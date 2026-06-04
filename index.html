@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+  <title>0xPortfolio — Cybersecurity &amp; Web Dev</title>
+  <meta name="description"
+    content="15-year-old cybersecurity enthusiast, pentester, and web developer. TryHackMe certified. OWASP | MITRE ATT&CK | Nmap | Metasploit." />
+  <meta property="og:title" content="0xPortfolio — Cybersecurity & Web Dev" />
+  <meta property="og:description" content="15-year-old cybersecurity enthusiast, pentester, and web developer." />
+  <meta name="theme-color" content="#0a0a0f" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Inter:wght@300;400;500;600;700;900&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+  <!-- ── CUSTOM CURSOR ── -->
+  <div class="cursor-dot" id="cursorDot"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
+
+  <!-- ── SPLASH SCREEN ── -->
+  <div class="splash" id="splash">
+    <div class="splash-inner">
+      <div class="splash-logo">
+        <span class="splash-bracket">[</span>
+        <span class="splash-x">0x</span>
+        <span class="splash-bracket">]</span>
+      </div>
+      <div class="splash-terminal">
+        <p class="splash-line" id="splashLine1"></p>
+        <p class="splash-line" id="splashLine2"></p>
+        <p class="splash-line" id="splashLine3"></p>
+        <span class="splash-cursor">▋</span>
+      </div>
+      <div class="splash-bar-wrap">
+        <div class="splash-bar" id="splashBar"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── NOISE OVERLAY ── -->
+  <div class="noise"></div>
+
+  <!-- ── CANVAS BG ── -->
+  <canvas id="bgCanvas"></canvas>
+
+  <!-- ── HEADER ── -->
+  <header id="header">
+    <div class="header-inner">
+      <a href="#hero" class="logo" id="headerLogo">
+        <span class="logo-bracket">[</span><span class="logo-text">0x</span><span class="logo-bracket">]</span>
+      </a>
+      <nav class="nav-links" id="navLinks">
+        <a href="#about" class="nav-link" data-section="about">About</a>
+        <a href="#skills" class="nav-link" data-section="skills">Skills</a>
+        <a href="#projects" class="nav-link" data-section="projects">Projects</a>
+        <a href="#certs" class="nav-link" data-section="certs">Certs</a>
+        <a href="#contact" class="nav-link contact-btn" data-section="contact">Contact</a>
+      </nav>
+      <button class="hamburger" id="hamburger" aria-label="Open menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ── MOBILE MENU ── -->
+  <div class="mobile-menu" id="mobileMenu">
+    <button class="mobile-close" id="mobileClose" aria-label="Close menu">✕</button>
+    <nav class="mobile-nav">
+      <a href="#hero" class="mobile-link" data-close>Home</a>
+      <a href="#about" class="mobile-link" data-close>About</a>
+      <a href="#skills" class="mobile-link" data-close>Skills</a>
+      <a href="#projects" class="mobile-link" data-close>Projects</a>
+      <a href="#certs" class="mobile-link" data-close>Certs</a>
+      <a href="#contact" class="mobile-link" data-close>Contact</a>
+    </nav>
+    <div class="mobile-socials">
+      <a href="https://tryhackme.com" target="_blank" rel="noreferrer">↗ TryHackMe</a>
+      <a href="https://github.com" target="_blank" rel="noreferrer">↗ GitHub</a>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       MAIN CONTENT
+  ══════════════════════════════════════ -->
+  <main id="main">
+
+    <!-- ── HERO ── -->
+    <section class="section hero-section" id="hero">
+      <div class="hero-content">
+        <div class="hero-top reveal-up">
+          <span class="hero-tag">
+            <span class="tag-dot"></span> Available for opportunities
+          </span>
+        </div>
+        <h1 class="hero-name reveal-up" id="heroName">
+          <span class="name-line glitch" data-text="Your Name">Your Name</span>
+        </h1>
+        <div class="hero-roles reveal-up">
+          <span class="role-prefix">// </span>
+          <span class="role-typewriter" id="roleTypewriter"></span>
+          <span class="type-cursor">|</span>
+        </div>
+        <p class="hero-bio reveal-up">
+          15 y/o hacker-in-the-making. Breaking systems to understand them.<br />
+          <span class="accent">TryHackMe certified</span> · OWASP · MITRE ATT&amp;CK · AI Fine-tuning · Web Dev
+        </p>
+        <div class="hero-actions reveal-up">
+          <a href="#projects" class="btn btn-primary">→ See My Work</a>
+          <a href="#contact" class="btn btn-ghost">Get In Touch</a>
+        </div>
+        <div class="hero-stats reveal-up">
+          <div class="stat">
+            <span class="stat-num" data-target="2">0</span>
+            <span class="stat-label">THM Certs</span>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat">
+            <span class="stat-num" data-target="10">0</span><span class="stat-plus">+</span>
+            <span class="stat-label">Tools Mastered</span>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat">
+            <span class="stat-num" data-target="4">0</span>
+            <span class="stat-label">Projects Built</span>
+          </div>
+        </div>
+      </div>
+      <div class="hero-scroll-hint">
+        <span>Scroll</span>
+        <div class="scroll-line"></div>
+      </div>
+    </section>
+
+    <!-- ── ABOUT ── -->
+    <section class="section about-section" id="about">
+      <div class="section-inner">
+        <div class="section-header reveal-up">
+          <span class="section-tag">01 / About</span>
+          <h2 class="section-title">Who am I<span class="accent">?</span></h2>
+        </div>
+        <div class="about-grid">
+          <div class="about-text reveal-up">
+            <p>
+              Hey — I'm a <span class="highlight">15-year-old cybersecurity enthusiast</span> and web developer
+              with a serious passion for understanding how systems break. What started as curiosity
+              turned into hands-on experience across pentesting, networking, and creative web development.
+            </p>
+            <p>
+              My main field is <span class="highlight">cybersecurity</span> — from Nmap recon to
+              Metasploit exploits, from sniffing packets to OSINT with tools like <span
+                class="code-inline">GraphSpy</span>
+              and <span class="code-inline">Shannon</span>. I do all of this safely through virtual machines
+              that let me explore freely without any system risk.
+            </p>
+            <p>
+              On the dev side, I've built a <span class="highlight">real-time AI stock market analyzer</span> —
+              a full web UI powered by an AI backend that processes live market data to identify optimal buy signals.
+            </p>
+            <p>
+              I'm also deep into <span class="highlight">AI model fine-tuning</span> on
+              <span class="code-inline">Hugging Face</span> — training and deploying specialized models.
+              My next project? A <span class="highlight">pentesting AI</span> model designed to assist with
+              vulnerability analysis — dropping on Hugging Face soon.
+            </p>
+            <div class="about-links">
+              <a href="#certs" class="text-link">→ View my certifications</a>
+              <a href="#projects" class="text-link">→ See my projects</a>
+            </div>
+          </div>
+          <div class="about-card-stack reveal-up">
+            <div class="info-card">
+              <span class="info-card-icon">🛡️</span>
+              <div>
+                <strong>Main Focus</strong>
+                <span>Cybersecurity & Pentesting</span>
+              </div>
+            </div>
+            <div class="info-card">
+              <span class="info-card-icon">📍</span>
+              <div>
+                <strong>Age</strong>
+                <span>15 years old</span>
+              </div>
+            </div>
+            <div class="info-card">
+              <span class="info-card-icon">🏆</span>
+              <div>
+                <strong>Platform</strong>
+                <span>TryHackMe</span>
+              </div>
+            </div>
+            <div class="info-card">
+              <span class="info-card-icon">💻</span>
+              <div>
+                <strong>Environment</strong>
+                <span>Virtual Machines + Kali Linux</span>
+              </div>
+            </div>
+            <div class="info-card">
+              <span class="info-card-icon">🤗</span>
+              <div>
+                <strong>AI Platform</strong>
+                <span>Hugging Face — Model Fine-tuning</span>
+              </div>
+            </div>
+            <div class="info-card">
+              <span class="info-card-icon">🌐</span>
+              <div>
+                <strong>Also Into</strong>
+                <span>Web Dev, AI Apps &amp; Model Training</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── SKILLS ── -->
+    <section class="section skills-section" id="skills">
+      <div class="section-inner">
+        <div class="section-header reveal-up">
+          <span class="section-tag">02 / Skills</span>
+          <h2 class="section-title">My Arsenal<span class="accent">.</span></h2>
+        </div>
+
+        <div class="skills-categories">
+
+          <!-- Offensive Security -->
+          <div class="skill-category reveal-up">
+            <div class="skill-cat-header">
+              <span class="skill-cat-icon">⚔️</span>
+              <h3>Offensive Security</h3>
+            </div>
+            <div class="skill-tags">
+              <span class="skill-tag tier-1">Nmap</span>
+              <span class="skill-tag tier-1">Metasploit</span>
+              <span class="skill-tag tier-1">John the Ripper</span>
+              <span class="skill-tag tier-2">GraphSpy</span>
+              <span class="skill-tag tier-2">Shannon</span>
+              <span class="skill-tag tier-2">Hydra</span>
+              <span class="skill-tag tier-2">Burp Suite</span>
+              <span class="skill-tag tier-3">Custom Exploits</span>
+            </div>
+          </div>
+
+          <!-- Frameworks & Knowledge -->
+          <div class="skill-category reveal-up">
+            <div class="skill-cat-header">
+              <span class="skill-cat-icon">📚</span>
+              <h3>Frameworks &amp; Standards</h3>
+            </div>
+            <div class="skill-tags">
+              <span class="skill-tag tier-1">OWASP Top 10</span>
+              <span class="skill-tag tier-1">MITRE ATT&amp;CK</span>
+              <span class="skill-tag tier-2">CVE Research</span>
+              <span class="skill-tag tier-2">AI Security</span>
+              <span class="skill-tag tier-2">Threat Modeling</span>
+              <span class="skill-tag tier-3">Windows Exploitation</span>
+              <span class="skill-tag tier-3">Linux Privesc</span>
+            </div>
+          </div>
+
+          <!-- Networking -->
+          <div class="skill-category reveal-up">
+            <div class="skill-cat-header">
+              <span class="skill-cat-icon">🌐</span>
+              <h3>Networking</h3>
+            </div>
+            <div class="skill-tags">
+              <span class="skill-tag tier-1">Packet Analysis</span>
+              <span class="skill-tag tier-1">Port Scanning</span>
+              <span class="skill-tag tier-2">TCP/IP</span>
+              <span class="skill-tag tier-2">DNS Enumeration</span>
+              <span class="skill-tag tier-2">CVE Exploitation</span>
+              <span class="skill-tag tier-3">VPN &amp; Tunneling</span>
+            </div>
+          </div>
+
+          <!-- Web Dev & AI -->
+          <div class="skill-category reveal-up">
+            <div class="skill-cat-header">
+              <span class="skill-cat-icon">🚀</span>
+              <h3>Web Dev &amp; AI</h3>
+            </div>
+            <div class="skill-tags">
+              <span class="skill-tag tier-1">HTML / CSS / JS</span>
+              <span class="skill-tag tier-1">UI/UX Design</span>
+              <span class="skill-tag tier-2">AI Integration</span>
+              <span class="skill-tag tier-2">REST APIs</span>
+              <span class="skill-tag tier-2">Data Visualization</span>
+              <span class="skill-tag tier-3">Stock Market APIs</span>
+            </div>
+          </div>
+
+          <!-- AI / ML -->
+          <div class="skill-category reveal-up">
+            <div class="skill-cat-header">
+              <span class="skill-cat-icon">🤗</span>
+              <h3>AI / ML &amp; Model Training</h3>
+            </div>
+            <div class="skill-tags">
+              <span class="skill-tag tier-1">Hugging Face</span>
+              <span class="skill-tag tier-1">Model Fine-tuning</span>
+              <span class="skill-tag tier-2">Transformers</span>
+              <span class="skill-tag tier-2">Dataset Prep</span>
+              <span class="skill-tag tier-2">Inference APIs</span>
+              <span class="skill-tag tier-3">AI Security Testing</span>
+              <span class="skill-tag tier-3">Adversarial ML</span>
+            </div>
+          </div>
+
+          <!-- Environment -->
+          <div class="skill-category reveal-up">
+            <div class="skill-cat-header">
+              <span class="skill-cat-icon">🖥️</span>
+              <h3>Environment &amp; Tools</h3>
+            </div>
+            <div class="skill-tags">
+              <span class="skill-tag tier-1">Kali Linux</span>
+              <span class="skill-tag tier-1">Virtual Machines</span>
+              <span class="skill-tag tier-2">GitHub</span>
+              <span class="skill-tag tier-2">VS Code</span>
+              <span class="skill-tag tier-2">Wireshark</span>
+              <span class="skill-tag tier-3">VirtualBox / VMware</span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Skill bars -->
+        <div class="skill-bars-wrap reveal-up">
+          <h3 class="skill-bars-title">Proficiency</h3>
+          <div class="skill-bars">
+            <div class="skill-bar-item">
+              <div class="skill-bar-label">
+                <span>Cybersecurity / Pentesting</span>
+                <span class="skill-pct">82%</span>
+              </div>
+              <div class="skill-bar-track">
+                <div class="skill-bar-fill" data-width="82"></div>
+              </div>
+            </div>
+            <div class="skill-bar-item">
+              <div class="skill-bar-label">
+                <span>Networking</span>
+                <span class="skill-pct">75%</span>
+              </div>
+              <div class="skill-bar-track">
+                <div class="skill-bar-fill" data-width="75"></div>
+              </div>
+            </div>
+            <div class="skill-bar-item">
+              <div class="skill-bar-label">
+                <span>Web Development</span>
+                <span class="skill-pct">70%</span>
+              </div>
+              <div class="skill-bar-track">
+                <div class="skill-bar-fill" data-width="70"></div>
+              </div>
+            </div>
+            <div class="skill-bar-item">
+              <div class="skill-bar-label">
+                <span>AI / ML &amp; Model Fine-tuning</span>
+                <span class="skill-pct">72%</span>
+              </div>
+              <div class="skill-bar-track">
+                <div class="skill-bar-fill" data-width="72"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ── PROJECTS ── -->
+    <section class="section projects-section" id="projects">
+      <div class="section-inner">
+        <div class="section-header reveal-up">
+          <span class="section-tag">03 / Projects</span>
+          <h2 class="section-title">What I've Built<span class="accent">.</span></h2>
+        </div>
+
+        <div class="projects-grid">
+
+          <!-- Project 1 -->
+          <div class="project-card featured reveal-up" id="proj-stock">
+            <div class="project-card-inner">
+              <div class="project-meta">
+                <span class="project-year">2024</span>
+                <span class="project-cat">AI · Full-Stack · Finance · Live</span>
+              </div>
+              <div class="project-visual stock-visual">
+                <div class="stock-chart">
+                  <svg viewBox="0 0 300 100" preserveAspectRatio="none" class="chart-svg">
+                    <defs>
+                      <linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stop-color="#00ff88" stop-opacity="0.4" />
+                        <stop offset="100%" stop-color="#00ff88" stop-opacity="0" />
+                      </linearGradient>
+                    </defs>
+                    <path class="chart-area"
+                      d="M0,80 L30,65 L60,70 L90,40 L120,55 L150,30 L180,45 L210,20 L240,35 L270,15 L300,25 L300,100 L0,100 Z"
+                      fill="url(#chartGrad)" />
+                    <path class="chart-line"
+                      d="M0,80 L30,65 L60,70 L90,40 L120,55 L150,30 L180,45 L210,20 L240,35 L270,15 L300,25" fill="none"
+                      stroke="#00ff88" stroke-width="2" />
+                    <circle class="chart-dot" cx="300" cy="25" r="4" fill="#00ff88" />
+                  </svg>
+                </div>
+                <div class="stock-tickers">
+                  <div class="ticker"><span class="t-sym">NVDA</span><span class="t-val up">+4.2%</span></div>
+                  <div class="ticker"><span class="t-sym">AAPL</span><span class="t-val up">+1.8%</span></div>
+                  <div class="ticker"><span class="t-sym">TSLA</span><span class="t-val down">-0.9%</span></div>
+                  <div class="ticker"><span class="t-sym">MSFT</span><span class="t-val up">+2.3%</span></div>
+                </div>
+                <div class="ai-badge">AI Powered ✦</div>
+              </div>
+              <h3 class="project-title">SignalHub — AI Stock Analyzer</h3>
+              <p class="project-desc">
+                A fully deployed web app that feeds <strong>live market data from a stock API</strong> directly
+                into an <strong>AI prompt at runtime</strong> — giving the model real context to decide whether
+                to recommend buying a stock. Built with a custom frontend UI, Firebase backend, and a
+                multi-source API pipeline. <em>It's live on the web right now.</em>
+              </p>
+              <div class="project-tags">
+                <span>Firebase</span><span>AI API</span><span>Stock API</span><span>Prompt Engineering</span><span>JavaScript</span><span>Full-Stack</span>
+              </div>
+              <div class="project-links">
+                <a href="https://signalhub-e79ba.web.app/" target="_blank" class="proj-link live">
+                  🔴 Live Demo ↗
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Project 2 -->
+          <div class="project-card reveal-up" id="proj-thm">
+            <div class="project-card-inner">
+              <div class="project-meta">
+                <span class="project-year">2024</span>
+                <span class="project-cat">Cybersecurity · CTF</span>
+              </div>
+              <div class="project-visual thm-visual">
+                <div class="terminal-window">
+                  <div class="terminal-bar">
+                    <span class="tb-dot red"></span>
+                    <span class="tb-dot yellow"></span>
+                    <span class="tb-dot green"></span>
+                    <span class="tb-title">kali@thm:~</span>
+                  </div>
+                  <div class="terminal-body">
+                    <p><span class="t-green">$</span> nmap -sV -sC target.thm</p>
+                    <p><span class="t-cyan">Starting Nmap 7.94...</span></p>
+                    <p>PORT STATE SERVICE</p>
+                    <p>22/tcp open ssh</p>
+                    <p>80/tcp open http</p>
+                    <p><span class="t-green">$</span> msfconsole<span class="blink-cursor">▋</span></p>
+                  </div>
+                </div>
+              </div>
+              <h3 class="project-title">TryHackMe CTF Labs</h3>
+              <p class="project-desc">
+                Hands-on penetration testing labs covering full attack chains —
+                reconnaissance with Nmap, exploitation via Metasploit,
+                password cracking with John the Ripper, and privilege escalation across Linux &amp; Windows targets.
+              </p>
+              <div class="project-tags">
+                <span>Nmap</span><span>Metasploit</span><span>JtR</span><span>Linux</span><span>Windows</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Project 3 -->
+          <div class="project-card reveal-up" id="proj-vm">
+            <div class="project-card-inner">
+              <div class="project-meta">
+                <span class="project-year">2023–24</span>
+                <span class="project-cat">Infrastructure · Security Lab</span>
+              </div>
+              <div class="project-visual vm-visual">
+                <div class="vm-diagram">
+                  <div class="vm-host">
+                    <span class="vm-label">Host Machine</span>
+                    <div class="vm-boxes">
+                      <div class="vm-box kali">
+                        <span>Kali Linux</span>
+                        <small>Attacker</small>
+                      </div>
+                      <div class="vm-box target">
+                        <span>Target VM</span>
+                        <small>Vulnerable OS</small>
+                      </div>
+                    </div>
+                    <div class="vm-network">
+                      <div class="vm-net-line"></div>
+                      <span class="vm-net-label">Isolated Network</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <h3 class="project-title">Personal Hacking Lab</h3>
+              <p class="project-desc">
+                Built a fully isolated virtual hacking environment with multiple VMs
+                networked together. Safely explored CVEs targeting legacy Windows systems,
+                OSINT techniques, and tool development using GitHub hacking tools — all without risk to the host.
+              </p>
+              <div class="project-tags">
+                <span>VirtualBox</span><span>Kali</span><span>CVE</span><span>OSINT</span><span>GraphSpy</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Project 4 — Coming Soon -->
+          <div class="project-card coming-soon-card featured reveal-up" id="proj-pentestai">
+            <div class="project-card-inner">
+              <div class="project-meta">
+                <span class="project-year">2025</span>
+                <span class="project-cat coming-cat">🤖 AI · Cybersecurity · Hugging Face</span>
+              </div>
+              <div class="project-visual pentestai-visual">
+                <div class="pentestai-inner">
+                  <div class="pentestai-pulse"></div>
+                  <div class="pentestai-text">
+                    <div class="pentestai-model-name">&lt;PentestGPT /&gt;</div>
+                    <div class="pentestai-status">
+                      <span class="status-dot"></span>
+                      <span>Training in progress...</span>
+                    </div>
+                    <div class="pentestai-stats">
+                      <div class="pstat"><span class="pstat-label">Base Model</span><span
+                          class="pstat-val">Mistral-7B</span></div>
+                      <div class="pstat"><span class="pstat-label">Task</span><span class="pstat-val">Vuln
+                          Analysis</span></div>
+                      <div class="pstat"><span class="pstat-label">Platform</span><span class="pstat-val">🤗
+                          HuggingFace</span></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="coming-soon-badge">🚀 Dropping Soon</div>
+              <h3 class="project-title">Pentesting AI Model</h3>
+              <p class="project-desc">
+                Fine-tuning a large language model on cybersecurity datasets to assist with
+                vulnerability analysis, CVE matching, and attack surface mapping.
+                Built on Hugging Face with a custom training pipeline — designed to bridge AI and offensive security.
+              </p>
+              <div class="project-tags">
+                <span>Hugging
+                  Face</span><span>Fine-tuning</span><span>Transformers</span><span>Pentesting</span><span>LLM</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ── CERTIFICATIONS ── -->
+    <section class="section certs-section" id="certs">
+      <div class="section-inner">
+        <div class="section-header reveal-up">
+          <span class="section-tag">04 / Certifications</span>
+          <h2 class="section-title">Credentials<span class="accent">.</span></h2>
+        </div>
+
+        <div class="certs-grid">
+
+          <div class="cert-card reveal-up">
+            <div class="cert-glow"></div>
+            <div class="cert-header">
+              <div class="cert-badge">
+                <svg viewBox="0 0 60 60" width="60" height="60">
+                  <circle cx="30" cy="30" r="28" fill="none" stroke="#00ff88" stroke-width="2" stroke-dasharray="4 2"
+                    class="cert-ring" />
+                  <text x="50%" y="52%" dominant-baseline="middle" text-anchor="middle" fill="#00ff88" font-size="18"
+                    font-family="JetBrains Mono">🛡️</text>
+                </svg>
+              </div>
+              <div class="cert-issuer">
+                <span class="cert-platform">TryHackMe</span>
+                <span class="cert-year">2024</span>
+              </div>
+            </div>
+            <h3 class="cert-title">Introduction to Cybersecurity</h3>
+            <p class="cert-desc">
+              Comprehensive path covering offensive &amp; defensive security fundamentals.
+              Hands-on modules in Nmap, Metasploit, John the Ripper, network analysis, and more.
+            </p>
+            <div class="cert-modules">
+              <span>Nmap</span>
+              <span>Metasploit</span>
+              <span>John the Ripper</span>
+              <span>OSINT</span>
+              <span>Web Hacking</span>
+              <span>Network Security</span>
+            </div>
+            <div class="cert-footer">
+              <span class="cert-status verified">✓ Verified</span>
+              <a href="https://tryhackme-certificates.s3-eu-west-1.amazonaws.com/THM-VCQQJBQXSD.pdf" target="_blank"
+                class="cert-link">↗ View</a>
+            </div>
+          </div>
+
+          <div class="cert-card reveal-up">
+            <div class="cert-glow" style="--glow-color: #a855f7;"></div>
+            <div class="cert-header">
+              <div class="cert-badge">
+                <svg viewBox="0 0 60 60" width="60" height="60">
+                  <circle cx="30" cy="30" r="28" fill="none" stroke="#a855f7" stroke-width="2" stroke-dasharray="4 2"
+                    class="cert-ring" style="stroke:#a855f7" />
+                  <text x="50%" y="52%" dominant-baseline="middle" text-anchor="middle" fill="#a855f7" font-size="18"
+                    font-family="JetBrains Mono">🤖</text>
+                </svg>
+              </div>
+              <div class="cert-issuer">
+                <span class="cert-platform">TryHackMe</span>
+                <span class="cert-year">2024</span>
+              </div>
+            </div>
+            <h3 class="cert-title">AI Security</h3>
+            <p class="cert-desc">
+              Specialized certification covering the security implications of artificial intelligence systems —
+              adversarial attacks, model poisoning, AI-specific threat vectors, and defensive strategies.
+            </p>
+            <div class="cert-modules" style="--tag-color: #a855f7;">
+              <span>Adversarial ML</span>
+              <span>Model Poisoning</span>
+              <span>AI Threat Vectors</span>
+              <span>LLM Security</span>
+              <span>Data Privacy</span>
+            </div>
+            <div class="cert-footer">
+              <span class="cert-status verified" style="color:#a855f7;border-color:#a855f7;">✓ Verified</span>
+              <a href="https://tryhackme-certificates.s3-eu-west-1.amazonaws.com/THM-PT5O33GQSU.pdf" target="_blank"
+                class="cert-link">↗ View</a>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- 91 Badges Matrix -->
+        <div class="badge-matrix-section reveal-up">
+          <div class="badge-matrix-header">
+            <h3 class="knowledge-title" style="margin-bottom:0;">TryHackMe Module Mastery</h3>
+            <span class="badge-count"><span class="accent">91</span> Badges Earned</span>
+          </div>
+          <div class="badge-matrix-container" id="badgeMatrix">
+            <!-- 91 dots will be injected here via JS -->
+          </div>
+          <div class="badge-matrix-footer">
+            <p>Spanning Web Exploitation, PrivEsc, OSINT, Network Analysis, and AI Security.</p>
+            <a href="https://tryhackme.com/p/354221973" target="_blank" class="text-link">↗ View Full THM Profile</a>
+          </div>
+        </div>
+
+        <!-- Knowledge badges -->
+        <div class="knowledge-section reveal-up">
+          <h3 class="knowledge-title">Also Familiar With</h3>
+          <div class="knowledge-badges">
+            <div class="know-badge">
+              <span class="know-icon">🔴</span>
+              <span>OWASP Top 10</span>
+            </div>
+            <div class="know-badge">
+              <span class="know-icon">⚡</span>
+              <span>MITRE ATT&amp;CK</span>
+            </div>
+            <div class="know-badge">
+              <span class="know-icon">🕵️</span>
+              <span>CVE Research</span>
+            </div>
+            <div class="know-badge">
+              <span class="know-icon">🪟</span>
+              <span>Windows Exploits</span>
+            </div>
+            <div class="know-badge">
+              <span class="know-icon">🐧</span>
+              <span>Linux Privesc</span>
+            </div>
+            <div class="know-badge">
+              <span class="know-icon">📡</span>
+              <span>Network Recon</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ── CONTACT ── -->
+    <section class="section contact-section" id="contact">
+      <div class="section-inner">
+        <div class="section-header reveal-up">
+          <span class="section-tag">05 / Contact</span>
+          <h2 class="section-title">Let's Connect<span class="accent">.</span></h2>
+        </div>
+        <div class="contact-content reveal-up">
+          <p class="contact-sub">
+            Whether you want to collab, need a junior security researcher, or just want to talk tech —
+            my inbox is open.
+          </p>
+          <a href="mailto:your@email.com" class="contact-email" id="contactEmail">
+            <span class="email-text">your@email.com</span>
+            <span class="email-arrow">→</span>
+          </a>
+          <div class="contact-socials">
+            <a href="https://tryhackme.com" target="_blank" rel="noreferrer" class="social-link">
+              <span class="social-icon">🏆</span> TryHackMe
+            </a>
+            <a href="https://github.com" target="_blank" rel="noreferrer" class="social-link">
+              <span class="social-icon">💻</span> GitHub
+            </a>
+            <a href="https://linkedin.com" target="_blank" rel="noreferrer" class="social-link">
+              <span class="social-icon">🔗</span> LinkedIn
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ── FOOTER ── -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <span class="footer-copy">© 2025 — Designed &amp; coded by <span class="accent">me</span></span>
+      <span class="footer-made">Made with ☕ &amp; curiosity</span>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+
+</html>
