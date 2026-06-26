@@ -114,16 +114,52 @@
     });
   });
 
-  // Surrounding Network Node Particles (Distributed among the 6 cores)
-  const nodeCount = isMobile ? 45 : 150;
-  const nodesGeo = new THREE.BufferGeometry();
+  // Canvas texture generator for glowing binary characters ('0' or '1')
+  function createBinaryTexture(char) {
+    const size = 64;
+    const canvas = document.createElement('canvas');
+    canvas.width = size;
+    canvas.height = size;
+    const ctx = canvas.getContext('2d');
+
+    ctx.clearRect(0, 0, size, size);
+
+    // Drawmonospace character
+    ctx.font = 'bold 50px monospace';
+    ctx.fillStyle = '#ffffff';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    
+    // Add green/cyan/blue cyber glow shadow
+    ctx.shadowColor = '#00ff66';
+    ctx.shadowBlur = 10;
+    
+    ctx.fillText(char, size / 2, size / 2);
+
+    const texture = new THREE.CanvasTexture(canvas);
+    return texture;
+  }
+
+  const texture0 = createBinaryTexture('0');
+  const texture1 = createBinaryTexture('1');
+
+  // Surrounding Network Node Particles (Distributed among the 6 cores, split into binary 0s and 1s)
+  const nodeCount = isMobile ? 44 : 150; // Even number for equal division
+  const nodeCount0 = Math.floor(nodeCount / 2);
+  const nodeCount1 = nodeCount - nodeCount0;
+
+  const nodesGeo0 = new THREE.BufferGeometry();
+  const nodesGeo1 = new THREE.BufferGeometry();
   
   const particleOffsets = [];
   const particleParents = [];
-  
-  const positions = new Float32Array(nodeCount * 3);
-  const colors = new Float32Array(nodeCount * 3);
   const nodeSpeeds = [];
+
+  const positions0 = new Float32Array(nodeCount0 * 3);
+  const colors0 = new Float32Array(nodeCount0 * 3);
+
+  const positions1 = new Float32Array(nodeCount1 * 3);
+  const colors1 = new Float32Array(nodeCount1 * 3);
 
   for (let i = 0; i < nodeCount; i++) {
     const parentIdx = i % coreConfigs.length;
@@ -147,10 +183,6 @@
 
     particleOffsets.push({ x: xSph, y: ySph, z: zSph });
 
-    positions[i * 3] = cpX + xSph;
-    positions[i * 3 + 1] = cpY + ySph;
-    positions[i * 3 + 2] = cpZ + zSph;
-
     // Drifting velocity vector
     nodeSpeeds.push({
       x: (Math.random() - 0.5) * 0.003,
@@ -158,24 +190,57 @@
       z: (Math.random() - 0.5) * 0.003
     });
 
-    // Particle color matches parent core color
-    colors[i * 3] = cfg.color.r;
-    colors[i * 3 + 1] = cfg.color.g;
-    colors[i * 3 + 2] = cfg.color.b;
+    if (i < nodeCount0) {
+      const idx = i * 3;
+      positions0[idx] = cpX + xSph;
+      positions0[idx + 1] = cpY + ySph;
+      positions0[idx + 2] = cpZ + zSph;
+
+      colors0[idx] = cfg.color.r;
+      colors0[idx + 1] = cfg.color.g;
+      colors0[idx + 2] = cfg.color.b;
+    } else {
+      const idx = (i - nodeCount0) * 3;
+      positions1[idx] = cpX + xSph;
+      positions1[idx + 1] = cpY + ySph;
+      positions1[idx + 2] = cpZ + zSph;
+
+      colors1[idx] = cfg.color.r;
+      colors1[idx + 1] = cfg.color.g;
+      colors1[idx + 2] = cfg.color.b;
+    }
   }
 
-  nodesGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-  nodesGeo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+  nodesGeo0.setAttribute('position', new THREE.BufferAttribute(positions0, 3));
+  nodesGeo0.setAttribute('color', new THREE.BufferAttribute(colors0, 3));
 
-  const nodesMat = new THREE.PointsMaterial({
-    size: isMobile ? 0.08 : 0.12,
+  nodesGeo1.setAttribute('position', new THREE.BufferAttribute(positions1, 3));
+  nodesGeo1.setAttribute('color', new THREE.BufferAttribute(colors1, 3));
+
+  const nodesMat0 = new THREE.PointsMaterial({
+    size: isMobile ? 0.38 : 0.55,
+    map: texture0,
     vertexColors: true,
     transparent: true,
-    opacity: 0.8
+    opacity: 0.85,
+    alphaTest: 0.1,
+    depthWrite: false
   });
 
-  const nodes = new THREE.Points(nodesGeo, nodesMat);
-  mainGroup.add(nodes);
+  const nodesMat1 = new THREE.PointsMaterial({
+    size: isMobile ? 0.38 : 0.55,
+    map: texture1,
+    vertexColors: true,
+    transparent: true,
+    opacity: 0.85,
+    alphaTest: 0.1,
+    depthWrite: false
+  });
+
+  const nodes0 = new THREE.Points(nodesGeo0, nodesMat0);
+  const nodes1 = new THREE.Points(nodesGeo1, nodesMat1);
+  mainGroup.add(nodes0);
+  mainGroup.add(nodes1);
 
   // Proximity Connection Lines
   const maxConnections = isMobile ? 25 : 120;
@@ -218,9 +283,19 @@
     }
   });
 
-  // Camera flight trajectory: stops exactly inside each core, looking ahead to the next one
+  // Camera flight trajectory: holding plateaus alternate with dynamic space flights
   tl
-    // 1. Transition into About (Core 2 center)
+    // Hero Plateau: hold at Core 1 center
+    .to(scrollTarget, {
+      camX: isMobile ? 0.0 : 2.0,
+      camY: 0.0,
+      camZ: 0.0,
+      lookX: isMobile ? 0.0 : -2.0,
+      lookY: -6.0,
+      lookZ: -12.0,
+      duration: 0.5
+    })
+    // Flight 1: Core 1 to Core 2 center
     .to(scrollTarget, {
       camX: isMobile ? 0.0 : -2.0,
       camY: -6.0,
@@ -228,10 +303,20 @@
       lookX: isMobile ? 0.0 : 2.0,
       lookY: -12.0,
       lookZ: -24.0,
-      duration: 1.0,
-      ease: "power1.inOut"
+      duration: 0.5,
+      ease: "power2.inOut"
     })
-    // 2. Transition into Skills (Core 3 center)
+    // About Plateau: hold at Core 2 center
+    .to(scrollTarget, {
+      camX: isMobile ? 0.0 : -2.0,
+      camY: -6.0,
+      camZ: -12.0,
+      lookX: isMobile ? 0.0 : 2.0,
+      lookY: -12.0,
+      lookZ: -24.0,
+      duration: 0.5
+    })
+    // Flight 2: Core 2 to Core 3 center
     .to(scrollTarget, {
       camX: isMobile ? 0.0 : 2.0,
       camY: -12.0,
@@ -239,10 +324,20 @@
       lookX: isMobile ? 0.0 : -1.8,
       lookY: -18.0,
       lookZ: -36.0,
-      duration: 1.0,
-      ease: "power1.inOut"
+      duration: 0.5,
+      ease: "power2.inOut"
     })
-    // 3. Transition into Projects (Core 4 center)
+    // Skills Plateau: hold at Core 3 center
+    .to(scrollTarget, {
+      camX: isMobile ? 0.0 : 2.0,
+      camY: -12.0,
+      camZ: -24.0,
+      lookX: isMobile ? 0.0 : -1.8,
+      lookY: -18.0,
+      lookZ: -36.0,
+      duration: 0.5
+    })
+    // Flight 3: Core 3 to Core 4 center
     .to(scrollTarget, {
       camX: isMobile ? 0.0 : -1.8,
       camY: -18.0,
@@ -250,10 +345,20 @@
       lookX: isMobile ? 0.0 : 1.8,
       lookY: -24.0,
       lookZ: -48.0,
-      duration: 1.0,
-      ease: "power1.inOut"
+      duration: 0.5,
+      ease: "power2.inOut"
     })
-    // 4. Transition into Certs (Core 5 center)
+    // Projects Plateau: hold at Core 4 center
+    .to(scrollTarget, {
+      camX: isMobile ? 0.0 : -1.8,
+      camY: -18.0,
+      camZ: -36.0,
+      lookX: isMobile ? 0.0 : 1.8,
+      lookY: -24.0,
+      lookZ: -48.0,
+      duration: 0.5
+    })
+    // Flight 4: Core 4 to Core 5 center
     .to(scrollTarget, {
       camX: isMobile ? 0.0 : 1.8,
       camY: -24.0,
@@ -261,10 +366,20 @@
       lookX: 0.0,
       lookY: -30.0,
       lookZ: -60.0,
-      duration: 1.0,
-      ease: "power1.inOut"
+      duration: 0.5,
+      ease: "power2.inOut"
     })
-    // 5. Transition into Contact (Core 6 center)
+    // Certs Plateau: hold at Core 5 center
+    .to(scrollTarget, {
+      camX: isMobile ? 0.0 : 1.8,
+      camY: -24.0,
+      camZ: -48.0,
+      lookX: 0.0,
+      lookY: -30.0,
+      lookZ: -60.0,
+      duration: 0.5
+    })
+    // Flight 5: Core 5 to Core 6 center
     .to(scrollTarget, {
       camX: 0.0,
       camY: -30.0,
@@ -272,8 +387,18 @@
       lookX: 0.0,
       lookY: -30.0,
       lookZ: -66.0,
-      duration: 1.0,
-      ease: "power1.inOut"
+      duration: 0.5,
+      ease: "power2.inOut"
+    })
+    // Contact Plateau: hold at Core 6 center
+    .to(scrollTarget, {
+      camX: 0.0,
+      camY: -30.0,
+      camZ: -60.0,
+      lookX: 0.0,
+      lookY: -30.0,
+      lookZ: -66.0,
+      duration: 0.5
     });
 
 
@@ -308,7 +433,6 @@
 
     // Core rotations (spins much faster in projects section)
     cores.forEach((core, idx) => {
-      // Rotate core elements
       const spinMultiplier = (idx === 3) ? 4.5 : 1.0;
       core.globe.rotation.y += 0.0012 * spinMultiplier;
       core.globe.rotation.x += 0.0005 * spinMultiplier;
@@ -316,9 +440,11 @@
       core.ring.rotation.z += 0.003 * spinMultiplier;
     });
 
-    // Update node positions with drift & orbit
-    const posAttr = nodesGeo.getAttribute('position');
-    const nodesArray = posAttr.array;
+    // Update node positions with drift & orbit for both binary meshes
+    const posAttr0 = nodesGeo0.getAttribute('position');
+    const posAttr1 = nodesGeo1.getAttribute('position');
+    const nodesArray0 = posAttr0.array;
+    const nodesArray1 = posAttr1.array;
 
     for (let i = 0; i < nodeCount; i++) {
       const parentIdx = particleParents[i];
@@ -342,11 +468,38 @@
         nodeSpeeds[i].z *= -1;
       }
 
-      nodesArray[i * 3] = cpX + offset.x;
-      nodesArray[i * 3 + 1] = cpY + offset.y;
-      nodesArray[i * 3 + 2] = cpZ + offset.z;
+      if (i < nodeCount0) {
+        const idx = i * 3;
+        nodesArray0[idx] = cpX + offset.x;
+        nodesArray0[idx + 1] = cpY + offset.y;
+        nodesArray0[idx + 2] = cpZ + offset.z;
+      } else {
+        const idx = (i - nodeCount0) * 3;
+        nodesArray1[idx] = cpX + offset.x;
+        nodesArray1[idx + 1] = cpY + offset.y;
+        nodesArray1[idx + 2] = cpZ + offset.z;
+      }
     }
-    posAttr.needsUpdate = true;
+    posAttr0.needsUpdate = true;
+    posAttr1.needsUpdate = true;
+
+    // Helper reader for absolute particle positions
+    function getParticlePosition(idx) {
+      if (idx < nodeCount0) {
+        return {
+          x: nodesArray0[idx * 3],
+          y: nodesArray0[idx * 3 + 1],
+          z: nodesArray0[idx * 3 + 2]
+        };
+      } else {
+        const oIdx = (idx - nodeCount0) * 3;
+        return {
+          x: nodesArray1[oIdx],
+          y: nodesArray1[oIdx + 1],
+          z: nodesArray1[oIdx + 2]
+        };
+      }
+    }
 
     // Calculate proximity connection lines dynamically
     const linePosAttr = connectionLines.geometry.getAttribute('position');
@@ -358,13 +511,9 @@
     const threshold = 2.4;
 
     for (let i = 0; i < nodeCount && lineIndex < maxConnections; i++) {
-      const x1 = nodesArray[i * 3];
-      const y1 = nodesArray[i * 3 + 1];
-      const z1 = nodesArray[i * 3 + 2];
-
-      const r1 = colors[i * 3];
-      const g1 = colors[i * 3 + 1];
-      const b1 = colors[i * 3 + 2];
+      const p1 = getParticlePosition(i);
+      const parentIdx1 = particleParents[i];
+      const cfg1 = coreConfigs[parentIdx1];
 
       for (let j = i + 1; j < nodeCount && lineIndex < maxConnections; j++) {
         // Fast optimization: only calculate lines between nodes belonging to the same or adjacent cores
@@ -374,34 +523,35 @@
           }
         }
 
-        const x2 = nodesArray[j * 3];
-        const y2 = nodesArray[j * 3 + 1];
-        const z2 = nodesArray[j * 3 + 2];
+        const p2 = getParticlePosition(j);
 
-        const dx = x1 - x2;
-        const dy = y1 - y2;
-        const dz = z1 - z2;
+        const dx = p1.x - p2.x;
+        const dy = p1.y - p2.y;
+        const dz = p1.z - p2.z;
         const distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
 
         if (distance < threshold) {
           const idx = lineIndex * 6;
           
-          linePosArray[idx] = x1;
-          linePosArray[idx + 1] = y1;
-          linePosArray[idx + 2] = z1;
+          linePosArray[idx] = p1.x;
+          linePosArray[idx + 1] = p1.y;
+          linePosArray[idx + 2] = p1.z;
           
-          linePosArray[idx + 3] = x2;
-          linePosArray[idx + 4] = y2;
-          linePosArray[idx + 5] = z2;
+          linePosArray[idx + 3] = p2.x;
+          linePosArray[idx + 4] = p2.y;
+          linePosArray[idx + 5] = p2.z;
 
           // Connect matching gradient colors
-          lineColArray[idx] = r1;
-          lineColArray[idx + 1] = g1;
-          lineColArray[idx + 2] = b1;
+          const parentIdx2 = particleParents[j];
+          const cfg2 = coreConfigs[parentIdx2];
 
-          lineColArray[idx + 3] = colors[j * 3];
-          lineColArray[idx + 4] = colors[j * 3 + 1];
-          lineColArray[idx + 5] = colors[j * 3 + 2];
+          lineColArray[idx] = cfg1.color.r;
+          lineColArray[idx + 1] = cfg1.color.g;
+          lineColArray[idx + 2] = cfg1.color.b;
+
+          lineColArray[idx + 3] = cfg2.color.r;
+          lineColArray[idx + 4] = cfg2.color.g;
+          lineColArray[idx + 5] = cfg2.color.b;
 
           lineIndex++;
         }
