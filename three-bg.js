@@ -43,122 +43,125 @@
   const mainGroup = new THREE.Group();
   scene.add(mainGroup);
 
-  // Color Definitions (Cyber Theme: Green, Blue, Black/Cyan)
+  // Color Definitions (Cyber Theme)
   const colorGreen = new THREE.Color('#00ff66');
   const colorBlue = new THREE.Color('#0066ff');
   const colorCyan = new THREE.Color('#00d4ff');
 
-  // 1. Shifting Focal Core (Wireframe Globe)
-  const sphereGeo = new THREE.IcosahedronGeometry(1.6, 2);
-  const sphereMat = new THREE.MeshBasicMaterial({
-    color: colorGreen.clone(),
-    wireframe: true,
-    transparent: true,
-    opacity: 0.18
-  });
-  const globeMesh = new THREE.Mesh(sphereGeo, sphereMat);
-  mainGroup.add(globeMesh);
+  // Core configurations mapping to the 6 sections in index.html
+  const coreConfigs = [
+    { name: 'hero',     color: colorGreen, scale: 1.6, x: 2.0,  y: 0.0,   z: 0.0 },
+    { name: 'about',    color: colorBlue,  scale: 1.3, x: -2.0, y: -6.0,  z: -12.0 },
+    { name: 'skills',   color: colorGreen, scale: 1.4, x: 2.0,  y: -12.0, z: -24.0 },
+    { name: 'projects', color: colorBlue,  scale: 1.2, x: -1.8, y: -18.0, z: -36.0 },
+    { name: 'certs',    color: colorCyan,  scale: 1.3, x: 1.8,  y: -24.0, z: -48.0 },
+    { name: 'contact',  color: colorCyan,  scale: 1.5, x: 0.0,  y: -30.0, z: -60.0 }
+  ];
 
-  // Inner solid core with low opacity
-  const innerGeo = new THREE.IcosahedronGeometry(1.4, 1);
-  const innerMat = new THREE.MeshBasicMaterial({
-    color: colorCyan.clone(),
-    wireframe: true,
-    transparent: true,
-    opacity: 0.04
-  });
-  const innerGlobe = new THREE.Mesh(innerGeo, innerMat);
-  mainGroup.add(innerGlobe);
+  const cores = [];
 
-  // Orbiting scanner ring
-  const ringGeo = new THREE.RingGeometry(2.4, 2.45, 64);
-  const ringMat = new THREE.MeshBasicMaterial({
-    color: colorCyan.clone(),
-    side: THREE.DoubleSide,
-    transparent: true,
-    opacity: 0.08
-  });
-  const scannerRing = new THREE.Mesh(ringGeo, ringMat);
-  scannerRing.rotation.x = Math.PI / 3;
-  mainGroup.add(scannerRing);
+  // Instantiate 6 stationary wireframe cores
+  coreConfigs.forEach((cfg) => {
+    const coreGroup = new THREE.Group();
+    const posX = isMobile ? 0.0 : cfg.x;
+    coreGroup.position.set(posX, cfg.y, cfg.z);
+    mainGroup.add(coreGroup);
 
-  // 2. Surrounding Network Node Particles
-  const nodeCount = isMobile ? 45 : 150; // Optimized particle buffer
+    // Wireframe Outer Globe (The page particle representation)
+    const sphereGeo = new THREE.IcosahedronGeometry(cfg.scale, 2);
+    const sphereMat = new THREE.MeshBasicMaterial({
+      color: cfg.color.clone(),
+      wireframe: true,
+      transparent: true,
+      opacity: 0.18
+    });
+    const globeMesh = new THREE.Mesh(sphereGeo, sphereMat);
+    coreGroup.add(globeMesh);
+
+    // Inner Solid-ish Globe
+    const innerGeo = new THREE.IcosahedronGeometry(cfg.scale * 0.85, 1);
+    const innerMat = new THREE.MeshBasicMaterial({
+      color: cfg.color.clone(),
+      wireframe: true,
+      transparent: true,
+      opacity: 0.04
+    });
+    const innerGlobe = new THREE.Mesh(innerGeo, innerMat);
+    coreGroup.add(innerGlobe);
+
+    // Scanner Ring
+    const ringGeo = new THREE.RingGeometry(cfg.scale * 1.5, cfg.scale * 1.53, 64);
+    const ringMat = new THREE.MeshBasicMaterial({
+      color: cfg.color.clone(),
+      side: THREE.DoubleSide,
+      transparent: true,
+      opacity: 0.08
+    });
+    const scannerRing = new THREE.Mesh(ringGeo, ringMat);
+    scannerRing.rotation.x = Math.PI / 3;
+    coreGroup.add(scannerRing);
+
+    cores.push({
+      group: coreGroup,
+      globe: globeMesh,
+      inner: innerGlobe,
+      ring: scannerRing,
+      matOuter: sphereMat,
+      matInner: innerMat,
+      matRing: ringMat,
+      baseScale: cfg.scale,
+      baseColor: cfg.color
+    });
+  });
+
+  // Surrounding Network Node Particles (Distributed among the 6 cores)
+  const nodeCount = isMobile ? 45 : 150;
   const nodesGeo = new THREE.BufferGeometry();
   
-  // Coordinate Arrays for Particle Constellations
-  const basePositions = [];
-  const skillsPositions = [];
-  const projectsPositions = [];
-  const contactPositions = [];
+  const particleOffsets = [];
+  const particleParents = [];
   
   const positions = new Float32Array(nodeCount * 3);
   const colors = new Float32Array(nodeCount * 3);
   const nodeSpeeds = [];
 
   for (let i = 0; i < nodeCount; i++) {
-    // A. Base spherical layout (starts orbiting around the focal node)
+    const parentIdx = i % coreConfigs.length;
+    particleParents.push(parentIdx);
+
+    const cfg = coreConfigs[parentIdx];
+    const cpX = isMobile ? 0.0 : cfg.x;
+    const cpY = cfg.y;
+    const cpZ = cfg.z;
+
+    // Generate coordinates relative to parent core center
     const u = Math.random();
     const v = Math.random();
     const theta = u * 2.0 * Math.PI;
     const phi = Math.acos(2.0 * v - 1.0);
-    const radius = 2.0 + Math.random() * 2.5;
+    const radius = cfg.scale * 1.2 + Math.random() * (cfg.scale * 1.8);
 
     const xSph = radius * Math.sin(phi) * Math.cos(theta);
     const ySph = radius * Math.sin(phi) * Math.sin(theta);
     const zSph = radius * Math.cos(phi);
 
-    basePositions.push({ x: xSph, y: ySph, z: zSph });
+    particleOffsets.push({ x: xSph, y: ySph, z: zSph });
 
-    positions[i * 3] = xSph;
-    positions[i * 3 + 1] = ySph;
-    positions[i * 3 + 2] = zSph;
+    positions[i * 3] = cpX + xSph;
+    positions[i * 3 + 1] = cpY + ySph;
+    positions[i * 3 + 2] = cpZ + zSph;
 
     // Drifting velocity vector
     nodeSpeeds.push({
-      x: (Math.random() - 0.5) * 0.002,
-      y: (Math.random() - 0.5) * 0.002,
-      z: (Math.random() - 0.5) * 0.002
+      x: (Math.random() - 0.5) * 0.003,
+      y: (Math.random() - 0.5) * 0.003,
+      z: (Math.random() - 0.5) * 0.003
     });
 
-    // B. Skills stage coords (split into 3 local constellations)
-    let cx = 0, cy = 0, cz = 0;
-    if (i % 3 === 0) { // Cluster 1: Left-Top
-      cx = -2.5; cy = 1.5; cz = 0.5;
-    } else if (i % 3 === 1) { // Cluster 2: Right-Center
-      cx = 2.5; cy = -0.5; cz = -1.0;
-    } else { // Cluster 3: Bottom-Left
-      cx = -1.5; cy = -2.0; cz = 1.0;
-    }
-    skillsPositions.push({
-      x: cx + (Math.random() - 0.5) * 1.2,
-      y: cy + (Math.random() - 0.5) * 1.2,
-      z: cz + (Math.random() - 0.5) * 1.2
-    });
-
-    // C. Projects horizontal scan plane coords
-    projectsPositions.push({
-      x: (Math.random() - 0.5) * 8.0,
-      y: -2.0 + (Math.random() - 0.5) * 0.6,
-      z: (Math.random() - 0.5) * 8.0
-    });
-
-    // D. Contact wide star constellation
-    contactPositions.push({
-      x: (Math.random() - 0.5) * 16.0,
-      y: (Math.random() - 0.5) * 16.0,
-      z: (Math.random() - 0.5) * 16.0
-    });
-
-    // Colors: mix of green, blue, cyan
-    const colorChance = Math.random();
-    let selectedColor = colorGreen;
-    if (colorChance > 0.7) selectedColor = colorBlue;
-    else if (colorChance > 0.4) selectedColor = colorCyan;
-
-    colors[i * 3] = selectedColor.r;
-    colors[i * 3 + 1] = selectedColor.g;
-    colors[i * 3 + 2] = selectedColor.b;
+    // Particle color matches parent core color
+    colors[i * 3] = cfg.color.r;
+    colors[i * 3 + 1] = cfg.color.g;
+    colors[i * 3 + 2] = cfg.color.b;
   }
 
   nodesGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
@@ -174,8 +177,8 @@
   const nodes = new THREE.Points(nodesGeo, nodesMat);
   mainGroup.add(nodes);
 
-  // 3. Proximity Connection Lines
-  const maxConnections = isMobile ? 25 : 120; // Drastically optimized mobile connection checking
+  // Proximity Connection Lines
+  const maxConnections = isMobile ? 25 : 120;
   const lineGeo = new THREE.BufferGeometry();
   const linePositions = new Float32Array(maxConnections * 2 * 3);
   const lineColors = new Float32Array(maxConnections * 2 * 3);
@@ -196,26 +199,14 @@
   // ── GSAP SCROLLTRIGGER TIMELINE ─────────────────
   gsap.registerPlugin(ScrollTrigger);
 
-  // Animatable configuration object
+  // Animatable camera flight parameters
   const scrollTarget = {
-    // Morph blend weights
-    factorSkills: 0,
-    factorProjects: 0,
-    factorContact: 0,
-
-    // Shifting Focal Globe Core values (scale, coordinates, color index)
-    globeScale: isMobile ? 3.2 : 5.0,  // HUGE core representing one giant particle on landing page
-    globeX: isMobile ? 0 : 2.4,        // Aligned right on desktop to clear text
-    globeY: isMobile ? -1.0 : 0.0,
-    globeZ: 0,
-    globeOpacity: 0.18,
-    colorFactor: 0.0,                  // 0 = Green, 1 = Blue, 2 = Green, 3 = Blue, 4 = Cyan
-
-    // Camera parameters
-    cameraZ: isMobile ? 9.0 : 7.0,
-    cameraY: 0.0,
-    cameraRotationX: 0.0,
-    cameraRotationY: 0.0
+    camX: isMobile ? 0.0 : -0.5,
+    camY: 0.0,
+    camZ: 5.0,
+    lookX: isMobile ? 0.0 : 1.5,
+    lookY: 0.0,
+    lookZ: 0.0
   };
 
   const tl = gsap.timeline({
@@ -227,56 +218,122 @@
     }
   });
 
-  // Dynamic Scroll Transitions
+  // Camera flight trajectory: dive through active core, curve to face next core
   tl
-    // 1. Transition into About: focal core shrinks and shifts left
+    // 1. Transition into About
     .to(scrollTarget, {
-      globeScale: 0.9,
-      globeX: isMobile ? 0 : -2.2,
-      globeY: isMobile ? 1.0 : 0.0,
-      globeOpacity: 0.12,
-      colorFactor: 1.0,  // Morphs color to Cyber Blue
-      cameraZ: isMobile ? 6.5 : 5.5,
-      duration: 1
+      // Phase 1a: Dive Core 1
+      camX: isMobile ? 0.0 : 2.0,
+      camY: 0.0,
+      camZ: -1.5,
+      lookX: isMobile ? 0.0 : -2.0,
+      lookY: -6.0,
+      lookZ: -12.0,
+      duration: 0.5,
+      ease: "power1.inOut"
     })
-    // 2. Transition into Skills: focal core shifts right, particles morph to clusters
     .to(scrollTarget, {
-      factorSkills: 1.0,
-      globeScale: 1.1,
-      globeX: isMobile ? 0 : 2.4,
-      globeY: isMobile ? -1.2 : 0.0,
-      colorFactor: 2.0,  // Morphs color back to Green
-      cameraZ: isMobile ? 8.0 : 6.0,
-      cameraRotationY: -0.15,
-      duration: 1
+      // Phase 1b: Align with About (Core 2)
+      camX: isMobile ? 0.0 : 0.5,
+      camY: -6.0,
+      camZ: -7.0,
+      lookX: isMobile ? 0.0 : -1.5,
+      lookY: -6.0,
+      lookZ: -12.0,
+      duration: 0.5,
+      ease: "power1.inOut"
     })
-    // 3. Transition into Projects: focal core shrinks further, shifts bottom-right
+    // 2. Transition into Skills
     .to(scrollTarget, {
-      factorSkills: 0.0,
-      factorProjects: 1.0,
-      globeScale: 0.65,
-      globeX: isMobile ? 0 : 1.8,
-      globeY: isMobile ? -1.5 : -1.0,
-      colorFactor: 3.0,  // Morphs color back to Blue
-      cameraZ: isMobile ? 7.5 : 5.5,
-      cameraY: -1.2,
-      cameraRotationX: 0.28,
-      duration: 1
+      // Phase 2a: Dive Core 2
+      camX: isMobile ? 0.0 : -2.0,
+      camY: -6.0,
+      camZ: -13.5,
+      lookX: isMobile ? 0.0 : 2.0,
+      lookY: -12.0,
+      lookZ: -24.0,
+      duration: 0.5,
+      ease: "power1.inOut"
     })
-    // 4. Transition into Contact: center out, expand to constellation stars
     .to(scrollTarget, {
-      factorProjects: 0.0,
-      factorContact: 1.0,
-      globeScale: 1.0,
-      globeX: 0,
-      globeY: 0,
-      globeOpacity: 0.08,
-      colorFactor: 4.0,  // Morphs color to Cyan
-      cameraZ: isMobile ? 11.0 : 9.5,
-      cameraY: 0,
-      cameraRotationX: 0,
-      cameraRotationY: 0.4,
-      duration: 1
+      // Phase 2b: Align with Skills (Core 3)
+      camX: isMobile ? 0.0 : -0.5,
+      camY: -12.0,
+      camZ: -19.0,
+      lookX: isMobile ? 0.0 : 1.5,
+      lookY: -12.0,
+      lookZ: -24.0,
+      duration: 0.5,
+      ease: "power1.inOut"
+    })
+    // 3. Transition into Projects
+    .to(scrollTarget, {
+      // Phase 3a: Dive Core 3
+      camX: isMobile ? 0.0 : 2.0,
+      camY: -12.0,
+      camZ: -25.5,
+      lookX: isMobile ? 0.0 : -1.8,
+      lookY: -18.0,
+      lookZ: -36.0,
+      duration: 0.5,
+      ease: "power1.inOut"
+    })
+    .to(scrollTarget, {
+      // Phase 3b: Align with Projects (Core 4)
+      camX: isMobile ? 0.0 : 0.5,
+      camY: -18.0,
+      camZ: -31.0,
+      lookX: isMobile ? 0.0 : -1.5,
+      lookY: -18.0,
+      lookZ: -36.0,
+      duration: 0.5,
+      ease: "power1.inOut"
+    })
+    // 4. Transition into Certs
+    .to(scrollTarget, {
+      // Phase 4a: Dive Core 4
+      camX: isMobile ? 0.0 : -1.8,
+      camY: -18.0,
+      camZ: -37.5,
+      lookX: isMobile ? 0.0 : 1.8,
+      lookY: -24.0,
+      lookZ: -48.0,
+      duration: 0.5,
+      ease: "power1.inOut"
+    })
+    .to(scrollTarget, {
+      // Phase 4b: Align with Certs (Core 5)
+      camX: isMobile ? 0.0 : -0.5,
+      camY: -24.0,
+      camZ: -43.0,
+      lookX: isMobile ? 0.0 : 1.5,
+      lookY: -24.0,
+      lookZ: -48.0,
+      duration: 0.5,
+      ease: "power1.inOut"
+    })
+    // 5. Transition into Contact
+    .to(scrollTarget, {
+      // Phase 5a: Dive Core 5
+      camX: isMobile ? 0.0 : 1.8,
+      camY: -24.0,
+      camZ: -49.5,
+      lookX: 0.0,
+      lookY: -30.0,
+      lookZ: -60.0,
+      duration: 0.5,
+      ease: "power1.inOut"
+    })
+    .to(scrollTarget, {
+      // Phase 5b: Align with Contact (Core 6)
+      camX: 0.0,
+      camY: -30.0,
+      camZ: -54.5,
+      lookX: 0.0,
+      lookY: -30.0,
+      lookZ: -60.0,
+      duration: 0.5,
+      ease: "power1.inOut"
     });
 
 
@@ -305,97 +362,49 @@
   function animate() {
     requestAnimationFrame(animate);
 
-    // Apply scroll triggers from GSAP targets
-    camera.position.z = scrollTarget.cameraZ;
-    camera.position.y = scrollTarget.cameraY;
-    camera.rotation.x = scrollTarget.cameraRotationX;
-    camera.rotation.y = scrollTarget.cameraRotationY;
-    
-    // Core transforms (Shifting focal globe core)
-    globeMesh.position.x = scrollTarget.globeX;
-    globeMesh.position.y = scrollTarget.globeY;
-    globeMesh.position.z = scrollTarget.globeZ;
-    
-    innerGlobe.position.copy(globeMesh.position);
-    scannerRing.position.copy(globeMesh.position);
-
-    globeMesh.scale.set(scrollTarget.globeScale, scrollTarget.globeScale, scrollTarget.globeScale);
-    innerGlobe.scale.copy(globeMesh.scale);
-    scannerRing.scale.set(scrollTarget.globeScale * 1.3, scrollTarget.globeScale * 1.3, scrollTarget.globeScale * 1.3);
-
-    sphereMat.opacity = scrollTarget.globeOpacity;
-
-    // Apply Color Blending on the shifting focal core
-    let activeColor = new THREE.Color();
-    const factor = scrollTarget.colorFactor;
-    if (factor < 1) {
-      activeColor.lerpColors(colorGreen, colorBlue, factor);
-    } else if (factor < 2) {
-      activeColor.lerpColors(colorBlue, colorGreen, factor - 1);
-    } else if (factor < 3) {
-      activeColor.lerpColors(colorGreen, colorBlue, factor - 2);
-    } else {
-      activeColor.lerpColors(colorBlue, colorCyan, Math.min(factor - 3, 1));
-    }
-    
-    sphereMat.color.copy(activeColor);
-    innerMat.color.copy(activeColor);
-    ringMat.color.copy(activeColor);
+    // Apply scroll-driven camera coordinates
+    camera.position.set(scrollTarget.camX, scrollTarget.camY, scrollTarget.camZ);
+    camera.lookAt(scrollTarget.lookX, scrollTarget.lookY, scrollTarget.lookZ);
 
     // Core rotations (spins much faster in projects section)
-    const spinMultiplier = scrollTarget.factorProjects > 0.5 ? 4.5 : 1.0;
-    globeMesh.rotation.y += 0.0012 * spinMultiplier;
-    globeMesh.rotation.x += 0.0005 * spinMultiplier;
-    innerGlobe.rotation.y -= 0.0006 * spinMultiplier;
-    scannerRing.rotation.z += 0.003 * spinMultiplier;
+    cores.forEach((core, idx) => {
+      // Rotate core elements
+      const spinMultiplier = (idx === 3) ? 4.5 : 1.0;
+      core.globe.rotation.y += 0.0012 * spinMultiplier;
+      core.globe.rotation.x += 0.0005 * spinMultiplier;
+      core.inner.rotation.y -= 0.0006 * spinMultiplier;
+      core.ring.rotation.z += 0.003 * spinMultiplier;
+    });
 
-    // Calculate node coordinates based on animation morph factors
+    // Update node positions with drift & orbit
     const posAttr = nodesGeo.getAttribute('position');
     const nodesArray = posAttr.array;
 
     for (let i = 0; i < nodeCount; i++) {
-      // Base sphere coords + noise drift
-      const base = basePositions[i];
-      base.x += nodeSpeeds[i].x;
-      base.y += nodeSpeeds[i].y;
-      base.z += nodeSpeeds[i].z;
+      const parentIdx = particleParents[i];
+      const cfg = coreConfigs[parentIdx];
+      const cpX = isMobile ? 0.0 : cfg.x;
+      const cpY = cfg.y;
+      const cpZ = cfg.z;
 
-      // Wrap-around bounds limit
-      const dist = Math.sqrt(base.x*base.x + base.y*base.y + base.z*base.z);
-      if (dist > 4.5 || dist < 2.0) {
+      const offset = particleOffsets[i];
+      offset.x += nodeSpeeds[i].x;
+      offset.y += nodeSpeeds[i].y;
+      offset.z += nodeSpeeds[i].z;
+
+      // Wrap-around bounds relative to parent core scale
+      const dist = Math.sqrt(offset.x*offset.x + offset.y*offset.y + offset.z*offset.z);
+      const maxDist = cfg.scale * 3.0;
+      const minDist = cfg.scale * 1.1;
+      if (dist > maxDist || dist < minDist) {
         nodeSpeeds[i].x *= -1;
         nodeSpeeds[i].y *= -1;
         nodeSpeeds[i].z *= -1;
       }
 
-      // Linear interpolations for morphing targets
-      let x = base.x;
-      let y = base.y;
-      let z = base.z;
-
-      // Local offset relative to shifting focal globe core
-      x += globeMesh.position.x;
-      y += globeMesh.position.y;
-      z += globeMesh.position.z;
-
-      // Morph to Skills Clusters
-      x = x + (skillsPositions[i].x - x) * scrollTarget.factorSkills;
-      y = y + (skillsPositions[i].y - y) * scrollTarget.factorSkills;
-      z = z + (skillsPositions[i].z - z) * scrollTarget.factorSkills;
-
-      // Morph to Projects Grid Plane
-      x = x + (projectsPositions[i].x - x) * scrollTarget.factorProjects;
-      y = y + (projectsPositions[i].y - y) * scrollTarget.factorProjects;
-      z = z + (projectsPositions[i].z - z) * scrollTarget.factorProjects;
-
-      // Morph to Contact Wide Space
-      x = x + (contactPositions[i].x - x) * scrollTarget.factorContact;
-      y = y + (contactPositions[i].y - y) * scrollTarget.factorContact;
-      z = z + (contactPositions[i].z - z) * scrollTarget.factorContact;
-
-      nodesArray[i * 3] = x;
-      nodesArray[i * 3 + 1] = y;
-      nodesArray[i * 3 + 2] = z;
+      nodesArray[i * 3] = cpX + offset.x;
+      nodesArray[i * 3 + 1] = cpY + offset.y;
+      nodesArray[i * 3 + 2] = cpZ + offset.z;
     }
     posAttr.needsUpdate = true;
 
@@ -406,7 +415,7 @@
     const lineColArray = lineColAttr.array;
 
     let lineIndex = 0;
-    const threshold = scrollTarget.factorContact > 0.5 ? 4.5 : 1.6;
+    const threshold = 2.4;
 
     for (let i = 0; i < nodeCount && lineIndex < maxConnections; i++) {
       const x1 = nodesArray[i * 3];
@@ -418,6 +427,13 @@
       const b1 = colors[i * 3 + 2];
 
       for (let j = i + 1; j < nodeCount && lineIndex < maxConnections; j++) {
+        // Fast optimization: only calculate lines between nodes belonging to the same or adjacent cores
+        if (particleParents[i] !== particleParents[j]) {
+          if (Math.abs(particleParents[i] - particleParents[j]) > 1) {
+            continue;
+          }
+        }
+
         const x2 = nodesArray[j * 3];
         const y2 = nodesArray[j * 3 + 1];
         const z2 = nodesArray[j * 3 + 2];
