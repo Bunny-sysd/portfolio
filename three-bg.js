@@ -201,12 +201,12 @@
 
   // Animatable camera flight parameters
   const scrollTarget = {
-    camX: isMobile ? 0.0 : -0.5,
+    camX: isMobile ? 0.0 : 2.0,
     camY: 0.0,
-    camZ: 5.0,
-    lookX: isMobile ? 0.0 : 1.5,
-    lookY: 0.0,
-    lookZ: 0.0
+    camZ: 0.0,
+    lookX: isMobile ? 0.0 : -2.0,
+    lookY: -6.0,
+    lookZ: -12.0
   };
 
   const tl = gsap.timeline({
@@ -218,121 +218,61 @@
     }
   });
 
-  // Camera flight trajectory: dive through active core, curve to face next core
+  // Camera flight trajectory: stops exactly inside each core, looking ahead to the next one
   tl
-    // 1. Transition into About
+    // 1. Transition into About (Core 2 center)
     .to(scrollTarget, {
-      // Phase 1a: Dive Core 1
-      camX: isMobile ? 0.0 : 2.0,
-      camY: 0.0,
-      camZ: -1.5,
-      lookX: isMobile ? 0.0 : -2.0,
-      lookY: -6.0,
-      lookZ: -12.0,
-      duration: 0.5,
-      ease: "power1.inOut"
-    })
-    .to(scrollTarget, {
-      // Phase 1b: Align with About (Core 2)
-      camX: isMobile ? 0.0 : 0.5,
-      camY: -6.0,
-      camZ: -7.0,
-      lookX: isMobile ? 0.0 : -1.5,
-      lookY: -6.0,
-      lookZ: -12.0,
-      duration: 0.5,
-      ease: "power1.inOut"
-    })
-    // 2. Transition into Skills
-    .to(scrollTarget, {
-      // Phase 2a: Dive Core 2
       camX: isMobile ? 0.0 : -2.0,
       camY: -6.0,
-      camZ: -13.5,
+      camZ: -12.0,
       lookX: isMobile ? 0.0 : 2.0,
       lookY: -12.0,
       lookZ: -24.0,
-      duration: 0.5,
+      duration: 1.0,
       ease: "power1.inOut"
     })
+    // 2. Transition into Skills (Core 3 center)
     .to(scrollTarget, {
-      // Phase 2b: Align with Skills (Core 3)
-      camX: isMobile ? 0.0 : -0.5,
-      camY: -12.0,
-      camZ: -19.0,
-      lookX: isMobile ? 0.0 : 1.5,
-      lookY: -12.0,
-      lookZ: -24.0,
-      duration: 0.5,
-      ease: "power1.inOut"
-    })
-    // 3. Transition into Projects
-    .to(scrollTarget, {
-      // Phase 3a: Dive Core 3
       camX: isMobile ? 0.0 : 2.0,
       camY: -12.0,
-      camZ: -25.5,
+      camZ: -24.0,
       lookX: isMobile ? 0.0 : -1.8,
       lookY: -18.0,
       lookZ: -36.0,
-      duration: 0.5,
+      duration: 1.0,
       ease: "power1.inOut"
     })
+    // 3. Transition into Projects (Core 4 center)
     .to(scrollTarget, {
-      // Phase 3b: Align with Projects (Core 4)
-      camX: isMobile ? 0.0 : 0.5,
-      camY: -18.0,
-      camZ: -31.0,
-      lookX: isMobile ? 0.0 : -1.5,
-      lookY: -18.0,
-      lookZ: -36.0,
-      duration: 0.5,
-      ease: "power1.inOut"
-    })
-    // 4. Transition into Certs
-    .to(scrollTarget, {
-      // Phase 4a: Dive Core 4
       camX: isMobile ? 0.0 : -1.8,
       camY: -18.0,
-      camZ: -37.5,
+      camZ: -36.0,
       lookX: isMobile ? 0.0 : 1.8,
       lookY: -24.0,
       lookZ: -48.0,
-      duration: 0.5,
+      duration: 1.0,
       ease: "power1.inOut"
     })
+    // 4. Transition into Certs (Core 5 center)
     .to(scrollTarget, {
-      // Phase 4b: Align with Certs (Core 5)
-      camX: isMobile ? 0.0 : -0.5,
-      camY: -24.0,
-      camZ: -43.0,
-      lookX: isMobile ? 0.0 : 1.5,
-      lookY: -24.0,
-      lookZ: -48.0,
-      duration: 0.5,
-      ease: "power1.inOut"
-    })
-    // 5. Transition into Contact
-    .to(scrollTarget, {
-      // Phase 5a: Dive Core 5
       camX: isMobile ? 0.0 : 1.8,
       camY: -24.0,
-      camZ: -49.5,
+      camZ: -48.0,
       lookX: 0.0,
       lookY: -30.0,
       lookZ: -60.0,
-      duration: 0.5,
+      duration: 1.0,
       ease: "power1.inOut"
     })
+    // 5. Transition into Contact (Core 6 center)
     .to(scrollTarget, {
-      // Phase 5b: Align with Contact (Core 6)
       camX: 0.0,
       camY: -30.0,
-      camZ: -54.5,
+      camZ: -60.0,
       lookX: 0.0,
       lookY: -30.0,
-      lookZ: -60.0,
-      duration: 0.5,
+      lookZ: -66.0,
+      duration: 1.0,
       ease: "power1.inOut"
     });
 

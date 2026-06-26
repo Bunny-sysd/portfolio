@@ -162,7 +162,7 @@
     'Penetration Tester',
     'AI Security Researcher',
     'CTF Player',
-    'Curious 15 y/o',
+    'Creator of Mutagen',
   ];
 
   const el = document.getElementById('roleTypewriter');
