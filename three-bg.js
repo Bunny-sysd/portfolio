@@ -27,7 +27,7 @@
 
   // Scene setup
   const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 100);
+  const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 150);
   const renderer = new THREE.WebGLRenderer({
     canvas: canvas,
     alpha: true,
@@ -144,7 +144,8 @@
   const texture1 = createBinaryTexture('1');
 
   // Surrounding Network Node Particles (Distributed among the 6 cores, split into binary 0s and 1s)
-  const nodeCount = isMobile ? 44 : 150; // Even number for equal division
+  const nodeCount = isMobile ? 150 : 1200; // Even number for equal division
+  const connectionNodeCount = isMobile ? 60 : 350;
   const nodeCount0 = Math.floor(nodeCount / 2);
   const nodeCount1 = nodeCount - nodeCount0;
 
@@ -218,7 +219,7 @@
   nodesGeo1.setAttribute('color', new THREE.BufferAttribute(colors1, 3));
 
   const nodesMat0 = new THREE.PointsMaterial({
-    size: isMobile ? 0.38 : 0.55,
+    size: isMobile ? 0.40 : 0.60,
     map: texture0,
     vertexColors: true,
     transparent: true,
@@ -228,7 +229,7 @@
   });
 
   const nodesMat1 = new THREE.PointsMaterial({
-    size: isMobile ? 0.38 : 0.55,
+    size: isMobile ? 0.40 : 0.60,
     map: texture1,
     vertexColors: true,
     transparent: true,
@@ -242,8 +243,94 @@
   mainGroup.add(nodes0);
   mainGroup.add(nodes1);
 
+  // ── GLOBAL FLOATING BINARY STARFIELD (INSANELY WILD BACKDROP) ──
+  const globalNodeCount = isMobile ? 300 : 1800;
+  const globalNodeCount0 = Math.floor(globalNodeCount / 2);
+  const globalNodeCount1 = globalNodeCount - globalNodeCount0;
+
+  const globalGeo0 = new THREE.BufferGeometry();
+  const globalGeo1 = new THREE.BufferGeometry();
+
+  const globalPos0 = new Float32Array(globalNodeCount0 * 3);
+  const globalCol0 = new Float32Array(globalNodeCount0 * 3);
+
+  const globalPos1 = new Float32Array(globalNodeCount1 * 3);
+  const globalCol1 = new Float32Array(globalNodeCount1 * 3);
+
+  const globalSpeeds = [];
+
+  for (let i = 0; i < globalNodeCount; i++) {
+    const x = (Math.random() - 0.5) * 55;
+    const y = Math.random() * -50 + 15;
+    const z = Math.random() * -100 + 20;
+
+    let pColor = colorGreen;
+    if (z < -45) {
+      pColor = colorCyan;
+    } else if (z < -15) {
+      pColor = colorBlue;
+    }
+
+    globalSpeeds.push({
+      x: (Math.random() - 0.5) * 0.005,
+      y: (Math.random() - 0.5) * 0.005,
+      z: (Math.random() - 0.5) * 0.005
+    });
+
+    if (i < globalNodeCount0) {
+      const idx = i * 3;
+      globalPos0[idx] = x;
+      globalPos0[idx + 1] = y;
+      globalPos0[idx + 2] = z;
+
+      globalCol0[idx] = pColor.r;
+      globalCol0[idx + 1] = pColor.g;
+      globalCol0[idx + 2] = pColor.b;
+    } else {
+      const idx = (i - globalNodeCount0) * 3;
+      globalPos1[idx] = x;
+      globalPos1[idx + 1] = y;
+      globalPos1[idx + 2] = z;
+
+      globalCol1[idx] = pColor.r;
+      globalCol1[idx + 1] = pColor.g;
+      globalCol1[idx + 2] = pColor.b;
+    }
+  }
+
+  globalGeo0.setAttribute('position', new THREE.BufferAttribute(globalPos0, 3));
+  globalGeo0.setAttribute('color', new THREE.BufferAttribute(globalCol0, 3));
+
+  globalGeo1.setAttribute('position', new THREE.BufferAttribute(globalPos1, 3));
+  globalGeo1.setAttribute('color', new THREE.BufferAttribute(globalCol1, 3));
+
+  const globalMat0 = new THREE.PointsMaterial({
+    size: isMobile ? 0.35 : 0.50,
+    map: texture0,
+    vertexColors: true,
+    transparent: true,
+    opacity: 0.55,
+    alphaTest: 0.1,
+    depthWrite: false
+  });
+
+  const globalMat1 = new THREE.PointsMaterial({
+    size: isMobile ? 0.35 : 0.50,
+    map: texture1,
+    vertexColors: true,
+    transparent: true,
+    opacity: 0.55,
+    alphaTest: 0.1,
+    depthWrite: false
+  });
+
+  const globalNodes0 = new THREE.Points(globalGeo0, globalMat0);
+  const globalNodes1 = new THREE.Points(globalGeo1, globalMat1);
+  mainGroup.add(globalNodes0);
+  mainGroup.add(globalNodes1);
+
   // Proximity Connection Lines
-  const maxConnections = isMobile ? 25 : 120;
+  const maxConnections = isMobile ? 60 : 350;
   const lineGeo = new THREE.BufferGeometry();
   const linePositions = new Float32Array(maxConnections * 2 * 3);
   const lineColors = new Float32Array(maxConnections * 2 * 3);
@@ -283,9 +370,9 @@
     }
   });
 
-  // Camera flight trajectory: holding plateaus alternate with dynamic space flights
+  // Camera flight trajectory: holding inside cores alternates with backing out and flying to the next core
   tl
-    // Hero Plateau: hold at Core 1 center
+    // Hero Plateau: hold inside Core 1 center
     .to(scrollTarget, {
       camX: isMobile ? 0.0 : 2.0,
       camY: 0.0,
@@ -293,9 +380,20 @@
       lookX: isMobile ? 0.0 : -2.0,
       lookY: -6.0,
       lookZ: -12.0,
-      duration: 0.5
+      duration: 0.33
     })
-    // Flight 1: Core 1 to Core 2 center
+    // Exit Hero: back out of Core 1
+    .to(scrollTarget, {
+      camX: isMobile ? 0.0 : 2.0,
+      camY: 0.0,
+      camZ: 4.0,
+      lookX: isMobile ? 0.0 : -2.0,
+      lookY: -6.0,
+      lookZ: -12.0,
+      duration: 0.33,
+      ease: "power1.inOut"
+    })
+    // Flight 1: enter Core 2 center
     .to(scrollTarget, {
       camX: isMobile ? 0.0 : -2.0,
       camY: -6.0,
@@ -303,10 +401,10 @@
       lookX: isMobile ? 0.0 : 2.0,
       lookY: -12.0,
       lookZ: -24.0,
-      duration: 0.5,
+      duration: 0.33,
       ease: "power2.inOut"
     })
-    // About Plateau: hold at Core 2 center
+    // About Plateau: hold inside Core 2 center
     .to(scrollTarget, {
       camX: isMobile ? 0.0 : -2.0,
       camY: -6.0,
@@ -314,9 +412,20 @@
       lookX: isMobile ? 0.0 : 2.0,
       lookY: -12.0,
       lookZ: -24.0,
-      duration: 0.5
+      duration: 0.33
     })
-    // Flight 2: Core 2 to Core 3 center
+    // Exit About: back out of Core 2
+    .to(scrollTarget, {
+      camX: isMobile ? 0.0 : -2.0,
+      camY: -6.0,
+      camZ: -8.0,
+      lookX: isMobile ? 0.0 : 2.0,
+      lookY: -12.0,
+      lookZ: -24.0,
+      duration: 0.33,
+      ease: "power1.inOut"
+    })
+    // Flight 2: enter Core 3 center
     .to(scrollTarget, {
       camX: isMobile ? 0.0 : 2.0,
       camY: -12.0,
@@ -324,10 +433,10 @@
       lookX: isMobile ? 0.0 : -1.8,
       lookY: -18.0,
       lookZ: -36.0,
-      duration: 0.5,
+      duration: 0.33,
       ease: "power2.inOut"
     })
-    // Skills Plateau: hold at Core 3 center
+    // Skills Plateau: hold inside Core 3 center
     .to(scrollTarget, {
       camX: isMobile ? 0.0 : 2.0,
       camY: -12.0,
@@ -335,9 +444,20 @@
       lookX: isMobile ? 0.0 : -1.8,
       lookY: -18.0,
       lookZ: -36.0,
-      duration: 0.5
+      duration: 0.33
     })
-    // Flight 3: Core 3 to Core 4 center
+    // Exit Skills: back out of Core 3
+    .to(scrollTarget, {
+      camX: isMobile ? 0.0 : 2.0,
+      camY: -12.0,
+      camZ: -20.0,
+      lookX: isMobile ? 0.0 : -1.8,
+      lookY: -18.0,
+      lookZ: -36.0,
+      duration: 0.33,
+      ease: "power1.inOut"
+    })
+    // Flight 3: enter Core 4 center
     .to(scrollTarget, {
       camX: isMobile ? 0.0 : -1.8,
       camY: -18.0,
@@ -345,10 +465,10 @@
       lookX: isMobile ? 0.0 : 1.8,
       lookY: -24.0,
       lookZ: -48.0,
-      duration: 0.5,
+      duration: 0.33,
       ease: "power2.inOut"
     })
-    // Projects Plateau: hold at Core 4 center
+    // Projects Plateau: hold inside Core 4 center
     .to(scrollTarget, {
       camX: isMobile ? 0.0 : -1.8,
       camY: -18.0,
@@ -356,9 +476,20 @@
       lookX: isMobile ? 0.0 : 1.8,
       lookY: -24.0,
       lookZ: -48.0,
-      duration: 0.5
+      duration: 0.33
     })
-    // Flight 4: Core 4 to Core 5 center
+    // Exit Projects: back out of Core 4
+    .to(scrollTarget, {
+      camX: isMobile ? 0.0 : -1.8,
+      camY: -18.0,
+      camZ: -32.0,
+      lookX: isMobile ? 0.0 : 1.8,
+      lookY: -24.0,
+      lookZ: -48.0,
+      duration: 0.33,
+      ease: "power1.inOut"
+    })
+    // Flight 4: enter Core 5 center
     .to(scrollTarget, {
       camX: isMobile ? 0.0 : 1.8,
       camY: -24.0,
@@ -366,10 +497,10 @@
       lookX: 0.0,
       lookY: -30.0,
       lookZ: -60.0,
-      duration: 0.5,
+      duration: 0.33,
       ease: "power2.inOut"
     })
-    // Certs Plateau: hold at Core 5 center
+    // Certs Plateau: hold inside Core 5 center
     .to(scrollTarget, {
       camX: isMobile ? 0.0 : 1.8,
       camY: -24.0,
@@ -377,9 +508,20 @@
       lookX: 0.0,
       lookY: -30.0,
       lookZ: -60.0,
-      duration: 0.5
+      duration: 0.33
     })
-    // Flight 5: Core 5 to Core 6 center
+    // Exit Certs: back out of Core 5
+    .to(scrollTarget, {
+      camX: isMobile ? 0.0 : 1.8,
+      camY: -24.0,
+      camZ: -44.0,
+      lookX: 0.0,
+      lookY: -30.0,
+      lookZ: -60.0,
+      duration: 0.33,
+      ease: "power1.inOut"
+    })
+    // Flight 5: enter Core 6 center
     .to(scrollTarget, {
       camX: 0.0,
       camY: -30.0,
@@ -387,10 +529,10 @@
       lookX: 0.0,
       lookY: -30.0,
       lookZ: -66.0,
-      duration: 0.5,
+      duration: 0.33,
       ease: "power2.inOut"
     })
-    // Contact Plateau: hold at Core 6 center
+    // Contact Plateau: hold inside Core 6 center
     .to(scrollTarget, {
       camX: 0.0,
       camY: -30.0,
@@ -398,7 +540,18 @@
       lookX: 0.0,
       lookY: -30.0,
       lookZ: -66.0,
-      duration: 0.5
+      duration: 0.33
+    })
+    // Exit Contact: gradually exit out/pull backwards at the bottom of the page
+    .to(scrollTarget, {
+      camX: isMobile ? 0.0 : 8.0,
+      camY: -15.0,
+      camZ: 10.0, // pull back deeply to see the entire grid of cyber domes
+      lookX: 0.0,
+      lookY: -30.0,
+      lookZ: -60.0,
+      duration: 0.85,
+      ease: "power2.inOut"
     });
 
 
@@ -460,8 +613,8 @@
 
       // Wrap-around bounds relative to parent core scale
       const dist = Math.sqrt(offset.x*offset.x + offset.y*offset.y + offset.z*offset.z);
-      const maxDist = cfg.scale * 3.0;
-      const minDist = cfg.scale * 1.1;
+      const maxDist = cfg.scale * 3.5;
+      const minDist = cfg.scale * 1.0;
       if (dist > maxDist || dist < minDist) {
         nodeSpeeds[i].x *= -1;
         nodeSpeeds[i].y *= -1;
@@ -482,6 +635,37 @@
     }
     posAttr0.needsUpdate = true;
     posAttr1.needsUpdate = true;
+
+    // Update global drifting particles
+    const gPosAttr0 = globalGeo0.getAttribute('position');
+    const gPosAttr1 = globalGeo1.getAttribute('position');
+    const gNodesArray0 = gPosAttr0.array;
+    const gNodesArray1 = gPosAttr1.array;
+
+    for (let i = 0; i < globalNodeCount; i++) {
+      const speed = globalSpeeds[i];
+      if (i < globalNodeCount0) {
+        const idx = i * 3;
+        gNodesArray0[idx] += speed.x;
+        gNodesArray0[idx + 1] += speed.y;
+        gNodesArray0[idx + 2] += speed.z;
+
+        if (gNodesArray0[idx] > 27.5 || gNodesArray0[idx] < -27.5) speed.x *= -1;
+        if (gNodesArray0[idx + 1] > 15 || gNodesArray0[idx + 1] < -45) speed.y *= -1;
+        if (gNodesArray0[idx + 2] > 20 || gNodesArray0[idx + 2] < -80) speed.z *= -1;
+      } else {
+        const idx = (i - globalNodeCount0) * 3;
+        gNodesArray1[idx] += speed.x;
+        gNodesArray1[idx + 1] += speed.y;
+        gNodesArray1[idx + 2] += speed.z;
+
+        if (gNodesArray1[idx] > 27.5 || gNodesArray1[idx] < -27.5) speed.x *= -1;
+        if (gNodesArray1[idx + 1] > 15 || gNodesArray1[idx + 1] < -45) speed.y *= -1;
+        if (gNodesArray1[idx + 2] > 20 || gNodesArray1[idx + 2] < -80) speed.z *= -1;
+      }
+    }
+    gPosAttr0.needsUpdate = true;
+    gPosAttr1.needsUpdate = true;
 
     // Helper reader for absolute particle positions
     function getParticlePosition(idx) {
@@ -508,14 +692,15 @@
     const lineColArray = lineColAttr.array;
 
     let lineIndex = 0;
-    const threshold = 2.4;
+    const threshold = 2.8;
+    const thresholdSq = threshold * threshold;
 
-    for (let i = 0; i < nodeCount && lineIndex < maxConnections; i++) {
+    for (let i = 0; i < connectionNodeCount && lineIndex < maxConnections; i++) {
       const p1 = getParticlePosition(i);
       const parentIdx1 = particleParents[i];
       const cfg1 = coreConfigs[parentIdx1];
 
-      for (let j = i + 1; j < nodeCount && lineIndex < maxConnections; j++) {
+      for (let j = i + 1; j < connectionNodeCount && lineIndex < maxConnections; j++) {
         // Fast optimization: only calculate lines between nodes belonging to the same or adjacent cores
         if (particleParents[i] !== particleParents[j]) {
           if (Math.abs(particleParents[i] - particleParents[j]) > 1) {
@@ -528,9 +713,11 @@
         const dx = p1.x - p2.x;
         const dy = p1.y - p2.y;
         const dz = p1.z - p2.z;
-        const distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
+        const distSq = dx * dx + dy * dy + dz * dz;
 
-        if (distance < threshold) {
+        // Perform fast squared distance check first to avoid Math.sqrt overhead on millions of checks
+        if (distSq < thresholdSq) {
+          const distance = Math.sqrt(distSq);
           const idx = lineIndex * 6;
           
           linePosArray[idx] = p1.x;
