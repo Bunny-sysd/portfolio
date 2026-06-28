@@ -27,6 +27,7 @@
 
   // Scene setup
   const scene = new THREE.Scene();
+  scene.fog = new THREE.FogExp2('#02040a', 0.022); // exponential dark fog matching CSS --bg
   const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 150);
   const renderer = new THREE.WebGLRenderer({
     canvas: canvas,
@@ -575,10 +576,16 @@
     renderer.setSize(window.innerWidth, window.innerHeight);
   });
 
+  let prevCamZ = 0.0;
 
   // ── RENDER LOOP ─────────────────────────────────
   function animate() {
     requestAnimationFrame(animate);
+
+    // Track scroll velocity for warp effects
+    const deltaZ = scrollTarget.camZ - prevCamZ;
+    const absoluteSpeedZ = Math.abs(deltaZ);
+    prevCamZ = scrollTarget.camZ;
 
     // Apply scroll-driven camera coordinates
     camera.position.set(scrollTarget.camX, scrollTarget.camY, scrollTarget.camZ);
@@ -636,32 +643,59 @@
     posAttr0.needsUpdate = true;
     posAttr1.needsUpdate = true;
 
-    // Update global drifting particles
+    // Gentle pulsing micro-animation for local particles
+    const pulse = 1.0 + Math.sin(Date.now() * 0.0035) * 0.12;
+    nodesMat0.size = (isMobile ? 0.40 : 0.60) * pulse;
+    nodesMat1.size = (isMobile ? 0.40 : 0.60) * pulse;
+
+    // Update global drifting particles with scroll-speed warp amplification
     const gPosAttr0 = globalGeo0.getAttribute('position');
     const gPosAttr1 = globalGeo1.getAttribute('position');
     const gNodesArray0 = gPosAttr0.array;
     const gNodesArray1 = gPosAttr1.array;
 
+    const warpFactor = 1.0 + Math.min(absoluteSpeedZ * 12.0, 18.0);
+    
+    // Scale global particles size & opacity slightly during fast scrolls
+    globalMat0.size = (isMobile ? 0.35 : 0.50) * (1.0 + Math.min(absoluteSpeedZ * 1.5, 0.8));
+    globalMat1.size = (isMobile ? 0.35 : 0.50) * (1.0 + Math.min(absoluteSpeedZ * 1.5, 0.8));
+    globalMat0.opacity = 0.55 + Math.min(absoluteSpeedZ * 0.3, 0.35);
+    globalMat1.opacity = 0.55 + Math.min(absoluteSpeedZ * 0.3, 0.35);
+
     for (let i = 0; i < globalNodeCount; i++) {
       const speed = globalSpeeds[i];
+      // Add relative camera speed translation along Z axis (flying opposite of scroll flight direction)
+      const dynamicZSpeed = speed.z - deltaZ * 0.45;
+
       if (i < globalNodeCount0) {
         const idx = i * 3;
         gNodesArray0[idx] += speed.x;
         gNodesArray0[idx + 1] += speed.y;
-        gNodesArray0[idx + 2] += speed.z;
+        gNodesArray0[idx + 2] += dynamicZSpeed * warpFactor;
 
         if (gNodesArray0[idx] > 27.5 || gNodesArray0[idx] < -27.5) speed.x *= -1;
         if (gNodesArray0[idx + 1] > 15 || gNodesArray0[idx + 1] < -45) speed.y *= -1;
-        if (gNodesArray0[idx + 2] > 20 || gNodesArray0[idx + 2] < -80) speed.z *= -1;
+        
+        // Wrap-around bounds for depth to keep them inside the active flight volume
+        if (gNodesArray0[idx + 2] > 20) {
+          gNodesArray0[idx + 2] = -80;
+        } else if (gNodesArray0[idx + 2] < -80) {
+          gNodesArray0[idx + 2] = 20;
+        }
       } else {
         const idx = (i - globalNodeCount0) * 3;
         gNodesArray1[idx] += speed.x;
         gNodesArray1[idx + 1] += speed.y;
-        gNodesArray1[idx + 2] += speed.z;
+        gNodesArray1[idx + 2] += dynamicZSpeed * warpFactor;
 
         if (gNodesArray1[idx] > 27.5 || gNodesArray1[idx] < -27.5) speed.x *= -1;
         if (gNodesArray1[idx + 1] > 15 || gNodesArray1[idx + 1] < -45) speed.y *= -1;
-        if (gNodesArray1[idx + 2] > 20 || gNodesArray1[idx + 2] < -80) speed.z *= -1;
+
+        if (gNodesArray1[idx + 2] > 20) {
+          gNodesArray1[idx + 2] = -80;
+        } else if (gNodesArray1[idx + 2] < -80) {
+          gNodesArray1[idx + 2] = 20;
+        }
       }
     }
     gPosAttr0.needsUpdate = true;
