@@ -371,19 +371,9 @@
     }
   });
 
-  // Camera flight trajectory: holding inside cores alternates with backing out and flying to the next core
+  // Camera flight trajectory: continuous movement from center to exit to center of next core
   tl
-    // Hero Plateau: hold inside Core 1 center
-    .to(scrollTarget, {
-      camX: isMobile ? 0.0 : 2.0,
-      camY: 0.0,
-      camZ: 0.0,
-      lookX: isMobile ? 0.0 : -2.0,
-      lookY: -6.0,
-      lookZ: -12.0,
-      duration: 0.33
-    })
-    // Exit Hero: back out of Core 1
+    // 1. Hero -> About
     .to(scrollTarget, {
       camX: isMobile ? 0.0 : 2.0,
       camY: 0.0,
@@ -391,10 +381,9 @@
       lookX: isMobile ? 0.0 : -2.0,
       lookY: -6.0,
       lookZ: -12.0,
-      duration: 0.33,
+      duration: 0.5,
       ease: "power1.inOut"
     })
-    // Flight 1: enter Core 2 center
     .to(scrollTarget, {
       camX: isMobile ? 0.0 : -2.0,
       camY: -6.0,
@@ -402,20 +391,10 @@
       lookX: isMobile ? 0.0 : 2.0,
       lookY: -12.0,
       lookZ: -24.0,
-      duration: 0.33,
-      ease: "power2.inOut"
+      duration: 0.5,
+      ease: "power1.inOut"
     })
-    // About Plateau: hold inside Core 2 center
-    .to(scrollTarget, {
-      camX: isMobile ? 0.0 : -2.0,
-      camY: -6.0,
-      camZ: -12.0,
-      lookX: isMobile ? 0.0 : 2.0,
-      lookY: -12.0,
-      lookZ: -24.0,
-      duration: 0.33
-    })
-    // Exit About: back out of Core 2
+    // 2. About -> Skills
     .to(scrollTarget, {
       camX: isMobile ? 0.0 : -2.0,
       camY: -6.0,
@@ -423,10 +402,9 @@
       lookX: isMobile ? 0.0 : 2.0,
       lookY: -12.0,
       lookZ: -24.0,
-      duration: 0.33,
+      duration: 0.5,
       ease: "power1.inOut"
     })
-    // Flight 2: enter Core 3 center
     .to(scrollTarget, {
       camX: isMobile ? 0.0 : 2.0,
       camY: -12.0,
@@ -434,20 +412,10 @@
       lookX: isMobile ? 0.0 : -1.8,
       lookY: -18.0,
       lookZ: -36.0,
-      duration: 0.33,
-      ease: "power2.inOut"
+      duration: 0.5,
+      ease: "power1.inOut"
     })
-    // Skills Plateau: hold inside Core 3 center
-    .to(scrollTarget, {
-      camX: isMobile ? 0.0 : 2.0,
-      camY: -12.0,
-      camZ: -24.0,
-      lookX: isMobile ? 0.0 : -1.8,
-      lookY: -18.0,
-      lookZ: -36.0,
-      duration: 0.33
-    })
-    // Exit Skills: back out of Core 3
+    // 3. Skills -> Projects
     .to(scrollTarget, {
       camX: isMobile ? 0.0 : 2.0,
       camY: -12.0,
@@ -455,10 +423,9 @@
       lookX: isMobile ? 0.0 : -1.8,
       lookY: -18.0,
       lookZ: -36.0,
-      duration: 0.33,
+      duration: 0.5,
       ease: "power1.inOut"
     })
-    // Flight 3: enter Core 4 center
     .to(scrollTarget, {
       camX: isMobile ? 0.0 : -1.8,
       camY: -18.0,
@@ -466,20 +433,10 @@
       lookX: isMobile ? 0.0 : 1.8,
       lookY: -24.0,
       lookZ: -48.0,
-      duration: 0.33,
-      ease: "power2.inOut"
+      duration: 0.5,
+      ease: "power1.inOut"
     })
-    // Projects Plateau: hold inside Core 4 center
-    .to(scrollTarget, {
-      camX: isMobile ? 0.0 : -1.8,
-      camY: -18.0,
-      camZ: -36.0,
-      lookX: isMobile ? 0.0 : 1.8,
-      lookY: -24.0,
-      lookZ: -48.0,
-      duration: 0.33
-    })
-    // Exit Projects: back out of Core 4
+    // 4. Projects -> Certs
     .to(scrollTarget, {
       camX: isMobile ? 0.0 : -1.8,
       camY: -18.0,
@@ -487,10 +444,9 @@
       lookX: isMobile ? 0.0 : 1.8,
       lookY: -24.0,
       lookZ: -48.0,
-      duration: 0.33,
+      duration: 0.5,
       ease: "power1.inOut"
     })
-    // Flight 4: enter Core 5 center
     .to(scrollTarget, {
       camX: isMobile ? 0.0 : 1.8,
       camY: -24.0,
@@ -498,20 +454,10 @@
       lookX: 0.0,
       lookY: -30.0,
       lookZ: -60.0,
-      duration: 0.33,
-      ease: "power2.inOut"
+      duration: 0.5,
+      ease: "power1.inOut"
     })
-    // Certs Plateau: hold inside Core 5 center
-    .to(scrollTarget, {
-      camX: isMobile ? 0.0 : 1.8,
-      camY: -24.0,
-      camZ: -48.0,
-      lookX: 0.0,
-      lookY: -30.0,
-      lookZ: -60.0,
-      duration: 0.33
-    })
-    // Exit Certs: back out of Core 5
+    // 5. Certs -> Contact
     .to(scrollTarget, {
       camX: isMobile ? 0.0 : 1.8,
       camY: -24.0,
@@ -519,10 +465,9 @@
       lookX: 0.0,
       lookY: -30.0,
       lookZ: -60.0,
-      duration: 0.33,
+      duration: 0.5,
       ease: "power1.inOut"
     })
-    // Flight 5: enter Core 6 center
     .to(scrollTarget, {
       camX: 0.0,
       camY: -30.0,
@@ -530,20 +475,10 @@
       lookX: 0.0,
       lookY: -30.0,
       lookZ: -66.0,
-      duration: 0.33,
-      ease: "power2.inOut"
+      duration: 0.5,
+      ease: "power1.inOut"
     })
-    // Contact Plateau: hold inside Core 6 center
-    .to(scrollTarget, {
-      camX: 0.0,
-      camY: -30.0,
-      camZ: -60.0,
-      lookX: 0.0,
-      lookY: -30.0,
-      lookZ: -66.0,
-      duration: 0.33
-    })
-    // Exit Contact: gradually exit out/pull backwards at the bottom of the page
+    // 6. Contact -> Exit (Bottom Pull-Back)
     .to(scrollTarget, {
       camX: isMobile ? 0.0 : 8.0,
       camY: -15.0,
