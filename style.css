@@ -1487,3 +1487,38 @@ header.scrolled {
   from { opacity: 0; transform: translateX(-5px); }
   to { opacity: 0.9; transform: translateX(0); }
 }
+
+/* ── GOOGLE STITCH PREMIUM UTIL STYLES ── */
+.glass-panel {
+  background: rgba(14, 20, 36, 0.65) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.05) !important;
+  border-radius: 8px !important;
+  box-shadow: 0 10px 45px rgba(2, 4, 10, 0.65) !important;
+}
+
+.active-edge-green {
+  border-top: 1px solid var(--green) !important;
+}
+
+.active-edge-cyan {
+  border-top: 1px solid var(--cyan) !important;
+}
+
+.scan-line {
+  width: 100%;
+  height: 2px;
+  background: rgba(0, 255, 102, 0.1);
+  position: absolute;
+  top: 0;
+  left: 0;
+  animation: scan-vertical 4s linear infinite;
+  z-index: 10;
+  pointer-events: none;
+}
+
+@keyframes scan-vertical {
+  0% { top: 0; }
+  100% { top: 100%; }
+}

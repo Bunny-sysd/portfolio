@@ -108,7 +108,9 @@
 (function initHeader() {
   const header = document.getElementById('header');
   window.addEventListener('scroll', () => {
-    header.classList.toggle('scrolled', window.scrollY > 60);
+    if (header) {
+      header.classList.toggle('scrolled', window.scrollY > 60);
+    }
   }, { passive: true });
 })();
 
