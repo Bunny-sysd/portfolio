@@ -159,10 +159,10 @@
 // ── TYPEWRITER ROLES ───────────────────────
 (function initTypewriter() {
   const roles = [
-    'Cybersecurity Enthusiast',
+    'Cybersecurity Researcher',
     'Agentic AI Developer',
     'Penetration Tester',
-    'AI Security Researcher',
+    'Zero-Day Hunter',
     'CTF Player',
     'Creator of Mutagen',
   ];
@@ -290,15 +290,25 @@
 // ── CERT CARD TILT ────────────────────────
 (function initTilt() {
   document.querySelectorAll('.project-card, .cert-card').forEach(card => {
+    card.addEventListener('mouseenter', () => {
+      // Remove transition so tilt responds instantly
+      card.style.transition = 'none';
+    });
     card.addEventListener('mousemove', e => {
       const rect = card.getBoundingClientRect();
-      const cx = rect.left + rect.width  / 2;
-      const cy = rect.top  + rect.height / 2;
-      const rx = (e.clientY - cy) / rect.height * 6;
-      const ry = (e.clientX - cx) / rect.width  * -6;
-      card.style.transform = `perspective(800px) rotateX(${rx}deg) rotateY(${ry}deg) translateY(-5px)`;
+      // Normalize cursor position to -1..1 from center
+      const nx = ((e.clientX - rect.left) / rect.width  - 0.5) * 2;
+      const ny = ((e.clientY - rect.top)  / rect.height - 0.5) * 2;
+      // Dead zone: ignore edges (outer 15%) to prevent snap on enter/leave
+      const edgeThreshold = 0.7;
+      if (Math.abs(nx) > edgeThreshold || Math.abs(ny) > edgeThreshold) return;
+      const rx = ny * 5;   // tilt X based on vertical offset
+      const ry = nx * -5;  // tilt Y based on horizontal offset
+      card.style.transform = `perspective(800px) rotateX(${rx}deg) rotateY(${ry}deg) translateY(-4px)`;
     });
     card.addEventListener('mouseleave', () => {
+      // Smooth ease back to flat
+      card.style.transition = 'transform 0.5s cubic-bezier(0.22, 1, 0.36, 1)';
       card.style.transform = '';
     });
   });
@@ -354,3 +364,18 @@ console.log(
   '%c > Built with ☕ curiosity and too many late nights.',
   'color:#94a3b8;font-family:monospace;font-size:12px;'
 );
+
+
+// ── HERO PARALLAX MICRO-SHIFT ─────────────
+(function initHeroParallax() {
+  const hero = document.querySelector('.hero-content');
+  if (!hero) return;
+
+  document.addEventListener('mousemove', e => {
+    const cx = window.innerWidth  / 2;
+    const cy = window.innerHeight / 2;
+    const dx = (e.clientX - cx) / cx; // -1 to 1
+    const dy = (e.clientY - cy) / cy; // -1 to 1
+    hero.style.transform = `translate(${dx * 6}px, ${dy * 4}px)`;
+  }, { passive: true });
+})();

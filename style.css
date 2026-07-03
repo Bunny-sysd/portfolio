@@ -1522,3 +1522,43 @@ header.scrolled {
   0% { top: 0; }
   100% { top: 100%; }
 }
+
+/* ── PREMIUM TILT & PARALLAX ── */
+.project-card,
+.cert-card {
+  will-change: transform;
+}
+
+.hero-content {
+  will-change: transform;
+  transition: transform 0.15s ease-out;
+}
+
+/* ── FEATURED CARD GLOW ── */
+.project-card.featured {
+  position: relative;
+  overflow: hidden;
+}
+
+.project-card.featured::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--green), var(--cyan), transparent);
+  background-size: 200% 100%;
+  animation: gradient-sweep 3s ease-in-out infinite;
+  z-index: 2;
+}
+
+@keyframes gradient-sweep {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* ── HERO BIO LEGIBILITY ── */
+.hero-bio {
+  text-shadow: 0 2px 20px rgba(2, 4, 10, 0.8);
+}
