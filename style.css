@@ -486,6 +486,20 @@ header.scrolled {
   background: rgba(255,255,255,0.08);
   box-shadow: 0 0 20px rgba(255,255,255,0.1);
 }
+.btn-resume {
+  border: 1px solid var(--cyan);
+  color: var(--cyan);
+  background: rgba(0,212,255,0.06);
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  letter-spacing: 0.03em;
+}
+.btn-resume:hover {
+  transform: translateY(-3px);
+  background: rgba(0,212,255,0.15);
+  box-shadow: 0 0 30px rgba(0,212,255,0.3), 0 0 10px rgba(0,212,255,0.5);
+  color: #fff;
+}
 
 /* Hero stats */
 .hero-stats {
