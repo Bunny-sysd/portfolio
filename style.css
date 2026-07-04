@@ -670,47 +670,98 @@ header.scrolled {
 }
 .skill-tag:hover { transform: scale(1.05); }
 
-/* Skill bars */
-.skill-bars-wrap {
+/* Mutagen Pipeline */
+.mutagen-pipeline-section {
   background: rgba(14, 20, 36, 0.45);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
-  padding: 2rem;
+  padding: 2.5rem 2rem;
 }
-.skill-bars-title {
-  font-size: 0.85rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--text-muted);
-  margin-bottom: 1.5rem;
+.pipeline-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 0.25rem;
 }
-.skill-bars { display: flex; flex-direction: column; gap: 1.25rem; }
-.skill-bar-item {}
-.skill-bar-label {
-  display: flex;
-  justify-content: space-between;
-  font-size: 0.9rem;
-  margin-bottom: 0.5rem;
+.pipeline-subtitle {
+  font-size: 0.88rem;
   color: var(--text-dim);
+  margin-bottom: 2rem;
 }
-.skill-pct { font-family: var(--font-mono); color: var(--green); }
-.skill-bar-track {
-  height: 6px;
-  background: rgba(255,255,255,0.05);
-  border-radius: 6px;
-  overflow: hidden;
+.pipeline-flow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
 }
-.skill-bar-fill {
-  height: 100%;
-  width: 0;
+.pipeline-stage {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  border-radius: var(--radius);
+  padding: 1.5rem 1rem;
+  transition: all var(--transition);
+}
+.pipeline-stage:hover {
+  background: rgba(0, 255, 102, 0.03);
+  border-color: rgba(0, 255, 102, 0.15);
+  transform: translateY(-2px);
+}
+.stage-icon {
+  font-size: 1.8rem;
+  margin-bottom: 0.75rem;
+}
+.stage-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+.stage-content strong {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--green);
+}
+.stage-content span {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+.pipeline-connector {
+  width: 24px;
+  height: 2px;
   background: linear-gradient(90deg, var(--green), var(--cyan));
-  border-radius: 6px;
-  box-shadow: 0 0 12px rgba(0,255,136,0.4);
-  transition: width 1.2s cubic-bezier(0.4,0,0.2,1);
+  opacity: 0.4;
+  flex-shrink: 0;
 }
+@media (max-width: 992px) {
+  .pipeline-flow {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1.5rem;
+  }
+  .pipeline-connector {
+    width: 2px;
+    height: 16px;
+    margin: 0 auto;
+    background: linear-gradient(180deg, var(--green), var(--cyan));
+  }
+  .pipeline-stage {
+    flex-direction: row;
+    text-align: left;
+    gap: 1.25rem;
+    padding: 1rem 1.25rem;
+  }
+  .stage-icon {
+    margin-bottom: 0;
+  }
+}
+
 
 /* ── PROJECTS ── */
 .projects-section { background: transparent; }

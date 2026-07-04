@@ -330,44 +330,48 @@
 
         </div>
 
-        <!-- Skill bars -->
-        <div class="skill-bars-wrap reveal-up">
-          <h3 class="skill-bars-title">Proficiency</h3>
-          <div class="skill-bars">
-            <div class="skill-bar-item">
-              <div class="skill-bar-label">
-                <span>Cybersecurity / Pentesting</span>
-                <span class="skill-pct">82%</span>
-              </div>
-              <div class="skill-bar-track">
-                <div class="skill-bar-fill" data-width="82"></div>
-              </div>
-            </div>
-            <div class="skill-bar-item">
-              <div class="skill-bar-label">
-                <span>Networking</span>
-                <span class="skill-pct">75%</span>
-              </div>
-              <div class="skill-bar-track">
-                <div class="skill-bar-fill" data-width="75"></div>
+        <!-- Mutagen Pipeline -->
+        <div class="mutagen-pipeline-section reveal-up">
+          <h3 class="pipeline-title">How Mutagen Works</h3>
+          <p class="pipeline-subtitle">End-to-end autonomous vulnerability pipeline — no human in the loop.</p>
+          <div class="pipeline-flow">
+            <div class="pipeline-stage">
+              <div class="stage-icon">📥</div>
+              <div class="stage-content">
+                <strong>1. Ingest</strong>
+                <span>Target binary + source code fed into the pipeline</span>
               </div>
             </div>
-            <div class="skill-bar-item">
-              <div class="skill-bar-label">
-                <span>Web Development</span>
-                <span class="skill-pct">70%</span>
-              </div>
-              <div class="skill-bar-track">
-                <div class="skill-bar-fill" data-width="70"></div>
+            <div class="pipeline-connector"></div>
+            <div class="pipeline-stage">
+              <div class="stage-icon">🔬</div>
+              <div class="stage-content">
+                <strong>2. Disassemble</strong>
+                <span>Ghidra Headless decompiles binaries into analyzable C</span>
               </div>
             </div>
-            <div class="skill-bar-item">
-              <div class="skill-bar-label">
-                <span>AI / ML &amp; Model Fine-tuning</span>
-                <span class="skill-pct">72%</span>
+            <div class="pipeline-connector"></div>
+            <div class="pipeline-stage">
+              <div class="stage-icon">💥</div>
+              <div class="stage-content">
+                <strong>3. Fuzz & Exploit</strong>
+                <span>AI-guided fuzzing catches crashes, generates working PoCs</span>
               </div>
-              <div class="skill-bar-track">
-                <div class="skill-bar-fill" data-width="72"></div>
+            </div>
+            <div class="pipeline-connector"></div>
+            <div class="pipeline-stage">
+              <div class="stage-icon">🩹</div>
+              <div class="stage-content">
+                <strong>4. Patch</strong>
+                <span>Gemini API generates and applies source-level patches</span>
+              </div>
+            </div>
+            <div class="pipeline-connector"></div>
+            <div class="pipeline-stage">
+              <div class="stage-icon">✅</div>
+              <div class="stage-content">
+                <strong>5. Verify</strong>
+                <span>Re-runs fuzz cycles — 0 crashes confirms target is secure</span>
               </div>
             </div>
           </div>

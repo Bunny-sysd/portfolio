@@ -205,17 +205,11 @@
     entries.forEach(entry => {
       if (entry.isIntersecting) {
         entry.target.classList.add('visible');
-        // Animate skill bars when visible
-        entry.target.querySelectorAll('.skill-bar-fill').forEach(bar => {
-          bar.style.width = bar.dataset.width + '%';
-        });
       }
     });
   }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
 
   document.querySelectorAll('.reveal-up').forEach(el => observer.observe(el));
-  // Also observe containers for skill bars
-  document.querySelectorAll('.skill-bars-wrap').forEach(el => observer.observe(el));
 })();
 
 
@@ -245,25 +239,6 @@
   if (heroStats) observer.observe(heroStats);
 })();
 
-
-// ── SKILL BAR TRIGGER ─────────────────────
-(function initSkillBars() {
-  // Triggered via IntersectionObserver in initReveal as well, but direct handle:
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.querySelectorAll('.skill-bar-fill').forEach(bar => {
-          setTimeout(() => {
-            bar.style.width = bar.dataset.width + '%';
-          }, 200);
-        });
-        observer.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.2 });
-
-  document.querySelectorAll('.skill-bars-wrap').forEach(el => observer.observe(el));
-})();
 
 
 // ── ACTIVE NAV LINK ON SCROLL ──────────────
