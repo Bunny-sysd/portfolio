@@ -27,16 +27,21 @@
 
   // Scene setup
   const scene = new THREE.Scene();
-  scene.fog = new THREE.FogExp2('#02040a', 0.022); // exponential dark fog matching CSS --bg
-  const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 150);
+  // Mobile/Performance detection — checked early so FOV, scale, spacing all adapt
+  const isMobile = /iPhone|iPad|Android/i.test(navigator.userAgent) || window.innerWidth < 768;
+
+  scene.fog = new THREE.FogExp2('#02040a', isMobile ? 0.016 : 0.022); // thinner fog on mobile for dome visibility
+  const camera = new THREE.PerspectiveCamera(
+    isMobile ? 75 : 60,   // wider FOV on portrait screens so domes actually fit
+    window.innerWidth / window.innerHeight,
+    0.1, 150
+  );
   const renderer = new THREE.WebGLRenderer({
     canvas: canvas,
     alpha: true,
-    antialias: true
+    antialias: !isMobile   // skip AA on mobile for perf
   });
 
-  // Mobile/Performance detection
-  const isMobile = /iPhone|iPad|Android/i.test(navigator.userAgent) || window.innerWidth < 768;
   renderer.setPixelRatio(isMobile ? 1.0 : Math.min(window.devicePixelRatio, 2));
   renderer.setSize(window.innerWidth, window.innerHeight);
 
@@ -50,7 +55,16 @@
   const colorCyan = new THREE.Color('#00d4ff');
 
   // Core configurations mapping to the 6 sections in index.html
-  const coreConfigs = [
+  // Mobile: center all domes on x-axis, use compressed Z-spacing, smaller scales
+  const mobileScale = 0.7;  // domes are 70% size on mobile
+  const coreConfigs = isMobile ? [
+    { name: 'hero',     color: colorGreen, scale: 1.6 * mobileScale, x: 0.0, y: 0.0,   z: 0.0 },
+    { name: 'about',    color: colorBlue,  scale: 1.3 * mobileScale, x: 0.0, y: -5.0,  z: -8.0 },
+    { name: 'skills',   color: colorGreen, scale: 1.4 * mobileScale, x: 0.0, y: -10.0, z: -16.0 },
+    { name: 'projects', color: colorBlue,  scale: 1.2 * mobileScale, x: 0.0, y: -15.0, z: -24.0 },
+    { name: 'certs',    color: colorCyan,  scale: 1.3 * mobileScale, x: 0.0, y: -20.0, z: -32.0 },
+    { name: 'contact',  color: colorCyan,  scale: 1.5 * mobileScale, x: 0.0, y: -25.0, z: -40.0 }
+  ] : [
     { name: 'hero',     color: colorGreen, scale: 1.6, x: 2.0,  y: 0.0,   z: 0.0 },
     { name: 'about',    color: colorBlue,  scale: 1.3, x: -2.0, y: -6.0,  z: -12.0 },
     { name: 'skills',   color: colorGreen, scale: 1.4, x: 2.0,  y: -12.0, z: -24.0 },
@@ -64,8 +78,7 @@
   // Instantiate 6 stationary wireframe cores
   coreConfigs.forEach((cfg) => {
     const coreGroup = new THREE.Group();
-    const posX = isMobile ? 0.0 : cfg.x;
-    coreGroup.position.set(posX, cfg.y, cfg.z);
+    coreGroup.position.set(cfg.x, cfg.y, cfg.z);
     mainGroup.add(coreGroup);
 
     // Wireframe Outer Globe (The page particle representation)
@@ -145,8 +158,8 @@
   const texture1 = createBinaryTexture('1');
 
   // Surrounding Network Node Particles (Distributed among the 6 cores, split into binary 0s and 1s)
-  const nodeCount = isMobile ? 150 : 1200; // Even number for equal division
-  const connectionNodeCount = isMobile ? 60 : 350;
+  const nodeCount = isMobile ? 100 : 1200; // Reduced further on mobile for perf
+  const connectionNodeCount = isMobile ? 40 : 350;
   const nodeCount0 = Math.floor(nodeCount / 2);
   const nodeCount1 = nodeCount - nodeCount0;
 
@@ -168,7 +181,7 @@
     particleParents.push(parentIdx);
 
     const cfg = coreConfigs[parentIdx];
-    const cpX = isMobile ? 0.0 : cfg.x;
+    const cpX = cfg.x;
     const cpY = cfg.y;
     const cpZ = cfg.z;
 
@@ -245,7 +258,7 @@
   mainGroup.add(nodes1);
 
   // ── GLOBAL FLOATING BINARY STARFIELD (INSANELY WILD BACKDROP) ──
-  const globalNodeCount = isMobile ? 300 : 1800;
+  const globalNodeCount = isMobile ? 200 : 1800;
   const globalNodeCount0 = Math.floor(globalNodeCount / 2);
   const globalNodeCount1 = globalNodeCount - globalNodeCount0;
 
@@ -364,14 +377,35 @@
   // ── GSAP SCROLLTRIGGER TIMELINE ─────────────────
   gsap.registerPlugin(ScrollTrigger);
 
-  // Animatable camera flight parameters
+  // Camera offset: sit IN FRONT of each dome, never inside it
+  // This eliminates the backward-clip effect entirely
+  const CAM_Z_OFFSET = isMobile ? 3.5 : 5.0;  // camera distance in front of dome
+  const CAM_Y_OFFSET = isMobile ? 1.0 : 1.5;   // slight elevation above dome center
+
+  // Build camera waypoints from coreConfigs programmatically
+  // Camera sits at (dome.x, dome.y + offset, dome.z + CAM_Z_OFFSET)
+  // Camera looks at the NEXT dome center (or straight ahead for the last one)
+  function getCamPos(idx) {
+    const c = coreConfigs[idx];
+    return { x: c.x, y: c.y + CAM_Y_OFFSET, z: c.z + CAM_Z_OFFSET };
+  }
+  function getLookTarget(idx) {
+    // Look at the dome we're currently sitting in front of
+    const c = coreConfigs[idx];
+    return { x: c.x, y: c.y, z: c.z };
+  }
+
+  // Initial camera state: in front of Hero dome, looking at Hero dome
+  const initCam = getCamPos(0);
+  const initLook = getLookTarget(0);
+
   const scrollTarget = {
-    camX: isMobile ? 0.0 : 2.0,
-    camY: 0.0,
-    camZ: 0.0,
-    lookX: isMobile ? 0.0 : -2.0,
-    lookY: -6.0,
-    lookZ: -12.0
+    camX:  initCam.x,
+    camY:  initCam.y,
+    camZ:  initCam.z,
+    lookX: initLook.x,
+    lookY: initLook.y,
+    lookZ: initLook.z
   };
 
   const tl = gsap.timeline({
@@ -379,87 +413,50 @@
       trigger: "body",
       start: "top top",
       end: "bottom bottom",
-      scrub: 1.2
+      scrub: 0.6   // tighter scrub = less lag = no perceivable bounce
     }
   });
 
-  // Camera flight trajectory: Strictly unidirectional linear mapping through cores
-  tl
-    // 1. Hero -> About
-    .to(scrollTarget, {
-      camX: isMobile ? 0.0 : -2.0,
-      camY: -6.0,
-      camZ: -12.0,
-      lookX: isMobile ? 0.0 : 2.0,
-      lookY: -12.0,
-      lookZ: -24.0,
-      duration: 1.0,
-      ease: "none"
-    })
-    // 2. About -> Skills
-    .to(scrollTarget, {
-      camX: isMobile ? 0.0 : 2.0,
-      camY: -12.0,
-      camZ: -24.0,
-      lookX: isMobile ? 0.0 : -1.8,
-      lookY: -18.0,
-      lookZ: -36.0,
-      duration: 1.0,
-      ease: "none"
-    })
-    // 3. Skills -> Projects
-    .to(scrollTarget, {
-      camX: isMobile ? 0.0 : -1.8,
-      camY: -18.0,
-      camZ: -36.0,
-      lookX: isMobile ? 0.0 : 1.8,
-      lookY: -24.0,
-      lookZ: -48.0,
-      duration: 1.0,
-      ease: "none"
-    })
-    // 4. Projects -> Certs
-    .to(scrollTarget, {
-      camX: isMobile ? 0.0 : 1.8,
-      camY: -24.0,
-      camZ: -48.0,
-      lookX: 0.0,
-      lookY: -30.0,
-      lookZ: -60.0,
-      duration: 1.0,
-      ease: "none"
-    })
-    // 5. Certs -> Contact
-    .to(scrollTarget, {
-      camX: 0.0,
-      camY: -30.0,
-      camZ: -60.0,
-      lookX: 0.0,
-      lookY: -36.0,
-      lookZ: -72.0,
-      duration: 1.0,
-      ease: "none"
-    })
-    // 6. Contact -> Exit (Continuous forward journey)
-    .to(scrollTarget, {
-      camX: 0.0,
-      camY: -36.0,
-      camZ: -72.0,
-      lookX: 0.0,
-      lookY: -42.0,
-      lookZ: -84.0,
+  // Camera flight: each keyframe moves camera to sit in front of the NEXT dome
+  // All Z values strictly decrease (move forward), no backwards motion ever
+  for (let i = 1; i < coreConfigs.length; i++) {
+    const cam = getCamPos(i);
+    const look = getLookTarget(i);
+    tl.to(scrollTarget, {
+      camX:  cam.x,
+      camY:  cam.y,
+      camZ:  cam.z,
+      lookX: look.x,
+      lookY: look.y,
+      lookZ: look.z,
       duration: 1.0,
       ease: "none"
     });
+  }
+  // Final keyframe: drift past the last dome (Contact) for exit
+  const lastCfg = coreConfigs[coreConfigs.length - 1];
+  tl.to(scrollTarget, {
+    camX:  lastCfg.x,
+    camY:  lastCfg.y - 5.0,
+    camZ:  lastCfg.z - CAM_Z_OFFSET * 2,
+    lookX: lastCfg.x,
+    lookY: lastCfg.y - 8.0,
+    lookZ: lastCfg.z - CAM_Z_OFFSET * 4,
+    duration: 1.0,
+    ease: "none"
+  });
 
 
   // ── MOUSE PARALLAX TILT ──────────────────────────
   let mouseX = 0, mouseY = 0;
   let targetRotationX = 0, targetRotationY = 0;
 
+  // Mouse parallax: completely disabled on mobile (touch has no hover),
+  // and reduced to very subtle on desktop to prevent misalignment
+  const TILT_STRENGTH = isMobile ? 0.0 : 0.08;  // reduced from 0.12
+
   window.addEventListener('mousemove', (e) => {
-    // Disable or reduce tilt during active scrolling to prevent misalignments
-    if (isScrolling) {
+    if (isMobile || isScrolling) {
       targetRotationX = 0;
       targetRotationY = 0;
       return;
@@ -467,14 +464,15 @@
     mouseX = (e.clientX / window.innerWidth) * 2 - 1;
     mouseY = -(e.clientY / window.innerHeight) * 2 + 1;
 
-    // Subtler tilting angles to prevent off-center layout breakage
-    targetRotationY = mouseX * 0.12;
-    targetRotationX = -mouseY * 0.12;
+    targetRotationY = mouseX * TILT_STRENGTH;
+    targetRotationX = -mouseY * TILT_STRENGTH;
   });
 
 
-  // Handle Resize
+  // Handle Resize — also re-check mobile for orientation changes
   window.addEventListener('resize', () => {
+    const nowMobile = window.innerWidth < 768;
+    camera.fov = nowMobile ? 75 : 60;
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
@@ -513,7 +511,7 @@
     for (let i = 0; i < nodeCount; i++) {
       const parentIdx = particleParents[i];
       const cfg = coreConfigs[parentIdx];
-      const cpX = isMobile ? 0.0 : cfg.x;
+      const cpX = cfg.x;
       const cpY = cfg.y;
       const cpZ = cfg.z;
 

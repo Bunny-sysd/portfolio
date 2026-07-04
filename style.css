@@ -308,7 +308,7 @@ header.scrolled {
 
 /* ── HERO ── */
 .hero-section {
-  min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -320,6 +320,8 @@ header.scrolled {
   max-width: 640px; /* Aligned left for 3D globe layout */
   width: 100%;
   margin: 0;
+  display: flex;
+  flex-direction: column;
   background: rgba(2, 4, 10, 0.45);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
@@ -330,12 +332,6 @@ header.scrolled {
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
 }
 
-@media (max-width: 768px) {
-  .hero-content {
-    padding: 1.75rem 2rem;
-    border-left-width: 2px;
-  }
-}
 
 /* High contrast legibility shadows */
 .hero-name, .hero-roles, .hero-bio, .section-title, .about-text p, .stat-label, .stat-num, .nav-link {
@@ -1233,13 +1229,7 @@ header.scrolled {
 .reveal-up:nth-child(5) { transition-delay: 0.4s; }
 
 /* ── RESPONSIVE ── */
-@media (max-width: 900px) {
-  .about-grid { grid-template-columns: 1fr; }
-  .projects-grid { grid-template-columns: 1fr; }
-  .project-card.featured { grid-column: auto; }
-  .certs-grid { grid-template-columns: 1fr; }
-  .hero-stats { gap: 1.5rem; }
-}
+/* Responsive rules moved to consolidated mobile breakpoints below */
 
 /* ── BADGE MATRIX ── */
 .badge-matrix-section {
@@ -1427,33 +1417,155 @@ header.scrolled {
   50% { box-shadow: 0 0 16px rgba(168,85,247,0.3); }
 }
 
-@media (max-width: 900px) {
-  .about-grid { grid-template-columns: 1fr; }
+/* ── TABLET BREAKPOINT ── */
+@media (max-width: 768px) {
+  .hero-section {
+    min-height: 100dvh;  /* iOS Safari safe area */
+    padding: 0 1.5rem;
+    padding-top: 4.5rem;
+    align-items: center;  /* center hero content on mobile */
+  }
+  .hero-content {
+    max-width: 100%;
+    padding: 2rem 1.75rem;
+    border-left-width: 2px;
+    text-align: center;
+    align-items: center;
+  }
+  .hero-top { margin-bottom: 1rem; }
+  .hero-name {
+    font-size: clamp(3rem, 13vw, 5.5rem);
+    text-align: center;
+  }
+  .hero-roles { justify-content: center; }
+  .hero-bio {
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 0.98rem;
+  }
+  .hero-actions { justify-content: center; }
+  .hero-stats { justify-content: center; }
+  .hero-scroll-hint { display: none; } /* scroll hint clutters mobile */
+
+  .section-inner { padding: 4.5rem 1.25rem; }
+  .section-title { font-size: clamp(1.8rem, 5vw, 2.8rem); }
+
+  .about-grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  .about-text p { font-size: 0.98rem; }
+
+  .certs-grid { grid-template-columns: 1fr; }
+  .cert-card { padding: 1.5rem; }
+  .cert-title { font-size: 1.05rem; }
+  .cert-desc { font-size: 0.82rem; }
+
   .projects-grid { grid-template-columns: 1fr; }
   .project-card.featured { grid-column: auto; }
-  .certs-grid { grid-template-columns: 1fr; }
-  .hero-stats { gap: 1.5rem; }
+  .project-title { font-size: 1.2rem; }
+  .project-desc { font-size: 0.85rem; line-height: 1.65; }
+  .project-card-inner { padding: 1.25rem; }
+
+  .contact-email { font-size: clamp(0.9rem, 3.5vw, 1.4rem); }
+  .contact-sub { font-size: 0.95rem; }
+  .contact-socials { gap: 0.75rem; }
+  .social-link { padding: 0.5rem 0.9rem; font-size: 0.82rem; }
+
+  .knowledge-badges { gap: 0.5rem; }
+  .know-badge { padding: 0.4rem 0.75rem; font-size: 0.78rem; }
 }
 
+/* ── MOBILE BREAKPOINT ── */
 @media (max-width: 700px) {
   .nav-links { display: none; }
   .hamburger { display: flex; }
-  .hero-section { padding: 0 1.25rem; padding-top: 5rem; }
-  .section-inner { padding: 5rem 1.25rem; }
-  .hero-name { font-size: clamp(2.8rem, 12vw, 5rem); }
-  .hero-stats { flex-wrap: wrap; gap: 1.25rem; }
+  header { padding: 0.85rem 1.25rem; }
+
+  .hero-section { padding: 0 1rem; padding-top: 4rem; }
+  .hero-content {
+    padding: 1.5rem 1.25rem;
+    border-radius: var(--radius);
+    backdrop-filter: blur(16px);
+    background: rgba(2, 4, 10, 0.6);
+  }
+  .hero-name { font-size: clamp(2.5rem, 11vw, 4rem); }
+  .hero-bio { font-size: 0.92rem; margin-bottom: 1.5rem; }
+  .hero-actions { gap: 0.5rem; margin-bottom: 2rem; }
+  .hero-stats {
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+  }
   .stat-divider { display: none; }
-  .skills-categories { grid-template-columns: 1fr; }
-  .stock-visual { grid-template-columns: 1fr; }
-  .stock-tickers { flex-direction: row; flex-wrap: wrap; }
+  .stat-num { font-size: 2rem; }
+  .stat-label { font-size: 0.7rem; }
+
+  .section-inner { padding: 3.5rem 1rem; }
+  .section-header { margin-bottom: 2.5rem; }
+
+  .about-text p { font-size: 0.92rem; line-height: 1.75; }
+  .about-card-stack { gap: 0.5rem; }
+  .info-card { padding: 0.75rem 1rem; }
+  .info-card-icon { font-size: 1.2rem; }
+  .info-card strong { font-size: 0.72rem; }
+  .info-card span { font-size: 0.85rem; }
+
+  .skills-categories { grid-template-columns: 1fr; gap: 1rem; }
+  .skill-category { padding: 1.25rem; }
+  .skill-cat-header h3 { font-size: 0.92rem; }
+  .skill-tags { gap: 0.35rem; }
+  .skill-tag { font-size: 0.68rem; padding: 0.25rem 0.55rem; }
+
+  .mutagen-pipeline-section { padding: 1.5rem 1.25rem; }
+  .pipeline-title { font-size: 1.1rem; }
+
+  .stock-visual { grid-template-columns: 1fr; gap: 1rem; }
+  .stock-tickers { flex-direction: row; flex-wrap: wrap; gap: 0.35rem; }
+  .ticker { min-width: 75px; }
+
+  .mutagen-terminal-body { font-size: 0.62rem; padding: 0.6rem 0.8rem; }
+  .mutagen-log-line { white-space: normal; word-break: break-word; }
+
+  .badge-matrix-header { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+  .badge-matrix-section { padding: 1.25rem; }
+
+  .pentestai-model-name { font-size: 1.2rem; }
+  .pentestai-stats { gap: 0.75rem; }
+  .pstat-val { font-size: 0.72rem; }
+
   .footer-inner { flex-direction: column; gap: 0.5rem; text-align: center; }
-  header { padding: 1rem 1.25rem; }
+  .footer-copy, .footer-made { font-size: 0.7rem; }
 }
 
+/* ── SMALL PHONE BREAKPOINT ── */
 @media (max-width: 450px) {
-  .hero-name { font-size: clamp(2.2rem, 10vw, 3rem); }
-  .hero-bio { font-size: 0.95rem; }
-  .btn { width: 100%; justify-content: center; }
+  .hero-section { padding: 0 0.75rem; padding-top: 3.5rem; }
+  .hero-content { padding: 1.25rem 1rem; }
+  .hero-name { font-size: clamp(2rem, 10vw, 2.8rem); }
+  .hero-bio { font-size: 0.88rem; }
+  .hero-tag { font-size: 0.68rem; padding: 0.25rem 0.6rem; }
+  .btn { width: 100%; justify-content: center; font-size: 0.85rem; }
+  .btn-resume { font-size: 0.78rem; }
+
+  .section-inner { padding: 3rem 0.75rem; }
+  .section-title { font-size: clamp(1.5rem, 6vw, 2.2rem); }
+
+  .project-card-inner { padding: 1rem; }
+  .project-title { font-size: 1.05rem; }
+  .project-desc { font-size: 0.82rem; }
+  .project-tags span { font-size: 0.62rem; padding: 0.15rem 0.45rem; }
+
+  .cert-card { padding: 1.25rem; }
+  .cert-modules span { font-size: 0.62rem; }
+
+  .contact-email { font-size: 0.85rem; flex-direction: column; gap: 0.5rem; text-align: center; }
+  .contact-socials { flex-direction: column; gap: 0.5rem; }
+  .social-link { justify-content: center; }
+
+  .about-links { flex-direction: column; gap: 0.75rem; }
+  .know-badge { font-size: 0.72rem; padding: 0.35rem 0.6rem; }
 }
 
 /* ── WebGL Fallback Grid ── */
