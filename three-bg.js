@@ -349,6 +349,18 @@
   mainGroup.add(connectionLines);
 
 
+  // ── SCROLL STATE TRACKING FOR CENTER ALIGNMENT ──
+  let isScrolling = false;
+  let scrollTimeout;
+  window.addEventListener('scroll', () => {
+    isScrolling = true;
+    clearTimeout(scrollTimeout);
+    scrollTimeout = setTimeout(() => {
+      isScrolling = false;
+    }, 150);
+  }, { passive: true });
+
+
   // ── GSAP SCROLLTRIGGER TIMELINE ─────────────────
   gsap.registerPlugin(ScrollTrigger);
 
@@ -371,19 +383,9 @@
     }
   });
 
-  // Camera flight trajectory: continuous movement from center to exit to center of next core
+  // Camera flight trajectory: Strictly unidirectional linear mapping through cores
   tl
     // 1. Hero -> About
-    .to(scrollTarget, {
-      camX: isMobile ? 0.0 : 2.0,
-      camY: 0.0,
-      camZ: 4.0,
-      lookX: isMobile ? 0.0 : -2.0,
-      lookY: -6.0,
-      lookZ: -12.0,
-      duration: 0.5,
-      ease: "power1.inOut"
-    })
     .to(scrollTarget, {
       camX: isMobile ? 0.0 : -2.0,
       camY: -6.0,
@@ -391,20 +393,10 @@
       lookX: isMobile ? 0.0 : 2.0,
       lookY: -12.0,
       lookZ: -24.0,
-      duration: 0.5,
-      ease: "power1.inOut"
+      duration: 1.0,
+      ease: "none"
     })
     // 2. About -> Skills
-    .to(scrollTarget, {
-      camX: isMobile ? 0.0 : -2.0,
-      camY: -6.0,
-      camZ: -8.0,
-      lookX: isMobile ? 0.0 : 2.0,
-      lookY: -12.0,
-      lookZ: -24.0,
-      duration: 0.5,
-      ease: "power1.inOut"
-    })
     .to(scrollTarget, {
       camX: isMobile ? 0.0 : 2.0,
       camY: -12.0,
@@ -412,20 +404,10 @@
       lookX: isMobile ? 0.0 : -1.8,
       lookY: -18.0,
       lookZ: -36.0,
-      duration: 0.5,
-      ease: "power1.inOut"
+      duration: 1.0,
+      ease: "none"
     })
     // 3. Skills -> Projects
-    .to(scrollTarget, {
-      camX: isMobile ? 0.0 : 2.0,
-      camY: -12.0,
-      camZ: -20.0,
-      lookX: isMobile ? 0.0 : -1.8,
-      lookY: -18.0,
-      lookZ: -36.0,
-      duration: 0.5,
-      ease: "power1.inOut"
-    })
     .to(scrollTarget, {
       camX: isMobile ? 0.0 : -1.8,
       camY: -18.0,
@@ -433,20 +415,10 @@
       lookX: isMobile ? 0.0 : 1.8,
       lookY: -24.0,
       lookZ: -48.0,
-      duration: 0.5,
-      ease: "power1.inOut"
+      duration: 1.0,
+      ease: "none"
     })
     // 4. Projects -> Certs
-    .to(scrollTarget, {
-      camX: isMobile ? 0.0 : -1.8,
-      camY: -18.0,
-      camZ: -32.0,
-      lookX: isMobile ? 0.0 : 1.8,
-      lookY: -24.0,
-      lookZ: -48.0,
-      duration: 0.5,
-      ease: "power1.inOut"
-    })
     .to(scrollTarget, {
       camX: isMobile ? 0.0 : 1.8,
       camY: -24.0,
@@ -454,40 +426,30 @@
       lookX: 0.0,
       lookY: -30.0,
       lookZ: -60.0,
-      duration: 0.5,
-      ease: "power1.inOut"
+      duration: 1.0,
+      ease: "none"
     })
     // 5. Certs -> Contact
-    .to(scrollTarget, {
-      camX: isMobile ? 0.0 : 1.8,
-      camY: -24.0,
-      camZ: -44.0,
-      lookX: 0.0,
-      lookY: -30.0,
-      lookZ: -60.0,
-      duration: 0.5,
-      ease: "power1.inOut"
-    })
     .to(scrollTarget, {
       camX: 0.0,
       camY: -30.0,
       camZ: -60.0,
       lookX: 0.0,
-      lookY: -30.0,
-      lookZ: -66.0,
-      duration: 0.5,
-      ease: "power1.inOut"
+      lookY: -36.0,
+      lookZ: -72.0,
+      duration: 1.0,
+      ease: "none"
     })
-    // 6. Contact -> Exit (Bottom Pull-Back)
+    // 6. Contact -> Exit (Continuous forward journey)
     .to(scrollTarget, {
-      camX: isMobile ? 0.0 : 8.0,
-      camY: -15.0,
-      camZ: 10.0, // pull back deeply to see the entire grid of cyber domes
+      camX: 0.0,
+      camY: -36.0,
+      camZ: -72.0,
       lookX: 0.0,
-      lookY: -30.0,
-      lookZ: -60.0,
-      duration: 0.85,
-      ease: "power2.inOut"
+      lookY: -42.0,
+      lookZ: -84.0,
+      duration: 1.0,
+      ease: "none"
     });
 
 
@@ -496,13 +458,20 @@
   let targetRotationX = 0, targetRotationY = 0;
 
   window.addEventListener('mousemove', (e) => {
+    // Disable or reduce tilt during active scrolling to prevent misalignments
+    if (isScrolling) {
+      targetRotationX = 0;
+      targetRotationY = 0;
+      return;
+    }
     mouseX = (e.clientX / window.innerWidth) * 2 - 1;
     mouseY = -(e.clientY / window.innerHeight) * 2 + 1;
 
-    // Subtle tilting angles
-    targetRotationY = mouseX * 0.35;
-    targetRotationX = -mouseY * 0.35;
+    // Subtler tilting angles to prevent off-center layout breakage
+    targetRotationY = mouseX * 0.12;
+    targetRotationX = -mouseY * 0.12;
   });
+
 
   // Handle Resize
   window.addEventListener('resize', () => {
@@ -728,9 +697,11 @@
     linePosAttr.needsUpdate = true;
     lineColAttr.needsUpdate = true;
 
-    // Mouse tilt calculations (lerped on top of main coordinates)
-    mainGroup.rotation.y += (targetRotationY - mainGroup.rotation.y) * 0.05;
-    mainGroup.rotation.x += (targetRotationX - mainGroup.rotation.x) * 0.05;
+    // Mouse tilt calculations (lerped on top of main coordinates, damped to 0 while scrolling)
+    const activeTargetX = isScrolling ? 0.0 : targetRotationX;
+    const activeTargetY = isScrolling ? 0.0 : targetRotationY;
+    mainGroup.rotation.y += (activeTargetY - mainGroup.rotation.y) * 0.05;
+    mainGroup.rotation.x += (activeTargetX - mainGroup.rotation.x) * 0.05;
 
     renderer.render(scene, camera);
   }

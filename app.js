@@ -246,19 +246,32 @@
   const sections = document.querySelectorAll('section[id]');
   const navLinks = document.querySelectorAll('.nav-link[data-section]');
 
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        navLinks.forEach(link => {
-          link.style.color = link.dataset.section === entry.target.id
-            ? 'var(--text)'
-            : '';
-        });
+  function updateActive() {
+    const scrollPos = window.scrollY + window.innerHeight * 0.35; // Trigger at 35% viewport depth
+    
+    let activeId = '';
+    sections.forEach(section => {
+      const top = section.offsetTop;
+      const height = section.offsetHeight;
+      if (scrollPos >= top && scrollPos < top + height) {
+        activeId = section.getAttribute('id');
       }
     });
-  }, { threshold: 0.4 });
 
-  sections.forEach(s => observer.observe(s));
+    // Fallback for bottom of the page
+    if ((window.innerHeight + window.scrollY) >= document.documentElement.scrollHeight - 60) {
+      activeId = 'contact';
+    }
+
+    navLinks.forEach(link => {
+      link.style.color = link.dataset.section === activeId ? 'var(--text)' : '';
+    });
+  }
+
+  window.addEventListener('scroll', updateActive, { passive: true });
+  window.addEventListener('resize', updateActive, { passive: true });
+  // Wait a brief moment after load to ensure offsets are correct
+  setTimeout(updateActive, 100);
 })();
 
 
