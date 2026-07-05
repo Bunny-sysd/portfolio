@@ -50,9 +50,9 @@
   scene.add(mainGroup);
 
   // Color Definitions (Cyber Theme)
-  const colorGreen = new THREE.Color('#00ff66');
-  const colorBlue = new THREE.Color('#0066ff');
-  const colorCyan = new THREE.Color('#00d4ff');
+  const colorGreen = new THREE.Color('#00ff41'); // Piercing terminal green
+  const colorBlue = new THREE.Color('#008822');  // Dark forest cyber green
+  const colorCyan = new THREE.Color('#ffffff');  // Luminous white contrast
 
   // Core configurations mapping to the 6 sections in index.html
   // Mobile: center all domes on x-axis, use compressed Z-spacing, smaller scales

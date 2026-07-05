@@ -1,10 +1,89 @@
 /* ═══════════════════════════════════════════
    0xPortfolio — app.js
+   Theme: Immersive Cyber-Diagnostic Interface
    ═══════════════════════════════════════════ */
 
 'use strict';
 
-// ── SPLASH SCREEN ──────────────────────────
+// ── CUSTOM CURSOR & SPOTLIGHT EFFECT ────────────────
+(function initCursor() {
+  const dot  = document.getElementById('cursorDot');
+  const ring = document.getElementById('cursorRing');
+
+  let mouseX = 0, mouseY = 0;
+  let ringX  = 0, ringY  = 0;
+
+  document.addEventListener('mousemove', e => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+
+    if (dot) {
+      dot.style.left  = mouseX + 'px';
+      dot.style.top   = mouseY + 'px';
+    }
+
+    // Set CSS custom variables for the animated spotlight gradient on body
+    document.documentElement.style.setProperty('--mouse-x', mouseX + 'px');
+    document.documentElement.style.setProperty('--mouse-y', mouseY + 'px');
+  });
+
+  // Smooth ring follow
+  function animateRing() {
+    ringX += (mouseX - ringX) * 0.13;
+    ringY += (mouseY - ringY) * 0.13;
+    if (ring) {
+      ring.style.left = ringX + 'px';
+      ring.style.top  = ringY + 'px';
+    }
+    requestAnimationFrame(animateRing);
+  }
+  animateRing();
+
+  // Hover effect on interactive elements
+  const hoverTargets = 'a, button, .bento-project-card, .sidebar-item, .cert-card, .skill-badge, .know-badge';
+  document.querySelectorAll(hoverTargets).forEach(el => {
+    el.addEventListener('mouseenter', () => ring && ring.classList.add('hovered'));
+    el.addEventListener('mouseleave', () => ring && ring.classList.remove('hovered'));
+  });
+
+  // Click burst
+  document.addEventListener('mousedown', () => dot && dot.classList.add('clicked'));
+  document.addEventListener('mouseup',   () => dot && dot.classList.remove('clicked'));
+})();
+
+// ── MATRIX DECRYPTION EFFECT ───────────────────────
+const decryptChars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ@#$&%*#+=/\\{}[]';
+function decryptText(element) {
+  if (element.classList.contains('decrypting')) return;
+  element.classList.add('decrypting');
+
+  const targetText = element.dataset.text || element.textContent;
+  let iterations = 0;
+
+  const interval = setInterval(() => {
+    element.textContent = targetText.split('').map((char, index) => {
+      if (index < iterations) {
+        return targetText[index];
+      }
+      if (char === ' ') return ' ';
+      return decryptChars[Math.floor(Math.random() * decryptChars.length)];
+    }).join('');
+
+    if (iterations >= targetText.length) {
+      clearInterval(interval);
+      element.classList.remove('decrypting');
+      element.textContent = targetText; // guarantee exact string match
+    }
+    iterations += targetText.length / 15; // solve dynamically based on string size
+  }, 25);
+}
+
+// Bind hover trigger for decryption
+document.querySelectorAll('.decrypt-trigger').forEach(el => {
+  el.addEventListener('mouseenter', () => decryptText(el));
+});
+
+// ── SPLASH SCREEN ──
 (function initSplash() {
   const splash   = document.getElementById('splash');
   const bar      = document.getElementById('splashBar');
@@ -15,9 +94,9 @@
   ];
 
   const messages = [
-    '> Initializing portfolio...',
-    '> Loading security modules...',
-    '> Access granted. Welcome.',
+    '> Initializing terminal link...',
+    '> Syncing vulnerability decompiler...',
+    '> Authorization granted. Decrypting interface...',
   ];
 
   let lineIdx = 0;
@@ -29,97 +108,146 @@
     const line = lines[lineIdx];
 
     if (charIdx < msg.length) {
-      line.textContent += msg[charIdx++];
-      setTimeout(typeNext, 38);
+      if (line) line.textContent += msg[charIdx++];
+      setTimeout(typeNext, 25);
     } else {
       lineIdx++;
       charIdx = 0;
       if (lineIdx < messages.length) {
-        setTimeout(typeNext, 260);
+        setTimeout(typeNext, 180);
       }
     }
   }
 
-  // Start typing after a short pause
+  // Start typing
   setTimeout(() => {
     typeNext();
-    // Animate the progress bar
-    requestAnimationFrame(() => {
-      bar.style.width = '100%';
-    });
-  }, 300);
+    if (bar) bar.style.width = '100%';
+  }, 200);
 
-  // Hide splash after animations complete
+  // Hide splash and run hero boot diagnostic simulation
   setTimeout(() => {
-    splash.classList.add('hidden');
+    if (splash) splash.classList.add('hidden');
     document.body.style.overflow = '';
-    // Trigger hero reveals
+    
+    // Trigger scroll reveals
     document.querySelectorAll('.hero-section .reveal-up').forEach((el, i) => {
-      setTimeout(() => el.classList.add('visible'), i * 120);
+      setTimeout(() => el.classList.add('visible'), i * 100);
     });
-  }, 3200);
+
+    // Run active hero diagnostic simulation
+    runHeroTerminalDiagnostics();
+  }, 2600);
 
   document.body.style.overflow = 'hidden';
 })();
 
+// ── HERO BOOT TERMINAL SIMULATION ────────────────
+function runHeroTerminalDiagnostics() {
+  const terminal = document.getElementById('heroTerminalOutput');
+  if (!terminal) return;
 
-// ── CUSTOM CURSOR ──────────────────────────
-(function initCursor() {
-  const dot  = document.getElementById('cursorDot');
-  const ring = document.getElementById('cursorRing');
+  // Clear original placeholder contents
+  terminal.innerHTML = '';
 
-  let mouseX = 0, mouseY = 0;
-  let ringX  = 0, ringY  = 0;
+  const diagnosticLines = [
+    { text: '[INIT] Loading core framework assets...', delay: 100, class: 'text-muted' },
+    { text: '[OK] Connection to target virtual machine established.', delay: 400, class: 'text-muted' },
+    { text: '[OK] 91 TryHackMe Badges mapped onto security matrix.', delay: 700, class: 'text-muted' },
+    { text: '[READY] Decryption module initialized.', delay: 1000, class: 'text-green' },
+    { text: '==================================================', delay: 1200, class: 'separator' },
+    { text: 'AARON ALVA // ', delay: 1550, isName: true }
+  ];
 
-  document.addEventListener('mousemove', e => {
-    mouseX = e.clientX;
-    mouseY = e.clientY;
-    dot.style.left  = mouseX + 'px';
-    dot.style.top   = mouseY + 'px';
+  diagnosticLines.forEach(line => {
+    setTimeout(() => {
+      const div = document.createElement('div');
+      
+      if (line.isName) {
+        div.className = 'console-line identity-line';
+        
+        const prefix = document.createElement('span');
+        prefix.className = 'role-prefix';
+        prefix.textContent = line.text;
+        
+        const nameText = document.createElement('span');
+        nameText.className = 'text-white';
+        nameText.dataset.text = 'Cybersecurity Researcher & Agentic AI Developer';
+        nameText.textContent = '';
+        
+        div.appendChild(prefix);
+        div.appendChild(nameText);
+        terminal.appendChild(div);
+        
+        // Decrypt name text once printed
+        setTimeout(() => {
+          decryptText(nameText);
+        }, 150);
+        
+        // Add description below name text
+        setTimeout(() => {
+          const desc = document.createElement('div');
+          desc.className = 'console-line bio-line text-dim mt-4';
+          desc.textContent = 'Building closed-loop AI pipelines that decompile, fuzz, exploit, and patch target C binaries autonomously. Creating Mutagen, an agentic zero-day fuzzer.';
+          terminal.appendChild(desc);
+        }, 800);
+
+      } else {
+        div.className = 'console-line ' + (line.class || '');
+        div.textContent = line.text;
+        terminal.appendChild(div);
+      }
+      
+      // Auto-scroll terminal body if content overflows
+      terminal.scrollTop = terminal.scrollHeight;
+    }, line.delay);
   });
+}
 
-  // Smooth ring follow
-  function animateRing() {
-    ringX += (mouseX - ringX) * 0.13;
-    ringY += (mouseY - ringY) * 0.13;
-    ring.style.left = ringX + 'px';
-    ring.style.top  = ringY + 'px';
-    requestAnimationFrame(animateRing);
-  }
-  animateRing();
+// ── FLOATING PILL NAV ACTIVE TAB HIGHLIGHT ────────
+(function initActiveNav() {
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.nav-link[data-section]');
 
-  // Hover effect on interactive elements
-  const hoverTargets = 'a, button, .project-card, .info-card, .cert-card, .skill-tag, .know-badge';
-  document.querySelectorAll(hoverTargets).forEach(el => {
-    el.addEventListener('mouseenter', () => ring.classList.add('hovered'));
-    el.addEventListener('mouseleave', () => ring.classList.remove('hovered'));
-  });
+  function updateActive() {
+    const scrollPos = window.scrollY + window.innerHeight * 0.35;
+    let activeId = '';
 
-  // Click burst
-  document.addEventListener('mousedown', () => dot.classList.add('clicked'));
-  document.addEventListener('mouseup',   () => dot.classList.remove('clicked'));
-})();
+    sections.forEach(section => {
+      const top = section.offsetTop;
+      const height = section.offsetHeight;
+      if (scrollPos >= top && scrollPos < top + height) {
+        activeId = section.getAttribute('id');
+      }
+    });
 
-
-
-
-
-// ── HEADER SCROLL EFFECT ───────────────────
-(function initHeader() {
-  const header = document.getElementById('header');
-  window.addEventListener('scroll', () => {
-    if (header) {
-      header.classList.toggle('scrolled', window.scrollY > 60);
+    if ((window.innerHeight + window.scrollY) >= document.documentElement.scrollHeight - 60) {
+      activeId = 'contact';
     }
-  }, { passive: true });
+
+    navLinks.forEach(link => {
+      if (link.dataset.section === activeId) {
+        link.classList.add('active-nav-tab');
+        link.style.color = 'var(--green)';
+      } else {
+        link.classList.remove('active-nav-tab');
+        link.style.color = '';
+      }
+    });
+  }
+
+  window.addEventListener('scroll', updateActive, { passive: true });
+  window.addEventListener('resize', updateActive, { passive: true });
+  setTimeout(updateActive, 100);
 })();
 
-
-// ── MOBILE MENU ────────────────────────────
+// ── MOBILE MENU TOGGLES ──
 (function initMobileMenu() {
   const hamburger   = document.getElementById('hamburger');
   const mobileMenu  = document.getElementById('mobileMenu');
   const mobileClose = document.getElementById('mobileClose');
+
+  if (!hamburger || !mobileMenu) return;
 
   function open() {
     mobileMenu.classList.add('open');
@@ -133,87 +261,53 @@
   }
 
   hamburger.addEventListener('click', open);
-  mobileClose.addEventListener('click', close);
+  if (mobileClose) mobileClose.addEventListener('click', close);
 
   document.querySelectorAll('[data-close]').forEach(el => {
     el.addEventListener('click', close);
   });
 })();
 
-
-// ── SMOOTH SCROLL NAV ──────────────────────
+// ── SMOOTH NAV SCROLLING ──
 (function initSmoothScroll() {
   document.querySelectorAll('a[href^="#"]').forEach(a => {
     a.addEventListener('click', e => {
       const target = document.querySelector(a.getAttribute('href'));
       if (!target) return;
       e.preventDefault();
-      const offset = 80;
+      
+      // Close mobile menu if open
+      const mobileMenu = document.getElementById('mobileMenu');
+      if (mobileMenu) mobileMenu.classList.remove('open');
+      document.body.style.overflow = '';
+
+      const offset = 90;
       const top = target.getBoundingClientRect().top + window.scrollY - offset;
       window.scrollTo({ top, behavior: 'smooth' });
     });
   });
 })();
 
-
-// ── TYPEWRITER ROLES ───────────────────────
-(function initTypewriter() {
-  const roles = [
-    'Cybersecurity Researcher',
-    'Agentic AI Developer',
-    'Penetration Tester',
-    'Zero-Day Hunter',
-    'CTF Player',
-    'Creator of Mutagen',
-  ];
-
-  const el = document.getElementById('roleTypewriter');
-  if (!el) return;
-
-  let roleIdx = 0;
-  let charIdx = 0;
-  let deleting = false;
-  let paused   = false;
-
-  function type() {
-    if (paused) { setTimeout(type, 1200); paused = false; return; }
-
-    const role = roles[roleIdx];
-
-    if (!deleting) {
-      el.textContent = role.slice(0, ++charIdx);
-      if (charIdx === role.length) { deleting = true; paused = true; }
-      setTimeout(type, 80);
-    } else {
-      el.textContent = role.slice(0, --charIdx);
-      if (charIdx === 0) {
-        deleting = false;
-        roleIdx = (roleIdx + 1) % roles.length;
-      }
-      setTimeout(type, 40);
-    }
-  }
-
-  // Start after splash
-  setTimeout(type, 3400);
-})();
-
-
-// ── SCROLL REVEAL ──────────────────────────
+// ── SCROLL REVEALS ──
 (function initReveal() {
   const observer = new IntersectionObserver(entries => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
         entry.target.classList.add('visible');
+        
+        // If the header has a decrypt title, decrypt it automatically when revealed
+        const title = entry.target.querySelector('.section-title.decrypt-trigger');
+        if (title) {
+          setTimeout(() => decryptText(title), 200);
+        }
       }
     });
-  }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
+  }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
 
   document.querySelectorAll('.reveal-up').forEach(el => observer.observe(el));
 })();
 
-
-// ── COUNTER ANIMATION ──────────────────────
+// ── COUNTER STATISTICS ANIMATION ──
 (function initCounters() {
   const observer = new IntersectionObserver(entries => {
     entries.forEach(entry => {
@@ -222,6 +316,7 @@
         const target = parseInt(el.dataset.target, 10);
         const duration = 1200;
         const start = performance.now();
+        
         function update(now) {
           const progress = Math.min((now - start) / duration, 1);
           const eased = 1 - Math.pow(1 - progress, 3);
@@ -233,77 +328,38 @@
       });
       observer.unobserve(entry.target);
     });
-  }, { threshold: 0.5 });
+  }, { threshold: 0.4 });
 
-  const heroStats = document.querySelector('.hero-stats');
+  const heroStats = document.querySelector('.hero-grid-stats');
   if (heroStats) observer.observe(heroStats);
 })();
 
-
-
-// ── ACTIVE NAV LINK ON SCROLL ──────────────
-(function initActiveNav() {
-  const sections = document.querySelectorAll('section[id]');
-  const navLinks = document.querySelectorAll('.nav-link[data-section]');
-
-  function updateActive() {
-    const scrollPos = window.scrollY + window.innerHeight * 0.35; // Trigger at 35% viewport depth
-    
-    let activeId = '';
-    sections.forEach(section => {
-      const top = section.offsetTop;
-      const height = section.offsetHeight;
-      if (scrollPos >= top && scrollPos < top + height) {
-        activeId = section.getAttribute('id');
-      }
-    });
-
-    // Fallback for bottom of the page
-    if ((window.innerHeight + window.scrollY) >= document.documentElement.scrollHeight - 60) {
-      activeId = 'contact';
-    }
-
-    navLinks.forEach(link => {
-      link.style.color = link.dataset.section === activeId ? 'var(--text)' : '';
-    });
-  }
-
-  window.addEventListener('scroll', updateActive, { passive: true });
-  window.addEventListener('resize', updateActive, { passive: true });
-  // Wait a brief moment after load to ensure offsets are correct
-  setTimeout(updateActive, 100);
-})();
-
-
-// ── CERT CARD TILT ────────────────────────
+// ── CARD MOUSE ROTATION (TILT) EFFECT ──
 (function initTilt() {
-  document.querySelectorAll('.project-card, .cert-card').forEach(card => {
+  document.querySelectorAll('.bento-project-card, .cert-card').forEach(card => {
     card.addEventListener('mouseenter', () => {
-      // Remove transition so tilt responds instantly
       card.style.transition = 'none';
     });
     card.addEventListener('mousemove', e => {
       const rect = card.getBoundingClientRect();
-      // Normalize cursor position to -1..1 from center
       const nx = ((e.clientX - rect.left) / rect.width  - 0.5) * 2;
       const ny = ((e.clientY - rect.top)  / rect.height - 0.5) * 2;
-      // Dead zone: ignore edges (outer 15%) to prevent snap on enter/leave
-      const edgeThreshold = 0.7;
+      
+      const edgeThreshold = 0.75;
       if (Math.abs(nx) > edgeThreshold || Math.abs(ny) > edgeThreshold) return;
-      const rx = ny * 5;   // tilt X based on vertical offset
-      const ry = nx * -5;  // tilt Y based on horizontal offset
-      card.style.transform = `perspective(800px) rotateX(${rx}deg) rotateY(${ry}deg) translateY(-4px)`;
+      
+      const rx = ny * 3.5; // subtle rotate strength
+      const ry = nx * -3.5;
+      card.style.transform = `perspective(800px) rotateX(${rx}deg) rotateY(${ry}deg) translateY(-2px)`;
     });
     card.addEventListener('mouseleave', () => {
-      // Smooth ease back to flat
-      card.style.transition = 'transform 0.5s cubic-bezier(0.22, 1, 0.36, 1)';
+      card.style.transition = 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)';
       card.style.transform = '';
     });
   });
 })();
 
-
-// ── BADGE MATRIX ───────────────────────────
+// ── TRYHACKME 91 BADGE MATRIX POPULATOR ────────────────
 (function initBadgeMatrix() {
   const container = document.getElementById('badgeMatrix');
   if (!container) return;
@@ -321,49 +377,20 @@
         const dots = entry.target.querySelectorAll('.badge-dot');
         dots.forEach((dot, index) => {
           setTimeout(() => {
-            // Mix of green and purple dots
-            if (Math.random() > 0.85) {
-               dot.classList.add('ai-active');
-            } else {
-               dot.classList.add('active');
-            }
-          }, index * 10 + Math.random() * 300);
+            dot.classList.add('active');
+          }, index * 8 + Math.random() * 200);
         });
         observer.unobserve(entry.target);
       }
     });
-  }, { threshold: 0.3 });
+  }, { threshold: 0.2 });
 
   const section = document.querySelector('.badge-matrix-section');
   if (section) observer.observe(section);
 })();
 
-
-// ── CONSOLE EGG ───────────────────────────
+// Console log egg easter header
 console.log(
-  '%c 0x | Portfolio ',
-  'color:#00ff88;background:#0a0a0f;font-family:monospace;font-size:20px;padding:8px 16px;border:1px solid #00ff88;border-radius:4px;'
+  '%c 0xPORTFOLIO ACTIVE // AUTHORIZED SESSION ',
+  'color:#00ff41;background:#0A0A0C;font-family:monospace;font-size:16px;padding:6px 12px;border:1px solid #00ff41;'
 );
-console.log(
-  '%c > Greetings, fellow hacker. 👋',
-  'color:#00d4ff;font-family:monospace;font-size:13px;'
-);
-console.log(
-  '%c > Built with ☕ curiosity and too many late nights.',
-  'color:#94a3b8;font-family:monospace;font-size:12px;'
-);
-
-
-// ── HERO PARALLAX MICRO-SHIFT ─────────────
-(function initHeroParallax() {
-  const hero = document.querySelector('.hero-content');
-  if (!hero) return;
-
-  document.addEventListener('mousemove', e => {
-    const cx = window.innerWidth  / 2;
-    const cy = window.innerHeight / 2;
-    const dx = (e.clientX - cx) / cx; // -1 to 1
-    const dy = (e.clientY - cy) / cy; // -1 to 1
-    hero.style.transform = `translate(${dx * 6}px, ${dy * 4}px)`;
-  }, { passive: true });
-})();

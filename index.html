@@ -15,7 +15,7 @@
   <meta name="twitter:title" content="Aaron Alva — Cybersecurity Researcher & AI Security Developer" />
   <meta name="twitter:description" content="I build autonomous AI tools that find and fix zero-day vulnerabilities. Creator of Mutagen." />
   <meta name="twitter:image" content="og-image.png" />
-  <meta name="theme-color" content="#0a0a0f" />
+  <meta name="theme-color" content="#0A0A0C" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
@@ -25,7 +25,11 @@
   <link rel="stylesheet" href="style.css?v=1.1" />
 </head>
 
-<body>
+<body class="terminal-theme">
+
+  <!-- ── CRT HARDWARE MONITOR OVERLAY ── -->
+  <div class="crt-overlay"></div>
+  <div class="scanline-beam"></div>
 
   <!-- ── CUSTOM CURSOR ── -->
   <div class="cursor-dot" id="cursorDot"></div>
@@ -57,9 +61,9 @@
   <!-- ── CANVAS BG ── -->
   <canvas id="bgCanvas"></canvas>
 
-  <!-- ── HEADER ── -->
-  <header id="header">
-    <div class="header-inner">
+  <!-- ── FLOATING PILL NAV ── -->
+  <header id="header" class="floating-nav-container">
+    <div class="floating-nav">
       <a href="#hero" class="logo" id="headerLogo">
         <span class="logo-bracket">[</span><span class="logo-text">0x</span><span class="logo-bracket">]</span>
       </a>
@@ -98,118 +102,108 @@
   ══════════════════════════════════════ -->
   <main id="main">
 
-    <!-- ── HERO ── -->
+    <!-- ── HERO SECTION (ACTIVE CYBER TERMINAL) ── -->
     <section class="section hero-section" id="hero">
-      <div class="hero-content">
-        <div class="hero-top reveal-up">
-          <span class="hero-tag">
-            <span class="tag-dot"></span> Available for Security Engineering & AI Security roles
-          </span>
-        </div>
-        <h1 class="hero-name reveal-up" id="heroName">
-          <span class="name-line">AARON</span>
-          <span class="name-line glitch" data-text="ALVA">ALVA</span>
-        </h1>
-        <div class="hero-roles reveal-up">
-          <span class="role-prefix">// </span>
-          <span class="role-typewriter" id="roleTypewriter"></span>
-          <span class="type-cursor">|</span>
-        </div>
-        <p class="hero-bio reveal-up">
-          I build autonomous AI systems that reduce vulnerability response time from days to minutes.<br />
-          <span class="accent">TryHackMe certified</span> · 91 badges · OWASP · MITRE ATT&amp;CK · Hugging Face
-        </p>
-        <div class="hero-actions reveal-up">
-          <a href="#projects" class="btn btn-primary">→ See My Work</a>
-          <a href="#contact" class="btn btn-ghost">Get In Touch</a>
-        </div>
-        <div class="hero-stats reveal-up">
-          <div class="stat">
-            <span class="stat-num" data-target="91">0</span>
-            <span class="stat-label">THM Badges</span>
+      <div class="hero-terminal glass-panel">
+        <div class="terminal-header">
+          <div class="window-controls">
+            <span class="control-dot close"></span>
+            <span class="control-dot minimize"></span>
+            <span class="control-dot maximize"></span>
           </div>
-          <div class="stat-divider"></div>
-          <div class="stat">
-            <span class="stat-num" data-target="20">0</span><span class="stat-plus">+</span>
-            <span class="stat-label">CVEs Targeted</span>
+          <span class="terminal-title">system_diagnostic_run.sh</span>
+          <span class="terminal-status">ONLINE</span>
+        </div>
+        <div class="terminal-body" id="heroTerminalOutput">
+          <!-- Populated line-by-line via initTypewriter boot simulation -->
+          <div class="console-line text-muted">[INIT] Loading core framework assets...</div>
+          <div class="console-line text-muted">[OK] Connection to main virtual machine established.</div>
+          <div class="console-line text-muted">[OK] 91 TryHackMe Badges mapped onto security matrix.</div>
+          <div class="console-line text-green">[READY] Decryption module initialized.</div>
+          <div class="console-line separator">==================================================</div>
+          <div class="console-line identity-line">
+            <span class="role-prefix">AARON ALVA // </span><span class="decrypt-target text-white" data-text="Cybersecurity Researcher & Agentic AI Developer">Cybersecurity Researcher & Agentic AI Developer</span>
           </div>
-          <div class="stat-divider"></div>
-          <div class="stat">
-            <span class="stat-num" data-target="5">0</span>
-            <span class="stat-label">Projects Shipped</span>
+          <div class="console-line bio-line text-dim mt-4">
+            Building closed-loop AI pipelines that decompile, fuzz, exploit, and patch target binaries autonomously. Creating Mutagen, an agentic zero-day fuzzer.
           </div>
+        </div>
+        <div class="hero-actions">
+          <a href="#projects" class="btn btn-primary decrypt-trigger" data-text="EXECUTE_FUZZER">EXECUTE_FUZZER</a>
+          <a href="#contact" class="btn btn-ghost decrypt-trigger" data-text="ESTABLISH_LINK">ESTABLISH_LINK</a>
         </div>
       </div>
-      <div class="hero-scroll-hint">
-        <span>Scroll</span>
-        <div class="scroll-line"></div>
+
+      <div class="hero-grid-stats">
+        <div class="bento-stat glass-panel">
+          <span class="stat-num" data-target="91">0</span>
+          <span class="stat-label">TryHackMe Badges</span>
+        </div>
+        <div class="bento-stat glass-panel">
+          <span class="stat-num" data-target="20">0</span><span class="stat-plus">+</span>
+          <span class="stat-label">Vulnerable Targets Checked</span>
+        </div>
+        <div class="bento-stat glass-panel">
+          <span class="stat-num" data-target="5">0</span>
+          <span class="stat-label">Projects Deployed</span>
+        </div>
       </div>
     </section>
 
-    <!-- ── ABOUT ── -->
+    <!-- ── ABOUT SECTION ── -->
     <section class="section about-section" id="about">
       <div class="section-inner">
         <div class="section-header reveal-up">
-          <span class="section-tag">01 / About</span>
-          <h2 class="section-title">Who am I<span class="accent">?</span></h2>
+          <span class="section-tag">[ 01_ABOUT_IDENTITY ]</span>
+          <h2 class="section-title text-white decrypt-trigger" data-text="WHO_AM_I?">WHO_AM_I?</h2>
         </div>
-        <div class="about-grid">
-          <div class="about-text reveal-up">
-            <p>
-              I'm a <span class="highlight">cybersecurity researcher</span> and agentic AI developer who builds tools that autonomously hunt, exploit, and patch software vulnerabilities. I don't just run scanners — I write the systems that do.
+        
+        <div class="bento-about-layout">
+          <div class="about-main glass-panel reveal-up">
+            <div class="card-edge-glow"></div>
+            <h3 class="bento-heading">[ PROFILING ]</h3>
+            <p class="about-bio">
+              I am a <span class="highlight">cybersecurity researcher</span> and agentic AI developer dedicated to automating offensive and defensive operations. I build pipelines that crawl codebase repositories, catch buffer corruptions, evaluate system vulnerabilities, and implement dynamic updates autonomously.
             </p>
-            <p>
-              My flagship project is <span class="highlight">Mutagen</span> — an autonomous zero-day fuzzer that disassembles C binaries with Ghidra Headless, catches heap overflows and buffer corruptions across 20+ CVE targets, generates working exploit PoCs, and patches the source code in a closed loop. No human in the loop required.
+            <p class="about-bio mt-4">
+              My core project is <span class="highlight">Mutagen</span>, an autonomous zero-day fuzzer that decompiles targets via Ghidra, analyzes memory limits, writes working exploit proof-of-concepts, and automatically updates safety checks to secure C codebases.
             </p>
-            <p>
-              On the offensive side, I work with <span class="highlight">Nmap, Metasploit, Burp Suite, and John the Ripper</span> across real CTF environments on TryHackMe (91 badges earned). On the AI side, I fine-tune large language models on Hugging Face for automated vulnerability classification and exploit verification.
+            <p class="about-bio mt-4">
+              I fine-tune large language models on Hugging Face to classify vulnerabilities and match MITRE ATT&amp;CK maps, utilizing isolated VM environments for exploit verification.
             </p>
-            <div class="about-links">
-              <a href="#certs" class="text-link">→ View my certifications</a>
-              <a href="#projects" class="text-link">→ See my projects</a>
+            <div class="about-nav-links mt-6">
+              <a href="#certs" class="text-link">→ View Certifications</a>
+              <a href="#projects" class="text-link">→ Analyze Projects</a>
             </div>
           </div>
-          <div class="about-card-stack reveal-up">
-            <div class="info-card glass-panel">
-              <span class="info-card-icon">🛡️</span>
-              <div>
-                <strong>Main Focus</strong>
-                <span>Cybersecurity & Pentesting</span>
+
+          <div class="about-sidebar">
+            <div class="sidebar-item glass-panel reveal-up">
+              <span class="sidebar-icon">🛡️</span>
+              <div class="sidebar-info">
+                <span class="label">FIELD OF WORK</span>
+                <span class="value">Cybersecurity & AI</span>
               </div>
             </div>
-            <div class="info-card glass-panel">
-              <span class="info-card-icon">📍</span>
-              <div>
-                <strong>Location</strong>
-                <span>Remote</span>
+            <div class="sidebar-item glass-panel reveal-up">
+              <span class="sidebar-icon">📍</span>
+              <div class="sidebar-info">
+                <span class="label">LOCATION</span>
+                <span class="value">Remote Network</span>
               </div>
             </div>
-            <div class="info-card glass-panel">
-              <span class="info-card-icon">🏆</span>
-              <div>
-                <strong>Platform</strong>
-                <span>TryHackMe</span>
+            <div class="sidebar-item glass-panel reveal-up">
+              <span class="sidebar-icon">🏆</span>
+              <div class="sidebar-info">
+                <span class="label">CTF PLATFORM</span>
+                <span class="value">TryHackMe Profile</span>
               </div>
             </div>
-            <div class="info-card glass-panel">
-              <span class="info-card-icon">💻</span>
-              <div>
-                <strong>Environment</strong>
-                <span>Virtual Machines + Kali Linux</span>
-              </div>
-            </div>
-            <div class="info-card glass-panel">
-              <span class="info-card-icon">🤗</span>
-              <div>
-                <strong>AI Platform</strong>
-                <span>Hugging Face — Model Fine-tuning</span>
-              </div>
-            </div>
-            <div class="info-card glass-panel">
-              <span class="info-card-icon">🌐</span>
-              <div>
-                <strong>Also Into</strong>
-                <span>Web Dev, AI Apps &amp; Model Training</span>
+            <div class="sidebar-item glass-panel reveal-up">
+              <span class="sidebar-icon">💻</span>
+              <div class="sidebar-info">
+                <span class="label">LAB SETUP</span>
+                <span class="value">VM Sandbox / Kali</span>
               </div>
             </div>
           </div>
@@ -217,160 +211,152 @@
       </div>
     </section>
 
-    <!-- ── SKILLS ── -->
+    <!-- ── SKILLS SECTION (BENTO GRID) ── -->
     <section class="section skills-section" id="skills">
       <div class="section-inner">
         <div class="section-header reveal-up">
-          <span class="section-tag">02 / Skills</span>
-          <h2 class="section-title">My Arsenal<span class="accent">.</span></h2>
+          <span class="section-tag">[ 02_SKILLS_ARSENAL ]</span>
+          <h2 class="section-title text-white decrypt-trigger" data-text="SYS_ARMAMENT">SYS_ARMAMENT</h2>
         </div>
 
-        <div class="skills-categories">
-
+        <div class="bento-skills-grid">
+          
           <!-- Offensive Security -->
-          <div class="skill-category reveal-up">
-            <div class="skill-cat-header">
-              <span class="skill-cat-icon">⚔️</span>
-              <h3>Offensive Security</h3>
+          <div class="bento-skill-box glass-panel reveal-up" style="grid-area: offensive;">
+            <div class="skill-box-header">
+              <span class="box-icon">⚔️</span>
+              <h3 class="box-title">Offensive Operations</h3>
             </div>
-            <div class="skill-tags">
-              <span class="skill-tag tier-1">Nmap</span>
-              <span class="skill-tag tier-1">Metasploit</span>
-              <span class="skill-tag tier-1">John the Ripper</span>
-              <span class="skill-tag tier-2">GraphSpy</span>
-              <span class="skill-tag tier-2">Shannon</span>
-              <span class="skill-tag tier-2">Hydra</span>
-              <span class="skill-tag tier-2">Burp Suite</span>
-              <span class="skill-tag tier-3">Custom Exploits</span>
+            <div class="skill-pills">
+              <span class="skill-badge tier-1">Nmap</span>
+              <span class="skill-badge tier-1">Metasploit</span>
+              <span class="skill-badge tier-1">John the Ripper</span>
+              <span class="skill-badge tier-2">GraphSpy</span>
+              <span class="skill-badge tier-2">Shannon</span>
+              <span class="skill-badge tier-2">Hydra</span>
+              <span class="skill-badge tier-2">Burp Suite</span>
+              <span class="skill-badge tier-3">Custom Exploits</span>
             </div>
           </div>
 
-          <!-- Frameworks & Knowledge -->
-          <div class="skill-category reveal-up">
-            <div class="skill-cat-header">
-              <span class="skill-cat-icon">📚</span>
-              <h3>Frameworks &amp; Standards</h3>
+          <!-- Standards & Frameworks -->
+          <div class="bento-skill-box glass-panel reveal-up" style="grid-area: standards;">
+            <div class="skill-box-header">
+              <span class="box-icon">📚</span>
+              <h3 class="box-title">Frameworks</h3>
             </div>
-            <div class="skill-tags">
-              <span class="skill-tag tier-1">OWASP Top 10</span>
-              <span class="skill-tag tier-1">MITRE ATT&amp;CK</span>
-              <span class="skill-tag tier-2">CVE Research</span>
-              <span class="skill-tag tier-2">AI Security</span>
-              <span class="skill-tag tier-2">Threat Modeling</span>
-              <span class="skill-tag tier-3">Windows Exploitation</span>
-              <span class="skill-tag tier-3">Linux Privesc</span>
+            <div class="skill-pills">
+              <span class="skill-badge tier-1">OWASP Top 10</span>
+              <span class="skill-badge tier-1">MITRE ATT&amp;CK</span>
+              <span class="skill-badge tier-2">CVE Research</span>
+              <span class="skill-badge tier-2">AI Security</span>
+              <span class="skill-badge tier-2">Threat Modeling</span>
             </div>
           </div>
 
           <!-- Networking -->
-          <div class="skill-category reveal-up">
-            <div class="skill-cat-header">
-              <span class="skill-cat-icon">🌐</span>
-              <h3>Networking</h3>
+          <div class="bento-skill-box glass-panel reveal-up" style="grid-area: networking;">
+            <div class="skill-box-header">
+              <span class="box-icon">🌐</span>
+              <h3 class="box-title">Networking</h3>
             </div>
-            <div class="skill-tags">
-              <span class="skill-tag tier-1">Packet Analysis</span>
-              <span class="skill-tag tier-1">Port Scanning</span>
-              <span class="skill-tag tier-2">TCP/IP</span>
-              <span class="skill-tag tier-2">DNS Enumeration</span>
-              <span class="skill-tag tier-2">CVE Exploitation</span>
-              <span class="skill-tag tier-3">VPN &amp; Tunneling</span>
+            <div class="skill-pills">
+              <span class="skill-badge tier-1">Packet Analysis</span>
+              <span class="skill-badge tier-1">Port Scanning</span>
+              <span class="skill-badge tier-2">TCP/IP</span>
+              <span class="skill-badge tier-2">DNS Enumeration</span>
+              <span class="skill-badge tier-3">Wireshark</span>
             </div>
           </div>
 
           <!-- Web Dev & AI -->
-          <div class="skill-category reveal-up">
-            <div class="skill-cat-header">
-              <span class="skill-cat-icon">🚀</span>
-              <h3>Web Dev &amp; AI</h3>
+          <div class="bento-skill-box glass-panel reveal-up" style="grid-area: webdev;">
+            <div class="skill-box-header">
+              <span class="box-icon">🚀</span>
+              <h3 class="box-title">Web &amp; Inference</h3>
             </div>
-            <div class="skill-tags">
-              <span class="skill-tag tier-1">HTML / CSS / JS</span>
-              <span class="skill-tag tier-1">UI/UX Design</span>
-              <span class="skill-tag tier-2">AI Integration</span>
-              <span class="skill-tag tier-2">REST APIs</span>
-              <span class="skill-tag tier-2">Data Visualization</span>
-              <span class="skill-tag tier-3">Stock Market APIs</span>
-            </div>
-          </div>
-
-          <!-- AI / ML -->
-          <div class="skill-category reveal-up">
-            <div class="skill-cat-header">
-              <span class="skill-cat-icon">🤗</span>
-              <h3>AI / ML &amp; Model Training</h3>
-            </div>
-            <div class="skill-tags">
-              <span class="skill-tag tier-1">Hugging Face</span>
-              <span class="skill-tag tier-1">Model Fine-tuning</span>
-              <span class="skill-tag tier-2">Transformers</span>
-              <span class="skill-tag tier-2">Dataset Prep</span>
-              <span class="skill-tag tier-2">Inference APIs</span>
-              <span class="skill-tag tier-3">AI Security Testing</span>
-              <span class="skill-tag tier-3">Adversarial ML</span>
+            <div class="skill-pills">
+              <span class="skill-badge tier-1">HTML / CSS / JS</span>
+              <span class="skill-badge tier-1">UI/UX Design</span>
+              <span class="skill-badge tier-2">AI Integration</span>
+              <span class="skill-badge tier-2">REST APIs</span>
+              <span class="skill-badge tier-3">JSON Data Pipelines</span>
             </div>
           </div>
 
-          <!-- Environment -->
-          <div class="skill-category reveal-up">
-            <div class="skill-cat-header">
-              <span class="skill-cat-icon">🖥️</span>
-              <h3>Environment &amp; Tools</h3>
+          <!-- AI / ML Model training -->
+          <div class="bento-skill-box glass-panel reveal-up" style="grid-area: aiml;">
+            <div class="skill-box-header">
+              <span class="box-icon">🤗</span>
+              <h3 class="box-title">Hugging Face &amp; LLMs</h3>
             </div>
-            <div class="skill-tags">
-              <span class="skill-tag tier-1">Kali Linux</span>
-              <span class="skill-tag tier-1">Virtual Machines</span>
-              <span class="skill-tag tier-2">GitHub</span>
-              <span class="skill-tag tier-2">VS Code</span>
-              <span class="skill-tag tier-2">Wireshark</span>
-              <span class="skill-tag tier-3">VirtualBox / VMware</span>
+            <div class="skill-pills">
+              <span class="skill-badge tier-1">Hugging Face API</span>
+              <span class="skill-badge tier-1">Model Fine-tuning</span>
+              <span class="skill-badge tier-2">Transformers</span>
+              <span class="skill-badge tier-2">Dataset Prep</span>
+              <span class="skill-badge tier-3">Adversarial ML</span>
             </div>
           </div>
 
+          <!-- Sandbox Environment -->
+          <div class="bento-skill-box glass-panel reveal-up" style="grid-area: sandbox;">
+            <div class="skill-box-header">
+              <span class="box-icon">🖥️</span>
+              <h3 class="box-title">Security Lab Environment</h3>
+            </div>
+            <div class="skill-pills">
+              <span class="skill-badge tier-1">Kali Linux</span>
+              <span class="skill-badge tier-1">Virtual Machines</span>
+              <span class="skill-badge tier-2">GitHub</span>
+              <span class="skill-badge tier-3">VirtualBox / VMware</span>
+            </div>
+          </div>
         </div>
 
-        <!-- Mutagen Pipeline -->
-        <div class="mutagen-pipeline-section reveal-up">
-          <h3 class="pipeline-title">How Mutagen Works</h3>
-          <p class="pipeline-subtitle">End-to-end autonomous vulnerability pipeline — no human in the loop.</p>
+        <!-- Mutagen Pipeline Box -->
+        <div class="mutagen-pipeline-section glass-panel reveal-up mt-8">
+          <h3 class="pipeline-title decrypt-trigger" data-text="MUTAGEN_PIPELINE">MUTAGEN_PIPELINE</h3>
+          <p class="pipeline-subtitle">Closed-loop zero-day exploitation and patching model flow.</p>
+          
           <div class="pipeline-flow">
             <div class="pipeline-stage">
               <div class="stage-icon">📥</div>
               <div class="stage-content">
                 <strong>1. Ingest</strong>
-                <span>Target binary + source code fed into the pipeline</span>
+                <span>Binary target &amp; source</span>
               </div>
             </div>
             <div class="pipeline-connector"></div>
             <div class="pipeline-stage">
               <div class="stage-icon">🔬</div>
               <div class="stage-content">
-                <strong>2. Disassemble</strong>
-                <span>Ghidra Headless decompiles binaries into analyzable C</span>
+                <strong>2. Ghidra Analysis</strong>
+                <span>Headless decompiler</span>
               </div>
             </div>
             <div class="pipeline-connector"></div>
             <div class="pipeline-stage">
               <div class="stage-icon">💥</div>
               <div class="stage-content">
-                <strong>3. Fuzz & Exploit</strong>
-                <span>AI-guided fuzzing catches crashes, generates working PoCs</span>
+                <strong>3. Exploit Verify</strong>
+                <span>Fuzz overflow crashes</span>
               </div>
             </div>
             <div class="pipeline-connector"></div>
             <div class="pipeline-stage">
               <div class="stage-icon">🩹</div>
               <div class="stage-content">
-                <strong>4. Patch</strong>
-                <span>Gemini API generates and applies source-level patches</span>
+                <strong>4. Patch Build</strong>
+                <span>Auto-patch source buffers</span>
               </div>
             </div>
             <div class="pipeline-connector"></div>
             <div class="pipeline-stage">
               <div class="stage-icon">✅</div>
               <div class="stage-content">
-                <strong>5. Verify</strong>
-                <span>Re-runs fuzz cycles — 0 crashes confirms target is secure</span>
+                <strong>5. Secure Output</strong>
+                <span>Re-fuzz validation pass</span>
               </div>
             </div>
           </div>
@@ -379,221 +365,204 @@
       </div>
     </section>
 
-    <!-- ── PROJECTS ── -->
+    <!-- ── PROJECTS SECTION (ASYMMETRIC BENTO GRID) ── -->
     <section class="section projects-section" id="projects">
       <div class="section-inner">
         <div class="section-header reveal-up">
-          <span class="section-tag">03 / Projects</span>
-          <h2 class="section-title">What I've Built<span class="accent">.</span></h2>
+          <span class="section-tag">[ 03_PROJECTS_PIPELINE ]</span>
+          <h2 class="section-title text-white decrypt-trigger" data-text="FUZZ_REPORTS">FUZZ_REPORTS</h2>
         </div>
 
-        <div class="projects-grid">
-
-          <!-- Project 1 (Mutagen) -->
-          <div class="project-card featured glass-panel active-edge-green reveal-up" id="proj-mutagen">
-            <div class="project-card-inner">
-              <div class="project-meta">
-                <span class="project-year">2026</span>
-                <span class="project-cat">Agentic AI · Fuzzer · SecOps · Active</span>
-              </div>
-              <div class="project-visual mutagen-visual">
-                <div class="mutagen-terminal">
-                  <div class="mutagen-terminal-header">
-                    <span class="mth-dot"></span>
-                    <span class="mth-dot"></span>
-                    <span class="mth-dot"></span>
-                    <span class="mth-title">mutagen@agentic-fuzzer:~</span>
-                  </div>
-                  <div class="mutagen-terminal-body">
-                    <div class="mutagen-log-line"><span class="log-time">[08:42:01]</span> <span class="log-tag tag-sys">[SYS]</span> Agentic AI Backbone Initialized. Scanning codebase target...</div>
-                    <div class="mutagen-log-line"><span class="log-time">[08:42:03]</span> <span class="log-tag tag-agent">[DECOMPILER]</span> Running Ghidra Headless: Disassembled 4 C targets.</div>
-                    <div class="mutagen-log-line"><span class="log-time">[08:42:07]</span> <span class="log-tag tag-fuzz">[FUZZER]</span> Cycle 147: Overflow crash caught at instruction offset <span class="highlight-address">0x004011d4</span>.</div>
-                    <div class="mutagen-log-line"><span class="log-time">[08:42:11]</span> <span class="log-tag tag-exploit">[EXPLOIT]</span> Functional PoC compiled. Exploit verification: <span class="highlight-success">SUCCESS</span>.</div>
-                    <div class="mutagen-log-line"><span class="log-time">[08:42:15]</span> <span class="log-tag tag-patch">[PATCHER]</span> Modifying target source buffer safety. Injecting patch.</div>
-                    <div class="mutagen-log-line"><span class="log-time">[08:42:19]</span> <span class="log-tag tag-audit">[AUDITOR]</span> Re-running fuzz cycles: 0 crashes found. Target secure.</div>
-                  </div>
+        <div class="bento-projects-grid">
+          
+          <!-- Project 1: Mutagen Fuzzer (Large featured box) -->
+          <div class="bento-project-card glass-panel active-edge-green reveal-up" id="proj-mutagen" style="grid-area: mutagen;">
+            <div class="project-card-header">
+              <span class="project-year">2026</span>
+              <span class="project-category">[ AGENTIC_AI / FUZZER ]</span>
+            </div>
+            <div class="project-visual mutagen-visual">
+              <div class="mutagen-terminal">
+                <div class="mutagen-terminal-header">
+                  <span class="mth-dot"></span>
+                  <span class="mth-dot"></span>
+                  <span class="mth-dot"></span>
+                  <span class="mth-title">mutagen@agentic-fuzzer:~</span>
+                </div>
+                <div class="mutagen-terminal-body">
+                  <div class="mutagen-log-line"><span class="log-time">[08:42:01]</span> <span class="log-tag tag-sys">[SYS]</span> AI zero-day scanner started...</div>
+                  <div class="mutagen-log-line"><span class="log-time">[08:42:03]</span> <span class="log-tag tag-agent">[Ghidra]</span> Disassembled functions successfully.</div>
+                  <div class="mutagen-log-line"><span class="log-time">[08:42:07]</span> <span class="log-tag tag-fuzz">[HEAP]</span> Crash caught at instruction offset <span class="highlight-address">0x004011d4</span>.</div>
+                  <div class="mutagen-log-line"><span class="log-time">[08:42:11]</span> <span class="log-tag tag-exploit">[PoC]</span> Payload compiled. Exploit state: <span class="highlight-success">VERIFIED</span>.</div>
+                  <div class="mutagen-log-line"><span class="log-time">[08:42:15]</span> <span class="log-tag tag-patch">[PATCH]</span> Safe buffer patch injected successfully.</div>
+                  <div class="mutagen-log-line"><span class="log-time">[08:42:19]</span> <span class="log-tag tag-audit">[AUDIT]</span> Re-fuzz pass: 0 leaks, 0 crashes. Target SECURED.</div>
                 </div>
               </div>
-              <h3 class="project-title">Mutagen — Agentic AI Zero-Day Fuzzer &amp; Auto-Patcher</h3>
-              <p class="project-desc">
-                An autonomous agentic AI cybersecurity tool that analyses target binary files and source code, detects zero-day vulnerabilities (handles 20+ CVE vulnerability targets), generates working exploit proofs of concept, patches codebase bugs, and validates fixes in a closed-loop environment.
+            </div>
+            <div class="project-details">
+              <h3 class="project-title text-white decrypt-trigger" data-text="Mutagen Zero-Day Fuzzer">Mutagen Zero-Day Fuzzer</h3>
+              <p class="project-desc text-dim">
+                Autonomous agentic vulnerability platform. Runs Ghidra decompiler on C binaries, generates exploits to confirm vulnerability, applies source code buffer patches, and tests the target under sandbox limits.
               </p>
               <div class="project-tags">
-                <span>Python</span><span>Gemini API</span><span>Ghidra Headless</span><span>Exploit PoC</span><span>Auto-Patching</span><span>Docker</span>
+                <span>Python</span><span>Gemini API</span><span>Ghidra</span><span>Docker</span>
               </div>
-              <div class="project-links">
-                <a href="https://github.com/bunny-sysd/mutagen" target="_blank" class="proj-link github">
-                  💻 View GitHub Repository ↗
+              <div class="project-links mt-4">
+                <a href="https://github.com/bunny-sysd/mutagen" target="_blank" class="proj-link live-btn">
+                  [ VIEW_SOURCE ]
                 </a>
               </div>
             </div>
           </div>
 
-          <!-- Project 2 (Stock Analyzer) -->
-          <div class="project-card glass-panel active-edge-cyan reveal-up" id="proj-stock">
-            <div class="project-card-inner">
-              <div class="project-meta">
-                <span class="project-year">2025</span>
-                <span class="project-cat">AI · Full-Stack · Finance · Live</span>
+          <!-- Project 2: SignalHub Stock Analyzer -->
+          <div class="bento-project-card glass-panel reveal-up" id="proj-stock" style="grid-area: stock;">
+            <div class="project-card-header">
+              <span class="project-year">2025</span>
+              <span class="project-category">[ DATA_PIPELINE / LIVE ]</span>
+            </div>
+            <div class="project-visual stock-visual">
+              <div class="stock-chart">
+                <svg viewBox="0 0 300 100" preserveAspectRatio="none" class="chart-svg">
+                  <defs>
+                    <linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stop-color="#00FF41" stop-opacity="0.3" />
+                      <stop offset="100%" stop-color="#00FF41" stop-opacity="0" />
+                    </linearGradient>
+                  </defs>
+                  <path class="chart-area"
+                    d="M0,80 L30,65 L60,70 L90,40 L120,55 L150,30 L180,45 L210,20 L240,35 L270,15 L300,25 L300,100 L0,100 Z"
+                    fill="url(#chartGrad)" />
+                  <path class="chart-line"
+                    d="M0,80 L30,65 L60,70 L90,40 L120,55 L150,30 L180,45 L210,20 L240,35 L270,15 L300,25" fill="none"
+                    stroke="#00FF41" stroke-width="2" />
+                  <circle class="chart-dot" cx="300" cy="25" r="4" fill="#00FF41" />
+                </svg>
               </div>
-              <div class="project-visual stock-visual">
-                <div class="stock-chart">
-                  <svg viewBox="0 0 300 100" preserveAspectRatio="none" class="chart-svg">
-                    <defs>
-                      <linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stop-color="#00ff88" stop-opacity="0.4" />
-                        <stop offset="100%" stop-color="#00ff88" stop-opacity="0" />
-                      </linearGradient>
-                    </defs>
-                    <path class="chart-area"
-                      d="M0,80 L30,65 L60,70 L90,40 L120,55 L150,30 L180,45 L210,20 L240,35 L270,15 L300,25 L300,100 L0,100 Z"
-                      fill="url(#chartGrad)" />
-                    <path class="chart-line"
-                      d="M0,80 L30,65 L60,70 L90,40 L120,55 L150,30 L180,45 L210,20 L240,35 L270,15 L300,25" fill="none"
-                      stroke="#00ff88" stroke-width="2" />
-                    <circle class="chart-dot" cx="300" cy="25" r="4" fill="#00ff88" />
-                  </svg>
-                </div>
-                <div class="stock-tickers">
-                  <div class="ticker"><span class="t-sym">NVDA</span><span class="t-val up">+4.2%</span></div>
-                  <div class="ticker"><span class="t-sym">AAPL</span><span class="t-val up">+1.8%</span></div>
-                  <div class="ticker"><span class="t-sym">TSLA</span><span class="t-val down">-0.9%</span></div>
-                  <div class="ticker"><span class="t-sym">MSFT</span><span class="t-val up">+2.3%</span></div>
-                </div>
-                <div class="ai-badge">AI Powered ✦</div>
+              <div class="stock-tickers">
+                <div class="ticker"><span class="t-sym">NVDA</span><span class="t-val up">+4.2%</span></div>
+                <div class="ticker"><span class="t-sym">MSFT</span><span class="t-val up">+2.3%</span></div>
               </div>
-              <h3 class="project-title">SignalHub — AI Stock Analyzer</h3>
-              <p class="project-desc">
-                A fully deployed web app that feeds <strong>live market data from a stock API</strong> directly
-                into an <strong>AI prompt at runtime</strong> — giving the model real context to decide whether
-                to recommend buying a stock. Built with a custom frontend UI, Firebase backend, and a
-                multi-source API pipeline. <em>It's live on the web right now.</em>
+              <div class="ai-badge">ANALYZER</div>
+            </div>
+            <div class="project-details">
+              <h3 class="project-title text-white decrypt-trigger" data-text="SignalHub Analytics">SignalHub Analytics</h3>
+              <p class="project-desc text-dim">
+                Real-time stock pipeline feeding live API queries into an LLM prompts dynamically at runtime to evaluate signals.
               </p>
               <div class="project-tags">
-                <span>Firebase</span><span>AI API</span><span>Stock API</span><span>Prompt Engineering</span><span>JavaScript</span><span>Full-Stack</span>
+                <span>Firebase</span><span>Stock API</span><span>JSON</span>
               </div>
-              <div class="project-links">
-                <a href="https://signalhub-e79ba.web.app/" target="_blank" class="proj-link live">
-                  🔴 Live Demo ↗
+              <div class="project-links mt-4">
+                <a href="https://signalhub-e79ba.web.app/" target="_blank" class="proj-link live-btn">
+                  [ ESTABLISH_SESSION ]
                 </a>
               </div>
             </div>
           </div>
 
-          <!-- Project 2 -->
-          <div class="project-card glass-panel reveal-up" id="proj-thm">
-            <div class="project-card-inner">
-              <div class="project-meta">
-                <span class="project-year">2025</span>
-                <span class="project-cat">Cybersecurity · CTF</span>
-              </div>
-              <div class="project-visual thm-visual">
-                <div class="terminal-window">
-                  <div class="terminal-bar">
-                    <span class="tb-dot red"></span>
-                    <span class="tb-dot yellow"></span>
-                    <span class="tb-dot green"></span>
-                    <span class="tb-title">kali@thm:~</span>
-                  </div>
-                  <div class="terminal-body">
-                    <p><span class="t-green">$</span> nmap -sV -sC target.thm</p>
-                    <p><span class="t-cyan">Starting Nmap 7.94...</span></p>
-                    <p>PORT STATE SERVICE</p>
-                    <p>22/tcp open ssh</p>
-                    <p>80/tcp open http</p>
-                    <p><span class="t-green">$</span> msfconsole<span class="blink-cursor">▋</span></p>
-                  </div>
+          <!-- Project 3: TryHackMe CTF Labs -->
+          <div class="bento-project-card glass-panel reveal-up" id="proj-thm" style="grid-area: thm;">
+            <div class="project-card-header">
+              <span class="project-year">2025</span>
+              <span class="project-category">[ PENETRATION_TESTING ]</span>
+            </div>
+            <div class="project-visual thm-visual">
+              <div class="terminal-window">
+                <div class="terminal-bar">
+                  <span class="tb-dot red"></span>
+                  <span class="tb-dot yellow"></span>
+                  <span class="tb-dot green"></span>
+                  <span class="tb-title">kali@thm:~</span>
+                </div>
+                <div class="terminal-body">
+                  <p><span class="t-green">$</span> nmap -sV -sC target.thm</p>
+                  <p><span class="t-cyan">Nmap 7.94 active scans...</span></p>
+                  <p>PORT STATE SERVICE</p>
+                  <p>22/tcp open ssh</p>
+                  <p>80/tcp open http</p>
+                  <p><span class="t-green">$</span> msfconsole<span class="blink-cursor">▋</span></p>
                 </div>
               </div>
-              <h3 class="project-title">TryHackMe CTF Labs</h3>
-              <p class="project-desc">
-                Hands-on penetration testing labs covering full attack chains —
-                reconnaissance with Nmap, exploitation via Metasploit,
-                password cracking with John the Ripper, and privilege escalation across Linux &amp; Windows targets.
+            </div>
+            <div class="project-details">
+              <h3 class="project-title text-white decrypt-trigger" data-text="TryHackMe Labs">TryHackMe Labs</h3>
+              <p class="project-desc text-dim">
+                Offensive operations, network maps, password attacks, privilege escalation, and domain takeovers.
               </p>
               <div class="project-tags">
-                <span>Nmap</span><span>Metasploit</span><span>JtR</span><span>Linux</span><span>Windows</span>
+                <span>Metasploit</span><span>Nmap</span><span>John</span>
               </div>
             </div>
           </div>
 
-          <!-- Project 3 -->
-          <div class="project-card glass-panel reveal-up" id="proj-vm">
-            <div class="project-card-inner">
-              <div class="project-meta">
-                <span class="project-year">2023–25</span>
-                <span class="project-cat">Infrastructure · Security Lab</span>
-              </div>
-              <div class="project-visual vm-visual">
-                <div class="vm-diagram">
-                  <div class="vm-host">
-                    <span class="vm-label">Host Machine</span>
-                    <div class="vm-boxes">
-                      <div class="vm-box kali">
-                        <span>Kali Linux</span>
-                        <small>Attacker</small>
-                      </div>
-                      <div class="vm-box target">
-                        <span>Target VM</span>
-                        <small>Vulnerable OS</small>
-                      </div>
+          <!-- Project 4: VM Lab -->
+          <div class="bento-project-card glass-panel reveal-up" id="proj-vm" style="grid-area: vm;">
+            <div class="project-card-header">
+              <span class="project-year">2023–25</span>
+              <span class="project-category">[ NETWORKING_LAB ]</span>
+            </div>
+            <div class="project-visual vm-visual">
+              <div class="vm-diagram">
+                <div class="vm-host">
+                  <span class="vm-label">Host Machine</span>
+                  <div class="vm-boxes">
+                    <div class="vm-box kali">
+                      <span>Kali Linux</span>
+                      <small>Attacker</small>
                     </div>
-                    <div class="vm-network">
-                      <div class="vm-net-line"></div>
-                      <span class="vm-net-label">Isolated Network</span>
+                    <div class="vm-box target">
+                      <span>Target VM</span>
+                      <small>Vulnerable</small>
                     </div>
+                  </div>
+                  <div class="vm-network">
+                    <div class="vm-net-line"></div>
+                    <span class="vm-net-label">Isolated Network</span>
                   </div>
                 </div>
               </div>
-              <h3 class="project-title">Personal Hacking Lab</h3>
-              <p class="project-desc">
-                Built a fully isolated virtual hacking environment with multiple VMs
-                networked together. Safely explored CVEs targeting legacy Windows systems,
-                OSINT techniques, and tool development using GitHub hacking tools — all without risk to the host.
+            </div>
+            <div class="project-details">
+              <h3 class="project-title text-white decrypt-trigger" data-text="Security Lab Sandbox">Security Lab Sandbox</h3>
+              <p class="project-desc text-dim">
+                Isolated penetration testing laboratory with multiple hosts, tracking network frames.
               </p>
               <div class="project-tags">
-                <span>VirtualBox</span><span>Kali</span><span>CVE</span><span>OSINT</span><span>GraphSpy</span>
+                <span>VirtualBox</span><span>OSINT</span>
               </div>
             </div>
           </div>
 
-          <!-- Project 4 — Coming Soon -->
-          <div class="project-card coming-soon-card glass-panel reveal-up" id="proj-pentestai">
-            <div class="project-card-inner">
-              <div class="project-meta">
-                <span class="project-year">2025</span>
-                <span class="project-cat coming-cat">🤖 AI · Cybersecurity · Hugging Face</span>
-              </div>
-              <div class="project-visual pentestai-visual">
-                <div class="pentestai-inner">
-                  <div class="pentestai-pulse"></div>
-                  <div class="pentestai-text">
-                    <div class="pentestai-model-name">&lt;PentestGPT /&gt;</div>
-                    <div class="pentestai-status">
-                      <span class="status-dot"></span>
-                      <span>Training in progress...</span>
-                    </div>
-                    <div class="pentestai-stats">
-                      <div class="pstat"><span class="pstat-label">Base Model</span><span
-                          class="pstat-val">Mistral-7B</span></div>
-                      <div class="pstat"><span class="pstat-label">Task</span><span class="pstat-val">Vuln
-                          Analysis</span></div>
-                      <div class="pstat"><span class="pstat-label">Platform</span><span class="pstat-val">🤗
-                          HuggingFace</span></div>
-                    </div>
+          <!-- Project 5: AI Model -->
+          <div class="bento-project-card glass-panel reveal-up" id="proj-pentestai" style="grid-area: pentestai;">
+            <div class="project-card-header">
+              <span class="project-year">2025</span>
+              <span class="project-category">[ HuggingFace / ML ]</span>
+            </div>
+            <div class="project-visual pentestai-visual">
+              <div class="pentestai-inner">
+                <div class="pentestai-pulse"></div>
+                <div class="pentestai-text">
+                  <div class="pentestai-model-name">&lt;PentestGPT /&gt;</div>
+                  <div class="pentestai-status">
+                    <span class="status-dot"></span>
+                    <span>Training...</span>
+                  </div>
+                  <div class="pentestai-stats">
+                    <div class="pstat"><span class="pstat-label">Model</span><span class="pstat-val">Mistral-7B</span></div>
+                    <div class="pstat"><span class="pstat-label">Platform</span><span class="pstat-val">🤗 HF</span></div>
                   </div>
                 </div>
               </div>
-              <div class="coming-soon-badge">🚀 Dropping Soon</div>
-              <h3 class="project-title">Pentesting AI Model</h3>
-              <p class="project-desc">
-                Fine-tuning a large language model on cybersecurity datasets to assist with
-                vulnerability analysis, CVE matching, and attack surface mapping.
-                Built on Hugging Face with a custom training pipeline — designed to bridge AI and offensive security.
+            </div>
+            <div class="project-details">
+              <h3 class="project-title text-white decrypt-trigger" data-text="Security LLM Training">Security LLM Training</h3>
+              <p class="project-desc text-dim">
+                Fine-tuning large language models to categorize target software code vulnerabilities.
               </p>
               <div class="project-tags">
-                <span>Hugging
-                  Face</span><span>Fine-tuning</span><span>Transformers</span><span>Pentesting</span><span>LLM</span>
+                <span>HF API</span><span>Transformers</span>
               </div>
             </div>
           </div>
@@ -602,25 +571,23 @@
       </div>
     </section>
 
-    <!-- ── CERTIFICATIONS ── -->
+    <!-- ── CERTIFICATIONS SECTION ── -->
     <section class="section certs-section" id="certs">
       <div class="section-inner">
         <div class="section-header reveal-up">
-          <span class="section-tag">04 / Certifications</span>
-          <h2 class="section-title">Credentials<span class="accent">.</span></h2>
+          <span class="section-tag">[ 04_CERTIFICATIONS ]</span>
+          <h2 class="section-title text-white decrypt-trigger" data-text="VERIFIED_KEYS">VERIFIED_KEYS</h2>
         </div>
 
         <div class="certs-grid">
-
+          
+          <!-- Cert 1 -->
           <div class="cert-card glass-panel active-edge-green reveal-up">
-            <div class="cert-glow"></div>
             <div class="cert-header">
               <div class="cert-badge">
                 <svg viewBox="0 0 60 60" width="60" height="60">
-                  <circle cx="30" cy="30" r="28" fill="none" stroke="#00ff88" stroke-width="2" stroke-dasharray="4 2"
-                    class="cert-ring" />
-                  <text x="50%" y="52%" dominant-baseline="middle" text-anchor="middle" fill="#00ff88" font-size="18"
-                    font-family="JetBrains Mono">🛡️</text>
+                  <circle cx="30" cy="30" r="28" fill="none" stroke="#00FF41" stroke-width="2" stroke-dasharray="4 2" class="cert-ring" />
+                  <text x="50%" y="52%" dominant-baseline="middle" text-anchor="middle" fill="#00FF41" font-size="18" font-family="JetBrains Mono">🛡️</text>
                 </svg>
               </div>
               <div class="cert-issuer">
@@ -628,35 +595,26 @@
                 <span class="cert-year">2025</span>
               </div>
             </div>
-            <h3 class="cert-title">Introduction to Cybersecurity</h3>
-            <p class="cert-desc">
-              Comprehensive path covering offensive &amp; defensive security fundamentals.
-              Hands-on modules in Nmap, Metasploit, John the Ripper, network analysis, and more.
+            <h3 class="cert-title text-white decrypt-trigger" data-text="Intro to Cybersecurity">Intro to Cybersecurity</h3>
+            <p class="cert-desc text-dim">
+              Offensive and defensive security paths: Nmap, Metasploit, password cracking, web payloads, and network frame validation.
             </p>
             <div class="cert-modules">
-              <span>Nmap</span>
-              <span>Metasploit</span>
-              <span>John the Ripper</span>
-              <span>OSINT</span>
-              <span>Web Hacking</span>
-              <span>Network Security</span>
+              <span>Nmap</span><span>Metasploit</span><span>John</span><span>Web</span>
             </div>
             <div class="cert-footer">
-              <span class="cert-status verified">✓ Verified</span>
-              <a href="https://tryhackme-certificates.s3-eu-west-1.amazonaws.com/THM-VCQQJBQXSD.pdf" target="_blank"
-                class="cert-link">↗ View</a>
+              <span class="cert-status verified">VERIFIED</span>
+              <a href="https://tryhackme-certificates.s3-eu-west-1.amazonaws.com/THM-VCQQJBQXSD.pdf" target="_blank" class="cert-link">[ VIEW_CERT ]</a>
             </div>
           </div>
 
-          <div class="cert-card glass-panel active-edge-cyan reveal-up">
-            <div class="cert-glow" style="--glow-color: #00d4ff;"></div>
+          <!-- Cert 2 -->
+          <div class="cert-card glass-panel active-edge-green reveal-up">
             <div class="cert-header">
               <div class="cert-badge">
                 <svg viewBox="0 0 60 60" width="60" height="60">
-                  <circle cx="30" cy="30" r="28" fill="none" stroke="#00d4ff" stroke-width="2" stroke-dasharray="4 2"
-                    class="cert-ring" style="stroke:#00d4ff" />
-                  <text x="50%" y="52%" dominant-baseline="middle" text-anchor="middle" fill="#00d4ff" font-size="18"
-                    font-family="JetBrains Mono">🤖</text>
+                  <circle cx="30" cy="30" r="28" fill="none" stroke="#00FF41" stroke-width="2" stroke-dasharray="4 2" class="cert-ring" />
+                  <text x="50%" y="52%" dominant-baseline="middle" text-anchor="middle" fill="#00FF41" font-size="18" font-family="JetBrains Mono">🤖</text>
                 </svg>
               </div>
               <div class="cert-issuer">
@@ -664,101 +622,76 @@
                 <span class="cert-year">2025</span>
               </div>
             </div>
-            <h3 class="cert-title">AI Security</h3>
-            <p class="cert-desc">
-              Specialized certification covering the security implications of artificial intelligence systems —
-              adversarial attacks, model poisoning, AI-specific threat vectors, and defensive strategies.
+            <h3 class="cert-title text-white decrypt-trigger" data-text="AI Security">AI Security</h3>
+            <p class="cert-desc text-dim">
+              Threat vectors, adversarial ML, prompt injection defenses, model theft safety, and data sanitization.
             </p>
-            <div class="cert-modules" style="--tag-color: #00d4ff;">
-              <span>Adversarial ML</span>
-              <span>Model Poisoning</span>
-              <span>AI Threat Vectors</span>
-              <span>LLM Security</span>
-              <span>Data Privacy</span>
+            <div class="cert-modules">
+              <span>Adversarial ML</span><span>LLM Threat Models</span><span>Data Privacy</span>
             </div>
             <div class="cert-footer">
-              <span class="cert-status verified" style="color:#00d4ff;border-color:#00d4ff;">✓ Verified</span>
-              <a href="https://tryhackme-certificates.s3-eu-west-1.amazonaws.com/THM-PT5O33GQSU.pdf" target="_blank"
-                class="cert-link">↗ View</a>
+              <span class="cert-status verified">VERIFIED</span>
+              <a href="https://tryhackme-certificates.s3-eu-west-1.amazonaws.com/THM-PT5O33GQSU.pdf" target="_blank" class="cert-link">[ VIEW_CERT ]</a>
             </div>
           </div>
 
         </div>
 
         <!-- 91 Badges Matrix -->
-        <div class="badge-matrix-section reveal-up">
+        <div class="badge-matrix-section glass-panel reveal-up mt-8">
           <div class="badge-matrix-header">
-            <h3 class="knowledge-title" style="margin-bottom:0;">TryHackMe Module Mastery</h3>
-            <span class="badge-count"><span class="accent">91</span> Badges Earned</span>
+            <h3 class="knowledge-title text-white">[ MODULE_MASTERY ]</h3>
+            <span class="badge-count"><span class="accent">91</span> Badges Installed</span>
           </div>
           <div class="badge-matrix-container" id="badgeMatrix">
-            <!-- 91 dots will be injected here via JS -->
+            <!-- Programmatically populated by app.js -->
           </div>
           <div class="badge-matrix-footer">
-            <p>Spanning Web Exploitation, PrivEsc, OSINT, Network Analysis, and AI Security.</p>
-            <a href="https://tryhackme.com/p/354221973" target="_blank" class="text-link">↗ View Full THM Profile</a>
+            <p class="text-dim">Tracking badges across Web Hacking, Windows Exploit, OSINT, and AI Defensive layers.</p>
+            <a href="https://tryhackme.com/p/354221973" target="_blank" class="text-link">↗ Full THM Profile</a>
           </div>
         </div>
 
-        <!-- Knowledge badges -->
-        <div class="knowledge-section reveal-up">
-          <h3 class="knowledge-title">Also Familiar With</h3>
+        <!-- Familiar With -->
+        <div class="knowledge-section glass-panel reveal-up mt-6">
+          <h3 class="knowledge-title text-white">[ SYSTEM_FAMILIARITY ]</h3>
           <div class="knowledge-badges">
-            <div class="know-badge">
-              <span class="know-icon">🔴</span>
-              <span>OWASP Top 10</span>
-            </div>
-            <div class="know-badge">
-              <span class="know-icon">⚡</span>
-              <span>MITRE ATT&amp;CK</span>
-            </div>
-            <div class="know-badge">
-              <span class="know-icon">🕵️</span>
-              <span>CVE Research</span>
-            </div>
-            <div class="know-badge">
-              <span class="know-icon">🪟</span>
-              <span>Windows Exploits</span>
-            </div>
-            <div class="know-badge">
-              <span class="know-icon">🐧</span>
-              <span>Linux Privesc</span>
-            </div>
-            <div class="know-badge">
-              <span class="know-icon">📡</span>
-              <span>Network Recon</span>
-            </div>
+            <div class="know-badge"><span class="know-icon">🔴</span><span>OWASP Top 10</span></div>
+            <div class="know-badge"><span class="know-icon">⚡</span><span>MITRE ATT&amp;CK</span></div>
+            <div class="know-badge"><span class="know-icon">🕵️</span><span>CVE Research</span></div>
+            <div class="know-badge"><span class="know-icon">🪟</span><span>Windows Exploits</span></div>
+            <div class="know-badge"><span class="know-icon">🐧</span><span>Linux Privesc</span></div>
           </div>
         </div>
 
       </div>
     </section>
 
-    <!-- ── CONTACT ── -->
+    <!-- ── CONTACT SECTION ── -->
     <section class="section contact-section" id="contact">
       <div class="section-inner">
         <div class="section-header reveal-up">
-          <span class="section-tag">05 / Contact</span>
-          <h2 class="section-title">Let's Connect<span class="accent">.</span></h2>
+          <span class="section-tag">[ 05_ESTABLISH_SOCKET ]</span>
+          <h2 class="section-title text-white decrypt-trigger" data-text="ESTABLISH_SOCKET">ESTABLISH_SOCKET</h2>
         </div>
-        <div class="contact-content reveal-up">
-          <p class="contact-sub">
-            Looking for a security researcher who builds, not just breaks? Whether it's a collaboration,
-            a role, or just a conversation about offensive AI — reach out.
+        
+        <div class="contact-content glass-panel reveal-up">
+          <p class="contact-sub text-dim">
+            Looking for a cybersecurity researcher who designs systems that automate security verification? Initiate connection.
           </p>
-          <a href="mailto:aaron.lawrence.alva@gmail.com" class="contact-email" id="contactEmail">
+          <a href="mailto:aaron.lawrence.alva@gmail.com" class="contact-email text-white decrypt-trigger" id="contactEmail" data-text="aaron.lawrence.alva@gmail.com">
             <span class="email-text">aaron.lawrence.alva@gmail.com</span>
             <span class="email-arrow">→</span>
           </a>
-          <div class="contact-socials">
+          <div class="contact-socials mt-6">
             <a href="https://tryhackme.com/p/354221973" target="_blank" rel="noreferrer" class="social-link">
-              <span class="social-icon">🏆</span> TryHackMe
+              [ TryHackMe ]
             </a>
             <a href="https://github.com/Bunny-sysd" target="_blank" rel="noreferrer" class="social-link">
-              <span class="social-icon">💻</span> GitHub
+              [ GitHub ]
             </a>
             <a href="https://www.linkedin.com/in/aaron-alva" target="_blank" rel="noreferrer" class="social-link">
-              <span class="social-icon">🔗</span> LinkedIn
+              [ LinkedIn ]
             </a>
           </div>
         </div>
@@ -770,8 +703,8 @@
   <!-- ── FOOTER ── -->
   <footer class="footer">
     <div class="footer-inner">
-      <span class="footer-copy">© 2026 — Designed &amp; coded by <span class="accent">Aaron Alva</span></span>
-      <span class="footer-made">Made with ☕ &amp; curiosity</span>
+      <span class="footer-copy">© 2026 Aaron Alva // terminal_state: active</span>
+      <span class="footer-made">Made with ☕ &amp; zero-day vulnerability checks</span>
     </div>
   </footer>
 
