@@ -124,8 +124,8 @@
           <div class="terminal-chips">
             <button class="command-chip" data-cmd="./view_mutagen_fuzzer">[ ./view_mutagen_fuzzer ]</button>
             <button class="command-chip" data-cmd="cat certifications.txt">[ cat certifications.txt ]</button>
+            <button class="command-chip" data-cmd="cat resume.md">[ cat resume.md ]</button>
             <button class="command-chip" data-cmd="cat skills.db">[ cat skills.db ]</button>
-            <button class="command-chip" data-cmd="cat profile.md">[ cat profile.md ]</button>
             <button class="command-chip" data-cmd="clear">[ clear ]</button>
           </div>
         </div>
@@ -172,13 +172,10 @@
             <div class="card-edge-glow"></div>
             <h3 class="bento-heading">[ PROFILING ]</h3>
             <p class="about-bio">
-              I am a <span class="highlight">cybersecurity researcher</span> and agentic AI developer dedicated to automating offensive and defensive operations. I build pipelines that crawl codebase repositories, catch buffer corruptions, evaluate system vulnerabilities, and implement dynamic updates autonomously.
+              I am a <span class="highlight">Cybersecurity Researcher</span> and AI Systems Architect focused on the next frontier of defense: <span class="highlight">autonomous, self-healing software pipelines</span>. I build closed-loop agents that crawl codebase repositories, catch buffer corruptions, evaluate system vulnerabilities, and implement dynamic security fixes autonomously.
             </p>
             <p class="about-bio mt-4">
-              My core project is <span class="highlight">Mutagen</span>, an autonomous zero-day fuzzer that decompiles targets via Ghidra, analyzes memory limits, writes working exploit proof-of-concepts, and automatically updates safety checks to secure C codebases.
-            </p>
-            <p class="about-bio mt-4">
-              I fine-tune large language models on Hugging Face to classify vulnerabilities and match MITRE ATT&amp;CK maps, utilizing isolated VM environments for exploit verification.
+              My mission is to replace manual code auditing with automated intelligence. Through my primary project, <span class="highlight">Mutagen</span>, I combine headless binary disassemblers with local machine learning models to decompile target architectures, verify crash vulnerabilities in secure sandboxes, and compile source patches instantly to secure assets.
             </p>
             <div class="about-nav-links mt-6">
               <a href="#certs" class="text-link">→ View Certifications</a>
@@ -186,33 +183,33 @@
             </div>
           </div>
 
-          <div class="about-sidebar">
-            <div class="sidebar-item glass-panel reveal-up">
-              <span class="sidebar-icon">🛡️</span>
-              <div class="sidebar-info">
-                <span class="label">FIELD OF WORK</span>
-                <span class="value">Cybersecurity & AI</span>
+          <div class="about-sidebar glass-panel reveal-up" style="padding: 1.5rem;">
+            <div class="card-edge-glow"></div>
+            <h3 class="bento-heading">[ OPERATIONAL_SPECS ]</h3>
+            <div style="font-family: var(--font-mono); font-size: 0.72rem; line-height: 1.8; margin-top: 1.25rem; color: var(--text-dim);">
+              <div style="display: flex; justify-content: space-between; margin-bottom: 0.6rem; border-bottom: 1px dashed rgba(255,255,255,0.05); padding-bottom: 0.25rem;">
+                <span style="color: var(--text-muted);">HOST_OS:</span>
+                <span style="color: var(--cyan);">Kali Linux / Kernel v6.12</span>
               </div>
-            </div>
-            <div class="sidebar-item glass-panel reveal-up">
-              <span class="sidebar-icon">📍</span>
-              <div class="sidebar-info">
-                <span class="label">LOCATION</span>
-                <span class="value">Remote Network</span>
+              <div style="display: flex; justify-content: space-between; margin-bottom: 0.6rem; border-bottom: 1px dashed rgba(255,255,255,0.05); padding-bottom: 0.25rem;">
+                <span style="color: var(--text-muted);">LOCAL_MODEL:</span>
+                <span style="color: var(--green);">Gemma-4-Security-FineTune</span>
               </div>
-            </div>
-            <div class="sidebar-item glass-panel reveal-up">
-              <span class="sidebar-icon">🏆</span>
-              <div class="sidebar-info">
-                <span class="label">CTF PLATFORM</span>
-                <span class="value">TryHackMe Profile</span>
+              <div style="display: flex; justify-content: space-between; margin-bottom: 0.6rem; border-bottom: 1px dashed rgba(255,255,255,0.05); padding-bottom: 0.25rem;">
+                <span style="color: var(--text-muted);">TARGET_ARCH:</span>
+                <span style="color: var(--cyan);">x86_64 ELF / PE32 Binaries</span>
               </div>
-            </div>
-            <div class="sidebar-item glass-panel reveal-up">
-              <span class="sidebar-icon">💻</span>
-              <div class="sidebar-info">
-                <span class="label">LAB SETUP</span>
-                <span class="value">VM Sandbox / Kali</span>
+              <div style="display: flex; justify-content: space-between; margin-bottom: 0.6rem; border-bottom: 1px dashed rgba(255,255,255,0.05); padding-bottom: 0.25rem;">
+                <span style="color: var(--text-muted);">ACTIVE_MISSION:</span>
+                <span style="color: var(--green);">Closed-Loop Binary Patching</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; margin-bottom: 0.6rem; border-bottom: 1px dashed rgba(255,255,255,0.05); padding-bottom: 0.25rem;">
+                <span style="color: var(--text-muted);">SANDBOX_LAB:</span>
+                <span style="color: var(--cyan);">VM Sandbox / Host Isolation</span>
+              </div>
+              <div style="display: flex; justify-content: space-between;">
+                <span style="color: var(--text-muted);">PIPELINE_STATUS:</span>
+                <span class="panel-status-tag" style="color: var(--green); font-weight: bold;">[ ACTIVE_MONITORING ]</span>
               </div>
             </div>
           </div>
@@ -228,97 +225,85 @@
           <h2 class="section-title text-white decrypt-trigger" data-text="SYS_ARMAMENT">SYS_ARMAMENT</h2>
         </div>
 
-        <div class="bento-skills-grid">
+        <div class="bento-skills-grid active-matrix-grid">
           
-          <!-- Offensive Security -->
-          <div class="bento-skill-box glass-panel reveal-up" style="grid-area: offensive;">
-            <div class="skill-box-header">
-              <span class="box-icon">⚔️</span>
-              <h3 class="box-title">Offensive Operations</h3>
+          <!-- Parent Box 1: Offensive Operations -->
+          <div class="bento-skill-box parent-node glass-panel reveal-up" id="parent-offensive" style="grid-area: offensive;">
+            <svg class="node-matrix-svg"></svg>
+            <div class="parent-node-header">
+              <span class="parent-node-reticle">[+]</span>
+              <h3 class="parent-node-title">OFFENSIVE OPERATIONS</h3>
             </div>
-            <div class="skill-pills">
-              <span class="skill-badge tier-1">Nmap</span>
-              <span class="skill-badge tier-1">Metasploit</span>
-              <span class="skill-badge tier-1">John the Ripper</span>
-              <span class="skill-badge tier-2">GraphSpy</span>
-              <span class="skill-badge tier-2">Shannon</span>
-              <span class="skill-badge tier-2">Hydra</span>
-              <span class="skill-badge tier-2">Burp Suite</span>
-              <span class="skill-badge tier-3">Custom Exploits</span>
-            </div>
-          </div>
-
-          <!-- Standards & Frameworks -->
-          <div class="bento-skill-box glass-panel reveal-up" style="grid-area: standards;">
-            <div class="skill-box-header">
-              <span class="box-icon">📚</span>
-              <h3 class="box-title">Frameworks</h3>
-            </div>
-            <div class="skill-pills">
-              <span class="skill-badge tier-1">OWASP Top 10</span>
-              <span class="skill-badge tier-1">MITRE ATT&amp;CK</span>
-              <span class="skill-badge tier-2">CVE Research</span>
-              <span class="skill-badge tier-2">AI Security</span>
-              <span class="skill-badge tier-2">Threat Modeling</span>
+            <div class="skill-pills child-chips-cluster">
+              <span class="skill-child-chip tier-1 clickable-cert-trigger" data-cert="cert-cyber" data-skill="nmap">Nmap</span>
+              <span class="skill-child-chip tier-1 clickable-cert-trigger" data-cert="cert-cyber" data-skill="metasploit">Metasploit</span>
+              <span class="skill-child-chip tier-2 clickable-cert-trigger" data-cert="cert-cyber" data-skill="burpsuite">Burp Suite</span>
+              <span class="skill-child-chip tier-1" data-skill="john">John the Ripper</span>
+              <span class="skill-child-chip tier-2" data-skill="graphspy">GraphSpy</span>
+              <span class="skill-child-chip tier-2" data-skill="hydra">Hydra</span>
+              <span class="skill-child-chip tier-3" data-skill="custom_exploits">Custom Exploits</span>
             </div>
           </div>
 
-          <!-- Networking -->
-          <div class="bento-skill-box glass-panel reveal-up" style="grid-area: networking;">
-            <div class="skill-box-header">
-              <span class="box-icon">🌐</span>
-              <h3 class="box-title">Networking</h3>
+          <!-- Parent Box 2: Frameworks & Protocols -->
+          <div class="bento-skill-box parent-node glass-panel reveal-up" id="parent-frameworks" style="grid-area: frameworks;">
+            <svg class="node-matrix-svg"></svg>
+            <div class="parent-node-header">
+              <span class="parent-node-reticle">[+]</span>
+              <h3 class="parent-node-title">FRAMEWORKS</h3>
             </div>
-            <div class="skill-pills">
-              <span class="skill-badge tier-1">Packet Analysis</span>
-              <span class="skill-badge tier-1">Port Scanning</span>
-              <span class="skill-badge tier-2">TCP/IP</span>
-              <span class="skill-badge tier-2">DNS Enumeration</span>
-              <span class="skill-badge tier-3">Wireshark</span>
-            </div>
-          </div>
-
-          <!-- Web Dev & AI -->
-          <div class="bento-skill-box glass-panel reveal-up" style="grid-area: webdev;">
-            <div class="skill-box-header">
-              <span class="box-icon">🚀</span>
-              <h3 class="box-title">Web &amp; Inference</h3>
-            </div>
-            <div class="skill-pills">
-              <span class="skill-badge tier-1">HTML / CSS / JS</span>
-              <span class="skill-badge tier-1">UI/UX Design</span>
-              <span class="skill-badge tier-2">AI Integration</span>
-              <span class="skill-badge tier-2">REST APIs</span>
-              <span class="skill-badge tier-3">JSON Data Pipelines</span>
+            <div class="skill-pills child-chips-cluster">
+              <span class="skill-child-chip tier-1" data-skill="owasp">OWASP Top 10</span>
+              <span class="skill-child-chip tier-1" data-skill="mitre">MITRE ATT&amp;CK</span>
+              <span class="skill-child-chip tier-2" data-skill="tcpip">TCP/IP Model</span>
+              <span class="skill-child-chip tier-2 clickable-cert-trigger" data-cert="cert-ai" data-skill="aisec">AI Security</span>
+              <span class="skill-child-chip tier-2" data-skill="cve">CVE Research</span>
+              <span class="skill-child-chip tier-2" data-skill="wireshark">Wireshark</span>
+              <span class="skill-child-chip tier-3" data-skill="packet">Packet Analysis</span>
             </div>
           </div>
 
-          <!-- AI / ML Model training -->
-          <div class="bento-skill-box glass-panel reveal-up" style="grid-area: aiml;">
-            <div class="skill-box-header">
-              <span class="box-icon">🤗</span>
-              <h3 class="box-title">Hugging Face &amp; LLMs</h3>
+          <!-- Parent Box 3: Hugging Face & LLMs -->
+          <div class="bento-skill-box parent-node glass-panel reveal-up" id="parent-aiml" style="grid-area: aiml;">
+            <svg class="node-matrix-svg"></svg>
+            <div class="parent-node-header">
+              <span class="parent-node-reticle">[+]</span>
+              <h3 class="parent-node-title">HUGGING FACE &amp; LLMS</h3>
             </div>
-            <div class="skill-pills">
-              <span class="skill-badge tier-1">Hugging Face API</span>
-              <span class="skill-badge tier-1">Model Fine-tuning</span>
-              <span class="skill-badge tier-2">Transformers</span>
-              <span class="skill-badge tier-2">Dataset Prep</span>
-              <span class="skill-badge tier-3">Adversarial ML</span>
+            <div class="skill-pills child-chips-cluster">
+              <span class="skill-child-chip tier-1" data-skill="huggingface">HuggingFace API</span>
+              <span class="skill-child-chip tier-1" data-skill="finetuning">Model Fine-tuning</span>
+              <span class="skill-child-chip tier-2" data-skill="transformers">Transformers</span>
+              <span class="skill-child-chip tier-2" data-skill="dataset">Dataset Prep</span>
+              <span class="skill-child-chip tier-3 clickable-cert-trigger" data-cert="cert-ai" data-skill="adversarial">Adversarial ML</span>
+              <span class="skill-child-chip tier-1" data-skill="python">Python</span>
+            </div>
+            <!-- Model initialization console logger -->
+            <div class="node-console-log" id="aimlConsole">
+              <span class="console-cursor">></span> Click node to initialize model...
             </div>
           </div>
 
-          <!-- Sandbox Environment -->
-          <div class="bento-skill-box glass-panel reveal-up" style="grid-area: sandbox;">
-            <div class="skill-box-header">
-              <span class="box-icon">🖥️</span>
-              <h3 class="box-title">Security Lab Environment</h3>
+          <!-- Parent Box 4: Security Lab Environment -->
+          <div class="bento-skill-box parent-node glass-panel reveal-up" id="parent-sandbox" style="grid-area: sandbox;">
+            <svg class="node-matrix-svg"></svg>
+            <div class="parent-node-header">
+              <span class="parent-node-reticle">[+]</span>
+              <h3 class="parent-node-title">SECURITY LAB</h3>
             </div>
-            <div class="skill-pills">
-              <span class="skill-badge tier-1">Kali Linux</span>
-              <span class="skill-badge tier-1">Virtual Machines</span>
-              <span class="skill-badge tier-2">GitHub</span>
-              <span class="skill-badge tier-3">VirtualBox / VMware</span>
+            <div class="skill-pills child-chips-cluster">
+              <span class="skill-child-chip tier-1" data-skill="kali">Kali Linux</span>
+              <span class="skill-child-chip tier-1" data-skill="vms">Virtual Machines</span>
+              <span class="skill-child-chip tier-2" data-skill="virtualbox">VirtualBox</span>
+              <span class="skill-child-chip tier-1" data-skill="bash">Bash</span>
+              <span class="skill-child-chip tier-1" data-skill="sql">Advanced SQL</span>
+              <span class="skill-child-chip tier-2" data-skill="javascript">Javascript</span>
+              <span class="skill-child-chip tier-2" data-skill="typescript">Typescript</span>
+              <span class="skill-child-chip tier-3" data-skill="cpp">C++ / C#</span>
+            </div>
+            <!-- Lab console status logger -->
+            <div class="node-console-log" id="sandboxConsole">
+              <span class="console-cursor">></span> status: online // click to stress test...
             </div>
           </div>
         </div>
@@ -389,7 +374,7 @@
             <div class="glitch-flash"></div>
             <div class="project-card-header">
               <span class="project-year">2026</span>
-              <span class="project-category">[ AGENTIC_AI / FUZZER ]</span>
+              <span class="project-category clickable-cert-trigger" data-cert="cert-ai" style="cursor: pointer;">[ AGENTIC_AI / FUZZER ]</span>
             </div>
             <div class="project-visual mutagen-visual" style="position: relative;">
               <canvas id="openclawCanvas" class="openclaw-canvas" style="position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: auto; z-index: 1;"></canvas>
@@ -413,7 +398,7 @@
                 Autonomous agentic vulnerability platform. Runs Ghidra decompiler on C binaries, generates exploits to confirm vulnerability, applies source patches, and audits target stability.
               </p>
               <div class="project-tags">
-                <span>Python</span><span>Gemini API</span><span>Ghidra</span><span>Docker</span>
+                <span>Python</span><span class="clickable-cert-trigger" data-cert="cert-ai" style="cursor: pointer;">Gemini API</span><span>Ghidra</span><span>Docker</span>
               </div>
               <div class="project-links mt-4">
                 <a href="javascript:void(0)" class="proj-link live-btn">[ VIEW_SOURCE ]</a>
@@ -473,7 +458,7 @@
             <div class="glitch-flash"></div>
             <div class="project-card-header">
               <span class="project-year">2025</span>
-              <span class="project-category">[ PENETRATION_TESTING ]</span>
+              <span class="project-category clickable-cert-trigger" data-cert="cert-cyber" style="cursor: pointer;">[ PENETRATION_TESTING ]</span>
             </div>
             <div class="project-visual thm-visual">
               <div class="terminal-window">
@@ -499,7 +484,7 @@
                 Offensive operations, network maps, password attacks, privilege escalation, and domain takeovers.
               </p>
               <div class="project-tags">
-                <span>Metasploit</span><span>Nmap</span><span>John</span>
+                <span class="clickable-cert-trigger" data-cert="cert-cyber" style="cursor: pointer;">Metasploit</span><span class="clickable-cert-trigger" data-cert="cert-cyber" style="cursor: pointer;">Nmap</span><span>John</span>
               </div>
               <div class="project-links mt-4">
                 <a href="javascript:void(0)" class="proj-link live-btn">[ VIEW_VERIFIED_PROFILE ]</a>
@@ -554,7 +539,7 @@
             <div class="glitch-flash"></div>
             <div class="project-card-header">
               <span class="project-year">2025</span>
-              <span class="project-category">[ HuggingFace / ML ]</span>
+              <span class="project-category clickable-cert-trigger" data-cert="cert-ai" style="cursor: pointer;">[ HuggingFace / ML ]</span>
             </div>
             <div class="project-visual pentestai-visual">
               <div class="pentestai-inner">
@@ -578,7 +563,7 @@
                 Fine-tuning large language models to categorize target software code vulnerabilities.
               </p>
               <div class="project-tags">
-                <span>HF API</span><span>Transformers</span>
+                <span>HF API</span><span class="clickable-cert-trigger" data-cert="cert-ai" style="cursor: pointer;">Transformers</span>
               </div>
               <div class="project-links mt-4">
                 <a href="javascript:void(0)" class="proj-link live-btn">[ CONNECT_HF_REPO ]</a>
@@ -601,12 +586,12 @@
         <div class="certs-grid">
           
           <!-- Cert 1 -->
-          <div class="cert-card glass-panel active-edge-green reveal-up">
+          <div class="cert-card glass-panel active-edge-green reveal-up" id="cert-cyber">
             <div class="cert-header">
               <div class="cert-badge">
                 <svg viewBox="0 0 60 60" width="60" height="60">
-                  <circle cx="30" cy="30" r="28" fill="none" stroke="#00FF41" stroke-width="2" stroke-dasharray="4 2" class="cert-ring" />
-                  <text x="50%" y="52%" dominant-baseline="middle" text-anchor="middle" fill="#00FF41" font-size="18" font-family="JetBrains Mono">🛡️</text>
+                  <circle cx="30" cy="30" r="28" fill="none" stroke="#00ff66" stroke-width="2" stroke-dasharray="4 2" class="cert-ring" />
+                  <text x="50%" y="52%" dominant-baseline="middle" text-anchor="middle" fill="#00ff66" font-size="18" font-family="JetBrains Mono">🛡️</text>
                 </svg>
               </div>
               <div class="cert-issuer">
@@ -628,7 +613,7 @@
           </div>
 
           <!-- Cert 2 -->
-          <div class="cert-card glass-panel active-edge-green reveal-up">
+          <div class="cert-card glass-panel active-edge-green reveal-up" id="cert-ai">
             <div class="cert-header">
               <div class="cert-badge">
                 <svg viewBox="0 0 60 60" width="60" height="60">
@@ -742,6 +727,15 @@
   </div>
 
   <!-- ── PROJECT DETAIL MODAL ── -->
+  <!-- Floating Terminal Tooltip for Skills Hover -->
+  <div id="terminalTooltip" class="terminal-tooltip glass-panel">
+    <div class="tooltip-header">
+      <span class="tooltip-dot"></span>
+      <span id="tooltipTitle">EXE_RUN</span>
+    </div>
+    <div class="tooltip-body" id="tooltipText">> </div>
+  </div>
+
   <div id="projectModal" class="project-modal-overlay">
     <div class="project-modal-content glass-panel">
       <button class="modal-close" id="modalCloseBtn">✕</button>

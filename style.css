@@ -710,71 +710,179 @@ body::before {
   margin-top: 0.15rem;
 }
 
-/* ── SKILLS BENTO GRID ── */
-.bento-skills-grid {
+/* ── ACTIVE TARGETING NODE MATRIX ── */
+.active-matrix-grid {
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr;
-  grid-template-rows: auto auto;
+  grid-template-columns: 1.3fr 0.7fr;
+  grid-template-rows: auto auto auto;
   grid-template-areas:
-    "offensive standards networking"
-    "offensive aiml sandbox";
-  gap: 1rem;
+    "offensive frameworks"
+    "offensive aiml"
+    "sandbox sandbox";
+  gap: 1.25rem;
 }
-.bento-skill-box {
+.parent-node {
+  position: relative;
   padding: 1.75rem;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
+  min-height: 200px;
+  background: rgba(2, 4, 10, 0.45);
+  border: 1px solid var(--border);
+  transition: box-shadow 0.4s ease, border-color 0.4s ease, transform 0.4s ease;
 }
-.skill-box-header {
+.parent-node.active-glow {
+  border-color: var(--green) !important;
+  box-shadow: 0 0 20px rgba(0, 255, 102, 0.2) !important;
+}
+.parent-node-header {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 1.25rem;
-  border-bottom: 1px solid var(--border);
+  gap: 0.6rem;
+  margin-bottom: 1.5rem;
+  z-index: 5;
+  position: relative;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   padding-bottom: 0.5rem;
 }
-.box-icon {
-  font-size: 1.2rem;
+.parent-node-reticle {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--green);
+  text-shadow: 0 0 6px rgba(0, 255, 102, 0.6);
 }
-.box-title {
-  font-size: 0.9rem;
+.parent-node-title {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
   font-weight: 700;
-  text-transform: uppercase;
+  letter-spacing: 0.08em;
   color: #fff;
+  text-transform: uppercase;
 }
-.skill-pills {
+.child-chips-cluster {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.4rem;
+  gap: 0.6rem;
+  z-index: 5;
+  position: relative;
+  margin-top: auto;
 }
-.skill-badge {
+.skill-child-chip {
+  display: inline-block;
+  padding: 0.3rem 0.75rem;
+  background: rgba(2, 4, 10, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  border-radius: var(--radius);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  position: relative;
+  z-index: 10;
+}
+.skill-child-chip:hover {
+  background: rgba(0, 255, 102, 0.06) !important;
+  border-color: var(--green) !important;
+  color: #fff !important;
+  box-shadow: 0 0 12px rgba(0, 255, 102, 0.25);
+  transform: translateY(-2px) scale(1.04);
+}
+.node-matrix-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Local console diagnostics */
+.node-console-log {
+  margin-top: 1rem;
+  padding: 0.5rem 0.75rem;
+  background: rgba(0, 0, 0, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: var(--radius);
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--cyan);
+  min-height: 34px;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  z-index: 5;
+  position: relative;
+}
+.console-cursor {
+  color: var(--green);
+  font-weight: bold;
+}
+
+/* ── FLOATING TERMINAL TOOLTIP ── */
+.terminal-tooltip {
+  position: fixed;
+  pointer-events: none;
+  z-index: 10000;
+  padding: 0.75rem 1.25rem;
   font-family: var(--font-mono);
   font-size: 0.72rem;
-  padding: 0.25rem 0.6rem;
+  color: var(--green);
+  background: rgba(2, 4, 10, 0.95);
+  border: 1px solid var(--green);
+  box-shadow: 0 0 16px rgba(0, 255, 96, 0.35);
   border-radius: var(--radius);
-  transition: all 0.2s;
-  cursor: default;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.1s ease;
+  min-width: 280px;
+  max-width: 340px;
+  backdrop-filter: blur(8px);
 }
-.tier-1 {
-  background: rgba(0, 255, 65, 0.08);
-  border: 1px solid rgba(0, 255, 65, 0.25);
-  color: var(--green);
+.terminal-tooltip.active {
+  opacity: 1;
+  visibility: visible;
 }
-.tier-2 {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  color: var(--text-dim);
+.tooltip-header {
+  border-bottom: 1px solid rgba(0, 255, 102, 0.2);
+  padding-bottom: 0.3rem;
+  margin-bottom: 0.4rem;
+  font-size: 0.65rem;
+  letter-spacing: 0.05em;
+  color: var(--cyan);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
 }
-.tier-3 {
-  background: rgba(255, 255, 255, 0.01);
-  border: 1px solid rgba(255, 255, 255, 0.03);
-  color: var(--text-muted);
+.tooltip-dot {
+  width: 6px;
+  height: 6px;
+  background: var(--green);
+  border-radius: 50%;
+  animation: blink 0.8s step-end infinite;
 }
-.skill-badge:hover {
-  border-color: var(--green);
-  color: var(--green);
-  transform: translateY(-1px);
+.tooltip-body {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
+
+/* Hardware Fault Animation */
+.stress-fault-glitch {
+  animation: hardware-stress-shake 0.4s linear forwards;
+  border-color: #ff0055 !important;
+  box-shadow: 0 0 30px rgba(255, 0, 85, 0.4) !important;
+}
+
+@keyframes hardware-stress-shake {
+  0% { transform: translate(1px, 1px) skewX(2deg); background: rgba(255, 0, 85, 0.15); }
+  20% { transform: translate(-2px, -1px) skewX(-3deg); }
+  40% { transform: translate(3px, 2px) skewX(5deg); }
+  60% { transform: translate(-1px, 2px) skewX(-2deg); }
+  80% { transform: translate(2px, -2px) skewX(1deg); }
+  100% { transform: translate(0, 0) skewX(0deg); }
+}
+
 
 /* ── PIPELINE FLOW ── */
 .mutagen-pipeline-section {
@@ -1390,13 +1498,13 @@ body::before {
   .bento-about-layout {
     grid-template-columns: 1fr;
   }
-  .bento-skills-grid {
-    grid-template-columns: 1fr 1fr;
+  .active-matrix-grid {
+    grid-template-columns: 1fr;
     grid-template-areas:
-      "offensive offensive"
-      "standards networking"
-      "webdev aiml"
-      "sandbox sandbox";
+      "offensive"
+      "frameworks"
+      "aiml"
+      "sandbox";
   }
   .bento-projects-grid {
     grid-template-columns: 1fr;
@@ -1438,13 +1546,11 @@ body::before {
   .hero-grid-stats {
     grid-template-columns: 1fr;
   }
-  .bento-skills-grid {
+  .active-matrix-grid {
     grid-template-columns: 1fr;
     grid-template-areas:
       "offensive"
-      "standards"
-      "networking"
-      "webdev"
+      "frameworks"
       "aiml"
       "sandbox";
   }
@@ -1622,6 +1728,17 @@ body::before {
   border: 1px solid rgba(0, 212, 255, 0.15);
   padding: 0.2rem 0.6rem;
   border-radius: var(--radius);
+}
+.clickable-cert-trigger {
+  cursor: pointer;
+  transition: all var(--transition) !important;
+}
+.clickable-cert-trigger:hover {
+  background: var(--green) !important;
+  color: #000 !important;
+  border-color: var(--green) !important;
+  box-shadow: 0 0 10px rgba(0, 255, 102, 0.45);
+  transform: translateY(-1px) scale(1.05);
 }
 .modal-action-btn {
   display: inline-flex;

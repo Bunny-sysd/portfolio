@@ -262,6 +262,39 @@ function runHeroTerminalDiagnostics() {
       return;
     }
 
+    if (trimmed === 'cat resume.md') {
+      printLine('[OK] Fetching formatted functional resume...', 'text-cyan');
+      setTimeout(() => {
+        printLine('============================================================', 'text-muted');
+        printLine('AARON ALVA // Mississauga, ON // Email: aaron.lawrence.alva@gmail.com', 'text-white');
+        printLine('------------------------------------------------------------', 'text-muted');
+        printLine('SUMMARY:', 'text-green');
+        printLine('  Motivated Grade 10 honours student with deep passion for network defense,', 'text-dim');
+        printLine('  ethical hacking, and automated security pipelines. Self-taught with fully', 'text-dim');
+        printLine('  operational VirtualBox home lab running threat simulations.', 'text-dim');
+        printLine('------------------------------------------------------------', 'text-muted');
+        printLine('TECHNICAL SKILLS:', 'text-green');
+        printLine('  - Security: Wireshark, Nmap, Burp Suite, Metasploit, GraphSpy', 'text-dim');
+        printLine('  - Code: Python, Bash, Advanced SQL, JS, TS, C++, C#', 'text-dim');
+        printLine('  - Systems: Kali Linux, Ubuntu, Arch, Windows 10/11, VirtualBox', 'text-dim');
+        printLine('  - Frameworks: MITRE ATT&CK, OWASP Top 10, TCP/IP Model', 'text-dim');
+        printLine('------------------------------------------------------------', 'text-muted');
+        printLine('ACHIEVEMENTS:', 'text-green');
+        printLine('  - Safe Virtual Hacking Environment: Designed VirtualBox lab simulating attacks.', 'text-dim');
+        printLine('  - Local Business AI Automation: Built lead-securing and security-hardened pipelines.', 'text-dim');
+        printLine('  - Web Vulnerability Research: Exploited SQLi & privilege escalation vectors.', 'text-dim');
+        printLine('  - Gemma 4 Fine-Tuning: Finetuned local transformer model for red team pentesting.', 'text-dim');
+        printLine('------------------------------------------------------------', 'text-muted');
+        printLine('EDUCATION:', 'text-green');
+        printLine('  - Ontario Secondary School Diploma (St. Joseph, Mississauga, ON) // Grade 10', 'text-dim');
+        printLine('  - Standing: Honours (80+) // Computer Science & Math coursework', 'text-dim');
+        printLine('============================================================', 'text-muted');
+      }, 200);
+      return;
+    }
+
+    }
+
     if (trimmed === 'cat skills.db') {
       printLine('[OK] Fetching dynamic skills matrix database...', 'text-cyan');
       setTimeout(() => {
@@ -302,6 +335,8 @@ function runHeroTerminalDiagnostics() {
 
     if (cleanQuery.includes('cert') || cleanQuery.includes('education') || cleanQuery.includes('giac') || cleanQuery.includes('credential') || cleanQuery.includes('badge') || cleanQuery.includes('thm')) {
       targetCommand = 'cat certifications.txt';
+    } else if (cleanQuery.includes('resume') || cleanQuery.includes('cv') || cleanQuery.includes('career') || cleanQuery.includes('experience') || cleanQuery.includes('history')) {
+      targetCommand = 'cat resume.md';
     } else if (cleanQuery.includes('skill') || cleanQuery.includes('arsenal') || cleanQuery.includes('tools') || cleanQuery.includes('techno') || cleanQuery.includes('offensive') || cleanQuery.includes('defense')) {
       targetCommand = 'cat skills.db';
     } else if (cleanQuery.includes('mutagen') || cleanQuery.includes('fuzzer') || cleanQuery.includes('zero') || cleanQuery.includes('exploit') || cleanQuery.includes('sandbox')) {
@@ -367,7 +402,7 @@ function runHeroTerminalDiagnostics() {
         inputEl.value = '';
 
         // If it's a direct command or in the chips, run directly
-        const knownCommands = ['./view_mutagen_fuzzer', 'cat certifications.txt', 'cat skills.db', 'cat profile.md', 'clear'];
+        const knownCommands = ['./view_mutagen_fuzzer', 'cat certifications.txt', 'cat skills.db', 'cat profile.md', 'cat resume.md', 'clear'];
         if (knownCommands.includes(val)) {
           executeCommand(val);
         } else {
@@ -1001,6 +1036,218 @@ function playSystemAlarmBeep() {
   if (closeBtn) closeBtn.addEventListener('click', closeModal);
   modal.addEventListener('click', e => {
     if (e.target === modal) closeModal();
+  });
+})();
+
+})();
+
+// ── ACTIVE TARGETING NODE MATRIX CONTROLLER ──
+(function initActiveNodeMatrix() {
+  // 1. Draw SVG bezier curves from parent title to child chips
+  function drawNodeMatrixLines() {
+    document.querySelectorAll('.parent-node').forEach(parent => {
+      const svg = parent.querySelector('.node-matrix-svg');
+      if (!svg) return;
+      svg.innerHTML = ''; // Clear existing path lines
+      
+      const header = parent.querySelector('.parent-node-header');
+      const chips = parent.querySelectorAll('.skill-child-chip');
+      if (!header || chips.length === 0) return;
+      
+      const parentRect = parent.getBoundingClientRect();
+      const headerRect = header.getBoundingClientRect();
+      
+      // Connection source: center bottom of parent title
+      const startX = headerRect.left - parentRect.left + headerRect.width / 2;
+      const startY = headerRect.bottom - parentRect.top;
+      
+      chips.forEach(chip => {
+        const chipRect = chip.getBoundingClientRect();
+        // Connection end: center top of child chip
+        const endX = chipRect.left - parentRect.left + chipRect.width / 2;
+        const endY = chipRect.top - parentRect.top;
+        
+        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        // Elegant S-curve / cubic bezier connection path
+        const d = `M ${startX} ${startY} C ${startX} ${(startY + endY) / 2}, ${endX} ${(startY + endY) / 2}, ${endX} ${endY}`;
+        path.setAttribute('d', d);
+        path.setAttribute('stroke', 'rgba(0, 255, 102, 0.15)');
+        path.setAttribute('stroke-width', '1');
+        path.setAttribute('fill', 'none');
+        svg.appendChild(path);
+      });
+    });
+  }
+
+  // Draw lines on DOM load, resize, and scroll triggers
+  window.addEventListener('load', drawNodeMatrixLines);
+  window.addEventListener('resize', drawNodeMatrixLines);
+  setTimeout(drawNodeMatrixLines, 500); // safety fallback
+
+  // 2. The Terminal Tooltip Hover
+  const tooltip = document.getElementById('terminalTooltip');
+  const tooltipText = document.getElementById('tooltipText');
+  let typeInterval = null;
+
+  const tooltipData = {
+    nmap: 'nmap -sC -sV target_subnet... [PORT 22 OPEN]',
+    metasploit: 'msfconsole -q... exploit/multi/handler',
+    burpsuite: 'POST /login.php HTTP/1.1 (admin123\' OR \'1\'=\'1)',
+    john: 'john --wordlist=rockyou.txt hash.txt... [CRACKED]',
+    graphspy: 'intercepting active proxy sockets...',
+    hydra: 'hydra -l admin -P pass.txt ssh://10.10.12.85',
+    custom_exploits: 'Disassembling binary offset 0x004011d4...',
+    owasp: 'A01:2021-Broken Access Control verification test...',
+    mitre: 'mapping techniques: T1059.004 Command Interpreter...',
+    tcpip: 'validating network frames... SYN-ACK captured',
+    aisec: 'auditing model prompt injection mitigation filters...',
+    cve: 'searching CVE database for target buffer exploits...',
+    wireshark: 'listening on interface eth0... PCAP captured',
+    packet: 'analyzing TCP frame structure... offset matches payload',
+    huggingface: 'from transformers import pipeline; classifier=pipeline(...)',
+    finetuning: 'training loss: 0.246 // QLoRA adapters loaded',
+    transformers: 'AutoModelForCausalLM.from_pretrained("./gemma-4")',
+    dataset: 'cleaning adversarial payload datasets... [OK]',
+    adversarial: 'initiating adversarial gradient descent checks...',
+    python: 'python3 -c "import socket; s=socket.socket()..."',
+    bash: 'guest@kali:~$ chmod +x target_payload.sh && ./target_payload.sh',
+    sql: 'SELECT * FROM users WHERE username=\'admin\' --',
+    javascript: 'fetch("/api/v1/sec").then(res => res.json())',
+    typescript: 'const secConfig: SecurityConfig = { sandbox: true };',
+    cpp: 'g++ -O3 -std=c++20 exploit.cpp -o exploit.exe',
+    kali: 'guest@kali:~$ sudo apt update && searchsplit',
+    vms: 'VBoxManage startvm "Target_Host" --type headless',
+    virtualbox: 'initializing virtual host adapters... [SANDBOXED]'
+  };
+
+  document.querySelectorAll('.skill-child-chip').forEach(chip => {
+    chip.addEventListener('mouseenter', e => {
+      if (!tooltip || !tooltipText) return;
+      const skillId = chip.getAttribute('data-skill');
+      const textToType = tooltipData[skillId] || 'Executing virtual process...';
+      
+      clearInterval(typeInterval);
+      tooltip.classList.add('active');
+      
+      // Typewriter sequence
+      tooltipText.textContent = '> ';
+      let charIdx = 0;
+      typeInterval = setInterval(() => {
+        if (charIdx < textToType.length) {
+          tooltipText.textContent += textToType[charIdx++];
+        } else {
+          clearInterval(typeInterval);
+        }
+      }, 15);
+    });
+
+    chip.addEventListener('mousemove', e => {
+      if (!tooltip) return;
+      // Position tooltip near cursor
+      tooltip.style.left = (e.clientX + 15) + 'px';
+      tooltip.style.top = (e.clientY + 15) + 'px';
+    });
+
+    chip.addEventListener('mouseleave', () => {
+      if (!tooltip) return;
+      clearInterval(typeInterval);
+      tooltip.classList.remove('active');
+      tooltipText.textContent = '> ';
+    });
+  });
+
+  // 3. Local Inference Click-State (Hugging Face Node)
+  const aimlNode = document.getElementById('parent-aiml');
+  const aimlConsole = document.getElementById('aimlConsole');
+  let aimlIntervals = [];
+
+  if (aimlNode && aimlConsole) {
+    aimlNode.addEventListener('click', e => {
+      // Prevent trigger when clicking clickable cert triggers directly
+      if (e.target.closest('.clickable-cert-trigger')) return;
+
+      aimlNode.classList.add('active-glow');
+      aimlConsole.innerHTML = '<span class="console-cursor">></span> ';
+      
+      aimlIntervals.forEach(i => clearTimeout(i));
+      aimlIntervals = [];
+
+      const lines = [
+        '[SYS] Allocating weights for local fine-tuning...',
+        '[SYS] Gemma 4 foundation model initialized via QLoRA.'
+      ];
+
+      let totalDelay = 100;
+      lines.forEach((lineText, lineIdx) => {
+        const t = setTimeout(() => {
+          if (lineIdx > 0) aimlConsole.innerHTML += '<br><span class="console-cursor">></span> ';
+          
+          let charIdx = 0;
+          const charInterval = setInterval(() => {
+            if (charIdx < lineText.length) {
+              aimlConsole.innerHTML += lineText[charIdx++];
+            } else {
+              clearInterval(charInterval);
+            }
+          }, 10);
+        }, totalDelay);
+        aimlIntervals.push(t);
+        totalDelay += 1200;
+      });
+
+      // Clear glow state after logs finish
+      const endGlow = setTimeout(() => {
+        aimlNode.classList.remove('active-glow');
+      }, 3500);
+      aimlIntervals.push(endGlow);
+    });
+  }
+
+  // 4. Hardware Stress Test (Security Lab Node)
+  const sandboxNode = document.getElementById('parent-sandbox');
+  const sandboxConsole = document.getElementById('sandboxConsole');
+  let sandboxTimeout = null;
+
+  if (sandboxNode && sandboxConsole) {
+    sandboxNode.addEventListener('click', e => {
+      // Prevent trigger on clickable cert links
+      if (e.target.closest('.clickable-cert-trigger')) return;
+
+      sandboxNode.classList.add('stress-fault-glitch');
+      sandboxConsole.style.color = '#ff0055';
+      sandboxConsole.innerHTML = '<span class="console-cursor" style="color:#ff0055">></span> [SYS_WARN: FAN OVER-SPIN] // HARDWARE FAULT STRESS TESTING...';
+      
+      playSystemAlarmBeep(); // Alarm beep
+      
+      clearTimeout(sandboxTimeout);
+      sandboxTimeout = setTimeout(() => {
+        sandboxNode.classList.remove('stress-fault-glitch');
+        sandboxConsole.style.color = 'var(--green)';
+        sandboxConsole.innerHTML = '<span class="console-cursor">></span> [SYS] Memory reseated. Allocation stable. Lab active.';
+      }, 400); // 0.4 seconds exactly
+    });
+  }
+})();
+
+// ── CLICKABLE CERTIFICATIONS NAVIGATION ──
+(function initClickableCerts() {
+  document.querySelectorAll('.clickable-cert-trigger').forEach(el => {
+    el.addEventListener('click', e => {
+      e.stopPropagation();
+      const certId = el.getAttribute('data-cert');
+      const target = document.getElementById(certId);
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        // Temporary active highlighting glow
+        target.style.transition = 'border-color 0.5s, box-shadow 0.5s';
+        target.style.borderColor = 'var(--green)';
+        target.style.boxShadow = '0 0 25px rgba(0, 255, 102, 0.4)';
+        setTimeout(() => {
+          target.style.borderColor = '';
+          target.style.boxShadow = '';
+        }, 1500);
+      }
+    });
   });
 })();
 
