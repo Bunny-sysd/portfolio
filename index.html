@@ -737,6 +737,70 @@
     <div class="tooltip-body" id="tooltipText">> </div>
   </div>
 
+  <!-- ── BOTTOM TACTICAL HUD (MOBILE NAV) ── -->
+  <div class="bottom-tactical-hud" id="bottomHud">
+    <div class="hud-tabs">
+      <a href="#about" class="hud-tab-btn" data-section="about">
+        <span class="hud-btn-tag">[ID]</span>
+        <span class="hud-btn-label">ABOUT</span>
+      </a>
+      <a href="#skills" class="hud-tab-btn" data-section="skills">
+        <span class="hud-btn-tag">[SYS]</span>
+        <span class="hud-btn-label">SKILLS</span>
+      </a>
+      <a href="#projects" class="hud-tab-btn" data-section="projects">
+        <span class="hud-btn-tag">[OPS]</span>
+        <span class="hud-btn-label">PROJECTS</span>
+      </a>
+      <a href="#certs" class="hud-tab-btn" data-section="certs">
+        <span class="hud-btn-tag">[CRT]</span>
+        <span class="hud-btn-label">CERTS</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- ── HARDWARE FAULT OVERLAY SEQUENCE ── -->
+  <div id="hardwareFaultScreen" class="hardware-fault-screen">
+    <div class="fault-inner glass-panel">
+      <div class="fault-header-section">
+        <span class="fault-alert-tag">[CRITICAL_FAULT]</span>
+        <h2 class="fault-title">SYS_WARN: FANS OVERACTIVE</h2>
+        <p class="fault-subtitle">RAM MODULE UNSEATED // BUS_LIMIT_EXCEEDED</p>
+      </div>
+
+      <!-- Desktop interactive drag-drop game -->
+      <div class="fault-desktop-game" id="faultDesktopGame">
+        <p class="fault-instruction">> drag the unstable memory module back into slot_0 to reseat connection:</p>
+        <div class="ram-game-arena">
+          <div class="ram-slot-target" id="ramSlot">
+            <span class="slot-label">SLOT_0 // [EMPTY]</span>
+          </div>
+          <div class="ram-module-draggable" id="ramModule" draggable="true">
+            <span class="ram-label">[ |||||| RAM_0xAA ]</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mobile interactive accelerometer shake game -->
+      <div class="fault-mobile-game" id="faultMobileGame">
+        <p class="fault-instruction">> physically shake device to seat memory controller, or tap module to override:</p>
+        <div class="ram-game-arena">
+          <div class="mobile-device-graphic">📱</div>
+          <div class="ram-module-tap" id="ramModuleTap">
+            <span class="ram-label">[ |||||| RAM_0xAA ]</span>
+          </div>
+          <div class="shake-indicator" id="shakeIndicator">0% ATTAINED</div>
+        </div>
+      </div>
+
+      <div class="fault-diagnostic-term">
+        <div class="diagnostic-line">> ALLOCATING CORE WEIGHTS FOR GEMMA_4 FINE-TUNING...</div>
+        <div class="diagnostic-line error">> [ERR_MEM_LIMIT] OUT OF MEMORY AT TRANSFORMATION LAYER 12</div>
+        <div class="diagnostic-line error">> FAN CONTROLLER OVER-SPINNING // OVERHEATING PROBABLE</div>
+      </div>
+    </div>
+  </div>
+
   <div id="projectModal" class="project-modal-overlay">
     <div class="project-modal-content glass-panel">
       <button class="modal-close" id="modalCloseBtn">✕</button>
@@ -747,8 +811,8 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-  <script src="three-bg.js?v=1.2"></script>
-  <script src="app.js?v=1.2"></script>
+  <script src="three-bg.js?v=1.3"></script>
+  <script src="app.js?v=1.3"></script>
 </body>
 
 </html>

@@ -397,6 +397,9 @@ function runHeroTerminalDiagnostics() {
   // Clickable Chips action listener
   chips.forEach(chip => {
     chip.addEventListener('click', () => {
+      if (navigator.vibrate) {
+        navigator.vibrate(10); // Sharp, 10ms click vibration
+      }
       const cmd = chip.getAttribute('data-cmd');
       if (!cmd || !inputEl) return;
       
@@ -445,6 +448,7 @@ function runHeroTerminalDiagnostics() {
 (function initActiveNav() {
   const sections = document.querySelectorAll('section[id]');
   const navLinks = document.querySelectorAll('.nav-link[data-section]');
+  const hudLinks = document.querySelectorAll('.hud-tab-btn');
 
   function updateActive() {
     const scrollPos = window.scrollY + window.innerHeight * 0.35;
@@ -468,6 +472,16 @@ function runHeroTerminalDiagnostics() {
         link.style.color = 'var(--green)';
       } else {
         link.classList.remove('active-nav-tab');
+        link.style.color = '';
+      }
+    });
+
+    hudLinks.forEach(link => {
+      if (link.dataset.section === activeId) {
+        link.classList.add('active-hud-tab');
+        link.style.color = 'var(--green)';
+      } else {
+        link.classList.remove('active-hud-tab');
         link.style.color = '';
       }
     });
@@ -902,6 +916,7 @@ function playSystemAlarmBeep() {
   let activeTypewriters = [];
 
   function openModal(id) {
+    window.openProjectModal = openModal;
     const data = projectsDb[id];
     if (!data) return;
 
@@ -1039,16 +1054,12 @@ function playSystemAlarmBeep() {
       const id = card.getAttribute('id');
       if (!id) return;
 
-      if (id === 'proj-pentestai' && faultOverlay) {
-        // Trigger 0.6s brutalist hardware fault alarm transition
-        playSystemAlarmBeep();
-        faultOverlay.classList.add('active');
-        
-        setTimeout(() => {
-          faultOverlay.classList.remove('active');
+      if (id === 'proj-pentestai') {
+        if (window.triggerGemmaHardwareFault) {
+          window.triggerGemmaHardwareFault();
+        } else {
           openModal(id);
-        }, 600);
-
+        }
       } else {
         // Standard 0.3s glitch
         card.classList.add('glitch-active');
@@ -1274,6 +1285,172 @@ function playSystemAlarmBeep() {
       }
     });
   });
+})();
+
+// ── DEVICE ORIENTATION GYROSCOPE PARALLAX ──
+(function initDeviceOrientationParallax() {
+  const bg = document.getElementById('bgCanvas');
+  if (!bg) return;
+  
+  window.addEventListener('deviceorientation', e => {
+    // Read alpha/beta/gamma and shift the background layer subtly
+    const x = (e.gamma || 0) * 0.7; // Left/right tilt
+    const y = (e.beta || 0) * 0.7;  // Front/back tilt
+    // Cap at +/- 18px and use GPU translate transform for maximum frame rates
+    const capX = Math.max(-18, Math.min(18, x));
+    const capY = Math.max(-18, Math.min(18, y));
+    bg.style.transform = `translate(${capX}px, ${capY}px) scale(1.04)`;
+  }, { passive: true });
+})();
+
+// ── GEMMA 4 HARDWARE FAULT INTERACTIVE GAME ──
+(function initGemmaFaultGame() {
+  let faultActive = false;
+  let alarmInterval = null;
+  let shakeProgress = 0;
+
+  function playSystemSuccessChime() {
+    try {
+      const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      const osc1 = audioCtx.createOscillator();
+      const osc2 = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+
+      osc1.frequency.setValueAtTime(523.25, audioCtx.currentTime); // C5
+      osc2.frequency.setValueAtTime(659.25, audioCtx.currentTime); // E5
+      gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.55);
+
+      osc1.connect(gain);
+      osc2.connect(gain);
+      gain.connect(audioCtx.destination);
+
+      osc1.start();
+      osc2.start();
+      osc1.stop(audioCtx.currentTime + 0.6);
+      osc2.stop(audioCtx.currentTime + 0.6);
+    } catch(e) {}
+  }
+
+  function triggerGemmaHardwareFault() {
+    const faultScreen = document.getElementById('hardwareFaultScreen');
+    if (!faultScreen) return;
+
+    faultActive = true;
+    shakeProgress = 0;
+    updateShakeIndicator();
+
+    faultScreen.classList.add('active');
+    document.body.classList.add('stress-fault-glitch'); // full screen tear effect
+
+    // Play synthetic sawtooth beep loop
+    playSystemAlarmBeep();
+    clearInterval(alarmInterval);
+    alarmInterval = setInterval(() => {
+      if (faultActive) playSystemAlarmBeep();
+    }, 850);
+
+    // Setup motion listener for mobile phone shakes
+    if (typeof DeviceMotionEvent !== 'undefined' && typeof DeviceMotionEvent.requestPermission === 'function') {
+      DeviceMotionEvent.requestPermission().then(state => {
+        if (state === 'granted') {
+          window.addEventListener('devicemotion', handleMobileShake, true);
+        }
+      }).catch(() => {});
+    } else {
+      window.addEventListener('devicemotion', handleMobileShake, true);
+    }
+  }
+  window.triggerGemmaHardwareFault = triggerGemmaHardwareFault;
+
+  function updateShakeIndicator() {
+    const indicator = document.getElementById('shakeIndicator');
+    if (indicator) {
+      indicator.textContent = `${shakeProgress}% ATTAINED`;
+      if (shakeProgress >= 100) {
+        resolveHardwareFault();
+      }
+    }
+  }
+
+  function handleMobileShake(e) {
+    if (!faultActive) return;
+    const acc = e.accelerationIncludingGravity || e.acceleration;
+    if (!acc) return;
+    const totalAcc = Math.sqrt(acc.x*acc.x + acc.y*acc.y + acc.z*acc.z);
+    if (totalAcc > 22) { // Shake intensity threshold
+      shakeProgress = Math.min(100, shakeProgress + 20);
+      updateShakeIndicator();
+    }
+  }
+
+  function resolveHardwareFault() {
+    if (!faultActive) return;
+    faultActive = false;
+    clearInterval(alarmInterval);
+    window.removeEventListener('devicemotion', handleMobileShake, true);
+
+    const faultScreen = document.getElementById('hardwareFaultScreen');
+    if (faultScreen) faultScreen.classList.remove('active');
+    document.body.classList.remove('stress-fault-glitch');
+
+    playSystemSuccessChime();
+
+    // Open standard project details modal
+    if (window.openProjectModal) {
+      window.openProjectModal('proj-pentestai');
+    }
+
+    // Inject system resolution log lines
+    setTimeout(() => {
+      const modalBody = document.getElementById('modalBody');
+      if (modalBody) {
+        const log = document.createElement('div');
+        log.className = 'console-line text-green mb-4';
+        log.innerHTML = `> [SYS] Hardware failure resolved. RAM reseated.<br>> Gemma 4 allocation stable. Proceed with local inference.`;
+        modalBody.insertBefore(log, modalBody.firstChild);
+      }
+    }, 100);
+  }
+
+  // Bind drag-drop & tap clicks
+  const module = document.getElementById('ramModule');
+  const slot = document.getElementById('ramSlot');
+  const tapBtn = document.getElementById('ramModuleTap');
+
+  if (module && slot) {
+    module.addEventListener('dragstart', e => {
+      e.dataTransfer.setData('text/plain', 'ram');
+    });
+
+    slot.addEventListener('dragover', e => {
+      e.preventDefault();
+      slot.classList.add('dragover');
+    });
+
+    slot.addEventListener('dragleave', () => {
+      slot.classList.remove('dragover');
+    });
+
+    slot.addEventListener('drop', e => {
+      e.preventDefault();
+      slot.classList.remove('dragover');
+      const data = e.dataTransfer.getData('text/plain');
+      if (data === 'ram') {
+        resolveHardwareFault();
+      }
+    });
+
+    // Tap/click bypass fallback
+    module.addEventListener('click', resolveHardwareFault);
+  }
+
+  if (tapBtn) {
+    tapBtn.addEventListener('click', () => {
+      shakeProgress = Math.min(100, shakeProgress + 20);
+      updateShakeIndicator();
+    });
+  }
 })();
 
 // Console log egg easter header
