@@ -1495,7 +1495,7 @@ function playSystemAlarmBeep() {
     transmitBtn.textContent = '[ ENCRYPTING... ]';
     resultLine.textContent = '';
 
-    // Phase 1: Show rapid ciphertext scramble for 0.8s
+    // Phase 1: Show rapid ciphertext scramble for 0.5s
     cipherBlock.classList.add('active');
     let scrambleInterval = setInterval(() => {
       cipherBlock.textContent = generateCiphertext(48);
@@ -1506,19 +1506,28 @@ function playSystemAlarmBeep() {
       cipherBlock.classList.remove('active');
       cipherBlock.textContent = '';
 
+      // Construct dynamic URI-encoded mailto link
+      const mailtoLink = 'mailto:aaron.lawrence.alva@gmail.com?subject=' + 
+        encodeURIComponent('Encrypted Payload from ' + name) + 
+        '&body=' + encodeURIComponent(msg);
+
+      // Force open local native mail client
+      window.location.href = mailtoLink;
+
       // Phase 2: Show success resolution
       resultLine.style.color = 'var(--green)';
-      resultLine.textContent = '> [SYS] Payload encrypted and routed via secure webhook. Connection terminated.';
+      resultLine.textContent = '> [SYS] Payload packaged. Handoff to secure local mail client complete.';
       transmitBtn.textContent = '[ TRANSMITTED ]';
 
-      // Reset form after delay
+      // Reset form controls after delay
       setTimeout(() => {
         nameInput.value = '';
         msgInput.value = '';
         transmitBtn.disabled = false;
         transmitBtn.textContent = '[ ./transmit_payload ]';
+        resultLine.textContent = '';
       }, 4000);
-    }, 800);
+    }, 500); // 0.5 seconds exactly
   });
 })();
 
