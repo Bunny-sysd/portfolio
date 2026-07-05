@@ -838,29 +838,23 @@ body::before {
 /* ── PROJECTS BENTO GRID ── */
 .bento-projects-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-auto-rows: minmax(180px, auto);
+  grid-template-columns: repeat(12, 1fr);
   gap: 1.5rem;
 }
 #proj-mutagen {
-  grid-column: span 2;
-  grid-row: span 2;
+  grid-column: span 8;
 }
 #proj-stock {
-  grid-column: span 1;
-  grid-row: span 2;
-}
-#proj-thm {
-  grid-column: span 1;
-  grid-row: span 1;
+  grid-column: span 4;
 }
 #proj-vm {
-  grid-column: span 1;
-  grid-row: span 1;
+  grid-column: span 6;
 }
 #proj-pentestai {
-  grid-column: span 1;
-  grid-row: span 1;
+  grid-column: span 6;
+}
+#proj-thm {
+  grid-column: span 12;
 }
 
 .bento-project-card {
@@ -1406,12 +1400,9 @@ body::before {
   }
   .bento-projects-grid {
     grid-template-columns: 1fr;
-    grid-template-areas:
-      "mutagen"
-      "stock"
-      "thm"
-      "vm"
-      "pentestai";
+  }
+  #proj-mutagen, #proj-stock, #proj-thm, #proj-vm, #proj-pentestai {
+    grid-column: span 1 !important;
   }
   .certs-grid {
     grid-template-columns: 1fr;
