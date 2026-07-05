@@ -479,6 +479,8 @@
   });
 
   let prevCamZ = 0.0;
+  let currentParallaxX = 0.0;
+  let currentParallaxY = 0.0;
 
   // ── RENDER LOOP ─────────────────────────────────
   function animate() {
@@ -489,8 +491,18 @@
     const absoluteSpeedZ = Math.abs(deltaZ);
     prevCamZ = scrollTarget.camZ;
 
-    // Apply scroll-driven camera coordinates
-    camera.position.set(scrollTarget.camX, scrollTarget.camY, scrollTarget.camZ);
+    // Smoothly interpolate current parallax offset (damped to 0 while scrolling)
+    const activeTargetX = isScrolling ? 0.0 : targetRotationX;
+    const activeTargetY = isScrolling ? 0.0 : targetRotationY;
+    currentParallaxX += (activeTargetX - currentParallaxX) * 0.05;
+    currentParallaxY += (activeTargetY - currentParallaxY) * 0.05;
+
+    // Apply scroll-driven camera coordinates + camera mouse parallax shift (lookAt keeps targets centered!)
+    camera.position.set(
+      scrollTarget.camX + currentParallaxY * 4.0, // horizontal camera shift
+      scrollTarget.camY + currentParallaxX * 4.0, // vertical camera shift
+      scrollTarget.camZ
+    );
     camera.lookAt(scrollTarget.lookX, scrollTarget.lookY, scrollTarget.lookZ);
 
     // Core rotations (spins much faster in projects section)
@@ -695,11 +707,8 @@
     linePosAttr.needsUpdate = true;
     lineColAttr.needsUpdate = true;
 
-    // Mouse tilt calculations (lerped on top of main coordinates, damped to 0 while scrolling)
-    const activeTargetX = isScrolling ? 0.0 : targetRotationX;
-    const activeTargetY = isScrolling ? 0.0 : targetRotationY;
-    mainGroup.rotation.y += (activeTargetY - mainGroup.rotation.y) * 0.05;
-    mainGroup.rotation.x += (activeTargetX - mainGroup.rotation.x) * 0.05;
+    // mainGroup rotation removed to prevent pendulum/alignment shifts on domes.
+    // Parallax is now applied directly to camera positioning.
 
     renderer.render(scene, camera);
   }
