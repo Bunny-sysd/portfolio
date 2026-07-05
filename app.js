@@ -84,10 +84,9 @@ document.querySelectorAll('.decrypt-trigger').forEach(el => {
 });
 
 // ── SPLASH SCREEN ──
-(function initSplashController() {
+(function initSplash() {
   const splash   = document.getElementById('splash');
   const bar      = document.getElementById('splashBar');
-  const skipBtn  = document.getElementById('splashSkipBtn');
   const lines    = [
     document.getElementById('splashLine1'),
     document.getElementById('splashLine2'),
@@ -102,12 +101,32 @@ document.querySelectorAll('.decrypt-trigger').forEach(el => {
 
   let lineIdx = 0;
   let charIdx = 0;
-  let resolved = false;
 
-  function resolveSplash() {
-    if (resolved) return;
-    resolved = true;
+  function typeNext() {
+    if (lineIdx >= messages.length) return;
+    const msg  = messages[lineIdx];
+    const line = lines[lineIdx];
 
+    if (charIdx < msg.length) {
+      if (line) line.textContent += msg[charIdx++];
+      setTimeout(typeNext, 25);
+    } else {
+      lineIdx++;
+      charIdx = 0;
+      if (lineIdx < messages.length) {
+        setTimeout(typeNext, 180);
+      }
+    }
+  }
+
+  // Start typing
+  setTimeout(() => {
+    typeNext();
+    if (bar) bar.style.width = '100%';
+  }, 200);
+
+  // Hide splash and run hero boot diagnostic simulation
+  setTimeout(() => {
     if (splash) splash.classList.add('hidden');
     document.body.style.overflow = '';
     
@@ -118,56 +137,7 @@ document.querySelectorAll('.decrypt-trigger').forEach(el => {
 
     // Run active hero diagnostic simulation
     runHeroTerminalDiagnostics();
-  }
-
-  function typeNext() {
-    if (resolved) return;
-    if (lineIdx >= messages.length) {
-      // Auto-resolve: when typing finishes, fade out overlay
-      setTimeout(resolveSplash, 400);
-      return;
-    }
-    const msg  = messages[lineIdx];
-    const line = lines[lineIdx];
-
-    if (charIdx < msg.length) {
-      if (line) line.textContent += msg[charIdx++];
-      setTimeout(typeNext, 20);
-    } else {
-      lineIdx++;
-      charIdx = 0;
-      if (lineIdx < messages.length) {
-        setTimeout(typeNext, 120);
-      } else {
-        setTimeout(resolveSplash, 300);
-      }
-    }
-  }
-
-  // Bind failsafe button click
-  if (skipBtn) {
-    skipBtn.addEventListener('click', resolveSplash);
-  }
-
-  // Bind Escape keyboard key
-  window.addEventListener('keydown', e => {
-    if (e.key === 'Escape') {
-      resolveSplash();
-    }
-  });
-
-  // Ensure Auto-Start on window load
-  window.addEventListener('load', () => {
-    // Start typing
-    setTimeout(() => {
-      if (resolved) return;
-      typeNext();
-      if (bar) bar.style.width = '100%';
-    }, 150);
-
-    // Hard fail-safe timeout in case anything is delayed
-    setTimeout(resolveSplash, 4000);
-  });
+  }, 2600);
 
   document.body.style.overflow = 'hidden';
 })();

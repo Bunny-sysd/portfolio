@@ -166,36 +166,15 @@ body::before {
   position: fixed;
   inset: 0;
   z-index: 99995;
-  background: #02040a;
+  background: #050507;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: opacity 0.8s cubic-bezier(0.25, 1, 0.5, 1), visibility 0.8s cubic-bezier(0.25, 1, 0.5, 1);
-  pointer-events: auto;
+  transition: opacity 0.5s ease, visibility 0.5s;
 }
 .splash.hidden {
   opacity: 0;
   visibility: hidden;
-  pointer-events: none;
-}
-.splash-skip {
-  position: absolute;
-  bottom: 2rem;
-  right: 2rem;
-  background: none;
-  border: none;
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  color: var(--green);
-  opacity: 0.35;
-  cursor: pointer;
-  letter-spacing: 0.05em;
-  transition: opacity 0.2s ease, text-shadow 0.2s ease;
-  z-index: 99999;
-}
-.splash-skip:hover {
-  opacity: 0.85;
-  text-shadow: 0 0 8px var(--green);
 }
 .splash-inner {
   max-width: 480px;
