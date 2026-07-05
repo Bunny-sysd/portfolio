@@ -661,12 +661,141 @@ function runHeroTerminalDiagnostics() {
   }
 })();
 
+// ── OPENCLAW AUTONOMOUS ROUTING NODE GRAPH CANVAS ────────────────
+(function initOpenClaw() {
+  const canvas = document.getElementById('openclawCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let width = canvas.offsetWidth;
+  let height = canvas.offsetHeight;
+  
+  // Fit canvas dimensions
+  canvas.width = width;
+  canvas.height = height;
+
+  let nodes = [];
+  const totalNodes = 32;
+  const mouse = { x: null, y: null, active: false };
+
+  class Node {
+    constructor() {
+      this.x = Math.random() * width;
+      this.y = Math.random() * height;
+      this.vx = (Math.random() - 0.5) * 1.8;
+      this.vy = (Math.random() - 0.5) * 1.8;
+      this.radius = 1.8 + Math.random() * 2.5;
+    }
+    update() {
+      if (mouse.active && mouse.x !== null) {
+        // Aggressive attraction cluster around cursor
+        const dx = mouse.x - this.x;
+        const dy = mouse.y - this.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < 130) {
+          const force = (130 - dist) / 130;
+          this.vx += (dx / dist) * force * 0.45;
+          this.vy += (dy / dist) * force * 0.45;
+        }
+      }
+      this.x += this.vx;
+      this.y += this.vy;
+      // Friction
+      this.vx *= 0.94;
+      this.vy *= 0.94;
+      // Boundary check
+      if (this.x < 0 || this.x > width) this.vx *= -1;
+      if (this.y < 0 || this.y > height) this.vy *= -1;
+    }
+    draw() {
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(0, 255, 102, 0.85)';
+      ctx.fill();
+    }
+  }
+
+  // Populate nodes
+  for (let i = 0; i < totalNodes; i++) {
+    nodes.push(new Node());
+  }
+
+  canvas.addEventListener('mousemove', e => {
+    const rect = canvas.getBoundingClientRect();
+    mouse.x = e.clientX - rect.left;
+    mouse.y = e.clientY - rect.top;
+    mouse.active = true;
+  });
+  canvas.addEventListener('mouseleave', () => {
+    mouse.active = false;
+  });
+
+  window.addEventListener('resize', () => {
+    if (!canvas) return;
+    width = canvas.offsetWidth;
+    height = canvas.offsetHeight;
+    canvas.width = width;
+    canvas.height = height;
+  });
+
+  function drawLinks() {
+    for (let i = 0; i < nodes.length; i++) {
+      for (let j = i + 1; j < nodes.length; j++) {
+        const dx = nodes[i].x - nodes[j].x;
+        const dy = nodes[i].y - nodes[j].y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < 90) {
+          ctx.beginPath();
+          ctx.moveTo(nodes[i].x, nodes[i].y);
+          ctx.lineTo(nodes[j].x, nodes[j].y);
+          ctx.strokeStyle = `rgba(0, 212, 255, ${0.4 * (1 - dist / 90)})`;
+          ctx.lineWidth = 0.6;
+          ctx.stroke();
+        }
+      }
+    }
+  }
+
+  function loop() {
+    ctx.clearRect(0, 0, width, height);
+    drawLinks();
+    nodes.forEach(node => {
+      node.update();
+      node.draw();
+    });
+    requestAnimationFrame(loop);
+  }
+  loop();
+})();
+
+// Helper to play synthesized PC alarm beep sound (Web Audio API)
+function playSystemAlarmBeep() {
+  try {
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+
+    osc.type = 'sawtooth';
+    osc.frequency.setValueAtTime(920, audioCtx.currentTime); // high pitch warning tone
+    gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.55);
+
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+
+    osc.start();
+    osc.stop(audioCtx.currentTime + 0.6);
+  } catch (err) {
+    console.warn("AudioContext blocked or uninitialized.");
+  }
+}
+
 // ── DETAIL EXPAND MODAL & HARDWARE GLITCH SIMULATOR ───────────────
 (function initProjectModals() {
   const cards = document.querySelectorAll('.bento-project-card.hardware-glitch');
   const modal = document.getElementById('projectModal');
   const modalBody = document.getElementById('modalBody');
   const closeBtn = document.getElementById('modalCloseBtn');
+  const faultOverlay = document.getElementById('faultOverlay');
 
   if (!modal || !modalBody) return;
 
@@ -676,79 +805,196 @@ function runHeroTerminalDiagnostics() {
       meta: "AGENTIC_AI / BINARY_FUZZER // 2026",
       desc: "Mutagen is an autonomous vulnerability platform designed to inspect binary systems for memory vulnerabilities. It combines headless Ghidra disassembly with LLM agents to detect buffer overflows, construct target payloads to verify exploitative impact, compile patches, and re-test binaries in secure Docker sandboxes.",
       tags: ["Python", "Gemma 4", "Ghidra API", "Docker Sandbox", "C++ ASM"],
-      link: "https://github.com/bunny-sysd/mutagen",
-      btnText: "CONNECT_TO_MUTAGEN_PIPELINE"
+      btnText: "TERMINATE_SESSION"
     },
     "proj-stock": {
       title: "SignalHub Analytics",
       meta: "DATA_PIPELINE / LIVE // 2025",
       desc: "SignalHub builds high-frequency stock parsing micro-systems. It streams market feed variables from Alpha Vantage API directly to Firebase Realtime Databases. Integrated triggers invoke agentic models to analyze price indicators and output trading buy/sell signal models.",
       tags: ["Firebase Database", "Alpha Vantage API", "Node.js REST", "Tailwind CSS"],
-      link: "https://signalhub-e79ba.web.app/",
-      btnText: "ESTABLISH_LIVE_SOCKET"
+      btnText: "TERMINATE_SESSION"
     },
     "proj-thm": {
       title: "TryHackMe CTF Labs",
       meta: "OFFENSIVE_OPERATIONS // 2025",
-      desc: "Completed 91 security badges tracking network pen-testing, password audits, active directory compromises, privilege escalation, and binary exploitation models.",
       tags: ["Metasploit Suite", "Burp Suite Pro", "Nmap Scanner", "Wireshark", "John"],
-      link: "https://tryhackme.com/p/354221973",
-      btnText: "VIEW_VERIFIED_BADGES"
+      isSandbox: true,
+      btnText: "TERMINATE_SESSION"
     },
     "proj-vm": {
       title: "Security Lab Sandbox",
       meta: "VIRTUAL_ISOLATION_LAB // 2023-2025",
-      desc: "Configured local virtualized network sandboxes to perform secure penetration testing on targets. Establishes isolated interfaces to trace network packet headers without exposing external systems.",
       tags: ["VirtualBox Hypervisor", "Kali Linux", "Wireshark PCAPs", "PFsense Firewall"],
-      link: "https://github.com/Bunny-sysd",
-      btnText: "VIEW_LAB_DIAGRAMS"
+      isSandbox: true,
+      btnText: "TERMINATE_SESSION"
     },
     "proj-pentestai": {
       title: "Security LLM Training",
       meta: "TRANSFORMERS / HUGGINGFACE // 2025",
       desc: "Finetuned Mistral and LLaMA transformers on custom datasets of vulnerable source codes to classify CVE entry categories automatically.",
       tags: ["HuggingFace", "Python PyTorch", "QLoRA", "Tokenizer Tuning"],
-      link: "https://github.com/Bunny-sysd",
-      btnText: "ACCESS_MODEL_WEIGHTS"
+      btnText: "TERMINATE_SESSION"
     }
   };
+
+  let activeTypewriters = [];
 
   function openModal(id) {
     const data = projectsDb[id];
     if (!data) return;
 
-    modalBody.innerHTML = `
-      <div class="modal-body-title">${data.title}</div>
-      <div class="modal-body-meta">${data.meta}</div>
-      <p class="modal-body-desc">${data.desc}</p>
-      <div class="modal-body-tags">
-        ${data.tags.map(tag => `<span>${tag}</span>`).join('')}
-      </div>
-      <div class="mt-4">
-        <a href="${data.link}" target="_blank" class="modal-action-btn">${data.btnText}</a>
-      </div>
-    `;
+    // Clear active typewriters
+    activeTypewriters.forEach(t => clearInterval(t));
+    activeTypewriters = [];
+
+    if (data.isSandbox) {
+      modalBody.innerHTML = `
+        <div class="modal-body-title">${data.title}</div>
+        <div class="modal-body-meta">${data.meta}</div>
+        <div class="sandbox-split-container">
+          <div class="sandbox-panel">
+            <div class="panel-header">
+              <span>Kali Terminal Sandbox</span>
+              <span class="panel-status-tag" id="terminalStatus">CONNECTING...</span>
+            </div>
+            <div class="panel-body-lines" id="sandboxTerminal"></div>
+          </div>
+          <div class="sandbox-panel">
+            <div class="panel-header">
+              <span>Burp Suite HTTP Intercept</span>
+              <span class="panel-status-tag" style="color: var(--cyan);" id="burpStatus">CAPTURING...</span>
+            </div>
+            <div class="panel-body-lines" id="sandboxBurp"></div>
+          </div>
+        </div>
+        <div class="modal-body-tags mt-4">
+          ${data.tags.map(tag => `<span>${tag}</span>`).join('')}
+        </div>
+        <div class="mt-4">
+          <button class="modal-action-btn" id="modalDismissBtn">${data.btnText}</button>
+        </div>
+      `;
+
+      // Start typing simulation
+      setTimeout(() => startSandboxSimulation(), 200);
+
+    } else {
+      modalBody.innerHTML = `
+        <div class="modal-body-title">${data.title}</div>
+        <div class="modal-body-meta">${data.meta}</div>
+        <p class="modal-body-desc">${data.desc}</p>
+        <div class="modal-body-tags">
+          ${data.tags.map(tag => `<span>${tag}</span>`).join('')}
+        </div>
+        <div class="mt-4">
+          <button class="modal-action-btn" id="modalDismissBtn">${data.btnText}</button>
+        </div>
+      `;
+    }
+
     modal.classList.add('open');
     document.body.style.overflow = 'hidden';
+
+    // Bind dismiss action
+    const dismissBtn = document.getElementById('modalDismissBtn');
+    if (dismissBtn) dismissBtn.addEventListener('click', closeModal);
+  }
+
+  function startSandboxSimulation() {
+    const term = document.getElementById('sandboxTerminal');
+    const burp = document.getElementById('sandboxBurp');
+    const termStatus = document.getElementById('terminalStatus');
+    const burpStatus = document.getElementById('burpStatus');
+
+    if (!term || !burp) return;
+
+    termStatus.textContent = 'ONLINE';
+    burpStatus.textContent = 'INTERCEPT_ON';
+
+    const termLines = [
+      { text: 'guest@kali:~$ nmap -sS -sV 10.10.142.85', class: 'cmd-prompt', delay: 100 },
+      { text: 'Starting Nmap 7.94 ( https://nmap.org ) at 2026-07-04 22:00', class: 'text-muted', delay: 400 },
+      { text: 'Nmap scan report for 10.10.142.85', class: '', delay: 800 },
+      { text: 'PORT   STATE SERVICE VERSION', class: '', delay: 1200 },
+      { text: '22/tcp open  ssh     OpenSSH 8.2p1 Ubuntu 4ubuntu0.5', class: 'res-out', delay: 1500 },
+      { text: '80/tcp open  http    Apache httpd 2.4.41', class: 'res-out', delay: 1800 },
+      { text: 'Vulnerable backend service audited on Port 80!', class: 'panel-status-tag', delay: 2200 },
+      { text: 'guest@kali:~$ exploit_payload --target 10.10.142.85', class: 'cmd-prompt', delay: 2800 },
+      { text: '[OK] Launching buffer overflow exploit socket injection...', class: 'panel-status-tag', delay: 3200 }
+    ];
+
+    const burpLines = [
+      { text: 'POST /login.php HTTP/1.1', class: 'req-out', delay: 100 },
+      { text: 'Host: vulnerable-bank.thm', class: '', delay: 300 },
+      { text: 'User-Agent: Mozilla/5.0 (Kali Linux)', class: '', delay: 600 },
+      { text: 'Content-Type: application/x-www-form-urlencoded', class: '', delay: 900 },
+      { text: 'Content-Length: 43', class: '', delay: 1200 },
+      { text: '', class: '', delay: 1400 },
+      { text: 'username=admin&password=admin123\' OR \'1\'=\'1', class: 'cmd-prompt', delay: 1600 },
+      { text: '------------------------------------------------', class: 'text-muted', delay: 2000 },
+      { text: 'HTTP/1.1 200 OK', class: 'res-out', delay: 2400 },
+      { text: 'Content-Type: application/json', class: 'res-out', delay: 2700 },
+      { text: '{"status":"success","session_token":"JWT_ROOT_KEY_..."}', class: 'panel-status-tag', delay: 3200 }
+    ];
+
+    termLines.forEach(line => {
+      const t = setTimeout(() => {
+        const div = document.createElement('div');
+        div.className = line.class;
+        div.textContent = line.text;
+        term.appendChild(div);
+        term.scrollTop = term.scrollHeight;
+      }, line.delay);
+      activeTypewriters.push(t);
+    });
+
+    burpLines.forEach(line => {
+      const t = setTimeout(() => {
+        const div = document.createElement('div');
+        div.className = line.class;
+        div.textContent = line.text;
+        burp.appendChild(div);
+        burp.scrollTop = burp.scrollHeight;
+      }, line.delay);
+      activeTypewriters.push(t);
+    });
   }
 
   function closeModal() {
     modal.classList.remove('open');
     document.body.style.overflow = '';
+    // Clear active typewriters
+    activeTypewriters.forEach(t => clearInterval(t));
+    activeTypewriters = [];
   }
 
   // Bind glitch clicks
   cards.forEach(card => {
-    card.addEventListener('click', () => {
+    card.addEventListener('click', e => {
+      // Prevent modal opening when clicking active buttons directly
+      if (e.target.closest('a.proj-link')) return;
+
       const id = card.getAttribute('id');
       if (!id) return;
 
-      // Trigger 0.3s hardware fault glitch stutter
-      card.classList.add('glitch-active');
-      setTimeout(() => {
-        card.classList.remove('glitch-active');
-        openModal(id);
-      }, 300);
+      if (id === 'proj-pentestai' && faultOverlay) {
+        // Trigger 0.6s brutalist hardware fault alarm transition
+        playSystemAlarmBeep();
+        faultOverlay.classList.add('active');
+        
+        setTimeout(() => {
+          faultOverlay.classList.remove('active');
+          openModal(id);
+        }, 600);
+
+      } else {
+        // Standard 0.3s glitch
+        card.classList.add('glitch-active');
+        setTimeout(() => {
+          card.classList.remove('glitch-active');
+          openModal(id);
+        }, 300);
+      }
     });
   });
 

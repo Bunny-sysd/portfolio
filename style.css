@@ -1644,3 +1644,132 @@ body::before {
   transform: translateY(-1px);
 }
 
+/* ── FULLSCREEN HARDWARE FAULT OVERLAY ── */
+.fault-active-overlay {
+  position: fixed;
+  inset: 0;
+  background: #02040a;
+  z-index: 20000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  color: #ff0055;
+  text-align: center;
+  padding: 2rem;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.15s ease, visibility 0.15s;
+}
+.fault-active-overlay.active {
+  opacity: 1;
+  visibility: visible;
+  animation: screen-tear-shake 0.6s linear forwards;
+}
+.fault-err-title {
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  margin-bottom: 1.5rem;
+  text-shadow: 0 0 10px rgba(255, 0, 85, 0.8);
+}
+.fault-fan-container {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  margin: 2rem 0;
+}
+.cooling-fan {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  border: 4px dashed #ff0055;
+  position: relative;
+  animation: spin-speed 0.08s linear infinite;
+  box-shadow: 0 0 20px rgba(255, 0, 85, 0.3);
+}
+.cooling-fan::before {
+  content: '';
+  position: absolute;
+  inset: 15px;
+  border: 2px dashed #ff0055;
+  border-radius: 50%;
+}
+.fault-details-log {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  line-height: 1.8;
+  max-width: 480px;
+}
+
+@keyframes spin-speed {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes screen-tear-shake {
+  0% { transform: skewX(10deg) translate(5px, 0); background: #ff0055; }
+  10% { transform: skewX(-15deg) translate(-8px, 0); background: #02040a; }
+  20% { transform: skewX(8deg) translate(4px, 2px); }
+  35% { transform: skewX(-5deg) translate(-2px, -3px); }
+  50% { transform: skewX(20deg) translate(10px, 0); background: #ff0055; }
+  65% { transform: skewX(-10deg) translate(-6px, 3px); background: #02040a; }
+  80% { transform: skewX(0deg) translate(0, 0); }
+  100% { transform: skewX(0deg) translate(0, 0); }
+}
+
+/* ── SANDBOX SPLIT SCREEN PANEL ── */
+.sandbox-split-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+  font-family: var(--font-mono);
+}
+.sandbox-panel {
+  background: rgba(0, 0, 0, 0.45);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+  font-size: 0.76rem;
+  line-height: 1.6;
+  min-height: 250px;
+  max-height: 350px;
+  overflow-y: auto;
+}
+.panel-header {
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.5rem;
+  margin-bottom: 0.8rem;
+  color: var(--cyan);
+  font-weight: 700;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  display: flex;
+  justify-content: space-between;
+}
+.panel-status-tag {
+  color: var(--green);
+}
+.panel-body-lines {
+  color: var(--text-dim);
+}
+.panel-body-lines .cmd-prompt {
+  color: var(--green);
+}
+.panel-body-lines .res-out {
+  color: var(--cyan);
+}
+.panel-body-lines .req-out {
+  color: #fff;
+}
+
+@media (max-width: 768px) {
+  .sandbox-split-container {
+    grid-template-columns: 1fr;
+  }
+}
+
+
