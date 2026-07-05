@@ -83,7 +83,7 @@
 
   <!-- ── MOBILE MENU ── -->
   <div class="mobile-menu" id="mobileMenu">
-    <button class="mobile-close" id="mobileClose" aria-label="Close menu">✕</button>
+    <button class="mobile-close" id="mobileClose" aria-label="Close menu">[X]</button>
     <nav class="mobile-nav">
       <a href="#hero" class="mobile-link" data-close>Home</a>
       <a href="#about" class="mobile-link" data-close>About</a>
@@ -316,7 +316,7 @@
           
           <div class="pipeline-flow">
             <div class="pipeline-stage">
-              <div class="stage-icon">📥</div>
+              <div class="stage-icon">[+]</div>
               <div class="stage-content">
                 <strong>1. Ingest</strong>
                 <span>Binary target &amp; source</span>
@@ -324,7 +324,7 @@
             </div>
             <div class="pipeline-connector"></div>
             <div class="pipeline-stage">
-              <div class="stage-icon">🔬</div>
+              <div class="stage-icon">[>]</div>
               <div class="stage-content">
                 <strong>2. Ghidra Analysis</strong>
                 <span>Headless decompiler</span>
@@ -332,7 +332,7 @@
             </div>
             <div class="pipeline-connector"></div>
             <div class="pipeline-stage">
-              <div class="stage-icon">💥</div>
+              <div class="stage-icon">[!]</div>
               <div class="stage-content">
                 <strong>3. Exploit Verify</strong>
                 <span>Fuzz overflow crashes</span>
@@ -340,7 +340,7 @@
             </div>
             <div class="pipeline-connector"></div>
             <div class="pipeline-stage">
-              <div class="stage-icon">🩹</div>
+              <div class="stage-icon">[~]</div>
               <div class="stage-content">
                 <strong>4. Patch Build</strong>
                 <span>Auto-patch source buffers</span>
@@ -348,7 +348,7 @@
             </div>
             <div class="pipeline-connector"></div>
             <div class="pipeline-stage">
-              <div class="stage-icon">✅</div>
+              <div class="stage-icon">[OK]</div>
               <div class="stage-content">
                 <strong>5. Secure Output</strong>
                 <span>Re-fuzz validation pass</span>
@@ -553,7 +553,7 @@
                   </div>
                   <div class="pentestai-stats">
                     <div class="pstat"><span class="pstat-label">Model</span><span class="pstat-val">Mistral-7B</span></div>
-                    <div class="pstat"><span class="pstat-label">Platform</span><span class="pstat-val">🤗 HF</span></div>
+                    <div class="pstat"><span class="pstat-label">Platform</span><span class="pstat-val">HF</span></div>
                   </div>
                 </div>
               </div>
@@ -592,7 +592,7 @@
               <div class="cert-badge">
                 <svg viewBox="0 0 60 60" width="60" height="60">
                   <circle cx="30" cy="30" r="28" fill="none" stroke="#00ff66" stroke-width="2" stroke-dasharray="4 2" class="cert-ring" />
-                  <text x="50%" y="52%" dominant-baseline="middle" text-anchor="middle" fill="#00ff66" font-size="18" font-family="JetBrains Mono">🛡️</text>
+                  <text x="50%" y="52%" dominant-baseline="middle" text-anchor="middle" fill="#00ff66" font-size="14" font-family="JetBrains Mono">[+]</text>
                 </svg>
               </div>
               <div class="cert-issuer">
@@ -619,7 +619,7 @@
               <div class="cert-badge">
                 <svg viewBox="0 0 60 60" width="60" height="60">
                   <circle cx="30" cy="30" r="28" fill="none" stroke="#00ff66" stroke-width="2" stroke-dasharray="4 2" class="cert-ring" />
-                  <text x="50%" y="52%" dominant-baseline="middle" text-anchor="middle" fill="#00ff66" font-size="18" font-family="JetBrains Mono">🤖</text>
+                  <text x="50%" y="52%" dominant-baseline="middle" text-anchor="middle" fill="#00ff66" font-size="14" font-family="JetBrains Mono">[>]</text>
                 </svg>
               </div>
               <div class="cert-issuer">
@@ -661,11 +661,11 @@
         <div class="knowledge-section glass-panel reveal-up mt-6">
           <h3 class="knowledge-title text-white">[ SYSTEM_FAMILIARITY ]</h3>
           <div class="knowledge-badges">
-            <div class="know-badge"><span class="know-icon">🔴</span><span>OWASP Top 10</span></div>
-            <div class="know-badge"><span class="know-icon">⚡</span><span>MITRE ATT&amp;CK</span></div>
-            <div class="know-badge"><span class="know-icon">🕵️</span><span>CVE Research</span></div>
-            <div class="know-badge"><span class="know-icon">🪟</span><span>Windows Exploits</span></div>
-            <div class="know-badge"><span class="know-icon">🐧</span><span>Linux Privesc</span></div>
+            <div class="know-badge"><span class="know-icon">[!]</span><span>OWASP Top 10</span></div>
+            <div class="know-badge"><span class="know-icon">[>]</span><span>MITRE ATT&amp;CK</span></div>
+            <div class="know-badge"><span class="know-icon">[~]</span><span>CVE Research</span></div>
+            <div class="know-badge"><span class="know-icon">[W]</span><span>Windows Exploits</span></div>
+            <div class="know-badge"><span class="know-icon">[L]</span><span>Linux Privesc</span></div>
           </div>
         </div>
 
@@ -679,25 +679,32 @@
           <span class="section-tag">[ 05_ESTABLISH_SOCKET ]</span>
           <h2 class="section-title text-white decrypt-trigger" data-text="ESTABLISH_SOCKET">ESTABLISH_SOCKET</h2>
         </div>
-        
-        <div class="contact-content glass-panel reveal-up">
-          <p class="contact-sub text-dim">
-            Looking for a cybersecurity researcher who designs systems that automate security verification? Initiate connection.
-          </p>
-          <a href="mailto:aaron.lawrence.alva@gmail.com" class="contact-email text-white decrypt-trigger" id="contactEmail" data-text="aaron.lawrence.alva@gmail.com">
-            <span class="email-text">aaron.lawrence.alva@gmail.com</span>
-            <span class="email-arrow">→</span>
-          </a>
-          <div class="contact-socials mt-6">
-            <a href="https://tryhackme.com/p/354221973" target="_blank" rel="noreferrer" class="social-link">
-              [ TryHackMe ]
-            </a>
-            <a href="https://github.com/Bunny-sysd" target="_blank" rel="noreferrer" class="social-link">
-              [ GitHub ]
-            </a>
-            <a href="https://www.linkedin.com/in/aaron-alva" target="_blank" rel="noreferrer" class="social-link">
-              [ LinkedIn ]
-            </a>
+
+        <div class="contact-terminal glass-panel reveal-up" id="contactTerminal">
+          <div class="contact-term-header">
+            <span class="contact-term-dot"></span>
+            <span class="contact-term-title">handshake_client.sh</span>
+          </div>
+          <div class="contact-term-body" id="contactTermBody">
+            <div class="contact-term-line text-green">> initiate_handshake --secure</div>
+            <div class="contact-term-line text-dim">> [SYS] Socket opened. Awaiting payload...</div>
+
+            <div class="contact-field-group">
+              <label class="contact-field-label" for="contactName">> Enter Target Alias (Name):</label>
+              <input type="text" id="contactName" class="contact-term-input" placeholder="________________" autocomplete="off" spellcheck="false" />
+            </div>
+
+            <div class="contact-field-group">
+              <label class="contact-field-label" for="contactMsg">> Enter Payload (Message):</label>
+              <textarea id="contactMsg" class="contact-term-input contact-term-textarea" placeholder="________________" rows="3" spellcheck="false"></textarea>
+            </div>
+
+            <div class="contact-term-actions">
+              <button class="contact-transmit-btn" id="contactTransmitBtn">[ ./transmit_payload ]</button>
+            </div>
+
+            <div class="contact-cipher-block" id="contactCipherBlock"></div>
+            <div class="contact-result-line" id="contactResultLine"></div>
           </div>
         </div>
       </div>
@@ -709,7 +716,7 @@
   <footer class="footer">
     <div class="footer-inner">
       <span class="footer-copy">© 2026 Aaron Alva // terminal_state: active</span>
-      <span class="footer-made">Made with ☕ &amp; zero-day vulnerability checks</span>
+      <span class="footer-made">Made with [+] zero-day vulnerability checks</span>
     </div>
   </footer>
 
@@ -785,7 +792,7 @@
       <div class="fault-mobile-game" id="faultMobileGame">
         <p class="fault-instruction">> physically shake device to seat memory controller, or tap module to override:</p>
         <div class="ram-game-arena">
-          <div class="mobile-device-graphic">📱</div>
+          <div class="mobile-device-graphic">[DEVICE]</div>
           <div class="ram-module-tap" id="ramModuleTap">
             <span class="ram-label">[ |||||| RAM_0xAA ]</span>
           </div>
@@ -803,7 +810,7 @@
 
   <div id="projectModal" class="project-modal-overlay">
     <div class="project-modal-content glass-panel">
-      <button class="modal-close" id="modalCloseBtn">✕</button>
+      <button class="modal-close" id="modalCloseBtn">[X]</button>
       <div id="modalBody"></div>
     </div>
   </div>
@@ -811,8 +818,8 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-  <script src="three-bg.js?v=1.3"></script>
-  <script src="app.js?v=1.3"></script>
+  <script src="three-bg.js?v=1.4"></script>
+  <script src="app.js?v=1.4"></script>
 </body>
 
 </html>

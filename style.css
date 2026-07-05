@@ -2158,5 +2158,131 @@ body::before {
   color: #ff0055;
 }
 
+/* ── CONTACT CLI TERMINAL FORM ── */
+.contact-terminal {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 0;
+  border: 1px solid var(--border);
+  overflow: hidden;
+  background: rgba(2, 4, 10, 0.75);
+  backdrop-filter: blur(16px);
+}
+.contact-term-header {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.65rem 1rem;
+  border-bottom: 1px solid var(--border);
+  background: rgba(0, 0, 0, 0.3);
+}
+.contact-term-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 6px var(--green);
+}
+.contact-term-title {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--text-dim);
+}
+.contact-term-body {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.contact-term-line {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  line-height: 1.5;
+}
+.contact-field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+.contact-field-label {
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  color: var(--cyan);
+}
+.contact-term-input {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  outline: none;
+  color: var(--green);
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  padding: 0.5rem 0;
+  width: 100%;
+  caret-color: var(--green);
+  transition: border-color 0.3s ease;
+  resize: none;
+}
+.contact-term-input::placeholder {
+  color: rgba(255, 255, 255, 0.15);
+  font-family: var(--font-mono);
+}
+.contact-term-input:focus {
+  border-bottom-color: var(--green);
+  box-shadow: 0 1px 0 var(--green);
+}
+.contact-term-textarea {
+  min-height: 60px;
+}
+.contact-term-actions {
+  margin-top: 0.5rem;
+}
+.contact-transmit-btn {
+  background: transparent;
+  border: 1px solid var(--green);
+  color: var(--green);
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 0.6rem 1.8rem;
+  cursor: pointer;
+  border-radius: var(--radius);
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+}
+.contact-transmit-btn:hover {
+  background: rgba(0, 255, 102, 0.1);
+  box-shadow: 0 0 16px rgba(0, 255, 102, 0.25);
+  text-shadow: 0 0 6px var(--green);
+}
+.contact-transmit-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+.contact-cipher-block {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--cyan);
+  line-height: 1.4;
+  min-height: 0;
+  overflow: hidden;
+  word-break: break-all;
+  transition: min-height 0.3s ease;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 0;
+  border-radius: var(--radius);
+}
+.contact-cipher-block.active {
+  padding: 0.85rem;
+  min-height: 60px;
+}
+.contact-result-line {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--green);
+  font-weight: 700;
+  min-height: 0;
+}
+
 
 

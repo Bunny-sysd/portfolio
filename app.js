@@ -95,7 +95,7 @@ document.querySelectorAll('.decrypt-trigger').forEach(el => {
   ];
 
   const messages = [
-    '> Initializing terminal link...',
+    '> [SYS] Loading user profile: Aaron Alva... [OK]',
     '> Syncing vulnerability decompiler...',
     '> Authorization granted. Decrypting interface...',
   ];
@@ -1451,6 +1451,75 @@ function playSystemAlarmBeep() {
       updateShakeIndicator();
     });
   }
+})();
+
+// ── CONTACT CLI TERMINAL FORM HANDLER ──
+(function initContactTerminal() {
+  const transmitBtn = document.getElementById('contactTransmitBtn');
+  const nameInput   = document.getElementById('contactName');
+  const msgInput    = document.getElementById('contactMsg');
+  const cipherBlock = document.getElementById('contactCipherBlock');
+  const resultLine  = document.getElementById('contactResultLine');
+
+  if (!transmitBtn || !nameInput || !msgInput) return;
+
+  function generateCiphertext(length) {
+    const hexChars = '0123456789ABCDEF';
+    let output = '';
+    for (let i = 0; i < length; i++) {
+      if (i > 0 && i % 2 === 0) output += ' ';
+      if (i > 0 && i % 32 === 0) output += '\n';
+      output += '0x' + hexChars[Math.floor(Math.random() * 16)] + hexChars[Math.floor(Math.random() * 16)];
+    }
+    return output;
+  }
+
+  transmitBtn.addEventListener('click', () => {
+    const name = nameInput.value.trim();
+    const msg  = msgInput.value.trim();
+
+    if (!name || !msg) {
+      resultLine.style.color = '#ff0055';
+      resultLine.textContent = '> [ERR] Payload incomplete. All fields required.';
+      setTimeout(() => {
+        resultLine.textContent = '';
+        resultLine.style.color = '';
+      }, 2000);
+      return;
+    }
+
+    // Haptic feedback on mobile
+    if (navigator.vibrate) navigator.vibrate(10);
+
+    transmitBtn.disabled = true;
+    transmitBtn.textContent = '[ ENCRYPTING... ]';
+    resultLine.textContent = '';
+
+    // Phase 1: Show rapid ciphertext scramble for 0.8s
+    cipherBlock.classList.add('active');
+    let scrambleInterval = setInterval(() => {
+      cipherBlock.textContent = generateCiphertext(48);
+    }, 50);
+
+    setTimeout(() => {
+      clearInterval(scrambleInterval);
+      cipherBlock.classList.remove('active');
+      cipherBlock.textContent = '';
+
+      // Phase 2: Show success resolution
+      resultLine.style.color = 'var(--green)';
+      resultLine.textContent = '> [SYS] Payload encrypted and routed via secure webhook. Connection terminated.';
+      transmitBtn.textContent = '[ TRANSMITTED ]';
+
+      // Reset form after delay
+      setTimeout(() => {
+        nameInput.value = '';
+        msgInput.value = '';
+        transmitBtn.disabled = false;
+        transmitBtn.textContent = '[ ./transmit_payload ]';
+      }, 4000);
+    }, 800);
+  });
 })();
 
 // Console log egg easter header
