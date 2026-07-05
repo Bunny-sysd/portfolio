@@ -5,19 +5,21 @@
 
 /* ── VARIABLES & SYSTEM CORE ── */
 :root {
-  --bg:           #0A0A0C; /* Deeper void black */
-  --bg-rgb:       10, 10, 12;
-  --bg2:          #0F0F12;
-  --bg3:          #14141A;
-  --surface:      rgba(15, 15, 20, 0.55); /* Glassmorphism background */
-  --border:       rgba(0, 255, 65, 0.08);  /* Translucent luminous green border */
-  --border2:      rgba(0, 255, 65, 0.25);  /* Slightly higher contrast green border */
-  --green:        #00FF41; /* Piercing luminous terminal green */
-  --green-rgb:    0, 255, 65;
-  --green-dim:    rgba(0, 255, 65, 0.15);
+  --bg:           #02040a; /* Deep tactical dark navy-black */
+  --bg-rgb:       2, 4, 10;
+  --bg2:          #070a12;
+  --bg3:          #0c1220;
+  --surface:      rgba(15, 20, 36, 0.55); /* Glassmorphism background */
+  --border:       rgba(255, 255, 255, 0.05); /* Ultra-thin border */
+  --border2:      rgba(0, 255, 102, 0.25);  /* Slightly higher contrast green border */
+  --green:        #00ff66; /* Tactical green success/active state */
+  --green-rgb:    0, 255, 102;
+  --green-dim:    rgba(0, 255, 102, 0.15);
+  --cyan:         #00d4ff; /* Cyber cyan for metadata */
+  --cyan-rgb:     0, 212, 255;
   --text:         #FFFFFF; /* Pure white for high contrast reading */
   --text-dim:     #A0AAB0; /* Readable gray-cyan */
-  --text-muted:   #55665b; /* Monospace label color */
+  --text-muted:   #4f5e75; /* Monospace label color */
   --font-mono:    'JetBrains Mono', monospace;
   --font-sans:    'Space Grotesk', sans-serif;
   --radius:       4px;  /* Sharper brutalist edges */
@@ -489,6 +491,83 @@ body::before {
 .text-muted { color: var(--text-muted); }
 .text-white { color: #fff; }
 .text-dim { color: var(--text-dim); }
+
+/* ── DYNAMIC TERMINAL CONTROLS ── */
+.terminal-chips-wrapper {
+  padding: 0 1.75rem;
+  margin-top: 1rem;
+}
+.chips-label {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  margin-bottom: 0.45rem;
+  letter-spacing: 0.05em;
+}
+.terminal-chips {
+  display: flex;
+  gap: 0.6rem;
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
+  scrollbar-width: none;
+}
+.terminal-chips::-webkit-scrollbar {
+  display: none;
+}
+.command-chip {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--cyan);
+  background: rgba(0, 212, 255, 0.04);
+  border: 1px solid rgba(0, 212, 255, 0.15);
+  padding: 0.45rem 0.9rem;
+  border-radius: var(--radius);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: transform 0.2s cubic-bezier(0.25, 0.8, 0.25, 1), border-color 0.2s, box-shadow 0.2s, color 0.2s;
+  will-change: transform;
+}
+.command-chip:hover {
+  border-color: var(--green);
+  color: var(--green);
+  transform: translateY(-2px);
+  box-shadow: 0 0 12px rgba(0, 255, 102, 0.15);
+}
+.command-chip:active {
+  transform: translateY(-0.5px);
+}
+
+.terminal-input-line {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem 1.75rem 1.75rem;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  border-top: 1px solid var(--border);
+  background: rgba(10, 10, 12, 0.4);
+}
+.prompt-symbol {
+  color: var(--cyan);
+  font-weight: 500;
+  white-space: nowrap;
+}
+#terminalInput {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--green);
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  caret-color: transparent; /* Hide browser caret to use custom block cursor */
+}
+.input-cursor {
+  color: var(--green);
+  animation: blink 0.8s step-end infinite;
+  margin-left: -0.25rem;
+}
 
 .hero-actions {
   display: flex;

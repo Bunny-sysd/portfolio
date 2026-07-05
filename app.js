@@ -145,18 +145,22 @@ document.querySelectorAll('.decrypt-trigger').forEach(el => {
 // ── HERO BOOT TERMINAL SIMULATION ────────────────
 function runHeroTerminalDiagnostics() {
   const terminal = document.getElementById('heroTerminalOutput');
+  const inputEl = document.getElementById('terminalInput');
+  const chips = document.querySelectorAll('.command-chip');
   if (!terminal) return;
 
-  // Clear original placeholder contents
+  // Clear output terminal body
   terminal.innerHTML = '';
 
   const diagnosticLines = [
-    { text: '[INIT] Loading core framework assets...', delay: 100, class: 'text-muted' },
-    { text: '[OK] Connection to target virtual machine established.', delay: 400, class: 'text-muted' },
-    { text: '[OK] 91 TryHackMe Badges mapped onto security matrix.', delay: 700, class: 'text-muted' },
-    { text: '[READY] Decryption module initialized.', delay: 1000, class: 'text-green' },
-    { text: '==================================================', delay: 1200, class: 'separator' },
-    { text: 'AARON ALVA // ', delay: 1550, isName: true }
+    { text: '> [SYS] Initializing local Gemma 4 environment... [OK]', delay: 100, class: 'text-dim' },
+    { text: '> [SYS] Establishing secure VM pipeline link... [OK]', delay: 350, class: 'text-dim' },
+    { text: '> [SYS] Loading user profile: Aaron Lawrence Alva... [OK]', delay: 600, class: 'text-dim' },
+    { text: '> [SYS] Mapping 91 TryHackMe active badges... [OK]', delay: 850, class: 'text-dim' },
+    { text: '> [SYS] Initializing NLP processing translation agent... [OK]', delay: 1100, class: 'text-green' },
+    { text: '> Available modules loaded. Click any highlighted command below or type your inquiry.', delay: 1350, class: 'text-cyan' },
+    { text: '==================================================', delay: 1500, class: 'separator' },
+    { text: 'AARON ALVA // ', delay: 1700, isName: true }
   ];
 
   diagnosticLines.forEach(line => {
@@ -190,6 +194,7 @@ function runHeroTerminalDiagnostics() {
           desc.className = 'console-line bio-line text-dim mt-4';
           desc.textContent = 'Building closed-loop AI pipelines that decompile, fuzz, exploit, and patch target C binaries autonomously. Creating Mutagen, an agentic zero-day fuzzer.';
           terminal.appendChild(desc);
+          terminal.scrollTop = terminal.scrollHeight;
         }, 800);
 
       } else {
@@ -198,10 +203,180 @@ function runHeroTerminalDiagnostics() {
         terminal.appendChild(div);
       }
       
-      // Auto-scroll terminal body if content overflows
       terminal.scrollTop = terminal.scrollHeight;
     }, line.delay);
   });
+
+  // Helper to print a line to terminal output
+  function printLine(text, cssClass = '') {
+    const div = document.createElement('div');
+    div.className = 'console-line ' + cssClass;
+    div.textContent = text;
+    terminal.appendChild(div);
+    terminal.scrollTop = terminal.scrollHeight;
+  }
+
+  // Execute terminal command
+  function executeCommand(cmd) {
+    const trimmed = cmd.trim();
+    if (!trimmed) return;
+
+    // Print command header
+    printLine('guest@0xportfolio:~$ ' + trimmed, 'prompt-symbol');
+
+    if (trimmed === 'clear') {
+      terminal.innerHTML = '';
+      return;
+    }
+
+    if (trimmed === './view_mutagen_fuzzer') {
+      printLine('[OK] Triggering autonomous fuzzer pipeline logging...', 'text-cyan');
+      let logDelay = 100;
+      const logs = [
+        '[08:42:01] [SYS] AI zero-day fuzzer engine active.',
+        '[08:42:03] [Ghidra] Disassembling C binary buffers...',
+        '[08:42:07] [HEAP] Crash caught at instruction offset 0x004011d4.',
+        '[08:42:11] [PoC] Compiling buffer overflow exploit payload: VERIFIED.',
+        '[08:42:15] [PATCH] Safe buffer injection patch applied to source code.',
+        '[08:42:19] [AUDIT] Re-fuzz pass: 0 leaks, 0 crashes. Target secured.'
+      ];
+      logs.forEach(log => {
+        setTimeout(() => {
+          printLine(log, 'text-green');
+        }, logDelay);
+        logDelay += 200;
+      });
+      return;
+    }
+
+    if (trimmed === 'cat certifications.txt') {
+      printLine('[OK] Querying local credentials vault...', 'text-cyan');
+      setTimeout(() => {
+        printLine('------------------------------------------------------------', 'text-muted');
+        printLine('LEGAL NAME: Aaron Lawrence Alva', 'text-white');
+        printLine('VERIFIED CREDENTIALS:', 'text-green');
+        printLine('  1. TryHackMe Intro to Cybersecurity (91 Badges Map) - VERIFIED', 'text-dim');
+        printLine('  2. TryHackMe AI Security (Prompt Injection / Attack Mapping) - VERIFIED', 'text-dim');
+        printLine('------------------------------------------------------------', 'text-muted');
+      }, 200);
+      return;
+    }
+
+    if (trimmed === 'cat skills.db') {
+      printLine('[OK] Fetching dynamic skills matrix database...', 'text-cyan');
+      setTimeout(() => {
+        printLine('------------------------------------------------------------', 'text-muted');
+        printLine('OFFENSIVE: Nmap, Metasploit, John the Ripper, Hydra, Custom Exploits', 'text-white');
+        printLine('DEFENSIVE: MITRE ATT&CK, OWASP Top 10, Threat Modeling', 'text-white');
+        printLine('AI/ML: Fine-tuning transformers, Dataset prep, Hugging Face API', 'text-white');
+        printLine('DEVELOPMENT: HTML, CSS, Vanilla JS, REST APIs, JSON Data Pipelines', 'text-white');
+        printLine('------------------------------------------------------------', 'text-muted');
+      }, 200);
+      return;
+    }
+
+    if (trimmed === 'cat profile.md') {
+      printLine('[OK] Querying user catalog database...', 'text-cyan');
+      setTimeout(() => {
+        printLine('------------------------------------------------------------', 'text-muted');
+        printLine('IDENTITY: Aaron Lawrence Alva // Cybersecurity Researcher', 'text-white');
+        printLine('BIO: I design closed-loop AI systems that find and fix zero-day vulnerabilities in C codebases automatically.', 'text-dim');
+        printLine('PROJECTS: Mutagen (fuzzer), SignalHub (analytics), PentestAI', 'text-dim');
+        printLine('CONTACT: aaron.lawrence.alva@gmail.com', 'text-green');
+        printLine('------------------------------------------------------------', 'text-muted');
+      }, 200);
+      return;
+    }
+
+    // Default catch-all
+    printLine('Error: Command not found: ' + trimmed, 'text-muted');
+  }
+
+  // NLP simulated engine
+  function processNaturalLanguage(query) {
+    printLine('guest@0xportfolio:~$ ' + query, 'text-white');
+    printLine('> [NLP_AGENT] Parsing input... translating to system call...', 'text-cyan');
+
+    const cleanQuery = query.toLowerCase();
+    let targetCommand = 'cat profile.md'; // fallback
+
+    if (cleanQuery.includes('cert') || cleanQuery.includes('education') || cleanQuery.includes('giac') || cleanQuery.includes('credential') || cleanQuery.includes('badge') || cleanQuery.includes('thm')) {
+      targetCommand = 'cat certifications.txt';
+    } else if (cleanQuery.includes('skill') || cleanQuery.includes('arsenal') || cleanQuery.includes('tools') || cleanQuery.includes('techno') || cleanQuery.includes('offensive') || cleanQuery.includes('defense')) {
+      targetCommand = 'cat skills.db';
+    } else if (cleanQuery.includes('mutagen') || cleanQuery.includes('fuzzer') || cleanQuery.includes('zero') || cleanQuery.includes('exploit') || cleanQuery.includes('sandbox')) {
+      targetCommand = './view_mutagen_fuzzer';
+    } else if (cleanQuery.includes('clear') || cleanQuery.includes('clean') || cleanQuery.includes('reset')) {
+      targetCommand = 'clear';
+    } else if (cleanQuery.includes('profile') || cleanQuery.includes('who') || cleanQuery.includes('bio') || cleanQuery.includes('name') || cleanQuery.includes('about')) {
+      targetCommand = 'cat profile.md';
+    } else {
+      // dynamic query grep
+      targetCommand = 'grep -i "' + query.replace(/[^a-zA-Z0-9 ]/g, '') + '" /usr/vault/credentials.db';
+    }
+
+    setTimeout(() => {
+      printLine('> Executing system call: ' + targetCommand, 'text-muted');
+      setTimeout(() => {
+        if (targetCommand.startsWith('grep')) {
+          printLine('guest@0xportfolio:~$ ' + targetCommand, 'prompt-symbol');
+          printLine('[OK] Searching database...', 'text-cyan');
+          setTimeout(() => {
+            printLine('No exact entry for "' + query + '" found in /usr/vault/credentials.db.', 'text-muted');
+            printLine('Suggested action: try click suggested command controls.', 'text-green');
+          }, 300);
+        } else {
+          executeCommand(targetCommand);
+        }
+      }, 300);
+    }, 850);
+  }
+
+  // Clickable Chips action listener
+  chips.forEach(chip => {
+    chip.addEventListener('click', () => {
+      const cmd = chip.getAttribute('data-cmd');
+      if (!cmd || !inputEl) return;
+      
+      // Simulate typing speed
+      inputEl.value = '';
+      inputEl.focus();
+      let charIdx = 0;
+      const typeInterval = setInterval(() => {
+        if (charIdx < cmd.length) {
+          inputEl.value += cmd[charIdx++];
+        } else {
+          clearInterval(typeInterval);
+          setTimeout(() => {
+            executeCommand(cmd);
+            inputEl.value = '';
+          }, 200);
+        }
+      }, 30);
+    });
+  });
+
+  // Text Prompt input listener
+  if (inputEl) {
+    inputEl.addEventListener('keydown', e => {
+      if (e.key === 'Enter') {
+        const val = inputEl.value.trim();
+        if (!val) return;
+
+        // Reset input field
+        inputEl.value = '';
+
+        // If it's a direct command or in the chips, run directly
+        const knownCommands = ['./view_mutagen_fuzzer', 'cat certifications.txt', 'cat skills.db', 'cat profile.md', 'clear'];
+        if (knownCommands.includes(val)) {
+          executeCommand(val);
+        } else {
+          // Process via NLP simulated translator
+          processNaturalLanguage(val);
+        }
+      }
+    });
+  }
 }
 
 // ── FLOATING PILL NAV ACTIVE TAB HIGHLIGHT ────────

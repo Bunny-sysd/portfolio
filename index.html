@@ -116,22 +116,31 @@
         </div>
         <div class="terminal-body" id="heroTerminalOutput">
           <!-- Populated line-by-line via initTypewriter boot simulation -->
-          <div class="console-line text-muted">[INIT] Loading core framework assets...</div>
-          <div class="console-line text-muted">[OK] Connection to main virtual machine established.</div>
-          <div class="console-line text-muted">[OK] 91 TryHackMe Badges mapped onto security matrix.</div>
-          <div class="console-line text-green">[READY] Decryption module initialized.</div>
-          <div class="console-line separator">==================================================</div>
-          <div class="console-line identity-line">
-            <span class="role-prefix">AARON ALVA // </span><span class="decrypt-target text-white" data-text="Cybersecurity Researcher & Agentic AI Developer">Cybersecurity Researcher & Agentic AI Developer</span>
-          </div>
-          <div class="console-line bio-line text-dim mt-4">
-            Building closed-loop AI pipelines that decompile, fuzz, exploit, and patch target binaries autonomously. Creating Mutagen, an agentic zero-day fuzzer.
+        </div>
+
+        <!-- Clickable Command Chips -->
+        <div class="terminal-chips-wrapper">
+          <div class="chips-label">Quick Execute Controls:</div>
+          <div class="terminal-chips">
+            <button class="command-chip" data-cmd="./view_mutagen_fuzzer">[ ./view_mutagen_fuzzer ]</button>
+            <button class="command-chip" data-cmd="cat certifications.txt">[ cat certifications.txt ]</button>
+            <button class="command-chip" data-cmd="cat skills.db">[ cat skills.db ]</button>
+            <button class="command-chip" data-cmd="cat profile.md">[ cat profile.md ]</button>
+            <button class="command-chip" data-cmd="clear">[ clear ]</button>
           </div>
         </div>
-        <div class="hero-actions">
-          <a href="#projects" class="btn btn-primary decrypt-trigger" data-text="EXECUTE_FUZZER">EXECUTE_FUZZER</a>
-          <a href="#contact" class="btn btn-ghost decrypt-trigger" data-text="ESTABLISH_LINK">ESTABLISH_LINK</a>
+
+        <!-- Interactive Terminal Prompt -->
+        <div class="terminal-input-line">
+          <span class="prompt-symbol">guest@0xportfolio:~$</span>
+          <input type="text" id="terminalInput" placeholder="Type command or query (e.g., 'show me your skills')..." autocomplete="off" />
+          <span class="input-cursor">▋</span>
         </div>
+      </div>
+
+      <div class="hero-actions">
+        <a href="#projects" class="btn btn-primary decrypt-trigger" data-text="VIEW_PROJECTS">VIEW_PROJECTS</a>
+        <a href="#contact" class="btn btn-ghost decrypt-trigger" data-text="ESTABLISH_SOCKET">ESTABLISH_SOCKET</a>
       </div>
 
       <div class="hero-grid-stats">
