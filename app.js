@@ -564,6 +564,200 @@ function runHeroTerminalDiagnostics() {
   if (section) observer.observe(section);
 })();
 
+// ── BENTO WIDGETS DYNAMIC LOGGING & SIGNAL STREAMS ────────────────
+(function initBentoWidgets() {
+  // 1. Mutagen Live Log Streamer
+  const mutagenLogs = document.getElementById('mutagenLiveLogs');
+  if (mutagenLogs) {
+    const logTemplates = [
+      { tag: '[SYS]', class: 'tag-sys', text: 'Routing fuzzer input via OpenClaw gateway... [OK]' },
+      { tag: '[Ghidra]', class: 'tag-agent', text: 'Disassembling instruction offset 0x004011d4...' },
+      { tag: '[AUDIT]', class: 'tag-audit', text: 'Memory limit buffer overflow check: COMPLETED.' },
+      { tag: '[HEAP]', class: 'tag-fuzz', text: 'Memory chunk offset 0x004012fc overflow audited... PATCHED.' },
+      { tag: '[PoC]', class: 'tag-exploit', text: 'Compiling buffer corrupt payload verification exploit...' },
+      { tag: '[NLP]', class: 'tag-agent', text: 'Analyzing buffer bounds targeting socket Port 8080...' },
+      { tag: '[OK]', class: 'tag-sys', text: 'Patch compiled. Target system vulnerability successfully secured.' }
+    ];
+
+    let logIndex = 0;
+    setInterval(() => {
+      const now = new Date();
+      const timeStr = now.toTimeString().split(' ')[0];
+      const template = logTemplates[logIndex];
+
+      const line = document.createElement('div');
+      line.className = 'mutagen-log-line';
+      
+      const timeSpan = document.createElement('span');
+      timeSpan.className = 'log-time';
+      timeSpan.textContent = `[${timeStr}] `;
+      
+      const tagSpan = document.createElement('span');
+      tagSpan.className = `log-tag ${template.class}`;
+      tagSpan.textContent = `${template.tag} `;
+      
+      const textSpan = document.createElement('span');
+      textSpan.textContent = template.text;
+      if (template.text.includes('0x004011d4')) {
+        textSpan.innerHTML = 'Disassembling instruction offset <span class="highlight-address">0x004011d4</span>...';
+      } else if (template.text.includes('secured') || template.text.includes('[OK]')) {
+        textSpan.innerHTML = 'Patch compiled. Target system vulnerability successfully <span class="highlight-success">SECURED</span>.';
+      }
+
+      line.appendChild(timeSpan);
+      line.appendChild(tagSpan);
+      line.appendChild(textSpan);
+      mutagenLogs.appendChild(line);
+
+      // Prevent DOM bloating
+      while (mutagenLogs.children.length > 14) {
+        mutagenLogs.removeChild(mutagenLogs.firstChild);
+      }
+
+      mutagenLogs.scrollTop = mutagenLogs.scrollHeight;
+      logIndex = (logIndex + 1) % logTemplates.length;
+    }, 2800);
+  }
+
+  // 2. SignalHub Stock JSON Ticker Streamer
+  const stockStream = document.getElementById('stockJsonStream');
+  if (stockStream) {
+    const symbols = ['NVDA', 'MSFT', 'AAPL', 'TSLA'];
+    const prices = { NVDA: 824.15, MSFT: 418.20, AAPL: 182.30, TSLA: 175.40 };
+    const deltas = { NVDA: 4.2, MSFT: 2.3, AAPL: 0.8, TSLA: -3.1 };
+
+    setInterval(() => {
+      // Pick random symbol
+      const sym = symbols[Math.floor(Math.random() * symbols.length)];
+      
+      // Update values
+      const deltaShift = (Math.random() - 0.48) * 0.8;
+      deltas[sym] = parseFloat((deltas[sym] + deltaShift).toFixed(2));
+      prices[sym] = parseFloat((prices[sym] * (1 + deltaShift / 100)).toFixed(2));
+
+      // Update Tickers text and colors
+      const nvdaEl = document.getElementById('ticker-nvda');
+      const msftEl = document.getElementById('ticker-msft');
+      if (nvdaEl) {
+        nvdaEl.textContent = `${deltas.NVDA >= 0 ? '+' : ''}${deltas.NVDA}%`;
+        nvdaEl.className = `t-val ${deltas.NVDA >= 0 ? 'up' : 'down'}`;
+      }
+      if (msftEl) {
+        msftEl.textContent = `${deltas.MSFT >= 0 ? '+' : ''}${deltas.MSFT}%`;
+        msftEl.className = `t-val ${deltas.MSFT >= 0 ? 'up' : 'down'}`;
+      }
+
+      // Generate structured JSON string
+      const jsonPayload = {
+        symbol: sym,
+        price: prices[sym],
+        volume: Math.floor(2500000 + Math.random() * 5000000),
+        sentiment: deltas[sym] >= 0 ? 'BULLISH' : 'BEARISH',
+        action: deltas[sym] > 1.5 ? 'BUY' : deltas[sym] < -1.5 ? 'SELL' : 'HOLD'
+      };
+
+      stockStream.textContent = JSON.stringify(jsonPayload, null, 2);
+    }, 1600);
+  }
+})();
+
+// ── DETAIL EXPAND MODAL & HARDWARE GLITCH SIMULATOR ───────────────
+(function initProjectModals() {
+  const cards = document.querySelectorAll('.bento-project-card.hardware-glitch');
+  const modal = document.getElementById('projectModal');
+  const modalBody = document.getElementById('modalBody');
+  const closeBtn = document.getElementById('modalCloseBtn');
+
+  if (!modal || !modalBody) return;
+
+  const projectsDb = {
+    "proj-mutagen": {
+      title: "Mutagen Zero-Day Fuzzer",
+      meta: "AGENTIC_AI / BINARY_FUZZER // 2026",
+      desc: "Mutagen is an autonomous vulnerability platform designed to inspect binary systems for memory vulnerabilities. It combines headless Ghidra disassembly with LLM agents to detect buffer overflows, construct target payloads to verify exploitative impact, compile patches, and re-test binaries in secure Docker sandboxes.",
+      tags: ["Python", "Gemma 4", "Ghidra API", "Docker Sandbox", "C++ ASM"],
+      link: "https://github.com/bunny-sysd/mutagen",
+      btnText: "CONNECT_TO_MUTAGEN_PIPELINE"
+    },
+    "proj-stock": {
+      title: "SignalHub Analytics",
+      meta: "DATA_PIPELINE / LIVE // 2025",
+      desc: "SignalHub builds high-frequency stock parsing micro-systems. It streams market feed variables from Alpha Vantage API directly to Firebase Realtime Databases. Integrated triggers invoke agentic models to analyze price indicators and output trading buy/sell signal models.",
+      tags: ["Firebase Database", "Alpha Vantage API", "Node.js REST", "Tailwind CSS"],
+      link: "https://signalhub-e79ba.web.app/",
+      btnText: "ESTABLISH_LIVE_SOCKET"
+    },
+    "proj-thm": {
+      title: "TryHackMe CTF Labs",
+      meta: "OFFENSIVE_OPERATIONS // 2025",
+      desc: "Completed 91 security badges tracking network pen-testing, password audits, active directory compromises, privilege escalation, and binary exploitation models.",
+      tags: ["Metasploit Suite", "Burp Suite Pro", "Nmap Scanner", "Wireshark", "John"],
+      link: "https://tryhackme.com/p/354221973",
+      btnText: "VIEW_VERIFIED_BADGES"
+    },
+    "proj-vm": {
+      title: "Security Lab Sandbox",
+      meta: "VIRTUAL_ISOLATION_LAB // 2023-2025",
+      desc: "Configured local virtualized network sandboxes to perform secure penetration testing on targets. Establishes isolated interfaces to trace network packet headers without exposing external systems.",
+      tags: ["VirtualBox Hypervisor", "Kali Linux", "Wireshark PCAPs", "PFsense Firewall"],
+      link: "https://github.com/Bunny-sysd",
+      btnText: "VIEW_LAB_DIAGRAMS"
+    },
+    "proj-pentestai": {
+      title: "Security LLM Training",
+      meta: "TRANSFORMERS / HUGGINGFACE // 2025",
+      desc: "Finetuned Mistral and LLaMA transformers on custom datasets of vulnerable source codes to classify CVE entry categories automatically.",
+      tags: ["HuggingFace", "Python PyTorch", "QLoRA", "Tokenizer Tuning"],
+      link: "https://github.com/Bunny-sysd",
+      btnText: "ACCESS_MODEL_WEIGHTS"
+    }
+  };
+
+  function openModal(id) {
+    const data = projectsDb[id];
+    if (!data) return;
+
+    modalBody.innerHTML = `
+      <div class="modal-body-title">${data.title}</div>
+      <div class="modal-body-meta">${data.meta}</div>
+      <p class="modal-body-desc">${data.desc}</p>
+      <div class="modal-body-tags">
+        ${data.tags.map(tag => `<span>${tag}</span>`).join('')}
+      </div>
+      <div class="mt-4">
+        <a href="${data.link}" target="_blank" class="modal-action-btn">${data.btnText}</a>
+      </div>
+    `;
+    modal.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal() {
+    modal.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  // Bind glitch clicks
+  cards.forEach(card => {
+    card.addEventListener('click', () => {
+      const id = card.getAttribute('id');
+      if (!id) return;
+
+      // Trigger 0.3s hardware fault glitch stutter
+      card.classList.add('glitch-active');
+      setTimeout(() => {
+        card.classList.remove('glitch-active');
+        openModal(id);
+      }, 300);
+    });
+  });
+
+  if (closeBtn) closeBtn.addEventListener('click', closeModal);
+  modal.addEventListener('click', e => {
+    if (e.target === modal) closeModal();
+  });
+})();
+
 // Console log egg easter header
 console.log(
   '%c 0xPORTFOLIO ACTIVE // AUTHORIZED SESSION ',
