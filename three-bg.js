@@ -103,26 +103,54 @@
     const innerGlobe = new THREE.Mesh(innerGeo, innerMat);
     coreGroup.add(innerGlobe);
 
-    // Scanner Ring
-    const ringGeo = new THREE.RingGeometry(cfg.scale * 1.5, cfg.scale * 1.53, 64);
-    const ringMat = new THREE.MeshBasicMaterial({
+    // Scanner Ring 1 (Medium, X-tilted)
+    const ringGeo1 = new THREE.RingGeometry(cfg.scale * 1.48, cfg.scale * 1.51, 64);
+    const ringMat1 = new THREE.MeshBasicMaterial({
       color: cfg.color.clone(),
       side: THREE.DoubleSide,
       transparent: true,
-      opacity: 0.08
+      opacity: 0.09
     });
-    const scannerRing = new THREE.Mesh(ringGeo, ringMat);
-    scannerRing.rotation.x = Math.PI / 3;
-    coreGroup.add(scannerRing);
+    const scannerRing1 = new THREE.Mesh(ringGeo1, ringMat1);
+    scannerRing1.rotation.x = Math.PI / 3;
+    coreGroup.add(scannerRing1);
+
+    // Scanner Ring 2 (Large, Y-tilted)
+    const ringGeo2 = new THREE.RingGeometry(cfg.scale * 1.54, cfg.scale * 1.57, 64);
+    const ringMat2 = new THREE.MeshBasicMaterial({
+      color: cfg.color.clone(),
+      side: THREE.DoubleSide,
+      transparent: true,
+      opacity: 0.06
+    });
+    const scannerRing2 = new THREE.Mesh(ringGeo2, ringMat2);
+    scannerRing2.rotation.y = Math.PI / 4;
+    coreGroup.add(scannerRing2);
+
+    // Scanner Ring 3 (Small, Z-tilted)
+    const ringGeo3 = new THREE.RingGeometry(cfg.scale * 1.42, cfg.scale * 1.45, 64);
+    const ringMat3 = new THREE.MeshBasicMaterial({
+      color: cfg.color.clone(),
+      side: THREE.DoubleSide,
+      transparent: true,
+      opacity: 0.05
+    });
+    const scannerRing3 = new THREE.Mesh(ringGeo3, ringMat3);
+    scannerRing3.rotation.z = Math.PI / 6;
+    coreGroup.add(scannerRing3);
 
     cores.push({
       group: coreGroup,
       globe: globeMesh,
       inner: innerGlobe,
-      ring: scannerRing,
+      ring1: scannerRing1,
+      ring2: scannerRing2,
+      ring3: scannerRing3,
       matOuter: sphereMat,
       matInner: innerMat,
-      matRing: ringMat,
+      matRing1: ringMat1,
+      matRing2: ringMat2,
+      matRing3: ringMat3,
       baseScale: cfg.scale,
       baseColor: cfg.color
     });
@@ -511,7 +539,9 @@
       core.globe.rotation.y += 0.0012 * spinMultiplier;
       core.globe.rotation.x += 0.0005 * spinMultiplier;
       core.inner.rotation.y -= 0.0006 * spinMultiplier;
-      core.ring.rotation.z += 0.003 * spinMultiplier;
+      core.ring1.rotation.z += 0.0025 * spinMultiplier;
+      core.ring2.rotation.x -= 0.0015 * spinMultiplier;
+      core.ring3.rotation.y += 0.0020 * spinMultiplier;
     });
 
     // Update node positions with drift & orbit for both binary meshes

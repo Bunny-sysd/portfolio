@@ -86,6 +86,14 @@ document.querySelectorAll('.decrypt-trigger').forEach(el => {
 // ── SPLASH SCREEN ──
 (function initSplashController() {
   const splash   = document.getElementById('splash');
+  if (!splash) {
+    document.body.style.overflow = '';
+    // Trigger scroll reveals immediately
+    document.querySelectorAll('.reveal-up').forEach((el) => {
+      el.classList.add('visible');
+    });
+    return;
+  }
   const bar      = document.getElementById('splashBar');
   const skipBtn  = document.getElementById('splashSkipBtn');
   const lines    = [
@@ -253,12 +261,14 @@ function runHeroTerminalDiagnostics() {
     // Print command header
     printLine('guest@0xportfolio:~$ ' + trimmed, 'prompt-symbol');
 
-    if (trimmed === 'clear') {
+    const lowerCmd = trimmed.toLowerCase();
+
+    if (lowerCmd === 'clear') {
       terminal.innerHTML = '';
       return;
     }
 
-    if (trimmed === './view_mutagen_fuzzer') {
+    if (lowerCmd === './view_mutagen_fuzzer') {
       printLine('[OK] Triggering autonomous fuzzer pipeline logging...', 'text-cyan');
       let logDelay = 100;
       const logs = [
@@ -278,7 +288,7 @@ function runHeroTerminalDiagnostics() {
       return;
     }
 
-    if (trimmed === 'cat certifications.txt') {
+    if (lowerCmd === 'cat certifications.txt') {
       printLine('[OK] Querying local credentials vault...', 'text-cyan');
       setTimeout(() => {
         printLine('------------------------------------------------------------', 'text-muted');
@@ -291,7 +301,7 @@ function runHeroTerminalDiagnostics() {
       return;
     }
 
-    if (trimmed === 'cat resume.md') {
+    if (lowerCmd === 'cat resume.md') {
       printLine('[OK] Fetching formatted functional resume...', 'text-cyan');
       setTimeout(() => {
         printLine('============================================================', 'text-muted');
@@ -322,7 +332,7 @@ function runHeroTerminalDiagnostics() {
       return;
     }
 
-    if (trimmed === 'cat skills.db') {
+    if (lowerCmd === 'cat skills.db') {
       printLine('[OK] Fetching dynamic skills matrix database...', 'text-cyan');
       setTimeout(() => {
         printLine('------------------------------------------------------------', 'text-muted');
@@ -335,7 +345,7 @@ function runHeroTerminalDiagnostics() {
       return;
     }
 
-    if (trimmed === 'cat profile.md') {
+    if (lowerCmd === 'cat profile.md') {
       printLine('[OK] Querying user catalog database...', 'text-cyan');
       setTimeout(() => {
         printLine('------------------------------------------------------------', 'text-muted');
@@ -433,8 +443,9 @@ function runHeroTerminalDiagnostics() {
 
         // If it's a direct command or in the chips, run directly
         const knownCommands = ['./view_mutagen_fuzzer', 'cat certifications.txt', 'cat skills.db', 'cat profile.md', 'cat resume.md', 'clear'];
-        if (knownCommands.includes(val)) {
-          executeCommand(val);
+        const matchedCmd = knownCommands.find(c => c.toLowerCase() === val.toLowerCase());
+        if (matchedCmd) {
+          executeCommand(val); // execute matching command with user's casing
         } else {
           // Process via NLP simulated translator
           processNaturalLanguage(val);
@@ -640,62 +651,330 @@ function runHeroTerminalDiagnostics() {
   if (section) observer.observe(section);
 })();
 
+// ── FLOATING NETWORK NODE GRAPH CANVAS FOR SKILLS SECTION ──────────
+(function initSkillsCanvases() {
+  const canvases = document.querySelectorAll('.skills-network-canvas');
+  canvases.forEach(canvas => {
+    const parentBox = canvas.closest('.bento-skill-box');
+    if (!parentBox) return;
+    
+    const ctx = canvas.getContext('2d');
+    let width = canvas.offsetWidth;
+    let height = canvas.offsetHeight;
+    canvas.width = width;
+    canvas.height = height;
+    
+    let particles = [];
+    const particleCount = 15;
+    const mouse = { x: null, y: null, active: false };
+    
+    class Particle {
+      constructor() {
+        this.x = Math.random() * width;
+        this.y = Math.random() * height;
+        this.vx = (Math.random() - 0.5) * 0.45;
+        this.vy = (Math.random() - 0.5) * 0.45;
+        this.radius = 1.5 + Math.random() * 2;
+      }
+      update() {
+        if (mouse.active && mouse.x !== null) {
+          const dx = mouse.x - this.x;
+          const dy = mouse.y - this.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < 80) {
+            const force = (80 - dist) / 80;
+            this.vx += (dx / dist) * force * 0.15;
+            this.vy += (dy / dist) * force * 0.15;
+          }
+        }
+        
+        this.x += this.vx;
+        this.y += this.vy;
+        
+        this.vx *= 0.96;
+        this.vy *= 0.96;
+        
+        if (this.x < 0 || this.x > width) this.vx *= -1;
+        if (this.y < 0 || this.y > height) this.vy *= -1;
+      }
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(0, 255, 102, 0.6)';
+        ctx.fill();
+      }
+    }
+    
+    for (let i = 0; i < particleCount; i++) {
+      particles.push(new Particle());
+    }
+    
+    parentBox.addEventListener('mousemove', e => {
+      const rect = parentBox.getBoundingClientRect();
+      mouse.x = e.clientX - rect.left;
+      mouse.y = e.clientY - rect.top;
+      mouse.active = true;
+    });
+    
+    parentBox.addEventListener('mouseleave', () => {
+      mouse.active = false;
+    });
+    
+    window.addEventListener('resize', () => {
+      if (!canvas) return;
+      width = canvas.offsetWidth;
+      height = canvas.offsetHeight;
+      canvas.width = width;
+      canvas.height = height;
+    });
+    
+    function drawConnections() {
+      for (let i = 0; i < particles.length; i++) {
+        for (let j = i + 1; j < particles.length; j++) {
+          const dx = particles[i].x - particles[j].x;
+          const dy = particles[i].y - particles[j].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          
+          if (dist < 60) {
+            ctx.beginPath();
+            ctx.moveTo(particles[i].x, particles[i].y);
+            ctx.lineTo(particles[j].x, particles[j].y);
+            ctx.strokeStyle = `rgba(0, 255, 102, ${0.18 * (1 - dist / 60)})`;
+            ctx.lineWidth = 0.55;
+            ctx.stroke();
+          }
+        }
+      }
+    }
+    
+    function loop() {
+      ctx.clearRect(0, 0, width, height);
+      drawConnections();
+      particles.forEach(p => {
+        p.update();
+        p.draw();
+      });
+      requestAnimationFrame(loop);
+    }
+    loop();
+  });
+})();
+
 // ── BENTO WIDGETS DYNAMIC LOGGING & SIGNAL STREAMS ────────────────
 (function initBentoWidgets() {
-  // 1. Mutagen Live Log Streamer
+  
+  // Custom rapid HTML character typist helper
+  function typeHtmlLine(container, htmlContent, className, onComplete) {
+    const line = document.createElement('div');
+    line.className = className || '';
+    container.appendChild(line);
+    
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = htmlContent;
+    
+    const childNodes = Array.from(tempDiv.childNodes);
+    let currentNodeIndex = 0;
+    let currentCharIndex = 0;
+    
+    function step() {
+      if (currentNodeIndex >= childNodes.length) {
+        container.scrollTop = container.scrollHeight;
+        if (onComplete) onComplete();
+        return;
+      }
+      
+      const node = childNodes[currentNodeIndex];
+      if (node.nodeType === Node.TEXT_NODE) {
+        if (currentCharIndex < node.textContent.length) {
+          line.appendChild(document.createTextNode(node.textContent[currentCharIndex]));
+          currentCharIndex++;
+          setTimeout(step, 10);
+        } else {
+          currentNodeIndex++;
+          currentCharIndex = 0;
+          step();
+        }
+      } else {
+        const clonedNode = node.cloneNode(false);
+        line.appendChild(clonedNode);
+        
+        let elementCharIndex = 0;
+        function stepElement() {
+          if (elementCharIndex < node.textContent.length) {
+            clonedNode.appendChild(document.createTextNode(node.textContent[elementCharIndex]));
+            elementCharIndex++;
+            setTimeout(stepElement, 10);
+          } else {
+            currentNodeIndex++;
+            step();
+          }
+        }
+        stepElement();
+      }
+      container.scrollTop = container.scrollHeight;
+    }
+    step();
+  }
+
+  // 1. Overhauled Mutagen Live Log Streamer with left-to-right typewriter effect
   const mutagenLogs = document.getElementById('mutagenLiveLogs');
   if (mutagenLogs) {
     const logTemplates = [
-      { tag: '[SYS]', class: 'tag-sys', text: 'Routing fuzzer input via OpenClaw gateway... [OK]' },
-      { tag: '[Ghidra]', class: 'tag-agent', text: 'Disassembling instruction offset 0x004011d4...' },
-      { tag: '[AUDIT]', class: 'tag-audit', text: 'Memory limit buffer overflow check: COMPLETED.' },
-      { tag: '[HEAP]', class: 'tag-fuzz', text: 'Memory chunk offset 0x004012fc overflow audited... PATCHED.' },
-      { tag: '[PoC]', class: 'tag-exploit', text: 'Compiling buffer corrupt payload verification exploit...' },
-      { tag: '[NLP]', class: 'tag-agent', text: 'Analyzing buffer bounds targeting socket Port 8080...' },
-      { tag: '[OK]', class: 'tag-sys', text: 'Patch compiled. Target system vulnerability successfully secured.' }
+      { tag: '[SYS]', class: 'tag-sys', text: 'Spawning headless target audit gateway... [OK]' },
+      { tag: '[DEBUG]', class: 'tag-agent', text: 'Disassembling logic instruction offset <span class="highlight-address" style="color:var(--cyan);">0x004011d4</span>...' },
+      { tag: '[AUDIT]', class: 'tag-audit', text: 'Found unsafe string strcpy copy bounds offset overflow.' },
+      { tag: '[FUZZ]', class: 'tag-fuzz', text: 'Fuzz pass: mutating payload buffer address sizes...' },
+      { tag: '[CRASH]', class: 'tag-exploit', text: 'SIGSEGV triggered! Stack instruction register corrupted.' },
+      { tag: '[PATCH]', class: 'tag-sys', text: 'Compiling boundary index validator bypass audit patch...' },
+      { tag: '[OK]', class: 'tag-sys', text: 'Re-running test: 10000 mutations compiled. Target vulnerability successfully secured.' }
     ];
 
     let logIndex = 0;
-    setInterval(() => {
+    
+    function startMutagenTypistLoop() {
+      const template = logTemplates[logIndex];
       const now = new Date();
       const timeStr = now.toTimeString().split(' ')[0];
-      const template = logTemplates[logIndex];
-
-      const line = document.createElement('div');
-      line.className = 'mutagen-log-line';
+      const fullLogStr = `<span class="log-time" style="color:var(--text-muted);">[${timeStr}]</span> <span class="log-tag ${template.class}">${template.tag}</span> ${template.text}`;
       
-      const timeSpan = document.createElement('span');
-      timeSpan.className = 'log-time';
-      timeSpan.textContent = `[${timeStr}] `;
-      
-      const tagSpan = document.createElement('span');
-      tagSpan.className = `log-tag ${template.class}`;
-      tagSpan.textContent = `${template.tag} `;
-      
-      const textSpan = document.createElement('span');
-      textSpan.textContent = template.text;
-      if (template.text.includes('0x004011d4')) {
-        textSpan.innerHTML = 'Disassembling instruction offset <span class="highlight-address">0x004011d4</span>...';
-      } else if (template.text.includes('secured') || template.text.includes('[OK]')) {
-        textSpan.innerHTML = 'Patch compiled. Target system vulnerability successfully <span class="highlight-success">SECURED</span>.';
-      }
-
-      line.appendChild(timeSpan);
-      line.appendChild(tagSpan);
-      line.appendChild(textSpan);
-      mutagenLogs.appendChild(line);
-
-      // Prevent DOM bloating
-      while (mutagenLogs.children.length > 14) {
-        mutagenLogs.removeChild(mutagenLogs.firstChild);
-      }
-
-      mutagenLogs.scrollTop = mutagenLogs.scrollHeight;
-      logIndex = (logIndex + 1) % logTemplates.length;
-    }, 2800);
+      typeHtmlLine(mutagenLogs, fullLogStr, 'mutagen-log-line', () => {
+        // Prevent DOM bloating
+        while (mutagenLogs.children.length > 11) {
+          mutagenLogs.removeChild(mutagenLogs.firstChild);
+        }
+        logIndex = (logIndex + 1) % logTemplates.length;
+        setTimeout(startMutagenTypistLoop, 2000);
+      });
+    }
+    
+    // Start initial loop
+    setTimeout(startMutagenTypistLoop, 100);
   }
 
-  // 2. SignalHub Stock JSON Ticker Streamer
+  // 2. Overhauled TryHackMe CTF Labs Terminal typing simulation loop
+  const thmTerminal = document.getElementById('thmLiveTerminal');
+  if (thmTerminal) {
+    const thmLines = [
+      { text: '<span class="cmd-prompt">kali@thm-target-box:~$</span> nmap -sS -p- 10.10.200.45', class: '' },
+      { text: 'Starting Nmap 7.94 active scanner...', class: 'res-out' },
+      { text: 'PORT   STATE SERVICE', class: 'res-out' },
+      { text: '21/tcp open  ftp (vsftpd 2.3.4)', class: 'res-out' },
+      { text: '22/tcp open  ssh', class: 'res-out' },
+      { text: '80/tcp open  http (Apache)', class: 'res-out' },
+      { text: '<span class="cmd-prompt">kali@thm-target-box:~$</span> python exploit.py --target 10.10.200.45', class: '' },
+      { text: '[+] Triggering vsftpd 2.3.4 backdoor socket handler...', class: 'tag-agent' },
+      { text: '[+] Backdoor successful. Spawning root shell descriptor.', class: 'tag-sys' },
+      { text: '<span class="cmd-prompt">root@thm-target-box:~#</span> cat /root/flag.txt', class: '' },
+      { text: '<span class="tag-sys" style="text-shadow: 0 0 6px var(--green);">THM{zero_day_stack_smashing_complete}</span>', class: '' }
+    ];
+
+    let lineIndex = 0;
+    
+    function startThmTypistLoop() {
+      if (lineIndex >= thmLines.length) {
+        setTimeout(() => {
+          thmTerminal.innerHTML = '';
+          lineIndex = 0;
+          startThmTypistLoop();
+        }, 3500);
+        return;
+      }
+      
+      const lineData = thmLines[lineIndex];
+      typeHtmlLine(thmTerminal, lineData.text, lineData.class, () => {
+        lineIndex++;
+        setTimeout(startThmTypistLoop, 1000);
+      });
+    }
+    
+    setTimeout(startThmTypistLoop, 500);
+  }
+
+  // 3. VM Lab Sandbox target node border status triggers
+  const vmTargetBox = document.getElementById('vmTargetBox');
+  const vmTargetLabel = document.getElementById('vmTargetLabel');
+  const vmAttackConsole = document.getElementById('vmAttackConsole');
+  if (vmAttackConsole) {
+    const statuses = [
+      { text: '[SYS] Running background port mapping scanner...', targetBorder: 'rgba(255,255,255,0.15)', targetColor: '', label: '[VULN_HOST]' },
+      { text: '[ATTACK] Sending stack pointer payload vector...', targetBorder: 'var(--cyan)', targetColor: 'rgba(0, 212, 255, 0.05)', label: '[INJECTING]' },
+      { text: '[COMPROMISED] Port socket overridden. Shell active.', targetBorder: '#ff4a5a', targetColor: 'rgba(255, 74, 90, 0.08)', label: '[COMPROMISED]' }
+    ];
+    let statusIndex = 0;
+    setInterval(() => {
+      const state = statuses[statusIndex];
+      vmAttackConsole.textContent = state.text;
+      
+      if (vmTargetBox) {
+        vmTargetBox.style.borderColor = state.targetBorder;
+        vmTargetBox.style.backgroundColor = state.targetColor;
+      }
+      if (vmTargetLabel) {
+        vmTargetLabel.textContent = state.label;
+        if (state.label.includes('COMPROMISED')) {
+          vmTargetLabel.style.color = '#ff4a5a';
+        } else if (state.label.includes('INJECTING')) {
+          vmTargetLabel.style.color = 'var(--cyan)';
+        } else {
+          vmTargetLabel.style.color = 'var(--text-dim)';
+        }
+      }
+      statusIndex = (statusIndex + 1) % statuses.length;
+    }, 4500);
+  }
+
+  // 4. AI Model Training tensor weights mapping updates
+  const tensorGrid = document.getElementById('tensorWeights');
+  const llmLoss = document.getElementById('llmLoss');
+  const llmEpoch = document.getElementById('llmEpoch');
+  const llmStatus = document.getElementById('llmStatus');
+  if (tensorGrid) {
+    // Populate 24 weights blocks
+    for (let i = 0; i < 24; i++) {
+      const block = document.createElement('div');
+      block.className = 'tensor-block';
+      tensorGrid.appendChild(block);
+    }
+    
+    // Dynamic weight activations animator
+    setInterval(() => {
+      const blocks = tensorGrid.querySelectorAll('.tensor-block');
+      blocks.forEach(block => {
+        block.className = 'tensor-block';
+        const rand = Math.random();
+        if (rand > 0.8) {
+          block.classList.add('active-weight-high');
+        } else if (rand > 0.5) {
+          block.classList.add('active-weight-med');
+        } else if (rand > 0.2) {
+          block.classList.add('active-weight-low');
+        }
+      });
+    }, 150);
+
+    // Live training loss simulator
+    let stepCount = 0;
+    setInterval(() => {
+      stepCount += 12;
+      if (stepCount > 3000) stepCount = 0;
+      
+      const currentLoss = (0.95 - (stepCount / 3000) * 0.91 + (Math.random() - 0.5) * 0.05).toFixed(4);
+      if (llmLoss) llmLoss.textContent = `loss: ${currentLoss}`;
+      if (llmEpoch) llmEpoch.textContent = `step: ${stepCount}/3000`;
+      
+      if (llmStatus) {
+        if (stepCount >= 2800) {
+          llmStatus.textContent = 'WEIGHTS_SYNCHRONIZED';
+          llmStatus.style.color = 'var(--green)';
+        } else {
+          llmStatus.textContent = 'MODEL_FINETUNING';
+          llmStatus.style.color = 'var(--cyan)';
+        }
+      }
+    }, 200);
+  }
+
+  // 5. SignalHub Stock JSON Ticker Streamer
   const stockStream = document.getElementById('stockJsonStream');
   if (stockStream) {
     const symbols = ['NVDA', 'MSFT', 'AAPL', 'TSLA'];
@@ -703,15 +982,11 @@ function runHeroTerminalDiagnostics() {
     const deltas = { NVDA: 4.2, MSFT: 2.3, AAPL: 0.8, TSLA: -3.1 };
 
     setInterval(() => {
-      // Pick random symbol
       const sym = symbols[Math.floor(Math.random() * symbols.length)];
-      
-      // Update values
       const deltaShift = (Math.random() - 0.48) * 0.8;
       deltas[sym] = parseFloat((deltas[sym] + deltaShift).toFixed(2));
       prices[sym] = parseFloat((prices[sym] * (1 + deltaShift / 100)).toFixed(2));
 
-      // Update Tickers text and colors
       const nvdaEl = document.getElementById('ticker-nvda');
       const msftEl = document.getElementById('ticker-msft');
       if (nvdaEl) {
@@ -723,7 +998,6 @@ function runHeroTerminalDiagnostics() {
         msftEl.className = `t-val ${deltas.MSFT >= 0 ? 'up' : 'down'}`;
       }
 
-      // Generate structured JSON string
       const jsonPayload = {
         symbol: sym,
         price: prices[sym],
@@ -1480,7 +1754,7 @@ function playSystemAlarmBeep() {
 
     if (!name || !msg) {
       resultLine.style.color = '#ff0055';
-      resultLine.textContent = '> [ERR] Payload incomplete. All fields required.';
+      resultLine.textContent = 'Payload incomplete. All fields required.';
       setTimeout(() => {
         resultLine.textContent = '';
         resultLine.style.color = '';
@@ -1492,7 +1766,7 @@ function playSystemAlarmBeep() {
     if (navigator.vibrate) navigator.vibrate(10);
 
     transmitBtn.disabled = true;
-    transmitBtn.textContent = '[ ENCRYPTING... ]';
+    transmitBtn.textContent = 'Encrypting...';
     resultLine.textContent = '';
 
     // Phase 1: Show rapid ciphertext scramble for 0.5s
@@ -1516,18 +1790,32 @@ function playSystemAlarmBeep() {
 
       // Phase 2: Show success resolution
       resultLine.style.color = 'var(--green)';
-      resultLine.textContent = '> [SYS] Payload packaged. Handoff to secure local mail client complete.';
-      transmitBtn.textContent = '[ TRANSMITTED ]';
+      resultLine.textContent = 'Payload packaged. Handoff to secure local mail client complete.';
+      transmitBtn.textContent = 'Transmitted';
 
       // Reset form controls after delay
       setTimeout(() => {
         nameInput.value = '';
         msgInput.value = '';
         transmitBtn.disabled = false;
-        transmitBtn.textContent = '[ ./transmit_payload ]';
+        transmitBtn.textContent = 'Transmit Payload';
         resultLine.textContent = '';
       }, 4000);
     }, 500); // 0.5 seconds exactly
+  });
+})();
+
+// ── BENTO CARD SPOTLIGHT TRACKER ──
+(function initBentoSpotlightTracker() {
+  const cards = document.querySelectorAll('.bento-project-card');
+  cards.forEach(card => {
+    card.addEventListener('mousemove', (e) => {
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      card.style.setProperty('--mouse-x', `${x}px`);
+      card.style.setProperty('--mouse-y', `${y}px`);
+    }, { passive: true });
   });
 })();
 

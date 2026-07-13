@@ -118,12 +118,13 @@ body::before {
   opacity: 0.55;
 }
 
-/* ── CANVAS BG ── */
+/* ── CANVAS BG — Layer 1: The Matrix ── */
 #bgCanvas {
   position: fixed;
   inset: 0;
   z-index: 0;
   pointer-events: none;
+  opacity: 0.80;
 }
 
 /* ── CUSTOM CURSOR ── */
@@ -386,10 +387,11 @@ body::before {
   color: var(--text-muted);
 }
 
-/* ── SECTIONS BASE ── */
+/* ── SECTIONS BASE — Layer 2+: Content above Canvas ── */
 .section {
   position: relative;
-  z-index: 1;
+  z-index: 2;
+  isolation: isolate; /* Forces new stacking context so backdrop-filter works */
   padding: 6rem 1.5rem;
   width: 100%;
 }
@@ -423,14 +425,15 @@ body::before {
   font-weight: 600;
 }
 
-/* ── GLASS PANELS ── */
+/* ── GLASS PANELS — Layer 2: The Frosted Shield ── */
 .glass-panel {
-  background: var(--surface);
+  background: rgba(2, 4, 10, 0.50);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   position: relative;
+  z-index: 10;
   overflow: hidden;
   transition: border-color var(--transition), box-shadow var(--transition);
 }
@@ -671,11 +674,13 @@ body::before {
   display: grid;
   grid-template-columns: 2fr 1fr;
   gap: 1.5rem;
-  align-items: stretch;
+  align-items: start;
 }
 .about-main {
-  padding: 2.25rem;
+  padding: 2.25rem 2.25rem 1.5rem;
   border-left: 2px solid var(--green);
+  align-self: start;
+  height: fit-content;
 }
 .bento-heading {
   font-family: var(--font-mono);
@@ -999,9 +1004,31 @@ body::before {
   overflow: hidden;
   transition: border-color var(--transition), box-shadow var(--transition);
 }
+.bento-project-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1.2px;
+  background: radial-gradient(
+    240px circle at var(--mouse-x, -999px) var(--mouse-y, -999px),
+    rgba(0, 255, 102, 0.35),
+    transparent 80%
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  z-index: 2;
+  transition: opacity 0.4s ease;
+  opacity: 0;
+}
+.bento-project-card:hover::before {
+  opacity: 1;
+}
 .bento-project-card:hover {
-  border-color: var(--green);
-  box-shadow: 0 0 16px rgba(0, 255, 102, 0.15);
+  border-color: rgba(0, 255, 102, 0.25);
+  box-shadow: 0 0 16px rgba(0, 255, 102, 0.08);
 }
 .bento-project-card.active-edge-green {
   border-top: 2px solid var(--green);
@@ -2293,6 +2320,54 @@ body::before {
   font-weight: 700;
   min-height: 0;
 }
+
+/* ── VM SANDBOX PACKET TRANSMISSION ANIMATION ── */
+.net-packet {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 8px var(--green);
+  position: absolute;
+  top: -2px;
+  left: 0;
+  animation: transmit 2.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite;
+}
+@keyframes transmit {
+  0% { left: 0%; opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { left: 100%; opacity: 0; }
+}
+
+/* ── TENSOR WEIGHTS GRID BLOCKS ── */
+.tensor-block {
+  width: 100%;
+  height: 14px;
+  background: rgba(0, 255, 102, 0.05);
+  border: 1px solid rgba(0, 255, 102, 0.1);
+  transition: background-color 0.15s ease, box-shadow 0.15s ease;
+}
+.tensor-block.active-weight-high {
+  background: rgba(0, 255, 102, 0.85);
+  box-shadow: 0 0 6px rgba(0, 255, 102, 0.7);
+}
+.tensor-block.active-weight-med {
+  background: rgba(0, 255, 102, 0.4);
+}
+.tensor-block.active-weight-low {
+  background: rgba(0, 255, 102, 0.15);
+}
+
+/* ── COLOR-CODED LOG STYLING TAGS ── */
+.tag-sys { color: var(--green); font-weight: bold; }
+.tag-agent { color: var(--cyan); }
+.tag-audit { color: #ffbd2e; } /* Amber warning */
+.tag-fuzz { color: #ff9f43; }
+.tag-exploit { color: #ff4a5a; font-weight: bold; } /* Red crash warning */
+.res-out { color: var(--text-dim); opacity: 0.85; }
+.cmd-prompt { color: #fff; font-weight: bold; }
+
 
 
 

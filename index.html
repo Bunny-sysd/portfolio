@@ -22,7 +22,7 @@
     href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap"
     rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="style.css?v=1.1" />
+  <link rel="stylesheet" href="style.css?v=1.4" />
 </head>
 
 <body class="terminal-theme">
@@ -35,27 +35,6 @@
   <div class="cursor-dot" id="cursorDot"></div>
   <div class="cursor-ring" id="cursorRing"></div>
 
-  <!-- ── SPLASH SCREEN ── -->
-  <div class="splash" id="splash">
-    <div class="splash-inner">
-      <div class="splash-logo">
-        <span class="splash-bracket">[</span>
-        <span class="splash-x">0x</span>
-        <span class="splash-bracket">]</span>
-      </div>
-      <div class="splash-terminal">
-        <p class="splash-line" id="splashLine1"></p>
-        <p class="splash-line" id="splashLine2"></p>
-        <p class="splash-line" id="splashLine3"></p>
-        <span class="splash-cursor">▋</span>
-      </div>
-      <div class="splash-bar-wrap">
-        <div class="splash-bar" id="splashBar"></div>
-      </div>
-    </div>
-    <button class="splash-skip" id="splashSkipBtn">[ ESC ] Skip Boot Sequence</button>
-  </div>
-
   <!-- ── NOISE OVERLAY ── -->
   <div class="noise"></div>
 
@@ -66,7 +45,7 @@
   <header id="header" class="floating-nav-container">
     <div class="floating-nav">
       <a href="#hero" class="logo" id="headerLogo">
-        <span class="logo-bracket">[</span><span class="logo-text">0x</span><span class="logo-bracket">]</span>
+        <span class="logo-text">0x</span>
       </a>
       <nav class="nav-links" id="navLinks">
         <a href="#about" class="nav-link" data-section="about">About</a>
@@ -83,7 +62,7 @@
 
   <!-- ── MOBILE MENU ── -->
   <div class="mobile-menu" id="mobileMenu">
-    <button class="mobile-close" id="mobileClose" aria-label="Close menu">[X]</button>
+    <button class="mobile-close" id="mobileClose" aria-label="Close menu">✕</button>
     <nav class="mobile-nav">
       <a href="#hero" class="mobile-link" data-close>Home</a>
       <a href="#about" class="mobile-link" data-close>About</a>
@@ -103,75 +82,21 @@
   ══════════════════════════════════════ -->
   <main id="main">
 
-    <!-- ── HERO SECTION (ACTIVE CYBER TERMINAL) ── -->
-    <section class="section hero-section" id="hero">
-      <div class="hero-terminal glass-panel">
-        <div class="terminal-header">
-          <div class="window-controls">
-            <span class="control-dot close"></span>
-            <span class="control-dot minimize"></span>
-            <span class="control-dot maximize"></span>
-          </div>
-          <span class="terminal-title">system_diagnostic_run.sh</span>
-          <span class="terminal-status">ONLINE</span>
-        </div>
-        <div class="terminal-body" id="heroTerminalOutput">
-          <!-- Populated line-by-line via initTypewriter boot simulation -->
-        </div>
-
-        <!-- Clickable Command Chips -->
-        <div class="terminal-chips-wrapper">
-          <div class="chips-label">Quick Execute Controls:</div>
-          <div class="terminal-chips">
-            <button class="command-chip" data-cmd="./view_mutagen_fuzzer">[ ./view_mutagen_fuzzer ]</button>
-            <button class="command-chip" data-cmd="cat certifications.txt">[ cat certifications.txt ]</button>
-            <button class="command-chip" data-cmd="cat resume.md">[ cat resume.md ]</button>
-            <button class="command-chip" data-cmd="cat skills.db">[ cat skills.db ]</button>
-            <button class="command-chip" data-cmd="clear">[ clear ]</button>
-          </div>
-        </div>
-
-        <!-- Interactive Terminal Prompt -->
-        <div class="terminal-input-line">
-          <span class="prompt-symbol">guest@0xportfolio:~$</span>
-          <input type="text" id="terminalInput" placeholder="Type command or query (e.g., 'show me your skills')..." autocomplete="off" />
-          <span class="input-cursor">▋</span>
-        </div>
-      </div>
-
-      <div class="hero-actions">
-        <a href="#projects" class="btn btn-primary decrypt-trigger" data-text="VIEW_PROJECTS">VIEW_PROJECTS</a>
-        <a href="#contact" class="btn btn-ghost decrypt-trigger" data-text="ESTABLISH_SOCKET">ESTABLISH_SOCKET</a>
-      </div>
-
-      <div class="hero-grid-stats">
-        <div class="bento-stat glass-panel">
-          <span class="stat-num" data-target="91">0</span>
-          <span class="stat-label">TryHackMe Badges</span>
-        </div>
-        <div class="bento-stat glass-panel">
-          <span class="stat-num" data-target="20">0</span><span class="stat-plus">+</span>
-          <span class="stat-label">Vulnerable Targets Checked</span>
-        </div>
-        <div class="bento-stat glass-panel">
-          <span class="stat-num" data-target="5">0</span>
-          <span class="stat-label">Projects Deployed</span>
-        </div>
-      </div>
-    </section>
+    <!-- ── HERO SECTION ── -->
+    <div id="react-hero-section" style="position: relative; z-index: 2; isolation: isolate;"></div>
 
     <!-- ── ABOUT SECTION ── -->
     <section class="section about-section" id="about">
       <div class="section-inner">
         <div class="section-header reveal-up">
-          <span class="section-tag">[ 01_ABOUT_IDENTITY ]</span>
-          <h2 class="section-title text-white decrypt-trigger" data-text="WHO_AM_I?">WHO_AM_I?</h2>
+          <span class="section-tag">01_ABOUT_ME</span>
+          <h2 class="section-title text-white decrypt-trigger" data-text="ABOUT_ME">ABOUT ME</h2>
         </div>
         
         <div class="bento-about-layout">
           <div class="about-main glass-panel reveal-up">
             <div class="card-edge-glow"></div>
-            <h3 class="bento-heading">[ PROFILING ]</h3>
+            <h3 class="bento-heading">Profiling</h3>
             <p class="about-bio">
               I am a <span class="highlight">Cybersecurity Researcher</span> and AI Systems Architect focused on the next frontier of defense: <span class="highlight">autonomous, self-healing software pipelines</span>. I build closed-loop agents that crawl codebase repositories, catch buffer corruptions, evaluate system vulnerabilities, and implement dynamic security fixes autonomously.
             </p>
@@ -184,179 +109,23 @@
             </div>
           </div>
 
-          <div class="about-sidebar glass-panel reveal-up" style="padding: 1.5rem;">
-            <div class="card-edge-glow"></div>
-            <h3 class="bento-heading">[ OPERATIONAL_SPECS ]</h3>
-            <div style="font-family: var(--font-mono); font-size: 0.72rem; line-height: 1.8; margin-top: 1.25rem; color: var(--text-dim);">
-              <div style="display: flex; justify-content: space-between; margin-bottom: 0.6rem; border-bottom: 1px dashed rgba(255,255,255,0.05); padding-bottom: 0.25rem;">
-                <span style="color: var(--text-muted);">HOST_OS:</span>
-                <span style="color: var(--cyan);">Kali Linux / Kernel v6.12</span>
-              </div>
-              <div style="display: flex; justify-content: space-between; margin-bottom: 0.6rem; border-bottom: 1px dashed rgba(255,255,255,0.05); padding-bottom: 0.25rem;">
-                <span style="color: var(--text-muted);">LOCAL_MODEL:</span>
-                <span style="color: var(--green);">Gemma-4-Security-FineTune</span>
-              </div>
-              <div style="display: flex; justify-content: space-between; margin-bottom: 0.6rem; border-bottom: 1px dashed rgba(255,255,255,0.05); padding-bottom: 0.25rem;">
-                <span style="color: var(--text-muted);">TARGET_ARCH:</span>
-                <span style="color: var(--cyan);">x86_64 ELF / PE32 Binaries</span>
-              </div>
-              <div style="display: flex; justify-content: space-between; margin-bottom: 0.6rem; border-bottom: 1px dashed rgba(255,255,255,0.05); padding-bottom: 0.25rem;">
-                <span style="color: var(--text-muted);">ACTIVE_MISSION:</span>
-                <span style="color: var(--green);">Closed-Loop Binary Patching</span>
-              </div>
-              <div style="display: flex; justify-content: space-between; margin-bottom: 0.6rem; border-bottom: 1px dashed rgba(255,255,255,0.05); padding-bottom: 0.25rem;">
-                <span style="color: var(--text-muted);">SANDBOX_LAB:</span>
-                <span style="color: var(--cyan);">VM Sandbox / Host Isolation</span>
-              </div>
-              <div style="display: flex; justify-content: space-between;">
-                <span style="color: var(--text-muted);">PIPELINE_STATUS:</span>
-                <span class="panel-status-tag" style="color: var(--green); font-weight: bold;">[ ACTIVE_MONITORING ]</span>
-              </div>
-            </div>
+          <div class="about-sidebar reveal-up">
+            <div id="react-operational-specs"></div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- ── SKILLS SECTION (BENTO GRID) ── -->
     <section class="section skills-section" id="skills">
       <div class="section-inner">
-        <div class="section-header reveal-up">
-          <span class="section-tag">[ 02_SKILLS_ARSENAL ]</span>
-          <h2 class="section-title text-white decrypt-trigger" data-text="SYS_ARMAMENT">SYS_ARMAMENT</h2>
-        </div>
+        <div id="react-sys-armament" style="width: 100%;"></div>
+      </div>
+    </section>
 
-        <div class="bento-skills-grid active-matrix-grid">
-          
-          <!-- Parent Box 1: Offensive Operations -->
-          <div class="bento-skill-box parent-node glass-panel reveal-up" id="parent-offensive" style="grid-area: offensive;">
-            <svg class="node-matrix-svg"></svg>
-            <div class="parent-node-header">
-              <span class="parent-node-reticle">[+]</span>
-              <h3 class="parent-node-title">OFFENSIVE OPERATIONS</h3>
-            </div>
-            <div class="skill-pills child-chips-cluster">
-              <span class="skill-child-chip tier-1 clickable-cert-trigger" data-cert="cert-cyber" data-skill="nmap">Nmap</span>
-              <span class="skill-child-chip tier-1 clickable-cert-trigger" data-cert="cert-cyber" data-skill="metasploit">Metasploit</span>
-              <span class="skill-child-chip tier-2 clickable-cert-trigger" data-cert="cert-cyber" data-skill="burpsuite">Burp Suite</span>
-              <span class="skill-child-chip tier-1" data-skill="john">John the Ripper</span>
-              <span class="skill-child-chip tier-2" data-skill="graphspy">GraphSpy</span>
-              <span class="skill-child-chip tier-2" data-skill="hydra">Hydra</span>
-              <span class="skill-child-chip tier-3" data-skill="custom_exploits">Custom Exploits</span>
-            </div>
-          </div>
-
-          <!-- Parent Box 2: Frameworks & Protocols -->
-          <div class="bento-skill-box parent-node glass-panel reveal-up" id="parent-frameworks" style="grid-area: frameworks;">
-            <svg class="node-matrix-svg"></svg>
-            <div class="parent-node-header">
-              <span class="parent-node-reticle">[+]</span>
-              <h3 class="parent-node-title">FRAMEWORKS</h3>
-            </div>
-            <div class="skill-pills child-chips-cluster">
-              <span class="skill-child-chip tier-1" data-skill="owasp">OWASP Top 10</span>
-              <span class="skill-child-chip tier-1" data-skill="mitre">MITRE ATT&amp;CK</span>
-              <span class="skill-child-chip tier-2" data-skill="tcpip">TCP/IP Model</span>
-              <span class="skill-child-chip tier-2 clickable-cert-trigger" data-cert="cert-ai" data-skill="aisec">AI Security</span>
-              <span class="skill-child-chip tier-2" data-skill="cve">CVE Research</span>
-              <span class="skill-child-chip tier-2" data-skill="wireshark">Wireshark</span>
-              <span class="skill-child-chip tier-3" data-skill="packet">Packet Analysis</span>
-            </div>
-          </div>
-
-          <!-- Parent Box 3: Hugging Face & LLMs -->
-          <div class="bento-skill-box parent-node glass-panel reveal-up" id="parent-aiml" style="grid-area: aiml;">
-            <svg class="node-matrix-svg"></svg>
-            <div class="parent-node-header">
-              <span class="parent-node-reticle">[+]</span>
-              <h3 class="parent-node-title">HUGGING FACE &amp; LLMS</h3>
-            </div>
-            <div class="skill-pills child-chips-cluster">
-              <span class="skill-child-chip tier-1" data-skill="huggingface">HuggingFace API</span>
-              <span class="skill-child-chip tier-1" data-skill="finetuning">Model Fine-tuning</span>
-              <span class="skill-child-chip tier-2" data-skill="transformers">Transformers</span>
-              <span class="skill-child-chip tier-2" data-skill="dataset">Dataset Prep</span>
-              <span class="skill-child-chip tier-3 clickable-cert-trigger" data-cert="cert-ai" data-skill="adversarial">Adversarial ML</span>
-              <span class="skill-child-chip tier-1" data-skill="python">Python</span>
-            </div>
-            <!-- Model initialization console logger -->
-            <div class="node-console-log" id="aimlConsole">
-              <span class="console-cursor">></span> Click node to initialize model...
-            </div>
-          </div>
-
-          <!-- Parent Box 4: Security Lab Environment -->
-          <div class="bento-skill-box parent-node glass-panel reveal-up" id="parent-sandbox" style="grid-area: sandbox;">
-            <svg class="node-matrix-svg"></svg>
-            <div class="parent-node-header">
-              <span class="parent-node-reticle">[+]</span>
-              <h3 class="parent-node-title">SECURITY LAB</h3>
-            </div>
-            <div class="skill-pills child-chips-cluster">
-              <span class="skill-child-chip tier-1" data-skill="kali">Kali Linux</span>
-              <span class="skill-child-chip tier-1" data-skill="vms">Virtual Machines</span>
-              <span class="skill-child-chip tier-2" data-skill="virtualbox">VirtualBox</span>
-              <span class="skill-child-chip tier-1" data-skill="bash">Bash</span>
-              <span class="skill-child-chip tier-1" data-skill="sql">Advanced SQL</span>
-              <span class="skill-child-chip tier-2" data-skill="javascript">Javascript</span>
-              <span class="skill-child-chip tier-2" data-skill="typescript">Typescript</span>
-              <span class="skill-child-chip tier-3" data-skill="cpp">C++ / C#</span>
-            </div>
-            <!-- Lab console status logger -->
-            <div class="node-console-log" id="sandboxConsole">
-              <span class="console-cursor">></span> status: online // click to stress test...
-            </div>
-          </div>
-        </div>
-
-        <!-- Mutagen Pipeline Box -->
-        <div class="mutagen-pipeline-section glass-panel reveal-up mt-8">
-          <h3 class="pipeline-title decrypt-trigger" data-text="MUTAGEN_PIPELINE">MUTAGEN_PIPELINE</h3>
-          <p class="pipeline-subtitle">Closed-loop zero-day exploitation and patching model flow.</p>
-          
-          <div class="pipeline-flow">
-            <div class="pipeline-stage">
-              <div class="stage-icon">[+]</div>
-              <div class="stage-content">
-                <strong>1. Ingest</strong>
-                <span>Binary target &amp; source</span>
-              </div>
-            </div>
-            <div class="pipeline-connector"></div>
-            <div class="pipeline-stage">
-              <div class="stage-icon">[>]</div>
-              <div class="stage-content">
-                <strong>2. Ghidra Analysis</strong>
-                <span>Headless decompiler</span>
-              </div>
-            </div>
-            <div class="pipeline-connector"></div>
-            <div class="pipeline-stage">
-              <div class="stage-icon">[!]</div>
-              <div class="stage-content">
-                <strong>3. Exploit Verify</strong>
-                <span>Fuzz overflow crashes</span>
-              </div>
-            </div>
-            <div class="pipeline-connector"></div>
-            <div class="pipeline-stage">
-              <div class="stage-icon">[~]</div>
-              <div class="stage-content">
-                <strong>4. Patch Build</strong>
-                <span>Auto-patch source buffers</span>
-              </div>
-            </div>
-            <div class="pipeline-connector"></div>
-            <div class="pipeline-stage">
-              <div class="stage-icon">[OK]</div>
-              <div class="stage-content">
-                <strong>5. Secure Output</strong>
-                <span>Re-fuzz validation pass</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
+    <!-- ── MUTAGEN PIPELINE CARD ── -->
+    <section class="section" style="padding-top: 0; padding-bottom: 2rem;">
+      <div class="section-inner">
+        <div id="react-mutagen-card" style="width: 100%;"></div>
       </div>
     </section>
 
@@ -364,8 +133,8 @@
     <section class="section projects-section" id="projects">
       <div class="section-inner">
         <div class="section-header reveal-up">
-          <span class="section-tag">[ 03_PROJECTS_PIPELINE ]</span>
-          <h2 class="section-title text-white decrypt-trigger" data-text="FUZZ_REPORTS">FUZZ_REPORTS</h2>
+          <span class="section-tag">03_SELECTED_PROJECTS</span>
+          <h2 class="section-title text-white decrypt-trigger" data-text="FEATURED_PROJECTS">FEATURED PROJECTS</h2>
         </div>
 
         <div class="bento-projects-grid">
@@ -375,7 +144,7 @@
             <div class="glitch-flash"></div>
             <div class="project-card-header">
               <span class="project-year">2026</span>
-              <span class="project-category clickable-cert-trigger" data-cert="cert-ai" style="cursor: pointer;">[ AGENTIC_AI / FUZZER ]</span>
+              <span class="project-category clickable-cert-trigger" data-cert="cert-ai" style="cursor: pointer;">AGENTIC_AI / FUZZER</span>
             </div>
             <div class="project-visual mutagen-visual" style="position: relative;">
               <canvas id="openclawCanvas" class="openclaw-canvas" style="position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: auto; z-index: 1;"></canvas>
@@ -388,8 +157,8 @@
                 </div>
                 <div class="mutagen-terminal-body" id="mutagenLiveLogs">
                   <!-- Populated dynamically via app.js -->
-                  <div class="mutagen-log-line"><span class="log-time">[08:42:01]</span> <span class="log-tag tag-sys">[SYS]</span> AI zero-day scanner started...</div>
-                  <div class="mutagen-log-line"><span class="log-time">[08:42:03]</span> <span class="log-tag tag-agent">[Ghidra]</span> Disassembled functions successfully.</div>
+                  <div class="mutagen-log-line"><span class="log-time">[08:42:01]</span> <span class="log-tag tag-sys">SYS</span> AI zero-day scanner started...</div>
+                  <div class="mutagen-log-line"><span class="log-time">[08:42:03]</span> <span class="log-tag tag-agent">Ghidra</span> Disassembled functions successfully.</div>
                 </div>
               </div>
             </div>
@@ -402,7 +171,7 @@
                 <span>Python</span><span class="clickable-cert-trigger" data-cert="cert-ai" style="cursor: pointer;">Gemini API</span><span>Ghidra</span><span>Docker</span>
               </div>
               <div class="project-links mt-4">
-                <a href="javascript:void(0)" class="proj-link live-btn">[ VIEW_SOURCE ]</a>
+                <a href="javascript:void(0)" class="proj-link live-btn">View Source</a>
               </div>
             </div>
           </div>
@@ -412,7 +181,7 @@
             <div class="glitch-flash"></div>
             <div class="project-card-header">
               <span class="project-year">2025</span>
-              <span class="project-category">[ DATA_PIPELINE / LIVE ]</span>
+              <span class="project-category">DATA_PIPELINE / LIVE</span>
             </div>
             <div class="project-visual stock-visual">
               <div class="stock-chart">
@@ -449,7 +218,7 @@
                 <span>Firebase</span><span>Stock API</span><span>JSON</span>
               </div>
               <div class="project-links mt-4">
-                <a href="javascript:void(0)" class="proj-link live-btn">[ ESTABLISH_SESSION ]</a>
+                <a href="javascript:void(0)" class="proj-link live-btn">Launch Demo</a>
               </div>
             </div>
           </div>
@@ -459,23 +228,18 @@
             <div class="glitch-flash"></div>
             <div class="project-card-header">
               <span class="project-year">2025</span>
-              <span class="project-category clickable-cert-trigger" data-cert="cert-cyber" style="cursor: pointer;">[ PENETRATION_TESTING ]</span>
+              <span class="project-category clickable-cert-trigger" data-cert="cert-cyber" style="cursor: pointer;">PENETRATION_TESTING</span>
             </div>
-            <div class="project-visual thm-visual">
-              <div class="terminal-window">
-                <div class="terminal-bar">
-                  <span class="tb-dot red"></span>
-                  <span class="tb-dot yellow"></span>
-                  <span class="tb-dot green"></span>
-                  <span class="tb-title">kali@thm:~</span>
+            <div class="project-visual thm-visual" style="position: relative; height: 180px;">
+              <div class="terminal-window" style="height: 100%;">
+                <div class="terminal-bar" style="display: flex; align-items: center; gap: 5px; background: #0d0d12; padding: 0.4rem 0.85rem;">
+                  <span class="tb-dot red" style="width: 6px; height: 6px; border-radius: 50%; background: #ff5f56;"></span>
+                  <span class="tb-dot yellow" style="width: 6px; height: 6px; border-radius: 50%; background: #ffbd2e;"></span>
+                  <span class="tb-dot green" style="width: 6px; height: 6px; border-radius: 50%; background: #27c93f;"></span>
+                  <span class="tb-title" style="font-family: var(--font-mono); font-size: 0.65rem; color: var(--text-muted); margin-left: 0.4rem;">kali@thm-target-box:~</span>
                 </div>
-                <div class="terminal-body">
-                  <p><span class="t-green">$</span> nmap -sV -sC target.thm</p>
-                  <p><span class="t-cyan">Nmap 7.94 active scans...</span></p>
-                  <p>PORT STATE SERVICE</p>
-                  <p>22/tcp open ssh</p>
-                  <p>80/tcp open http</p>
-                  <p><span class="t-green">$</span> msfconsole<span class="blink-cursor">▋</span></p>
+                <div class="terminal-body" id="thmLiveTerminal" style="padding: 0.85rem 1.25rem; font-family: var(--font-mono); font-size: 0.72rem; line-height: 1.6; height: calc(100% - 28px); overflow-y: hidden; background: #060608;">
+                  <!-- Live typist content injected via app.js -->
                 </div>
               </div>
             </div>
@@ -488,7 +252,7 @@
                 <span class="clickable-cert-trigger" data-cert="cert-cyber" style="cursor: pointer;">Metasploit</span><span class="clickable-cert-trigger" data-cert="cert-cyber" style="cursor: pointer;">Nmap</span><span>John</span>
               </div>
               <div class="project-links mt-4">
-                <a href="javascript:void(0)" class="proj-link live-btn">[ VIEW_VERIFIED_PROFILE ]</a>
+                <a href="javascript:void(0)" class="proj-link live-btn">View Verified Profile</a>
               </div>
             </div>
           </div>
@@ -498,27 +262,31 @@
             <div class="glitch-flash"></div>
             <div class="project-card-header">
               <span class="project-year">2023–25</span>
-              <span class="project-category">[ NETWORKING_LAB ]</span>
+              <span class="project-category">NETWORKING_LAB</span>
             </div>
-            <div class="project-visual vm-visual">
-              <div class="vm-diagram">
-                <div class="vm-host">
-                  <span class="vm-label">Host Machine</span>
-                  <div class="vm-boxes">
-                    <div class="vm-box kali">
-                      <span>Kali Linux</span>
-                      <small>Attacker</small>
-                    </div>
-                    <div class="vm-box target">
-                      <span>Target VM</span>
-                      <small>Vulnerable</small>
-                    </div>
-                  </div>
-                  <div class="vm-network">
-                    <div class="vm-net-line"></div>
-                    <span class="vm-net-label">Isolated Network</span>
-                  </div>
+            <div class="project-visual vm-visual" style="display: flex; flex-direction: column; padding: 1.2rem; justify-content: center; height: 180px; position: relative; background: #08080c; border-bottom: 1px solid var(--border);">
+              <div class="vm-nodes-wrapper" style="display: flex; justify-content: space-between; align-items: center; width: 100%; max-width: 280px; margin: 0 auto; position: relative;">
+                <!-- Attacker host -->
+                <div class="vm-box kali" style="width: 75px; text-align: center; border: 1px solid var(--green); padding: 0.4rem; background: rgba(0,255,102,0.05); font-family: var(--font-mono); font-size: 0.65rem; border-radius: 4px; position: relative; z-index: 2;">
+                  <span>KALI_VM</span>
+                  <small style="display: block; font-size: 0.52rem; opacity: 0.7; color: var(--green);">ATTACKER</small>
                 </div>
+                
+                <!-- Network Cable -->
+                <div class="vm-cable" style="flex: 1; height: 2px; background: rgba(0, 255, 102, 0.2); position: relative; margin: 0 0.5rem; z-index: 1; overflow: hidden;">
+                  <div class="net-packet"></div>
+                </div>
+                
+                <!-- Target Host -->
+                <div class="vm-box target" id="vmTargetBox" style="width: 75px; text-align: center; border: 1px solid rgba(255,255,255,0.15); padding: 0.4rem; background: rgba(255,255,255,0.02); font-family: var(--font-mono); font-size: 0.65rem; border-radius: 4px; position: relative; z-index: 2; transition: all 0.3s ease;">
+                  <span>TARGET_VM</span>
+                  <small style="display: block; font-size: 0.52rem; opacity: 0.7; color: var(--text-dim);" id="vmTargetLabel">VULN_HOST</small>
+                </div>
+              </div>
+              
+              <!-- Dynamic Attack Status console output -->
+              <div class="vm-attack-console" id="vmAttackConsole" style="text-align: center; margin-top: 1.2rem; font-family: var(--font-mono); font-size: 0.68rem; color: var(--cyan); min-height: 18px;">
+                Initializing target vector...
               </div>
             </div>
             <div class="project-details">
@@ -530,7 +298,7 @@
                 <span>VirtualBox</span><span>OSINT</span>
               </div>
               <div class="project-links mt-4">
-                <a href="javascript:void(0)" class="proj-link live-btn">[ VIEW_LAB_SPECS ]</a>
+                <a href="javascript:void(0)" class="proj-link live-btn">View Lab Specs</a>
               </div>
             </div>
           </div>
@@ -540,22 +308,21 @@
             <div class="glitch-flash"></div>
             <div class="project-card-header">
               <span class="project-year">2025</span>
-              <span class="project-category clickable-cert-trigger" data-cert="cert-ai" style="cursor: pointer;">[ HuggingFace / ML ]</span>
+              <span class="project-category clickable-cert-trigger" data-cert="cert-ai" style="cursor: pointer;">HuggingFace / ML</span>
             </div>
-            <div class="project-visual pentestai-visual">
-              <div class="pentestai-inner">
-                <div class="pentestai-pulse"></div>
-                <div class="pentestai-text">
-                  <div class="pentestai-model-name">&lt;PentestGPT /&gt;</div>
-                  <div class="pentestai-status">
-                    <span class="status-dot"></span>
-                    <span>Training...</span>
-                  </div>
-                  <div class="pentestai-stats">
-                    <div class="pstat"><span class="pstat-label">Model</span><span class="pstat-val">Mistral-7B</span></div>
-                    <div class="pstat"><span class="pstat-label">Platform</span><span class="pstat-val">HF</span></div>
-                  </div>
-                </div>
+            <div class="project-visual pentestai-visual" style="height: 180px; background: #07070A; display: flex; flex-direction: column; justify-content: center; padding: 1.2rem; gap: 0.75rem; position: relative; border-bottom: 1px solid var(--border);">
+              <!-- Tensor weights map layout -->
+              <div class="tensor-weight-matrix" id="tensorWeights" style="display: grid; grid-template-columns: repeat(12, 1fr); gap: 4px; width: 100%; max-width: 240px; margin: 0 auto;">
+                <!-- 24 tensor blocks mapped dynamically via JS -->
+              </div>
+              
+              <div class="pentestai-telemetry" style="display: flex; justify-content: space-between; font-family: var(--font-mono); font-size: 0.62rem; width: 100%; max-width: 240px; margin: 0 auto; color: var(--text-dim);">
+                <span id="llmLoss" style="color: var(--cyan);">loss: 0.942</span>
+                <span id="llmEpoch" style="color: var(--text-muted);">step: 0/3000</span>
+              </div>
+              <div class="pentestai-status" style="text-align: center; font-family: var(--font-mono); font-size: 0.65rem; color: var(--green); display: flex; align-items: center; justify-content: center; gap: 6px;">
+                <span class="status-dot animate-pulse" style="display:inline-block; width:6px; height:6px; border-radius:50%; background:var(--green);"></span>
+                <span id="llmStatus">MODEL FINETUNING</span>
               </div>
             </div>
             <div class="project-details">
@@ -567,7 +334,7 @@
                 <span>HF API</span><span class="clickable-cert-trigger" data-cert="cert-ai" style="cursor: pointer;">Transformers</span>
               </div>
               <div class="project-links mt-4">
-                <a href="javascript:void(0)" class="proj-link live-btn">[ CONNECT_HF_REPO ]</a>
+                <a href="javascript:void(0)" class="proj-link live-btn">View Repository</a>
               </div>
             </div>
           </div>
@@ -580,8 +347,8 @@
     <section class="section certs-section" id="certs">
       <div class="section-inner">
         <div class="section-header reveal-up">
-          <span class="section-tag">[ 04_CERTIFICATIONS ]</span>
-          <h2 class="section-title text-white decrypt-trigger" data-text="VERIFIED_KEYS">VERIFIED_KEYS</h2>
+          <span class="section-tag">04_CREDENTIALS</span>
+          <h2 class="section-title text-white decrypt-trigger" data-text="CERTIFICATIONS">CERTIFICATIONS</h2>
         </div>
 
         <div class="certs-grid">
@@ -592,7 +359,7 @@
               <div class="cert-badge">
                 <svg viewBox="0 0 60 60" width="60" height="60">
                   <circle cx="30" cy="30" r="28" fill="none" stroke="#00ff66" stroke-width="2" stroke-dasharray="4 2" class="cert-ring" />
-                  <text x="50%" y="52%" dominant-baseline="middle" text-anchor="middle" fill="#00ff66" font-size="14" font-family="JetBrains Mono">[+]</text>
+                  <text x="50%" y="52%" dominant-baseline="middle" text-anchor="middle" fill="#00ff66" font-size="14" font-family="JetBrains Mono">+</text>
                 </svg>
               </div>
               <div class="cert-issuer">
@@ -609,7 +376,7 @@
             </div>
             <div class="cert-footer">
               <span class="cert-status verified">VERIFIED</span>
-              <a href="javascript:void(0)" class="cert-link">[ VIEW_CERT ]</a>
+              <a href="javascript:void(0)" class="cert-link">View Certificate</a>
             </div>
           </div>
 
@@ -619,7 +386,7 @@
               <div class="cert-badge">
                 <svg viewBox="0 0 60 60" width="60" height="60">
                   <circle cx="30" cy="30" r="28" fill="none" stroke="#00ff66" stroke-width="2" stroke-dasharray="4 2" class="cert-ring" />
-                  <text x="50%" y="52%" dominant-baseline="middle" text-anchor="middle" fill="#00ff66" font-size="14" font-family="JetBrains Mono">[>]</text>
+                  <text x="50%" y="52%" dominant-baseline="middle" text-anchor="middle" fill="#00ff66" font-size="14" font-family="JetBrains Mono">&gt;</text>
                 </svg>
               </div>
               <div class="cert-issuer">
@@ -636,16 +403,16 @@
             </div>
             <div class="cert-footer">
               <span class="cert-status verified">VERIFIED</span>
-              <a href="javascript:void(0)" class="cert-link">[ VIEW_CERT ]</a>
+              <a href="javascript:void(0)" class="cert-link">View Certificate</a>
             </div>
           </div>
 
         </div>
 
-        <!-- 91 Badges Matrix -->
+        {/* 91 Badges Matrix */}
         <div class="badge-matrix-section glass-panel reveal-up mt-8">
           <div class="badge-matrix-header">
-            <h3 class="knowledge-title text-white">[ MODULE_MASTERY ]</h3>
+            <h3 class="knowledge-title text-white">Module Mastery</h3>
             <span class="badge-count"><span class="accent">91</span> Badges Installed</span>
           </div>
           <div class="badge-matrix-container" id="badgeMatrix">
@@ -659,13 +426,13 @@
 
         <!-- Familiar With -->
         <div class="knowledge-section glass-panel reveal-up mt-6">
-          <h3 class="knowledge-title text-white">[ SYSTEM_FAMILIARITY ]</h3>
+          <h3 class="knowledge-title text-white">System Familiarity</h3>
           <div class="knowledge-badges">
-            <div class="know-badge"><span class="know-icon">[!]</span><span>OWASP Top 10</span></div>
-            <div class="know-badge"><span class="know-icon">[>]</span><span>MITRE ATT&amp;CK</span></div>
-            <div class="know-badge"><span class="know-icon">[~]</span><span>CVE Research</span></div>
-            <div class="know-badge"><span class="know-icon">[W]</span><span>Windows Exploits</span></div>
-            <div class="know-badge"><span class="know-icon">[L]</span><span>Linux Privesc</span></div>
+            <div class="know-badge"><span>OWASP Top 10</span></div>
+            <div class="know-badge"><span>MITRE ATT&amp;CK</span></div>
+            <div class="know-badge"><span>CVE Research</span></div>
+            <div class="know-badge"><span>Windows Exploits</span></div>
+            <div class="know-badge"><span>Linux Privesc</span></div>
           </div>
         </div>
 
@@ -676,31 +443,31 @@
     <section class="section contact-section" id="contact">
       <div class="section-inner">
         <div class="section-header reveal-up">
-          <span class="section-tag">[ 05_ESTABLISH_SOCKET ]</span>
-          <h2 class="section-title text-white decrypt-trigger" data-text="ESTABLISH_SOCKET">ESTABLISH_SOCKET</h2>
+          <span class="section-tag">05_CONTACT</span>
+          <h2 class="section-title text-white decrypt-trigger" data-text="GET_IN_TOUCH">GET IN TOUCH</h2>
         </div>
 
         <div class="contact-terminal glass-panel reveal-up" id="contactTerminal">
           <div class="contact-term-header">
             <span class="contact-term-dot"></span>
-            <span class="contact-term-title">handshake_client.sh</span>
+            <span class="contact-term-title">contact_form</span>
           </div>
           <div class="contact-term-body" id="contactTermBody">
-            <div class="contact-term-line text-green">> initiate_handshake --secure</div>
-            <div class="contact-term-line text-dim">> [SYS] Socket opened. Awaiting payload...</div>
+            <div class="contact-term-line text-green">Ready to connect</div>
+            <div class="contact-term-line text-dim">Drop me a message — I'd love to hear from you.</div>
 
             <div class="contact-field-group">
-              <label class="contact-field-label" for="contactName">> Enter Target Alias (Name):</label>
+              <label class="contact-field-label" for="contactName">Your Name:</label>
               <input type="text" id="contactName" class="contact-term-input" placeholder="________________" autocomplete="off" spellcheck="false" />
             </div>
 
             <div class="contact-field-group">
-              <label class="contact-field-label" for="contactMsg">> Enter Payload (Message):</label>
+              <label class="contact-field-label" for="contactMsg">Your Message:</label>
               <textarea id="contactMsg" class="contact-term-input contact-term-textarea" placeholder="________________" rows="3" spellcheck="false"></textarea>
             </div>
 
             <div class="contact-term-actions">
-              <button class="contact-transmit-btn" id="contactTransmitBtn">[ ./transmit_payload ]</button>
+              <button class="contact-transmit-btn" id="contactTransmitBtn">Send Message</button>
             </div>
 
             <div class="contact-cipher-block" id="contactCipherBlock"></div>
@@ -715,14 +482,14 @@
   <!-- ── FOOTER ── -->
   <footer class="footer">
     <div class="footer-inner">
-      <span class="footer-copy">© 2026 Aaron Alva // terminal_state: active</span>
-      <span class="footer-made">Made with [+] zero-day vulnerability checks</span>
+      <span class="footer-copy">© 2026 Aaron Alva</span>
+      <span class="footer-made">Made with + zero-day vulnerability checks</span>
     </div>
   </footer>
 
   <!-- Fullscreen Hardware Fault Transition Overlay -->
   <div id="faultOverlay" class="fault-active-overlay">
-    <div class="fault-err-title">[ERR_MEM_LIMIT]</div>
+    <div class="fault-err-title">ERR_MEM_LIMIT</div>
     <div class="fault-fan-container">
       <div class="cooling-fan"></div>
       <div class="cooling-fan" style="animation-delay: 0.03s;"></div>
@@ -818,8 +585,9 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-  <script src="three-bg.js?v=1.4"></script>
-  <script src="app.js?v=1.4"></script>
+  <script type="module" src="/src/main.jsx"></script>
+  <script src="three-bg.js?v=1.5"></script>
+  <script src="app.js?v=1.5"></script>
 </body>
 
 </html>
