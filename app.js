@@ -1322,8 +1322,9 @@ function playSystemAlarmBeep() {
   // Bind glitch clicks
   cards.forEach(card => {
     card.addEventListener('click', e => {
-      // Prevent modal opening when clicking active buttons directly
-      if (e.target.closest('a.proj-link')) return;
+      // Prevent modal opening when clicking active external links directly
+      const link = e.target.closest('a.proj-link');
+      if (link && link.getAttribute('href') !== 'javascript:void(0)') return;
 
       const id = card.getAttribute('id');
       if (!id) return;

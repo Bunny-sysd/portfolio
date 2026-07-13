@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+  <title>Aaron Alva — Cybersecurity Researcher & AI Security Developer</title>
+  <meta name="description"
+    content="Cybersecurity researcher and creator of Mutagen, an autonomous AI zero-day fuzzer. TryHackMe certified (91 badges). OWASP | MITRE ATT&CK | Hugging Face | Ghidra." />
+  <meta property="og:title" content="Aaron Alva — Cybersecurity Researcher & AI Security Developer" />
+  <meta property="og:description" content="I build autonomous AI tools that find and fix zero-day vulnerabilities. Creator of Mutagen. TryHackMe certified." />
+  <meta property="og:image" content="og-image.png" />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Aaron Alva — Cybersecurity Researcher & AI Security Developer" />
+  <meta name="twitter:description" content="I build autonomous AI tools that find and fix zero-day vulnerabilities. Creator of Mutagen." />
+  <meta name="twitter:image" content="og-image.png" />
+  <meta name="theme-color" content="#0A0A0C" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+  <script type="module" crossorigin src="./assets/index-DS9k_e7U.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-BJ9T8FE1.css">
+</head>
+
+<body class="terminal-theme">
+
+  <!-- ── CRT HARDWARE MONITOR OVERLAY ── -->
+  <div class="crt-overlay"></div>
+  <div class="scanline-beam"></div>
+
+  <!-- ── CUSTOM CURSOR ── -->
+  <div class="cursor-dot" id="cursorDot"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
+
+  <!-- ── NOISE OVERLAY ── -->
+  <div class="noise"></div>
+
+  <!-- ── CANVAS BG ── -->
+  <canvas id="bgCanvas"></canvas>
+
+  <!-- ── FLOATING PILL NAV ── -->
+  <header id="header" class="floating-nav-container">
+    <div class="floating-nav">
+      <a href="#hero" class="logo" id="headerLogo">
+        <span class="logo-text">0x</span>
+      </a>
+      <nav class="nav-links" id="navLinks">
+        <a href="#about" class="nav-link" data-section="about">About</a>
+        <a href="#skills" class="nav-link" data-section="skills">Skills</a>
+        <a href="#projects" class="nav-link" data-section="projects">Projects</a>
+        <a href="#certs" class="nav-link" data-section="certs">Certs</a>
+        <a href="#contact" class="nav-link contact-btn" data-section="contact">Contact</a>
+      </nav>
+      <button class="hamburger" id="hamburger" aria-label="Open menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ── MOBILE MENU ── -->
+  <div class="mobile-menu" id="mobileMenu">
+    <button class="mobile-close" id="mobileClose" aria-label="Close menu">✕</button>
+    <nav class="mobile-nav">
+      <a href="#hero" class="mobile-link" data-close>Home</a>
+      <a href="#about" class="mobile-link" data-close>About</a>
+      <a href="#skills" class="mobile-link" data-close>Skills</a>
+      <a href="#projects" class="mobile-link" data-close>Projects</a>
+      <a href="#certs" class="mobile-link" data-close>Certs</a>
+      <a href="#contact" class="mobile-link" data-close>Contact</a>
+    </nav>
+    <div class="mobile-socials">
+      <a href="https://tryhackme.com/p/354221973" target="_blank" rel="noreferrer">↗ TryHackMe</a>
+      <a href="https://github.com/Bunny-sysd" target="_blank" rel="noreferrer">↗ GitHub</a>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       MAIN CONTENT
+  ══════════════════════════════════════ -->
+  <main id="main">
+
+    <!-- ── HERO SECTION ── -->
+    <div id="react-hero-section" style="position: relative; z-index: 2; isolation: isolate;"></div>
+
+    <!-- ── ABOUT SECTION ── -->
+    <section class="section about-section" id="about">
+      <div class="section-inner">
+        <div class="section-header reveal-up">
+          <span class="section-tag">01_ABOUT_ME</span>
+          <h2 class="section-title text-white decrypt-trigger" data-text="ABOUT_ME">ABOUT ME</h2>
+        </div>
+        
+        <div class="bento-about-layout">
+          <div class="about-main glass-panel reveal-up">
+            <div class="card-edge-glow"></div>
+            <h3 class="bento-heading">Profiling</h3>
+            <p class="about-bio">
+              I am a <span class="highlight">Cybersecurity Researcher</span> and AI Systems Architect focused on the next frontier of defense: <span class="highlight">autonomous, self-healing software pipelines</span>. I build closed-loop agents that crawl codebase repositories, catch buffer corruptions, evaluate system vulnerabilities, and implement dynamic security fixes autonomously.
+            </p>
+            <p class="about-bio mt-4">
+              My mission is to replace manual code auditing with automated intelligence. Through my primary project, <span class="highlight">Mutagen</span>, I combine headless binary disassemblers with local machine learning models to decompile target architectures, verify crash vulnerabilities in secure sandboxes, and compile source patches instantly to secure assets.
+            </p>
+            <div class="about-nav-links mt-6">
+              <a href="#certs" class="text-link">→ View Certifications</a>
+              <a href="#projects" class="text-link">→ Analyze Projects</a>
+            </div>
+          </div>
+
+          <div class="about-sidebar reveal-up">
+            <div id="react-operational-specs"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section skills-section" id="skills">
+      <div class="section-inner">
+        <div id="react-sys-armament" style="width: 100%;"></div>
+      </div>
+    </section>
+
+    <!-- ── MUTAGEN PIPELINE CARD ── -->
+    <section class="section" style="padding-top: 0; padding-bottom: 2rem;">
+      <div class="section-inner">
+        <div id="react-mutagen-card" style="width: 100%;"></div>
+      </div>
+    </section>
+
+    <!-- ── PROJECTS SECTION (ASYMMETRIC BENTO GRID) ── -->
+    <section class="section projects-section" id="projects">
+      <div class="section-inner">
+        <div class="section-header reveal-up">
+          <span class="section-tag">03_SELECTED_PROJECTS</span>
+          <h2 class="section-title text-white decrypt-trigger" data-text="FEATURED_PROJECTS">FEATURED PROJECTS</h2>
+        </div>
+
+        <div class="bento-projects-grid">
+          
+          <!-- Project 1: Mutagen Fuzzer (2x2 featured box) -->
+          <div class="bento-project-card active-edge-green reveal-up hardware-glitch" id="proj-mutagen">
+            <div class="glitch-flash"></div>
+            <div class="project-card-header">
+              <span class="project-year">2026</span>
+              <span class="project-category clickable-cert-trigger" data-cert="cert-ai" style="cursor: pointer;">AGENTIC_AI / FUZZER</span>
+            </div>
+            <div class="project-visual mutagen-visual" style="position: relative;">
+              <canvas id="openclawCanvas" class="openclaw-canvas" style="position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: auto; z-index: 1;"></canvas>
+              <div class="mutagen-terminal" style="position: relative; z-index: 2; pointer-events: none;">
+                <div class="mutagen-terminal-header">
+                  <span class="mth-dot"></span>
+                  <span class="mth-dot"></span>
+                  <span class="mth-dot"></span>
+                  <span class="mth-title">mutagen@agentic-fuzzer:~</span>
+                </div>
+                <div class="mutagen-terminal-body" id="mutagenLiveLogs">
+                  <!-- Populated dynamically via app.js -->
+                  <div class="mutagen-log-line"><span class="log-time">[08:42:01]</span> <span class="log-tag tag-sys">SYS</span> AI zero-day scanner started...</div>
+                  <div class="mutagen-log-line"><span class="log-time">[08:42:03]</span> <span class="log-tag tag-agent">Ghidra</span> Disassembled functions successfully.</div>
+                </div>
+              </div>
+            </div>
+            <div class="project-details">
+              <h3 class="project-title text-white decrypt-trigger" data-text="Mutagen Zero-Day Fuzzer">Mutagen Zero-Day Fuzzer</h3>
+              <p class="project-desc text-dim">
+                Autonomous agentic vulnerability platform. Runs Ghidra decompiler on C binaries, generates exploits to confirm vulnerability, applies source patches, and audits target stability.
+              </p>
+              <div class="project-tags">
+                <span>Python</span><span class="clickable-cert-trigger" data-cert="cert-ai" style="cursor: pointer;">Gemini API</span><span>Ghidra</span><span>Docker</span>
+              </div>
+              <div class="project-links mt-4">
+                <a href="https://github.com/Bunny-sysd/portfolio" target="_blank" rel="noopener noreferrer" class="proj-link live-btn">View Source</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Project 2: SignalHub Analytics (1x2 vertical box) -->
+          <div class="bento-project-card reveal-up hardware-glitch" id="proj-stock">
+            <div class="glitch-flash"></div>
+            <div class="project-card-header">
+              <span class="project-year">2025</span>
+              <span class="project-category">DATA_PIPELINE / LIVE</span>
+            </div>
+            <div class="project-visual stock-visual">
+              <div class="stock-chart">
+                <svg viewBox="0 0 300 75" preserveAspectRatio="none" class="chart-svg">
+                  <defs>
+                    <linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stop-color="#00ff66" stop-opacity="0.3" />
+                      <stop offset="100%" stop-color="#00ff66" stop-opacity="0" />
+                    </linearGradient>
+                  </defs>
+                  <path class="chart-area"
+                    d="M0,60 L30,50 L60,55 L90,30 L120,40 L150,20 L180,35 L210,15 L240,25 L270,10 L300,18 L300,75 L0,75 Z"
+                    fill="url(#chartGrad)" />
+                  <path class="chart-line"
+                    d="M0,60 L30,50 L60,55 L90,30 L120,40 L150,20 L180,35 L210,15 L240,25 L270,10 L300,18" fill="none"
+                    stroke="#00ff66" stroke-width="2" />
+                  <circle class="chart-dot" cx="300" cy="18" r="4" fill="#00ff66" />
+                </svg>
+              </div>
+              <div class="stock-json-stream" id="stockJsonStream">
+                <!-- Populated dynamically via app.js -->
+              </div>
+              <div class="stock-tickers">
+                <div class="ticker"><span class="t-sym">NVDA</span><span class="t-val up" id="ticker-nvda">+4.2%</span></div>
+                <div class="ticker"><span class="t-sym">MSFT</span><span class="t-val up" id="ticker-msft">+2.3%</span></div>
+              </div>
+            </div>
+            <div class="project-details">
+              <h3 class="project-title text-white decrypt-trigger" data-text="SignalHub Analytics">SignalHub Analytics</h3>
+              <p class="project-desc text-dim">
+                Real-time stock pipeline feeding live API queries into an LLM prompts dynamically at runtime to evaluate signals.
+              </p>
+              <div class="project-tags">
+                <span>Firebase</span><span>Stock API</span><span>JSON</span>
+              </div>
+              <div class="project-links mt-4">
+                <a href="javascript:void(0)" class="proj-link live-btn">Launch Demo</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Project 3: TryHackMe CTF Labs (1x1 box) -->
+          <div class="bento-project-card reveal-up hardware-glitch" id="proj-thm">
+            <div class="glitch-flash"></div>
+            <div class="project-card-header">
+              <span class="project-year">2025</span>
+              <span class="project-category clickable-cert-trigger" data-cert="cert-cyber" style="cursor: pointer;">PENETRATION_TESTING</span>
+            </div>
+            <div class="project-visual thm-visual" style="position: relative; height: 180px;">
+              <div class="terminal-window" style="height: 100%;">
+                <div class="terminal-bar" style="display: flex; align-items: center; gap: 5px; background: #0d0d12; padding: 0.4rem 0.85rem;">
+                  <span class="tb-dot red" style="width: 6px; height: 6px; border-radius: 50%; background: #ff5f56;"></span>
+                  <span class="tb-dot yellow" style="width: 6px; height: 6px; border-radius: 50%; background: #ffbd2e;"></span>
+                  <span class="tb-dot green" style="width: 6px; height: 6px; border-radius: 50%; background: #27c93f;"></span>
+                  <span class="tb-title" style="font-family: var(--font-mono); font-size: 0.65rem; color: var(--text-muted); margin-left: 0.4rem;">kali@thm-target-box:~</span>
+                </div>
+                <div class="terminal-body" id="thmLiveTerminal" style="padding: 0.85rem 1.25rem; font-family: var(--font-mono); font-size: 0.72rem; line-height: 1.6; height: calc(100% - 28px); overflow-y: hidden; background: #060608;">
+                  <!-- Live typist content injected via app.js -->
+                </div>
+              </div>
+            </div>
+            <div class="project-details">
+              <h3 class="project-title text-white decrypt-trigger" data-text="TryHackMe Labs">TryHackMe Labs</h3>
+              <p class="project-desc text-dim">
+                Offensive operations, network maps, password attacks, privilege escalation, and domain takeovers.
+              </p>
+              <div class="project-tags">
+                <span class="clickable-cert-trigger" data-cert="cert-cyber" style="cursor: pointer;">Metasploit</span><span class="clickable-cert-trigger" data-cert="cert-cyber" style="cursor: pointer;">Nmap</span><span>John</span>
+              </div>
+              <div class="project-links mt-4">
+                <a href="https://tryhackme.com/p/354221973" target="_blank" rel="noopener noreferrer" class="proj-link live-btn">View Verified Profile</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Project 4: VM Lab Sandbox (1x1 box) -->
+          <div class="bento-project-card reveal-up hardware-glitch" id="proj-vm">
+            <div class="glitch-flash"></div>
+            <div class="project-card-header">
+              <span class="project-year">2023–25</span>
+              <span class="project-category">NETWORKING_LAB</span>
+            </div>
+            <div class="project-visual vm-visual" style="display: flex; flex-direction: column; padding: 1.2rem; justify-content: center; height: 180px; position: relative; background: #08080c; border-bottom: 1px solid var(--border);">
+              <div class="vm-nodes-wrapper" style="display: flex; justify-content: space-between; align-items: center; width: 100%; max-width: 280px; margin: 0 auto; position: relative;">
+                <!-- Attacker host -->
+                <div class="vm-box kali" style="width: 75px; text-align: center; border: 1px solid var(--green); padding: 0.4rem; background: rgba(0,255,102,0.05); font-family: var(--font-mono); font-size: 0.65rem; border-radius: 4px; position: relative; z-index: 2;">
+                  <span>KALI_VM</span>
+                  <small style="display: block; font-size: 0.52rem; opacity: 0.7; color: var(--green);">ATTACKER</small>
+                </div>
+                
+                <!-- Network Cable -->
+                <div class="vm-cable" style="flex: 1; height: 2px; background: rgba(0, 255, 102, 0.2); position: relative; margin: 0 0.5rem; z-index: 1; overflow: hidden;">
+                  <div class="net-packet"></div>
+                </div>
+                
+                <!-- Target Host -->
+                <div class="vm-box target" id="vmTargetBox" style="width: 75px; text-align: center; border: 1px solid rgba(255,255,255,0.15); padding: 0.4rem; background: rgba(255,255,255,0.02); font-family: var(--font-mono); font-size: 0.65rem; border-radius: 4px; position: relative; z-index: 2; transition: all 0.3s ease;">
+                  <span>TARGET_VM</span>
+                  <small style="display: block; font-size: 0.52rem; opacity: 0.7; color: var(--text-dim);" id="vmTargetLabel">VULN_HOST</small>
+                </div>
+              </div>
+              
+              <!-- Dynamic Attack Status console output -->
+              <div class="vm-attack-console" id="vmAttackConsole" style="text-align: center; margin-top: 1.2rem; font-family: var(--font-mono); font-size: 0.68rem; color: var(--cyan); min-height: 18px;">
+                Initializing target vector...
+              </div>
+            </div>
+            <div class="project-details">
+              <h3 class="project-title text-white decrypt-trigger" data-text="Security Lab Sandbox">Security Lab Sandbox</h3>
+              <p class="project-desc text-dim">
+                Isolated penetration testing laboratory with multiple hosts, tracking network frames.
+              </p>
+              <div class="project-tags">
+                <span>VirtualBox</span><span>OSINT</span>
+              </div>
+              <div class="project-links mt-4">
+                <a href="javascript:void(0)" class="proj-link live-btn">View Lab Specs</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Project 5: AI Model Training (1x1 box) -->
+          <div class="bento-project-card reveal-up hardware-glitch" id="proj-pentestai">
+            <div class="glitch-flash"></div>
+            <div class="project-card-header">
+              <span class="project-year">2025</span>
+              <span class="project-category clickable-cert-trigger" data-cert="cert-ai" style="cursor: pointer;">HuggingFace / ML</span>
+            </div>
+            <div class="project-visual pentestai-visual" style="height: 180px; background: #07070A; display: flex; flex-direction: column; justify-content: center; padding: 1.2rem; gap: 0.75rem; position: relative; border-bottom: 1px solid var(--border);">
+              <!-- Tensor weights map layout -->
+              <div class="tensor-weight-matrix" id="tensorWeights" style="display: grid; grid-template-columns: repeat(12, 1fr); gap: 4px; width: 100%; max-width: 240px; margin: 0 auto;">
+                <!-- 24 tensor blocks mapped dynamically via JS -->
+              </div>
+              
+              <div class="pentestai-telemetry" style="display: flex; justify-content: space-between; font-family: var(--font-mono); font-size: 0.62rem; width: 100%; max-width: 240px; margin: 0 auto; color: var(--text-dim);">
+                <span id="llmLoss" style="color: var(--cyan);">loss: 0.942</span>
+                <span id="llmEpoch" style="color: var(--text-muted);">step: 0/3000</span>
+              </div>
+              <div class="pentestai-status" style="text-align: center; font-family: var(--font-mono); font-size: 0.65rem; color: var(--green); display: flex; align-items: center; justify-content: center; gap: 6px;">
+                <span class="status-dot animate-pulse" style="display:inline-block; width:6px; height:6px; border-radius:50%; background:var(--green);"></span>
+                <span id="llmStatus">MODEL FINETUNING</span>
+              </div>
+            </div>
+            <div class="project-details">
+              <h3 class="project-title text-white decrypt-trigger" data-text="Security LLM Training">Security LLM Training</h3>
+              <p class="project-desc text-dim">
+                Fine-tuning large language models to categorize target software code vulnerabilities.
+              </p>
+              <div class="project-tags">
+                <span>HF API</span><span class="clickable-cert-trigger" data-cert="cert-ai" style="cursor: pointer;">Transformers</span>
+              </div>
+              <div class="project-links mt-4">
+                <a href="javascript:void(0)" class="proj-link live-btn">View Repository</a>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ── CERTIFICATIONS SECTION ── -->
+    <section class="section certs-section" id="certs">
+      <div class="section-inner">
+        <div class="section-header reveal-up">
+          <span class="section-tag">04_CREDENTIALS</span>
+          <h2 class="section-title text-white decrypt-trigger" data-text="CERTIFICATIONS">CERTIFICATIONS</h2>
+        </div>
+
+        <div class="certs-grid">
+          
+          <!-- Cert 1 -->
+          <div class="cert-card glass-panel active-edge-green reveal-up" id="cert-cyber">
+            <div class="cert-header">
+              <div class="cert-badge">
+                <svg viewBox="0 0 60 60" width="60" height="60">
+                  <circle cx="30" cy="30" r="28" fill="none" stroke="#00ff66" stroke-width="2" stroke-dasharray="4 2" class="cert-ring" />
+                  <text x="50%" y="52%" dominant-baseline="middle" text-anchor="middle" fill="#00ff66" font-size="14" font-family="JetBrains Mono">+</text>
+                </svg>
+              </div>
+              <div class="cert-issuer">
+                <span class="cert-platform">TryHackMe</span>
+                <span class="cert-year">2025</span>
+              </div>
+            </div>
+            <h3 class="cert-title text-white decrypt-trigger" data-text="Intro to Cybersecurity">Intro to Cybersecurity</h3>
+            <p class="cert-desc text-dim">
+              Offensive and defensive security paths: Nmap, Metasploit, password cracking, web payloads, and network frame validation.
+            </p>
+            <div class="cert-modules">
+              <span>Nmap</span><span>Metasploit</span><span>John</span><span>Web</span>
+            </div>
+            <div class="cert-footer">
+              <span class="cert-status verified">VERIFIED</span>
+              <a href="https://tryhackme.com/p/354221973" target="_blank" rel="noopener noreferrer" class="cert-link">View Certificate</a>
+            </div>
+          </div>
+
+          <!-- Cert 2 -->
+          <div class="cert-card glass-panel active-edge-green reveal-up" id="cert-ai">
+            <div class="cert-header">
+              <div class="cert-badge">
+                <svg viewBox="0 0 60 60" width="60" height="60">
+                  <circle cx="30" cy="30" r="28" fill="none" stroke="#00ff66" stroke-width="2" stroke-dasharray="4 2" class="cert-ring" />
+                  <text x="50%" y="52%" dominant-baseline="middle" text-anchor="middle" fill="#00ff66" font-size="14" font-family="JetBrains Mono">&gt;</text>
+                </svg>
+              </div>
+              <div class="cert-issuer">
+                <span class="cert-platform">TryHackMe</span>
+                <span class="cert-year">2025</span>
+              </div>
+            </div>
+            <h3 class="cert-title text-white decrypt-trigger" data-text="AI Security">AI Security</h3>
+            <p class="cert-desc text-dim">
+              Threat vectors, adversarial ML, prompt injection defenses, model theft safety, and data sanitization.
+            </p>
+            <div class="cert-modules">
+              <span>Adversarial ML</span><span>LLM Threat Models</span><span>Data Privacy</span>
+            </div>
+            <div class="cert-footer">
+              <span class="cert-status verified">VERIFIED</span>
+              <a href="https://tryhackme.com/p/354221973" target="_blank" rel="noopener noreferrer" class="cert-link">View Certificate</a>
+            </div>
+          </div>
+
+        </div>
+
+        {/* 91 Badges Matrix */}
+        <div class="badge-matrix-section glass-panel reveal-up mt-8">
+          <div class="badge-matrix-header">
+            <h3 class="knowledge-title text-white">Module Mastery</h3>
+            <span class="badge-count"><span class="accent">91</span> Badges Installed</span>
+          </div>
+          <div class="badge-matrix-container" id="badgeMatrix">
+            <!-- Programmatically populated by app.js -->
+          </div>
+          <div class="badge-matrix-footer">
+            <p class="text-dim">Tracking badges across Web Hacking, Windows Exploit, OSINT, and AI Defensive layers.</p>
+            <a href="javascript:void(0)" class="text-link">↗ Full THM Profile</a>
+          </div>
+        </div>
+
+        <!-- Familiar With -->
+        <div class="knowledge-section glass-panel reveal-up mt-6">
+          <h3 class="knowledge-title text-white">System Familiarity</h3>
+          <div class="knowledge-badges">
+            <div class="know-badge"><span>OWASP Top 10</span></div>
+            <div class="know-badge"><span>MITRE ATT&amp;CK</span></div>
+            <div class="know-badge"><span>CVE Research</span></div>
+            <div class="know-badge"><span>Windows Exploits</span></div>
+            <div class="know-badge"><span>Linux Privesc</span></div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ── CONTACT SECTION ── -->
+    <section class="section contact-section" id="contact">
+      <div class="section-inner">
+        <div class="section-header reveal-up">
+          <span class="section-tag">05_CONTACT</span>
+          <h2 class="section-title text-white decrypt-trigger" data-text="GET_IN_TOUCH">GET IN TOUCH</h2>
+        </div>
+
+        <div class="contact-terminal glass-panel reveal-up" id="contactTerminal">
+          <div class="contact-term-header">
+            <span class="contact-term-dot"></span>
+            <span class="contact-term-title">contact_form</span>
+          </div>
+          <div class="contact-term-body" id="contactTermBody">
+            <div class="contact-term-line text-green">Ready to connect</div>
+            <div class="contact-term-line text-dim">Drop me a message — I'd love to hear from you.</div>
+
+            <div class="contact-field-group">
+              <label class="contact-field-label" for="contactName">Your Name:</label>
+              <input type="text" id="contactName" class="contact-term-input" placeholder="________________" autocomplete="off" spellcheck="false" />
+            </div>
+
+            <div class="contact-field-group">
+              <label class="contact-field-label" for="contactMsg">Your Message:</label>
+              <textarea id="contactMsg" class="contact-term-input contact-term-textarea" placeholder="________________" rows="3" spellcheck="false"></textarea>
+            </div>
+
+            <div class="contact-term-actions">
+              <button class="contact-transmit-btn" id="contactTransmitBtn">Send Message</button>
+            </div>
+
+            <div class="contact-cipher-block" id="contactCipherBlock"></div>
+            <div class="contact-result-line" id="contactResultLine"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ── FOOTER ── -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <span class="footer-copy">© 2026 Aaron Alva</span>
+      <span class="footer-made">Made with + zero-day vulnerability checks</span>
+    </div>
+  </footer>
+
+  <!-- Fullscreen Hardware Fault Transition Overlay -->
+  <div id="faultOverlay" class="fault-active-overlay">
+    <div class="fault-err-title">ERR_MEM_LIMIT</div>
+    <div class="fault-fan-container">
+      <div class="cooling-fan"></div>
+      <div class="cooling-fan" style="animation-delay: 0.03s;"></div>
+    </div>
+    <div class="fault-details-log">
+      *** CRITICAL SYSTEM ERROR // ALLOC FAULT EXCEPTION ***<br>
+      SYSTEM FAULT ALARM TRIGGERS // HEAP INHIBITED<br>
+      AUTOMATICALLY RESEATING VIRTUAL MEMORY BANK 3...
+    </div>
+  </div>
+
+  <!-- ── PROJECT DETAIL MODAL ── -->
+  <!-- Floating Terminal Tooltip for Skills Hover -->
+  <div id="terminalTooltip" class="terminal-tooltip glass-panel">
+    <div class="tooltip-header">
+      <span class="tooltip-dot"></span>
+      <span id="tooltipTitle">EXE_RUN</span>
+    </div>
+    <div class="tooltip-body" id="tooltipText">> </div>
+  </div>
+
+  <!-- ── BOTTOM TACTICAL HUD (MOBILE NAV) ── -->
+  <div class="bottom-tactical-hud" id="bottomHud">
+    <div class="hud-tabs">
+      <a href="#about" class="hud-tab-btn" data-section="about">
+        <span class="hud-btn-tag">[ID]</span>
+        <span class="hud-btn-label">ABOUT</span>
+      </a>
+      <a href="#skills" class="hud-tab-btn" data-section="skills">
+        <span class="hud-btn-tag">[SYS]</span>
+        <span class="hud-btn-label">SKILLS</span>
+      </a>
+      <a href="#projects" class="hud-tab-btn" data-section="projects">
+        <span class="hud-btn-tag">[OPS]</span>
+        <span class="hud-btn-label">PROJECTS</span>
+      </a>
+      <a href="#certs" class="hud-tab-btn" data-section="certs">
+        <span class="hud-btn-tag">[CRT]</span>
+        <span class="hud-btn-label">CERTS</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- ── HARDWARE FAULT OVERLAY SEQUENCE ── -->
+  <div id="hardwareFaultScreen" class="hardware-fault-screen">
+    <div class="fault-inner glass-panel">
+      <div class="fault-header-section">
+        <span class="fault-alert-tag">[CRITICAL_FAULT]</span>
+        <h2 class="fault-title">SYS_WARN: FANS OVERACTIVE</h2>
+        <p class="fault-subtitle">RAM MODULE UNSEATED // BUS_LIMIT_EXCEEDED</p>
+      </div>
+
+      <!-- Desktop interactive drag-drop game -->
+      <div class="fault-desktop-game" id="faultDesktopGame">
+        <p class="fault-instruction">> drag the unstable memory module back into slot_0 to reseat connection:</p>
+        <div class="ram-game-arena">
+          <div class="ram-slot-target" id="ramSlot">
+            <span class="slot-label">SLOT_0 // [EMPTY]</span>
+          </div>
+          <div class="ram-module-draggable" id="ramModule" draggable="true">
+            <span class="ram-label">[ |||||| RAM_0xAA ]</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mobile interactive accelerometer shake game -->
+      <div class="fault-mobile-game" id="faultMobileGame">
+        <p class="fault-instruction">> physically shake device to seat memory controller, or tap module to override:</p>
+        <div class="ram-game-arena">
+          <div class="mobile-device-graphic">[DEVICE]</div>
+          <div class="ram-module-tap" id="ramModuleTap">
+            <span class="ram-label">[ |||||| RAM_0xAA ]</span>
+          </div>
+          <div class="shake-indicator" id="shakeIndicator">0% ATTAINED</div>
+        </div>
+      </div>
+
+      <div class="fault-diagnostic-term">
+        <div class="diagnostic-line">> ALLOCATING CORE WEIGHTS FOR GEMMA_4 FINE-TUNING...</div>
+        <div class="diagnostic-line error">> [ERR_MEM_LIMIT] OUT OF MEMORY AT TRANSFORMATION LAYER 12</div>
+        <div class="diagnostic-line error">> FAN CONTROLLER OVER-SPINNING // OVERHEATING PROBABLE</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="projectModal" class="project-modal-overlay">
+    <div class="project-modal-content glass-panel">
+      <button class="modal-close" id="modalCloseBtn">[X]</button>
+      <div id="modalBody"></div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+</body>
+
+</html>

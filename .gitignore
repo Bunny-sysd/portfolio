@@ -6,3 +6,4 @@ dist/
 .agents/
 .system_generated/
 *.log
+.vite/
