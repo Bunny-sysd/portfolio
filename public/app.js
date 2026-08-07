@@ -1158,35 +1158,45 @@ function playSystemAlarmBeep() {
       meta: "AGENTIC_AI / BINARY_FUZZER // 2026",
       desc: "Mutagen is an autonomous vulnerability platform designed to inspect binary systems for memory vulnerabilities. It combines headless Ghidra disassembly with LLM agents to detect buffer overflows, construct target payloads to verify exploitative impact, compile patches, and re-test binaries in secure Docker sandboxes.",
       tags: ["Python", "Gemma 4", "Ghidra API", "Docker Sandbox", "C++ ASM"],
-      btnText: "TERMINATE_SESSION"
+      btnText: "VIEW_REPOSITORY",
+      repoUrl: "https://github.com/Bunny-sysd/mutagen"
+    },
+    "proj-vigil": {
+      title: "Vigil Threat Hunter",
+      meta: "THREAT_INTEL / LOG_ENGINE // 2026",
+      desc: "Vigil Threat Hunter is an autonomous security log parsing and threat intelligence system. It ingests system syslog streams, network traffic captures, and authentication logs, automatically mapping threat indicators against live CVE databases (MITRE ATT&CK & NVD). When vulnerabilities are detected, Vigil queries the GitHub API for published PoC exploits and audits codebase dependencies for exposure risks.",
+      tags: ["Python", "CVE Database", "GitHub API", "NVD Parser", "Syslog Intel", "MITRE ATT&CK"],
+      btnText: "VIEW_REPOSITORY",
+      repoUrl: "https://github.com/Bunny-sysd/vigil-hunter"
     },
     "proj-stock": {
-      title: "SignalHub Analytics",
-      meta: "DATA_PIPELINE / LIVE // 2025",
-      desc: "SignalHub builds high-frequency stock parsing micro-systems. It streams market feed variables from Alpha Vantage API directly to Firebase Realtime Databases. Integrated triggers invoke agentic models to analyze price indicators and output trading buy/sell signal models.",
-      tags: ["Firebase Database", "Alpha Vantage API", "Node.js REST", "Tailwind CSS"],
-      btnText: "TERMINATE_SESSION"
+      title: "SignalHub Market AI Pipeline",
+      meta: "DATA_PIPELINE / LIVE_EVAL // 2025",
+      desc: "SignalHub builds high-frequency stock parsing micro-systems. It streams market feed variables from live market APIs directly to Firebase Realtime Databases. Integrated triggers invoke agentic models to analyze price indicators and output trading momentum buy/sell signals and risk scores in real-time.",
+      tags: ["Firebase Cloud", "Live Stock API", "LLM Prompting", "JSON Pipeline", "WebSockets"],
+      btnText: "VIEW_SPECS",
+      repoUrl: "https://github.com/Bunny-sysd/portfolio"
     },
     "proj-thm": {
       title: "TryHackMe CTF Labs",
       meta: "OFFENSIVE_OPERATIONS // 2025",
       tags: ["Metasploit Suite", "Burp Suite Pro", "Nmap Scanner", "Wireshark", "John"],
       isSandbox: true,
-      btnText: "TERMINATE_SESSION"
+      btnText: "CLOSE_SANDBOX"
     },
     "proj-vm": {
       title: "Security Lab Sandbox",
       meta: "VIRTUAL_ISOLATION_LAB // 2023-2025",
       tags: ["VirtualBox Hypervisor", "Kali Linux", "Wireshark PCAPs", "PFsense Firewall"],
       isSandbox: true,
-      btnText: "TERMINATE_SESSION"
+      btnText: "CLOSE_SANDBOX"
     },
     "proj-pentestai": {
-      title: "Security LLM Training",
+      title: "Security LLM Fine-Tuning",
       meta: "TRANSFORMERS / HUGGINGFACE // 2025",
-      desc: "Finetuned Mistral and LLaMA transformers on custom datasets of vulnerable source codes to classify CVE entry categories automatically.",
+      desc: "Fine-tuned Mistral and LLaMA transformers on custom datasets of vulnerable source code to automatically classify CVE entry categories, assess exploit severity, and generate remediation code snippets.",
       tags: ["HuggingFace", "Python PyTorch", "QLoRA", "Tokenizer Tuning"],
-      btnText: "TERMINATE_SESSION"
+      btnText: "CLOSE_SPEC"
     }
   };
 
@@ -1240,8 +1250,9 @@ function playSystemAlarmBeep() {
         <div class="modal-body-tags">
           ${data.tags.map(tag => `<span>${tag}</span>`).join('')}
         </div>
-        <div class="mt-4">
-          <button class="modal-action-btn" id="modalDismissBtn">${data.btnText}</button>
+        <div class="mt-4" style="display: flex; gap: 10px; flex-wrap: wrap;">
+          ${data.repoUrl ? `<a href="${data.repoUrl}" target="_blank" rel="noopener noreferrer" class="modal-action-btn" style="text-decoration: none; display: inline-block;">${data.btnText || 'VIEW_REPOSITORY'}</a>` : ''}
+          <button class="modal-action-btn" id="modalDismissBtn" style="background: rgba(255,255,255,0.05); border-color: var(--border);">CLOSE_SPEC</button>
         </div>
       `;
     }
