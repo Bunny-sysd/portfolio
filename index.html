@@ -38,8 +38,8 @@
   <!-- ── NOISE OVERLAY ── -->
   <div class="noise"></div>
 
-  <!-- ── REACT 3D CANVAS BG ── -->
-  <div id="react-3d-background" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 0; pointer-events: none;"></div>
+  <!-- ── 3D MATRIX CANVAS BG ── -->
+  <canvas id="bgCanvas" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 0; pointer-events: none;"></canvas>
 
   <!-- ── FLOATING PILL NAV ── -->
   <header id="header" class="floating-nav-container">
@@ -627,10 +627,12 @@
     </div>
   </div>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
   <script type="module" src="src/main.jsx"></script>
-  <script src="/app.js?v=1.5"></script>
+  <script src="three-bg.js?v=1.6"></script>
+  <script src="app.js?v=1.5"></script>
 </body>
 
 </html>
