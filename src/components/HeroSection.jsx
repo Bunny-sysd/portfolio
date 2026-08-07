@@ -96,7 +96,7 @@ export default function HeroSection() {
 
           {/* Sub-headline */}
           <p className="text-base md:text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed mb-10">
-            Cybersecurity Researcher &amp; AI Systems Architect building closed-loop agents that discover and patch vulnerabilities.
+            Cybersecurity Researcher &amp; Systems Developer building tools for automated vulnerability discovery, threat intelligence, and security log parsing.
           </p>
 
           {/* CTA Actions */}

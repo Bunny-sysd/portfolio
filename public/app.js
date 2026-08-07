@@ -538,6 +538,9 @@ function runHeroTerminalDiagnostics() {
       if (!target) return;
       e.preventDefault();
       
+      // Trigger R3F Particle Burst Effect
+      window.dispatchEvent(new Event('particle-burst'));
+
       // Close mobile menu if open
       const mobileMenu = document.getElementById('mobileMenu');
       if (mobileMenu) mobileMenu.classList.remove('open');
@@ -1820,8 +1823,116 @@ function playSystemAlarmBeep() {
   });
 })();
 
+// ── VIGIL RED EYE SCANNER MOUSE TRACKER ──
+(function initVigilEyeTracker() {
+  const vigilCard = document.getElementById('proj-vigil');
+  const vigilIris = document.getElementById('vigilIris');
+  if (!vigilCard || !vigilIris) return;
+
+  vigilCard.addEventListener('mousemove', (e) => {
+    const rect = vigilCard.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+
+    const deltaX = (e.clientX - centerX) / (rect.width / 2);
+    const deltaY = (e.clientY - centerY) / (rect.height / 2);
+
+    const moveX = Math.min(Math.max(deltaX * 6, -6), 6);
+    const moveY = Math.min(Math.max(deltaY * 5, -5), 5);
+
+    vigilIris.style.animation = 'none';
+    vigilIris.style.transform = `translate(${moveX}px, ${moveY}px)`;
+  }, { passive: true });
+
+  vigilCard.addEventListener('mouseleave', () => {
+    vigilIris.style.transform = 'translate(0px, 0px)';
+    vigilIris.style.animation = 'vigilLookAround 6s ease-in-out infinite alternate';
+  });
+})();
+
+// ── SIGNALHUB REAL-TIME JSON MARKET FEED SIMULATOR ──
+(function initSignalHubStream() {
+  const streamEl = document.getElementById('stockJsonStream');
+  if (!streamEl) return;
+
+  const marketFeeds = [
+    { spy: { symbol: "SPY", name: "S&P 500 Index", last_price: 768.56, daily_change_percent: -0.16 }, qqq: { symbol: "QQQ", name: "Nasdaq 100", last_price: 714.65, daily_change_percent: -0.37 }, dia: { symbol: "DIA", name: "Dow Jones", last_price: 538.19, daily_change_percent: -0.85 } },
+    { nvda: { symbol: "NVDA", name: "NVIDIA Corp", last_price: 138.40, daily_change_percent: 4.25 }, tsla: { symbol: "TSLA", name: "Tesla Inc", last_price: 248.10, daily_change_percent: 3.72 }, msft: { symbol: "MSFT", name: "Microsoft", last_price: 442.50, daily_change_percent: 2.15 } },
+    { signal: "BUY_CONFIRMED", confidence: 0.942, target: 148.50, stop_loss: 132.00, eval_model: "gemini-flash-1.5", latency_ms: 42 }
+  ];
+
+  let feedIdx = 0;
+  setInterval(() => {
+    const feedData = marketFeeds[feedIdx % marketFeeds.length];
+    streamEl.textContent = JSON.stringify(feedData, null, 2);
+    feedIdx++;
+  }, 3500);
+})();
+
 // Console log egg easter header
 console.log(
   '%c 0xPORTFOLIO ACTIVE // AUTHORIZED SESSION ',
   'color:#00ff41;background:#0A0A0C;font-family:monospace;font-size:16px;padding:6px 12px;border:1px solid #00ff41;'
 );
+
+// ── GSAP SCROLLTRIGGER ANIMATIONS ────────────────
+(function initGSAP() {
+  if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') return;
+  
+  gsap.registerPlugin(ScrollTrigger);
+
+  // Parallax fade-in for section titles
+  gsap.utils.toArray('.section-title').forEach(title => {
+    gsap.fromTo(title, 
+      { opacity: 0, y: 50 },
+      {
+        opacity: 1, 
+        y: 0,
+        duration: 1,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: title,
+          start: "top 85%",
+          toggleActions: "play none none reverse"
+        }
+      }
+    );
+  });
+
+  // Staggered fade up for Bento Cards
+  gsap.utils.toArray('.bento-project-card').forEach((card, i) => {
+    gsap.fromTo(card, 
+      { opacity: 0, y: 100, scale: 0.95 },
+      {
+        opacity: 1, 
+        y: 0, 
+        scale: 1,
+        duration: 0.8,
+        ease: "back.out(1.2)",
+        scrollTrigger: {
+          trigger: card,
+          start: "top 90%",
+          toggleActions: "play none none reverse"
+        }
+      }
+    );
+  });
+
+  // Fade-in and slide for the skills sections
+  gsap.utils.toArray('.bento-skill-box').forEach(box => {
+    gsap.fromTo(box,
+      { opacity: 0, x: -50 },
+      {
+        opacity: 1,
+        x: 0,
+        duration: 1,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: box,
+          start: "top 80%",
+          toggleActions: "play none none reverse"
+        }
+      }
+    );
+  });
+})();

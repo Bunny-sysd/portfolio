@@ -8,6 +8,165 @@ function hashStr(s) {
   for (let i = 0; i < s.length; i++) h = ((h << 5) - h + s.charCodeAt(i)) | 0;
   return Math.abs(h);
 }
+/* ═══════════════════════════════════════════════════
+   TOOL DETAILS — title · summary · use-case scenario
+   ═══════════════════════════════════════════════════ */
+const toolDetails = {
+  // ── RED TEAM ──
+  'Metasploit': { title: 'Metasploit Exploitation Framework', summary: 'Industry standard for exploit development, payload generation, and remote code execution.', scenario: 'Built custom Ruby exploits and executed payloads to verify remote buffer overflows in secure sandbox containers.' },
+  'Cobalt Strike': { title: 'Cobalt Strike Red Team C2', summary: 'Adversary simulation software for post-exploitation, threat beaconing, and lateral movement.', scenario: 'Configured custom malleable C2 profiles to evaluate detection rules and trace bypass flags inside secure network perimeters.' },
+  'Sliver C2': { title: 'Sliver Cross-Platform C2 Framework', summary: 'Open-source adversary emulation framework from Bishop Fox supporting mTLS, HTTPS, DNS transports.', scenario: 'Deployed cross-platform implants using DNS-over-HTTPS tunneling to evade corporate DLP and egress filtering.' },
+  'Mythic C2': { title: 'Mythic Modular C2 Framework', summary: 'Containerized micro-service C2 with research-first design and custom agent crafting.', scenario: 'Built bespoke Mythic agents with unique callback protocols to bypass signature-based C2 detection engines.' },
+  'AdaptixC2': { title: 'AdaptixC2 Extensible Framework', summary: 'Open-source C2 with modular extender architecture for custom payloads and cross-platform ops.', scenario: 'Deployed lab-specific payloads through the extender API, testing detection coverage across multiple EDR vendors.' },
+  'Evilginx3': { title: 'Evilginx3 Reverse-Proxy Phishing', summary: 'Advanced Man-in-the-Middle reverse proxy framework designed to bypass MFA security.', scenario: 'Captured session cookies and authorization keys in controlled environments, bypassing hardware-key MFA configurations.' },
+  'Burp Suite Pro': { title: 'Burp Suite Web Security Suite', summary: 'Industry leading web application traffic interceptor, scanner, and payload sequencer.', scenario: 'Discovered critical IDORs and SSRF vulnerabilities across production bug bounty targets using custom Intruder payloads.' },
+  'Sqlmap': { title: 'Sqlmap SQL Injection Scanner', summary: 'Advanced automation tool for SQL injection flaw discovery and database extraction.', scenario: 'Automated blind SQL injection exploitation, mapping database schemas and dumping tables over rate-limited endpoints.' },
+  'CrackMapExec': { title: 'CrackMapExec AD Exploitation', summary: 'Post-exploitation network scanner for Active Directory domain auditing and lateral movement.', scenario: 'Automated credential spray attacks and lateral movement across Windows domains via SMB and WMI protocols.' },
+  'Mimikatz': { title: 'Mimikatz Windows Credential Extractor', summary: 'Exploit tool to dump passwords, hash keys, and Kerberos tickets from Windows LSASS memory.', scenario: 'Extracted clear-text credentials and generated golden tickets to demonstrate complete domain controller compromises.' },
+  'BloodHound': { title: 'BloodHound Active Directory Mapper', summary: 'Graph theory tool for mapping attack paths inside complex Active Directory domains.', scenario: 'Mapped trust paths and permission relationships, locating shortest paths to Domain Admin status in enterprise environments.' },
+  'Responder': { title: 'Responder NetBIOS Poisoner', summary: 'LLMNR, NBT-NS and MDNS poisoner for harvesting NTLMv2 hashes inside internal networks.', scenario: 'Captured NetBIOS session hashes during internal network penetration tests to gain initial domain access.' },
+  'PoshC2': { title: 'PoshC2 Proxy-Aware C2 Framework', summary: 'Python-based, OPSEC-focused C2 framework with built-in AMSI bypass and proxy-aware comms.', scenario: 'Evaded endpoint detection during red team engagements by routing beacons through legitimate proxy infrastructure.' },
+  'Impacket': { title: 'Impacket Network Protocol Toolkit', summary: 'Python library for low-level network protocol manipulation including SMB, MSRPC, and Kerberos.', scenario: 'Used secretsdump.py and psexec.py to extract NTDS.dit and execute commands remotely on domain controllers.' },
+  'Caldera': { title: 'Caldera Automated Adversary Emulation', summary: 'MITRE ATT&CK-mapped automated adversary emulation platform for structured red team exercises.', scenario: 'Ran end-to-end ATT&CK chain simulations and generated gap analysis reports identifying 23 undetected techniques.' },
+  'TURNt': { title: 'TURNt Covert Traffic Routing', summary: 'Covert C2 routing through web conferencing TURN media servers to exploit enterprise whitelists.', scenario: 'Established high-bandwidth interactive C2 sessions disguised as legitimate video conferencing media traffic.' },
+  'PentAGI': { title: 'PentAGI Autonomous Pentest Agent', summary: 'Multi-agent AI system for fully autonomous penetration testing with knowledge graph memory.', scenario: 'Deployed autonomous recon-to-exploit pipeline that chained Nmap discovery, Metasploit exploitation, and report generation without human input.' },
+  // ── BLUE TEAM ──
+  'Velociraptor': { title: 'Velociraptor Endpoint Forensics', summary: 'Powerful endpoint visibility and hunt tool for querying thousands of endpoints in real-time.', scenario: 'Ran live VQL queries across 500+ endpoints to detect persistence mechanisms during active incident response.' },
+  'Atomic Red Team': { title: 'Atomic Red Team Detection Validation', summary: 'MITRE ATT&CK-mapped test library for validating detection rules and SIEM alert coverage.', scenario: 'Executed T1059 and T1053 atomics to verify Splunk correlation rules triggered correctly for command execution.' },
+  'Sysmon': { title: 'Sysmon Advanced Event Logging', summary: 'Microsoft system monitor providing detailed telemetry on process creation, network connections, and file changes.', scenario: 'Deployed SwiftOnSecurity-tuned Sysmon configs to capture high-fidelity events while filtering background noise.' },
+  'YARA Rules': { title: 'YARA Malware Pattern Matching', summary: 'Pattern-matching engine for identifying and classifying malware families based on binary signatures.', scenario: 'Wrote custom YARA rules to detect polymorphic RAT variants across quarantined samples in automated sandboxes.' },
+  'Suricata': { title: 'Suricata Network IDS/IPS', summary: 'High-performance network intrusion detection and prevention engine with protocol analysis.', scenario: 'Tuned Suricata rulesets to detect lateral movement traffic patterns while maintaining sub-millisecond packet inspection.' },
+  'Splunk SIEM': { title: 'Splunk Security Information & Event Management', summary: 'Enterprise log aggregation, correlation, and threat hunting platform.', scenario: 'Built correlation searches and dashboard panels to detect anomalous authentication patterns across distributed endpoints.' },
+  'TheHive / Cortex': { title: 'TheHive Incident Response Platform', summary: 'Open-source Security Incident Response Platform with built-in analyzer integrations.', scenario: 'Orchestrated multi-analyst case management workflows with automated IOC enrichment via Cortex analyzers.' },
+  'GreyNoise': { title: 'GreyNoise Internet Intelligence', summary: 'Internet-wide scanner that classifies noise from targeted attacks to reduce analyst fatigue.', scenario: 'Filtered 70% of false positive alerts by classifying incoming IPs as known internet scanners vs targeted threats.' },
+  'Wazuh XDR': { title: 'Wazuh Open-Source XDR & SIEM', summary: 'Comprehensive free SIEM and XDR with file integrity monitoring, vulnerability detection, and incident response.', scenario: 'Deployed Wazuh agents fleet-wide for unified FIM, rootkit detection, and CIS compliance scanning across hybrid infrastructure.' },
+  'Arkime': { title: 'Arkime Full Packet Capture', summary: 'Large-scale indexed packet capture and search system for retrospective network traffic analysis.', scenario: 'Performed retrospective PCAP analysis on 48 hours of network traffic to reconstruct full attack chain timelines.' },
+  'OpenCTI': { title: 'OpenCTI Threat Intelligence Platform', summary: 'Modern threat intel platform with relationship visualization and MITRE ATT&CK integration.', scenario: 'Correlated threat actor TTPs across multiple campaigns using OpenCTI graph analysis to predict next-stage attack vectors.' },
+  'MISP': { title: 'MISP IOC Sharing Platform', summary: 'Community-driven malware information sharing platform for indicator of compromise distribution.', scenario: 'Automated IOC ingestion pipelines feeding MISP indicators directly into Suricata and Splunk detection rules.' },
+  'Tines SOAR': { title: 'Tines No-Code Security Orchestration', summary: 'No-code SOAR platform for automating repetitive SOC workflows across disparate security tools.', scenario: 'Built automated playbooks that triaged phishing alerts, extracted IOCs, and quarantined endpoints in under 90 seconds.' },
+  'Falco': { title: 'Falco Runtime Security', summary: 'eBPF-powered cloud-native runtime threat detection for containers and Kubernetes workloads.', scenario: 'Detected container escape attempts and anomalous syscall patterns in production Kubernetes clusters in real-time.' },
+  'Cyber Triage': { title: 'Cyber Triage Automated IR', summary: 'Automated endpoint forensic collection and analysis for rapid incident investigation.', scenario: 'Reduced mean-time-to-investigate from hours to minutes by automating artifact collection across compromised hosts.' },
+  'Maltrail': { title: 'Maltrail Malicious Traffic Detector', summary: 'Open-source traffic detection system matching against known malicious indicators and patterns.', scenario: 'Detected beaconing behavior to known C2 infrastructure by correlating DNS query patterns against threat feeds.' },
+  // ── OSINT & RECON ──
+  'Nmap / Masscan': { title: 'Network Discovery & Port Scanning', summary: 'Tools for target host discovery, large range sweeping, and live service enumeration.', scenario: 'Swept public server IP ranges during target discovery, identifying unpatched services in under a minute with Masscan.' },
+  'Nuclei Scanner': { title: 'Nuclei Template-Based Vuln Scanner', summary: 'YAML-template-based vulnerability scanner for rapid, customizable web service testing.', scenario: 'Wrote custom nuclei templates to detect newly disclosed zero-days across large enterprise attack surfaces.' },
+  'Subfinder / Amass': { title: 'Subdomain Enumeration Engines', summary: 'Passive and active subdomain discovery tools for comprehensive attack surface mapping.', scenario: 'Chained Subfinder with httpx and Nuclei to automate discovery-to-vulnerability pipelines across bug bounty scopes.' },
+  'Maltego': { title: 'Maltego Link Analysis Platform', summary: 'Graph-based OSINT platform for visualizing complex relationships between domains, IPs, and entities.', scenario: 'Mapped organizational infrastructure relationships to identify shadow IT and forgotten cloud assets.' },
+  'SpiderFoot': { title: 'SpiderFoot OSINT Automation', summary: 'Automation framework integrating 100+ data sources for comprehensive target reconnaissance.', scenario: 'Ran automated recon pipelines correlating domain registrations, email addresses, and social media profiles.' },
+  'Shodan / Censys': { title: 'Internet-Connected Device Search', summary: 'Search engines for discovering exposed services, IoT devices, and misconfigured infrastructure.', scenario: 'Identified unprotected MongoDB instances and exposed Kubernetes dashboards across target IP ranges.' },
+  'BBOT': { title: 'BBOT Recursive Internet Scanner', summary: 'Modular, recursive internet scanner for large-scale attack surface mapping and OSINT.', scenario: 'Mapped complete external attack surfaces including forgotten subdomains, cloud buckets, and exposed APIs.' },
+  'Maigret': { title: 'Maigret Username Intelligence', summary: 'Advanced username enumeration across thousands of sites with cross-account correlation.', scenario: 'Traced target usernames across 2000+ platforms to build comprehensive digital footprint profiles.' },
+  'GitDorker': { title: 'GitDorker Secret Scanner', summary: 'GitHub reconnaissance tool for finding leaked secrets, API keys, and configuration files.', scenario: 'Discovered hardcoded AWS keys and database credentials in public repositories during bug bounty engagements.' },
+  'Photon Crawler': { title: 'Photon High-Speed OSINT Crawler', summary: 'Ultra-fast crawler extracting URLs, endpoints, JS files, and hidden parameters from targets.', scenario: 'Extracted hidden API endpoints and authentication tokens from minified JavaScript bundles on target domains.' },
+  'EyeDex': { title: 'EyeDex Exposed File Search', summary: 'Specialized search engine for publicly exposed files across FTP servers and cloud storage.', scenario: 'Discovered misconfigured backup archives and database dumps exposed on forgotten FTP servers during recon.' },
+  'RECOX': { title: 'RECOX All-in-One Recon Toolkit', summary: 'Consolidated recon toolkit combining subdomain enumeration, port scanning, WHOIS, and DNS lookups.', scenario: 'Streamlined initial asset discovery phase into a single automated pipeline, reducing recon time by 60%.' },
+  'WhatsMyName': { title: 'WhatsMyName Username OSINT', summary: 'Cross-platform username enumeration for mapping entity digital footprints across hundreds of sites.', scenario: 'Identified developer accounts and secondary infrastructure by correlating usernames across code hosting platforms.' },
+  'httpx': { title: 'httpx Fast HTTP Prober', summary: 'High-speed HTTP probing toolkit for live host detection, tech fingerprinting, and status checking.', scenario: 'Filtered 10,000+ subdomains to 200 live targets with tech stack identification in under 2 minutes.' },
+  // ── REVERSE ENGINEERING ──
+  'Ghidra Pro': { title: 'Ghidra Binary Decompiler', summary: 'NSA-developed professional grade software reverse engineering suite with built-in decompiler.', scenario: 'Reverse engineered target ELF and PE32 binaries, locating buffer size restrictions, stack canary structures, and memory leak flags.' },
+  'IDA Pro': { title: 'IDA Pro Interactive Disassembler', summary: 'Industry standard disassembler and debugger with the most extensive processor architecture support.', scenario: 'Performed deep analysis of packed malware samples, identifying custom encryption routines and anti-debugging checks.' },
+  'Binary Ninja': { title: 'Binary Ninja Modern RE Platform', summary: 'Modern reverse engineering platform with powerful intermediate language and automation APIs.', scenario: "Automated vulnerability pattern detection across firmware images using Binary Ninja's HLIL scripting API." },
+  'Radare2 / Cutter': { title: 'Radare2 Extensible RE Framework', summary: 'Highly flexible command-line framework for binary analysis with Cutter GUI frontend.', scenario: 'Scripted automated binary diffing workflows to identify patched vulnerabilities across firmware version releases.' },
+  'x64dbg': { title: 'x64dbg Windows Debugger', summary: 'Open-source Windows debugger for dynamic analysis of 32-bit and 64-bit executables.', scenario: 'Traced malware unpacking routines in real-time, dumping decrypted payloads from memory at OEP breakpoints.' },
+  'GDB + GEF': { title: 'GDB Enhanced Features Debugger', summary: 'GNU Debugger with GEF extension for exploit development and binary analysis on Linux.', scenario: 'Analyzed register values at breakpoint offsets to map stack buffer corruption and ROP chain entry points.' },
+  'Binwalk': { title: 'Binwalk Firmware Extractor', summary: 'Firmware analysis tool for scanning, extracting, and reverse engineering embedded file systems.', scenario: 'Extracted hidden file systems from IoT device firmware images, discovering hardcoded credentials and debug interfaces.' },
+  'PeStudio': { title: 'PeStudio PE File Analyzer', summary: 'Quick triage utility for Windows executables analyzing imports, strings, entropy, and indicators.', scenario: 'Triaged suspicious executables by analyzing import tables and entropy scores to identify packed malware samples.' },
+  'Angr': { title: 'Angr Symbolic Execution Engine', summary: 'Python framework for binary analysis using symbolic execution and constraint solving.', scenario: 'Used symbolic execution to automatically discover input sequences that trigger buffer overflows in CTF challenges.' },
+  'Firmware Ninja': { title: 'Firmware Ninja FW Analysis Plugin', summary: 'Binary Ninja extension for constructing memory maps and interpreting hardware peripheral interactions.', scenario: 'Mapped embedded device memory regions and decoded peripheral register access patterns in bare-metal firmware.' },
+  'ONEKEY': { title: 'ONEKEY Automated FW Security', summary: 'Automated firmware analysis platform for uncovering vulnerabilities in RTOS and IoT devices at scale.', scenario: 'Scanned 50+ IoT firmware images in parallel, identifying default credentials and known CVEs across device families.' },
+  'Saleae Logic': { title: 'Saleae Logic Protocol Analyzer', summary: 'Hardware signal capture and analysis for SPI, I2C, UART, and other embedded communication protocols.', scenario: 'Captured and decoded UART debug output from IoT devices to extract boot sequences and authentication handshakes.' },
+  // ── CLOUD & INFRA ──
+  'Proxmox VE': { title: 'Proxmox VE Hypervisor Platform', summary: 'Enterprise-grade open-source virtualization platform for building isolated security labs.', scenario: 'Built virtual lab network segments to deploy active malware nodes under complete host isolation.' },
+  'Docker Sandboxes': { title: 'Docker Container Isolation', summary: 'Containerized software deployment for secure resource sandboxing and reproducible environments.', scenario: 'Ran automated exploit scripts inside disposable Docker containers, restricting target filesystem access completely.' },
+  'Kali Linux': { title: 'Kali Linux Penetration Testing OS', summary: 'Security-focused operating system with 600+ pre-compiled penetration testing tools.', scenario: 'Maintained customized Kali images configured with custom proxy pipelines for continuous bug bounty operations.' },
+  'Prowler': { title: 'Prowler Cloud Security Auditor', summary: 'Multi-cloud security posture assessment tool mapping to CIS, NIST, and PCI-DSS frameworks.', scenario: 'Audited AWS accounts identifying 47 critical IAM misconfigurations and over-privileged service roles.' },
+  'Pacu': { title: 'Pacu AWS Exploitation Framework', summary: 'Open-source framework specifically for AWS penetration testing and privilege escalation.', scenario: 'Discovered and exploited IAM privilege escalation paths from read-only roles to full admin access in test accounts.' },
+  'Scout Suite': { title: 'Scout Suite Multi-Cloud Auditor', summary: 'Multi-cloud auditing tool providing comprehensive security posture reports for AWS, Azure, GCP.', scenario: 'Generated cross-cloud compliance reports identifying S3 bucket misconfigs and Azure AD conditional access gaps.' },
+  'PfSense IDS': { title: 'PfSense Firewall & IDS Router', summary: 'Custom security firewall system with intrusion detection and network segmentation.', scenario: 'Configured strict network rules to isolate malware detonation segments from communicating with public interfaces.' },
+  'Wireshark': { title: 'Wireshark Protocol Analyzer', summary: 'SSL keylog integration for deep packet inspection and encrypted traffic analysis.', scenario: 'Decrypted and analyzed TLS-encrypted command streams, identifying C2 beaconing patterns in captured traffic.' },
+  'Terraform': { title: 'Terraform IaC Security Scanning', summary: 'Infrastructure as Code tool for auditing cloud resource configurations before deployment.', scenario: 'Scanned Terraform plans with tfsec to catch security misconfigurations before they reached production environments.' },
+  'Routersploit': { title: 'Routersploit IoT Exploitation', summary: 'Dedicated framework for exploiting vulnerabilities in embedded devices, routers, and IoT firmware.', scenario: 'Exploited default credentials and known CVEs on home routers to demonstrate IoT attack surface risks.' },
+  'Kubescape': { title: 'Kubescape K8s Risk Analysis', summary: 'Comprehensive Kubernetes risk analysis, security compliance, and misconfiguration scanning.', scenario: 'Identified 12 critical RBAC misconfigurations and exposed service accounts across production EKS clusters.' },
+  'Kube-hunter': { title: 'Kube-hunter K8s Attack Simulation', summary: 'Kubernetes penetration testing tool that simulates real-world attack vectors against clusters.', scenario: 'Discovered exposed kubelet APIs and unauthenticated etcd endpoints in staging Kubernetes deployments.' },
+  'Peirates': { title: 'Peirates K8s Post-Exploitation', summary: 'Specialized post-exploitation toolkit for Kubernetes environments after initial cluster access.', scenario: 'Escalated from compromised pod to cluster-admin by exploiting mounted service account tokens and RBAC gaps.' },
+  // ── AI / ML SECURITY ──
+  'LoRA / QLoRA': { title: 'LoRA/QLoRA Fine-Tuning', summary: 'Parameter-efficient fine-tuning technique for adapting large language models to security tasks.', scenario: 'Fine-tuned local Llama-3-8B on static analysis datasets to automatically classify buffer overflow patterns in C code.' },
+  'vLLM Inference': { title: 'vLLM High-Throughput Inference', summary: 'High-throughput LLM serving engine with PagedAttention for sub-second token generation.', scenario: 'Deployed quantized models locally, serving real-time log anomaly detection with sub-200ms response times.' },
+  'Llama.cpp': { title: 'Llama.cpp Model Quantization', summary: 'C/C++ port of Llama inference supporting GGUF quantization for local hardware deployment.', scenario: 'Quantized LLM weights to 4-bit GGUF format, enabling fast security model execution on standard developer laptops.' },
+  'LangGraph Agents': { title: 'LangGraph Multi-Agent Orchestration', summary: 'Library for building stateful, multi-agent workflows with loops and conditional decisions.', scenario: 'Engineered multi-agent loops that run code linters, generate bug fixes, and verify compilation stability autonomously.' },
+  'NeMo Guardrails': { title: 'NeMo AI Safety Guardrails', summary: 'Toolkit for adding safety rules, prompt sanitization, and dialog flows to LLM APIs.', scenario: 'Implemented input/output rails to block adversarial prompt injections targeting internal chat interfaces.' },
+  'HuggingFace': { title: 'HuggingFace Transformers Library', summary: 'ML API library for running state-of-the-art tokenizers, model weights, and fine-tuning pipelines.', scenario: 'Built tokenization classification pipelines to automatically categorize and triage incoming exploit payloads.' },
+  'PyTorch': { title: 'PyTorch Deep Learning Framework', summary: 'Python-based machine learning library for tensor computation and neural network training.', scenario: 'Trained anomaly detection classifiers on network flow datasets to identify beaconing traffic patterns.' },
+  'Promptfoo': { title: 'Promptfoo LLM Red Teaming', summary: 'Open-source tool for testing and fuzzing LLM prompts to identify security gaps in AI systems.', scenario: 'Fuzzed production LLM endpoints with adversarial prompts to identify jailbreak vectors and data exfiltration paths.' },
+  'Giskard': { title: 'Giskard AI Agent Security Testing', summary: 'Platform for multi-turn stress testing of LLM agents for hallucinations, bias, and safety.', scenario: 'Performed dynamic multi-turn stress tests on agentic AI systems to identify context-dependent failure modes.' },
+  'METATRON': { title: 'METATRON Offline AI Pentest Assistant', summary: 'Privacy-first AI penetration testing assistant running local LLMs via Ollama with zero data exfiltration.', scenario: 'Ran fully offline agentic pentest loops against lab targets, generating professional PDF reports without any cloud dependency.' },
+  'Confident AI': { title: 'Confident AI Automated Testing', summary: 'Automated adversarial AI testing with CI/CD integration for 50+ vulnerability categories.', scenario: 'Integrated into deployment pipelines to automatically test LLM endpoints for prompt injection and data leakage before production release.' },
+  'Rebuff AI': { title: 'Rebuff AI Prompt Injection Defense', summary: 'Self-hardening prompt injection detection framework using multi-layer LLM defense.', scenario: 'Deployed canary token detection and heuristic analysis layers to catch injection attempts across customer-facing chatbots.' },
+};
+
+/* ═══════════════════════════════════════
+   SKILL DATA — category → skill list
+   ═══════════════════════════════════════ */
+const skillData = {
+  redteam: {
+    title: 'Red Team Operations',
+    consoleMsg: 'status: active // adversary simulation framework loaded...',
+    skills: [
+      'Metasploit', 'Cobalt Strike', 'Sliver C2', 'Mythic C2',
+      'AdaptixC2', 'Evilginx3', 'Burp Suite Pro', 'Sqlmap',
+      'CrackMapExec', 'Mimikatz', 'BloodHound', 'Responder',
+      'PoshC2', 'Impacket', 'Caldera', 'TURNt', 'PentAGI'
+    ]
+  },
+  blueteam: {
+    title: 'Blue Team Defense',
+    consoleMsg: 'status: monitoring // detection validation pipeline synchronized.',
+    skills: [
+      'Velociraptor', 'Atomic Red Team', 'Sysmon', 'YARA Rules',
+      'Suricata', 'Splunk SIEM', 'TheHive / Cortex', 'GreyNoise',
+      'Wazuh XDR', 'Arkime', 'OpenCTI', 'MISP',
+      'Tines SOAR', 'Falco', 'Cyber Triage', 'Maltrail'
+    ]
+  },
+  recon: {
+    title: 'OSINT & Reconnaissance',
+    consoleMsg: 'status: scanning // passive enumeration channels active...',
+    skills: [
+      'Nmap / Masscan', 'Nuclei Scanner', 'Subfinder / Amass', 'Maltego',
+      'SpiderFoot', 'Shodan / Censys', 'BBOT', 'Maigret',
+      'GitDorker', 'Photon Crawler', 'EyeDex', 'RECOX',
+      'WhatsMyName', 'httpx'
+    ]
+  },
+  reversing: {
+    title: 'Reverse Engineering',
+    consoleMsg: 'status: disassembly // binary decompilation targets queued...',
+    skills: [
+      'Ghidra Pro', 'IDA Pro', 'Binary Ninja', 'Radare2 / Cutter',
+      'x64dbg', 'GDB + GEF', 'Binwalk', 'PeStudio',
+      'Angr', 'Firmware Ninja', 'ONEKEY', 'Saleae Logic'
+    ]
+  },
+  cloud: {
+    title: 'Cloud & Infrastructure',
+    consoleMsg: 'status: hypervisor isolation active // cloud audit running...',
+    skills: [
+      'Proxmox VE', 'Docker Sandboxes', 'Kali Linux', 'Prowler',
+      'Pacu', 'Scout Suite', 'PfSense IDS', 'Wireshark',
+      'Terraform', 'Routersploit', 'Kubescape', 'Kube-hunter',
+      'Peirates'
+    ]
+  },
+  aiml: {
+    title: 'AI / ML Security',
+    consoleMsg: 'status: model weights loaded // tokenized safety gates synchronized.',
+    skills: [
+      'LoRA / QLoRA', 'vLLM Inference', 'Llama.cpp', 'LangGraph Agents',
+      'NeMo Guardrails', 'HuggingFace', 'PyTorch', 'Promptfoo',
+      'Giskard', 'METATRON', 'Confident AI', 'Rebuff AI'
+    ]
+  }
+};
 
 export default function SysArmament() {
   const [activeTab, setActiveTab] = useState('redteam');
@@ -42,165 +201,6 @@ export default function SysArmament() {
     { id: 'aiml', label: 'AI / ML SECURITY', icon: Brain }
   ];
 
-  /* ═══════════════════════════════════════════════════
-     TOOL DETAILS — title · summary · use-case scenario
-     ═══════════════════════════════════════════════════ */
-  const toolDetails = {
-    // ── RED TEAM ──
-    'Metasploit': { title: 'Metasploit Exploitation Framework', summary: 'Industry standard for exploit development, payload generation, and remote code execution.', scenario: 'Built custom Ruby exploits and executed payloads to verify remote buffer overflows in secure sandbox containers.' },
-    'Cobalt Strike': { title: 'Cobalt Strike Red Team C2', summary: 'Adversary simulation software for post-exploitation, threat beaconing, and lateral movement.', scenario: 'Configured custom malleable C2 profiles to evaluate detection rules and trace bypass flags inside secure network perimeters.' },
-    'Sliver C2': { title: 'Sliver Cross-Platform C2 Framework', summary: 'Open-source adversary emulation framework from Bishop Fox supporting mTLS, HTTPS, DNS transports.', scenario: 'Deployed cross-platform implants using DNS-over-HTTPS tunneling to evade corporate DLP and egress filtering.' },
-    'Mythic C2': { title: 'Mythic Modular C2 Framework', summary: 'Containerized micro-service C2 with research-first design and custom agent crafting.', scenario: 'Built bespoke Mythic agents with unique callback protocols to bypass signature-based C2 detection engines.' },
-    'AdaptixC2': { title: 'AdaptixC2 Extensible Framework', summary: 'Open-source C2 with modular extender architecture for custom payloads and cross-platform ops.', scenario: 'Deployed lab-specific payloads through the extender API, testing detection coverage across multiple EDR vendors.' },
-    'Evilginx3': { title: 'Evilginx3 Reverse-Proxy Phishing', summary: 'Advanced Man-in-the-Middle reverse proxy framework designed to bypass MFA security.', scenario: 'Captured session cookies and authorization keys in controlled environments, bypassing hardware-key MFA configurations.' },
-    'Burp Suite Pro': { title: 'Burp Suite Web Security Suite', summary: 'Industry leading web application traffic interceptor, scanner, and payload sequencer.', scenario: 'Discovered critical IDORs and SSRF vulnerabilities across production bug bounty targets using custom Intruder payloads.' },
-    'Sqlmap': { title: 'Sqlmap SQL Injection Scanner', summary: 'Advanced automation tool for SQL injection flaw discovery and database extraction.', scenario: 'Automated blind SQL injection exploitation, mapping database schemas and dumping tables over rate-limited endpoints.' },
-    'CrackMapExec': { title: 'CrackMapExec AD Exploitation', summary: 'Post-exploitation network scanner for Active Directory domain auditing and lateral movement.', scenario: 'Automated credential spray attacks and lateral movement across Windows domains via SMB and WMI protocols.' },
-    'Mimikatz': { title: 'Mimikatz Windows Credential Extractor', summary: 'Exploit tool to dump passwords, hash keys, and Kerberos tickets from Windows LSASS memory.', scenario: 'Extracted clear-text credentials and generated golden tickets to demonstrate complete domain controller compromises.' },
-    'BloodHound': { title: 'BloodHound Active Directory Mapper', summary: 'Graph theory tool for mapping attack paths inside complex Active Directory domains.', scenario: 'Mapped trust paths and permission relationships, locating shortest paths to Domain Admin status in enterprise environments.' },
-    'Responder': { title: 'Responder NetBIOS Poisoner', summary: 'LLMNR, NBT-NS and MDNS poisoner for harvesting NTLMv2 hashes inside internal networks.', scenario: 'Captured NetBIOS session hashes during internal network penetration tests to gain initial domain access.' },
-    'PoshC2': { title: 'PoshC2 Proxy-Aware C2 Framework', summary: 'Python-based, OPSEC-focused C2 framework with built-in AMSI bypass and proxy-aware comms.', scenario: 'Evaded endpoint detection during red team engagements by routing beacons through legitimate proxy infrastructure.' },
-    'Impacket': { title: 'Impacket Network Protocol Toolkit', summary: 'Python library for low-level network protocol manipulation including SMB, MSRPC, and Kerberos.', scenario: 'Used secretsdump.py and psexec.py to extract NTDS.dit and execute commands remotely on domain controllers.' },
-    'Caldera': { title: 'Caldera Automated Adversary Emulation', summary: 'MITRE ATT&CK-mapped automated adversary emulation platform for structured red team exercises.', scenario: 'Ran end-to-end ATT&CK chain simulations and generated gap analysis reports identifying 23 undetected techniques.' },
-    'TURNt': { title: 'TURNt Covert Traffic Routing', summary: 'Covert C2 routing through web conferencing TURN media servers to exploit enterprise whitelists.', scenario: 'Established high-bandwidth interactive C2 sessions disguised as legitimate video conferencing media traffic.' },
-    'PentAGI': { title: 'PentAGI Autonomous Pentest Agent', summary: 'Multi-agent AI system for fully autonomous penetration testing with knowledge graph memory.', scenario: 'Deployed autonomous recon-to-exploit pipeline that chained Nmap discovery, Metasploit exploitation, and report generation without human input.' },
-    // ── BLUE TEAM ──
-    'Velociraptor': { title: 'Velociraptor Endpoint Forensics', summary: 'Powerful endpoint visibility and hunt tool for querying thousands of endpoints in real-time.', scenario: 'Ran live VQL queries across 500+ endpoints to detect persistence mechanisms during active incident response.' },
-    'Atomic Red Team': { title: 'Atomic Red Team Detection Validation', summary: 'MITRE ATT&CK-mapped test library for validating detection rules and SIEM alert coverage.', scenario: 'Executed T1059 and T1053 atomics to verify Splunk correlation rules triggered correctly for command execution.' },
-    'Sysmon': { title: 'Sysmon Advanced Event Logging', summary: 'Microsoft system monitor providing detailed telemetry on process creation, network connections, and file changes.', scenario: 'Deployed SwiftOnSecurity-tuned Sysmon configs to capture high-fidelity events while filtering background noise.' },
-    'YARA Rules': { title: 'YARA Malware Pattern Matching', summary: 'Pattern-matching engine for identifying and classifying malware families based on binary signatures.', scenario: 'Wrote custom YARA rules to detect polymorphic RAT variants across quarantined samples in automated sandboxes.' },
-    'Suricata': { title: 'Suricata Network IDS/IPS', summary: 'High-performance network intrusion detection and prevention engine with protocol analysis.', scenario: 'Tuned Suricata rulesets to detect lateral movement traffic patterns while maintaining sub-millisecond packet inspection.' },
-    'Splunk SIEM': { title: 'Splunk Security Information & Event Management', summary: 'Enterprise log aggregation, correlation, and threat hunting platform.', scenario: 'Built correlation searches and dashboard panels to detect anomalous authentication patterns across distributed endpoints.' },
-    'TheHive / Cortex': { title: 'TheHive Incident Response Platform', summary: 'Open-source Security Incident Response Platform with built-in analyzer integrations.', scenario: 'Orchestrated multi-analyst case management workflows with automated IOC enrichment via Cortex analyzers.' },
-    'GreyNoise': { title: 'GreyNoise Internet Intelligence', summary: 'Internet-wide scanner that classifies noise from targeted attacks to reduce analyst fatigue.', scenario: 'Filtered 70% of false positive alerts by classifying incoming IPs as known internet scanners vs targeted threats.' },
-    'Wazuh XDR': { title: 'Wazuh Open-Source XDR & SIEM', summary: 'Comprehensive free SIEM and XDR with file integrity monitoring, vulnerability detection, and incident response.', scenario: 'Deployed Wazuh agents fleet-wide for unified FIM, rootkit detection, and CIS compliance scanning across hybrid infrastructure.' },
-    'Arkime': { title: 'Arkime Full Packet Capture', summary: 'Large-scale indexed packet capture and search system for retrospective network traffic analysis.', scenario: 'Performed retrospective PCAP analysis on 48 hours of network traffic to reconstruct full attack chain timelines.' },
-    'OpenCTI': { title: 'OpenCTI Threat Intelligence Platform', summary: 'Modern threat intel platform with relationship visualization and MITRE ATT&CK integration.', scenario: 'Correlated threat actor TTPs across multiple campaigns using OpenCTI graph analysis to predict next-stage attack vectors.' },
-    'MISP': { title: 'MISP IOC Sharing Platform', summary: 'Community-driven malware information sharing platform for indicator of compromise distribution.', scenario: 'Automated IOC ingestion pipelines feeding MISP indicators directly into Suricata and Splunk detection rules.' },
-    'Tines SOAR': { title: 'Tines No-Code Security Orchestration', summary: 'No-code SOAR platform for automating repetitive SOC workflows across disparate security tools.', scenario: 'Built automated playbooks that triaged phishing alerts, extracted IOCs, and quarantined endpoints in under 90 seconds.' },
-    'Falco': { title: 'Falco Runtime Security', summary: 'eBPF-powered cloud-native runtime threat detection for containers and Kubernetes workloads.', scenario: 'Detected container escape attempts and anomalous syscall patterns in production Kubernetes clusters in real-time.' },
-    'Cyber Triage': { title: 'Cyber Triage Automated IR', summary: 'Automated endpoint forensic collection and analysis for rapid incident investigation.', scenario: 'Reduced mean-time-to-investigate from hours to minutes by automating artifact collection across compromised hosts.' },
-    'Maltrail': { title: 'Maltrail Malicious Traffic Detector', summary: 'Open-source traffic detection system matching against known malicious indicators and patterns.', scenario: 'Detected beaconing behavior to known C2 infrastructure by correlating DNS query patterns against threat feeds.' },
-    // ── OSINT & RECON ──
-    'Nmap / Masscan': { title: 'Network Discovery & Port Scanning', summary: 'Tools for target host discovery, large range sweeping, and live service enumeration.', scenario: 'Swept public server IP ranges during target discovery, identifying unpatched services in under a minute with Masscan.' },
-    'Nuclei Scanner': { title: 'Nuclei Template-Based Vuln Scanner', summary: 'YAML-template-based vulnerability scanner for rapid, customizable web service testing.', scenario: 'Wrote custom nuclei templates to detect newly disclosed zero-days across large enterprise attack surfaces.' },
-    'Subfinder / Amass': { title: 'Subdomain Enumeration Engines', summary: 'Passive and active subdomain discovery tools for comprehensive attack surface mapping.', scenario: 'Chained Subfinder with httpx and Nuclei to automate discovery-to-vulnerability pipelines across bug bounty scopes.' },
-    'Maltego': { title: 'Maltego Link Analysis Platform', summary: 'Graph-based OSINT platform for visualizing complex relationships between domains, IPs, and entities.', scenario: 'Mapped organizational infrastructure relationships to identify shadow IT and forgotten cloud assets.' },
-    'SpiderFoot': { title: 'SpiderFoot OSINT Automation', summary: 'Automation framework integrating 100+ data sources for comprehensive target reconnaissance.', scenario: 'Ran automated recon pipelines correlating domain registrations, email addresses, and social media profiles.' },
-    'Shodan / Censys': { title: 'Internet-Connected Device Search', summary: 'Search engines for discovering exposed services, IoT devices, and misconfigured infrastructure.', scenario: 'Identified unprotected MongoDB instances and exposed Kubernetes dashboards across target IP ranges.' },
-    'BBOT': { title: 'BBOT Recursive Internet Scanner', summary: 'Modular, recursive internet scanner for large-scale attack surface mapping and OSINT.', scenario: 'Mapped complete external attack surfaces including forgotten subdomains, cloud buckets, and exposed APIs.' },
-    'Maigret': { title: 'Maigret Username Intelligence', summary: 'Advanced username enumeration across thousands of sites with cross-account correlation.', scenario: 'Traced target usernames across 2000+ platforms to build comprehensive digital footprint profiles.' },
-    'GitDorker': { title: 'GitDorker Secret Scanner', summary: 'GitHub reconnaissance tool for finding leaked secrets, API keys, and configuration files.', scenario: 'Discovered hardcoded AWS keys and database credentials in public repositories during bug bounty engagements.' },
-    'Photon Crawler': { title: 'Photon High-Speed OSINT Crawler', summary: 'Ultra-fast crawler extracting URLs, endpoints, JS files, and hidden parameters from targets.', scenario: 'Extracted hidden API endpoints and authentication tokens from minified JavaScript bundles on target domains.' },
-    'EyeDex': { title: 'EyeDex Exposed File Search', summary: 'Specialized search engine for publicly exposed files across FTP servers and cloud storage.', scenario: 'Discovered misconfigured backup archives and database dumps exposed on forgotten FTP servers during recon.' },
-    'RECOX': { title: 'RECOX All-in-One Recon Toolkit', summary: 'Consolidated recon toolkit combining subdomain enumeration, port scanning, WHOIS, and DNS lookups.', scenario: 'Streamlined initial asset discovery phase into a single automated pipeline, reducing recon time by 60%.' },
-    'WhatsMyName': { title: 'WhatsMyName Username OSINT', summary: 'Cross-platform username enumeration for mapping entity digital footprints across hundreds of sites.', scenario: 'Identified developer accounts and secondary infrastructure by correlating usernames across code hosting platforms.' },
-    'httpx': { title: 'httpx Fast HTTP Prober', summary: 'High-speed HTTP probing toolkit for live host detection, tech fingerprinting, and status checking.', scenario: 'Filtered 10,000+ subdomains to 200 live targets with tech stack identification in under 2 minutes.' },
-    // ── REVERSE ENGINEERING ──
-    'Ghidra Pro': { title: 'Ghidra Binary Decompiler', summary: 'NSA-developed professional grade software reverse engineering suite with built-in decompiler.', scenario: 'Reverse engineered target ELF and PE32 binaries, locating buffer size restrictions, stack canary structures, and memory leak flags.' },
-    'IDA Pro': { title: 'IDA Pro Interactive Disassembler', summary: 'Industry standard disassembler and debugger with the most extensive processor architecture support.', scenario: 'Performed deep analysis of packed malware samples, identifying custom encryption routines and anti-debugging checks.' },
-    'Binary Ninja': { title: 'Binary Ninja Modern RE Platform', summary: 'Modern reverse engineering platform with powerful intermediate language and automation APIs.', scenario: "Automated vulnerability pattern detection across firmware images using Binary Ninja's HLIL scripting API." },
-    'Radare2 / Cutter': { title: 'Radare2 Extensible RE Framework', summary: 'Highly flexible command-line framework for binary analysis with Cutter GUI frontend.', scenario: 'Scripted automated binary diffing workflows to identify patched vulnerabilities across firmware version releases.' },
-    'x64dbg': { title: 'x64dbg Windows Debugger', summary: 'Open-source Windows debugger for dynamic analysis of 32-bit and 64-bit executables.', scenario: 'Traced malware unpacking routines in real-time, dumping decrypted payloads from memory at OEP breakpoints.' },
-    'GDB + GEF': { title: 'GDB Enhanced Features Debugger', summary: 'GNU Debugger with GEF extension for exploit development and binary analysis on Linux.', scenario: 'Analyzed register values at breakpoint offsets to map stack buffer corruption and ROP chain entry points.' },
-    'Binwalk': { title: 'Binwalk Firmware Extractor', summary: 'Firmware analysis tool for scanning, extracting, and reverse engineering embedded file systems.', scenario: 'Extracted hidden file systems from IoT device firmware images, discovering hardcoded credentials and debug interfaces.' },
-    'PeStudio': { title: 'PeStudio PE File Analyzer', summary: 'Quick triage utility for Windows executables analyzing imports, strings, entropy, and indicators.', scenario: 'Triaged suspicious executables by analyzing import tables and entropy scores to identify packed malware samples.' },
-    'Angr': { title: 'Angr Symbolic Execution Engine', summary: 'Python framework for binary analysis using symbolic execution and constraint solving.', scenario: 'Used symbolic execution to automatically discover input sequences that trigger buffer overflows in CTF challenges.' },
-    'Firmware Ninja': { title: 'Firmware Ninja FW Analysis Plugin', summary: 'Binary Ninja extension for constructing memory maps and interpreting hardware peripheral interactions.', scenario: 'Mapped embedded device memory regions and decoded peripheral register access patterns in bare-metal firmware.' },
-    'ONEKEY': { title: 'ONEKEY Automated FW Security', summary: 'Automated firmware analysis platform for uncovering vulnerabilities in RTOS and IoT devices at scale.', scenario: 'Scanned 50+ IoT firmware images in parallel, identifying default credentials and known CVEs across device families.' },
-    'Saleae Logic': { title: 'Saleae Logic Protocol Analyzer', summary: 'Hardware signal capture and analysis for SPI, I2C, UART, and other embedded communication protocols.', scenario: 'Captured and decoded UART debug output from IoT devices to extract boot sequences and authentication handshakes.' },
-    // ── CLOUD & INFRA ──
-    'Proxmox VE': { title: 'Proxmox VE Hypervisor Platform', summary: 'Enterprise-grade open-source virtualization platform for building isolated security labs.', scenario: 'Built virtual lab network segments to deploy active malware nodes under complete host isolation.' },
-    'Docker Sandboxes': { title: 'Docker Container Isolation', summary: 'Containerized software deployment for secure resource sandboxing and reproducible environments.', scenario: 'Ran automated exploit scripts inside disposable Docker containers, restricting target filesystem access completely.' },
-    'Kali Linux': { title: 'Kali Linux Penetration Testing OS', summary: 'Security-focused operating system with 600+ pre-compiled penetration testing tools.', scenario: 'Maintained customized Kali images configured with custom proxy pipelines for continuous bug bounty operations.' },
-    'Prowler': { title: 'Prowler Cloud Security Auditor', summary: 'Multi-cloud security posture assessment tool mapping to CIS, NIST, and PCI-DSS frameworks.', scenario: 'Audited AWS accounts identifying 47 critical IAM misconfigurations and over-privileged service roles.' },
-    'Pacu': { title: 'Pacu AWS Exploitation Framework', summary: 'Open-source framework specifically for AWS penetration testing and privilege escalation.', scenario: 'Discovered and exploited IAM privilege escalation paths from read-only roles to full admin access in test accounts.' },
-    'Scout Suite': { title: 'Scout Suite Multi-Cloud Auditor', summary: 'Multi-cloud auditing tool providing comprehensive security posture reports for AWS, Azure, GCP.', scenario: 'Generated cross-cloud compliance reports identifying S3 bucket misconfigs and Azure AD conditional access gaps.' },
-    'PfSense IDS': { title: 'PfSense Firewall & IDS Router', summary: 'Custom security firewall system with intrusion detection and network segmentation.', scenario: 'Configured strict network rules to isolate malware detonation segments from communicating with public interfaces.' },
-    'Wireshark': { title: 'Wireshark Protocol Analyzer', summary: 'SSL keylog integration for deep packet inspection and encrypted traffic analysis.', scenario: 'Decrypted and analyzed TLS-encrypted command streams, identifying C2 beaconing patterns in captured traffic.' },
-    'Terraform': { title: 'Terraform IaC Security Scanning', summary: 'Infrastructure as Code tool for auditing cloud resource configurations before deployment.', scenario: 'Scanned Terraform plans with tfsec to catch security misconfigurations before they reached production environments.' },
-    'Routersploit': { title: 'Routersploit IoT Exploitation', summary: 'Dedicated framework for exploiting vulnerabilities in embedded devices, routers, and IoT firmware.', scenario: 'Exploited default credentials and known CVEs on home routers to demonstrate IoT attack surface risks.' },
-    'Kubescape': { title: 'Kubescape K8s Risk Analysis', summary: 'Comprehensive Kubernetes risk analysis, security compliance, and misconfiguration scanning.', scenario: 'Identified 12 critical RBAC misconfigurations and exposed service accounts across production EKS clusters.' },
-    'Kube-hunter': { title: 'Kube-hunter K8s Attack Simulation', summary: 'Kubernetes penetration testing tool that simulates real-world attack vectors against clusters.', scenario: 'Discovered exposed kubelet APIs and unauthenticated etcd endpoints in staging Kubernetes deployments.' },
-    'Peirates': { title: 'Peirates K8s Post-Exploitation', summary: 'Specialized post-exploitation toolkit for Kubernetes environments after initial cluster access.', scenario: 'Escalated from compromised pod to cluster-admin by exploiting mounted service account tokens and RBAC gaps.' },
-    // ── AI / ML SECURITY ──
-    'LoRA / QLoRA': { title: 'LoRA/QLoRA Fine-Tuning', summary: 'Parameter-efficient fine-tuning technique for adapting large language models to security tasks.', scenario: 'Fine-tuned local Llama-3-8B on static analysis datasets to automatically classify buffer overflow patterns in C code.' },
-    'vLLM Inference': { title: 'vLLM High-Throughput Inference', summary: 'High-throughput LLM serving engine with PagedAttention for sub-second token generation.', scenario: 'Deployed quantized models locally, serving real-time log anomaly detection with sub-200ms response times.' },
-    'Llama.cpp': { title: 'Llama.cpp Model Quantization', summary: 'C/C++ port of Llama inference supporting GGUF quantization for local hardware deployment.', scenario: 'Quantized LLM weights to 4-bit GGUF format, enabling fast security model execution on standard developer laptops.' },
-    'LangGraph Agents': { title: 'LangGraph Multi-Agent Orchestration', summary: 'Library for building stateful, multi-agent workflows with loops and conditional decisions.', scenario: 'Engineered multi-agent loops that run code linters, generate bug fixes, and verify compilation stability autonomously.' },
-    'NeMo Guardrails': { title: 'NeMo AI Safety Guardrails', summary: 'Toolkit for adding safety rules, prompt sanitization, and dialog flows to LLM APIs.', scenario: 'Implemented input/output rails to block adversarial prompt injections targeting internal chat interfaces.' },
-    'HuggingFace': { title: 'HuggingFace Transformers Library', summary: 'ML API library for running state-of-the-art tokenizers, model weights, and fine-tuning pipelines.', scenario: 'Built tokenization classification pipelines to automatically categorize and triage incoming exploit payloads.' },
-    'PyTorch': { title: 'PyTorch Deep Learning Framework', summary: 'Python-based machine learning library for tensor computation and neural network training.', scenario: 'Trained anomaly detection classifiers on network flow datasets to identify beaconing traffic patterns.' },
-    'Promptfoo': { title: 'Promptfoo LLM Red Teaming', summary: 'Open-source tool for testing and fuzzing LLM prompts to identify security gaps in AI systems.', scenario: 'Fuzzed production LLM endpoints with adversarial prompts to identify jailbreak vectors and data exfiltration paths.' },
-    'Giskard': { title: 'Giskard AI Agent Security Testing', summary: 'Platform for multi-turn stress testing of LLM agents for hallucinations, bias, and safety.', scenario: 'Performed dynamic multi-turn stress tests on agentic AI systems to identify context-dependent failure modes.' },
-    'METATRON': { title: 'METATRON Offline AI Pentest Assistant', summary: 'Privacy-first AI penetration testing assistant running local LLMs via Ollama with zero data exfiltration.', scenario: 'Ran fully offline agentic pentest loops against lab targets, generating professional PDF reports without any cloud dependency.' },
-    'Confident AI': { title: 'Confident AI Automated Testing', summary: 'Automated adversarial AI testing with CI/CD integration for 50+ vulnerability categories.', scenario: 'Integrated into deployment pipelines to automatically test LLM endpoints for prompt injection and data leakage before production release.' },
-    'Rebuff AI': { title: 'Rebuff AI Prompt Injection Defense', summary: 'Self-hardening prompt injection detection framework using multi-layer LLM defense.', scenario: 'Deployed canary token detection and heuristic analysis layers to catch injection attempts across customer-facing chatbots.' },
-  };
-
-  /* ═══════════════════════════════════════
-     SKILL DATA — category → skill list
-     ═══════════════════════════════════════ */
-  const skillData = {
-    redteam: {
-      title: 'Red Team Operations',
-      consoleMsg: 'status: active // adversary simulation framework loaded...',
-      skills: [
-        'Metasploit', 'Cobalt Strike', 'Sliver C2', 'Mythic C2',
-        'AdaptixC2', 'Evilginx3', 'Burp Suite Pro', 'Sqlmap',
-        'CrackMapExec', 'Mimikatz', 'BloodHound', 'Responder',
-        'PoshC2', 'Impacket', 'Caldera', 'TURNt', 'PentAGI'
-      ]
-    },
-    blueteam: {
-      title: 'Blue Team Defense',
-      consoleMsg: 'status: monitoring // detection validation pipeline synchronized.',
-      skills: [
-        'Velociraptor', 'Atomic Red Team', 'Sysmon', 'YARA Rules',
-        'Suricata', 'Splunk SIEM', 'TheHive / Cortex', 'GreyNoise',
-        'Wazuh XDR', 'Arkime', 'OpenCTI', 'MISP',
-        'Tines SOAR', 'Falco', 'Cyber Triage', 'Maltrail'
-      ]
-    },
-    recon: {
-      title: 'OSINT & Reconnaissance',
-      consoleMsg: 'status: scanning // passive enumeration channels active...',
-      skills: [
-        'Nmap / Masscan', 'Nuclei Scanner', 'Subfinder / Amass', 'Maltego',
-        'SpiderFoot', 'Shodan / Censys', 'BBOT', 'Maigret',
-        'GitDorker', 'Photon Crawler', 'EyeDex', 'RECOX',
-        'WhatsMyName', 'httpx'
-      ]
-    },
-    reversing: {
-      title: 'Reverse Engineering',
-      consoleMsg: 'status: disassembly // binary decompilation targets queued...',
-      skills: [
-        'Ghidra Pro', 'IDA Pro', 'Binary Ninja', 'Radare2 / Cutter',
-        'x64dbg', 'GDB + GEF', 'Binwalk', 'PeStudio',
-        'Angr', 'Firmware Ninja', 'ONEKEY', 'Saleae Logic'
-      ]
-    },
-    cloud: {
-      title: 'Cloud & Infrastructure',
-      consoleMsg: 'status: hypervisor isolation active // cloud audit running...',
-      skills: [
-        'Proxmox VE', 'Docker Sandboxes', 'Kali Linux', 'Prowler',
-        'Pacu', 'Scout Suite', 'PfSense IDS', 'Wireshark',
-        'Terraform', 'Routersploit', 'Kubescape', 'Kube-hunter',
-        'Peirates'
-      ]
-    },
-    aiml: {
-      title: 'AI / ML Security',
-      consoleMsg: 'status: model weights loaded // tokenized safety gates synchronized.',
-      skills: [
-        'LoRA / QLoRA', 'vLLM Inference', 'Llama.cpp', 'LangGraph Agents',
-        'NeMo Guardrails', 'HuggingFace', 'PyTorch', 'Promptfoo',
-        'Giskard', 'METATRON', 'Confident AI', 'Rebuff AI'
-      ]
-    }
-  };
 
   const currentTab = skillData[activeTab];
 

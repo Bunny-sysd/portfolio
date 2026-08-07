@@ -5,6 +5,7 @@ import HeroSection from './components/HeroSection';
 import ActiveObjectives from './components/ActiveObjectives';
 import SysArmament from './components/SysArmament';
 import MutagenCard from './components/MutagenCard';
+import InteractiveBackground from './components/InteractiveBackground';
 
 // Mount Hero Section
 const heroRoot = document.getElementById('react-hero-section');
@@ -42,6 +43,16 @@ if (mutagenRoot) {
   ReactDOM.createRoot(mutagenRoot).render(
     <React.StrictMode>
       <MutagenCard />
+    </React.StrictMode>
+  );
+}
+
+// Mount Interactive 3D Background
+const bgRoot = document.getElementById('react-3d-background');
+if (bgRoot) {
+  ReactDOM.createRoot(bgRoot).render(
+    <React.StrictMode>
+      <InteractiveBackground />
     </React.StrictMode>
   );
 }
