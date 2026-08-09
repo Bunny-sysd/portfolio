@@ -1171,11 +1171,11 @@ function playSystemAlarmBeep() {
     },
     "proj-stock": {
       title: "SignalHub Market AI Pipeline",
-      meta: "DATA_PIPELINE / LIVE_EVAL // 2025",
-      desc: "SignalHub builds high-frequency stock parsing micro-systems. It streams market feed variables from live market APIs directly to Firebase Realtime Databases. Integrated triggers invoke agentic models to analyze price indicators and output trading momentum buy/sell signals and risk scores in real-time.",
-      tags: ["Firebase Cloud", "Live Stock API", "LLM Prompting", "JSON Pipeline", "WebSockets"],
-      btnText: "VIEW_SPECS",
-      repoUrl: "https://github.com/Bunny-sysd/portfolio"
+      meta: "LIVE_WEB_APP / FIREBASE // 2025",
+      desc: "Live AI-powered market intelligence dashboard deployed at signalhub-e79ba.web.app. Streams market feed variables from live APIs directly to Firebase Realtime Databases. Integrated triggers invoke agentic models to analyze price indicators and output trading momentum buy/sell signals and risk scores in real-time.",
+      tags: ["Live Web App", "Firebase Cloud", "Stock API", "LLM Prompting", "JSON Pipeline", "WebSockets"],
+      btnText: "LAUNCH_LIVE_APP",
+      repoUrl: "https://signalhub-e79ba.web.app"
     },
     "proj-thm": {
       title: "TryHackMe CTF Labs",

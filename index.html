@@ -235,52 +235,24 @@
             <div class="glitch-flash"></div>
             <div class="project-card-header">
               <span class="project-year">2025</span>
-              <span class="project-category">QUANT_PIPELINE / LIVE_EVAL</span>
+              <span class="project-category">LIVE_APP / FIREBASE</span>
             </div>
-            <div class="project-visual stock-visual" style="position: relative; background: #05070c; border-bottom: 1px solid var(--border); overflow: hidden; padding: 0.85rem; display: flex; flex-direction: column; justify-content: space-between;">
-              
-              <!-- Ticker Bar -->
-              <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(0, 255, 102, 0.04); padding: 0.4rem 0.75rem; border-radius: 4px; border: 1px solid rgba(0, 255, 102, 0.15);">
-                <div style="display: flex; gap: 8px; font-family: var(--font-mono); font-size: 0.68rem;">
-                  <span style="color: var(--green); font-weight: bold;">NVDA $138.40 (+4.2%)</span>
-                  <span style="color: var(--cyan);">TSLA $248.10 (+3.7%)</span>
-                  <span style="color: #ffbd2e;">MSFT $442.50 (+2.1%)</span>
-                </div>
-                <span class="status-dot animate-pulse" style="width: 7px; height: 7px; border-radius: 50%; background: var(--green); box-shadow: 0 0 8px var(--green);"></span>
-              </div>
-
-              <!-- Real-time SVG Stock Area + Candlestick Chart -->
-              <div class="stock-chart" style="position: relative; height: 85px; width: 100%; margin: 0.3rem 0;">
-                <svg viewBox="0 0 400 85" preserveAspectRatio="none" style="width: 100%; height: 100%;">
-                  <defs>
-                    <linearGradient id="stockAreaGrad" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stop-color="#00ff66" stop-opacity="0.35" />
-                      <stop offset="100%" stop-color="#00ff66" stop-opacity="0" />
-                    </linearGradient>
-                  </defs>
-                  <path d="M0,65 Q50,40 100,55 T200,25 T300,35 T400,10 L400,85 L0,85 Z" fill="url(#stockAreaGrad)" />
-                  <path d="M0,65 Q50,40 100,55 T200,25 T300,35 T400,10" fill="none" stroke="#00ff66" stroke-width="2.5" />
-                  <circle cx="400" cy="10" r="5" fill="#00ff66" style="filter: drop-shadow(0 0 6px #00ff66);" />
-                </svg>
-              </div>
-
-              <!-- Live LLM Signal Telemetry Stream -->
-              <div style="background: #020306; border-radius: 4px; padding: 0.45rem 0.75rem; font-family: var(--font-mono); font-size: 0.65rem; color: var(--text-dim); border: 1px solid rgba(0, 255, 102, 0.15); display: flex; justify-content: space-between; align-items: center;">
-                <span><span style="color: var(--green); font-weight: bold;">[BUY_CONFIRMED]</span> Alpha Signal: 94.2% Confidence</span>
-                <span style="color: var(--cyan);">Latency: 42ms</span>
-              </div>
+            <div class="project-visual stock-visual" style="position: relative; background: #05070c; border-bottom: 1px solid var(--border); overflow: hidden; padding: 0;">
+              <!-- Embedded Live SignalHub Web App -->
+              <iframe src="https://signalhub-e79ba.web.app" style="width: 100%; height: 100%; border: none; background: #05070c; pointer-events: auto;" title="SignalHub AI Stock Dashboard" loading="lazy"></iframe>
             </div>
 
             <div class="project-details">
               <h3 class="project-title text-white decrypt-trigger" data-text="SignalHub Market AI Pipeline">SignalHub Market AI Pipeline</h3>
               <p class="project-desc text-dim">
-                Real-time financial data pipeline ingesting live market feeds, parsing JSON sentiment streams, and prompting LLMs dynamically at runtime to generate momentum trading signals and risk assessments.
+                Live AI-powered market intelligence dashboard deployed at <span class="highlight">signalhub-e79ba.web.app</span>. Ingests real-time financial feeds, parses JSON sentiment indicators, and executes LLM agent evaluations for trading signals.
               </p>
               <div class="project-tags">
-                <span>Firebase Cloud</span><span>Live Stock API</span><span>LLM Prompting</span><span>JSON Pipeline</span><span>WebSockets</span>
+                <span>Live Web App</span><span>Firebase Cloud</span><span>Stock API</span><span>LLM Prompting</span><span>JSON Pipeline</span>
               </div>
-              <div class="project-links mt-4">
-                <a href="https://github.com/Bunny-sysd/portfolio" target="_blank" rel="noopener noreferrer" class="proj-link live-btn">View Architecture Specs</a>
+              <div class="project-links mt-4" style="display: flex; gap: 10px; flex-wrap: wrap;">
+                <a href="https://signalhub-e79ba.web.app" target="_blank" rel="noopener noreferrer" class="proj-link live-btn">Launch Live App ↗</a>
+                <a href="https://github.com/Bunny-sysd/portfolio" target="_blank" rel="noopener noreferrer" class="proj-link live-btn" style="background: rgba(255,255,255,0.05); border-color: var(--border);">Architecture Specs</a>
               </div>
             </div>
           </div>
