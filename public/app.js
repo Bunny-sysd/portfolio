@@ -1202,6 +1202,16 @@ function playSystemAlarmBeep() {
 
   let activeTypewriters = [];
 
+  function escapeHTML(str) {
+    if (typeof str !== 'string') return '';
+    return str
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
+  }
+
   function openModal(id) {
     window.openProjectModal = openModal;
     const data = projectsDb[id];
@@ -1211,10 +1221,15 @@ function playSystemAlarmBeep() {
     activeTypewriters.forEach(t => clearInterval(t));
     activeTypewriters = [];
 
+    const safeTitle = escapeHTML(data.title);
+    const safeMeta  = escapeHTML(data.meta);
+    const safeDesc  = escapeHTML(data.desc || '');
+    const safeBtn   = escapeHTML(data.btnText || 'CLOSE_SPEC');
+
     if (data.isSandbox) {
       modalBody.innerHTML = `
-        <div class="modal-body-title">${data.title}</div>
-        <div class="modal-body-meta">${data.meta}</div>
+        <div class="modal-body-title">${safeTitle}</div>
+        <div class="modal-body-meta">${safeMeta}</div>
         <div class="sandbox-split-container">
           <div class="sandbox-panel">
             <div class="panel-header">
@@ -1232,10 +1247,10 @@ function playSystemAlarmBeep() {
           </div>
         </div>
         <div class="modal-body-tags mt-4">
-          ${data.tags.map(tag => `<span>${tag}</span>`).join('')}
+          ${data.tags.map(tag => `<span>${escapeHTML(tag)}</span>`).join('')}
         </div>
         <div class="mt-4">
-          <button class="modal-action-btn" id="modalDismissBtn">${data.btnText}</button>
+          <button class="modal-action-btn" id="modalDismissBtn">${safeBtn}</button>
         </div>
       `;
 
@@ -1244,14 +1259,14 @@ function playSystemAlarmBeep() {
 
     } else {
       modalBody.innerHTML = `
-        <div class="modal-body-title">${data.title}</div>
-        <div class="modal-body-meta">${data.meta}</div>
-        <p class="modal-body-desc">${data.desc}</p>
+        <div class="modal-body-title">${safeTitle}</div>
+        <div class="modal-body-meta">${safeMeta}</div>
+        <p class="modal-body-desc">${safeDesc}</p>
         <div class="modal-body-tags">
-          ${data.tags.map(tag => `<span>${tag}</span>`).join('')}
+          ${data.tags.map(tag => `<span>${escapeHTML(tag)}</span>`).join('')}
         </div>
         <div class="mt-4" style="display: flex; gap: 10px; flex-wrap: wrap;">
-          ${data.repoUrl ? `<a href="${data.repoUrl}" target="_blank" rel="noopener noreferrer" class="modal-action-btn" style="text-decoration: none; display: inline-block;">${data.btnText || 'VIEW_REPOSITORY'}</a>` : ''}
+          ${data.repoUrl ? `<a href="${escapeHTML(data.repoUrl)}" target="_blank" rel="noopener noreferrer" class="modal-action-btn" style="text-decoration: none; display: inline-block;">${safeBtn}</a>` : ''}
           <button class="modal-action-btn" id="modalDismissBtn" style="background: rgba(255,255,255,0.05); border-color: var(--border);">CLOSE_SPEC</button>
         </div>
       `;

@@ -16,6 +16,8 @@
   <meta name="twitter:description" content="I build autonomous AI tools that find and fix zero-day vulnerabilities. Creator of Mutagen." />
   <meta name="twitter:image" content="og-image.png" />
   <meta name="theme-color" content="#0A0A0C" />
+  <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+  <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
@@ -72,8 +74,8 @@
       <a href="#contact" class="mobile-link" data-close>Contact</a>
     </nav>
     <div class="mobile-socials">
-      <a href="https://tryhackme.com/p/354221973" target="_blank" rel="noreferrer">↗ TryHackMe</a>
-      <a href="https://github.com/Bunny-sysd" target="_blank" rel="noreferrer">↗ GitHub</a>
+      <a href="https://tryhackme.com/p/354221973" target="_blank" rel="noopener noreferrer">↗ TryHackMe</a>
+      <a href="https://github.com/Bunny-sysd" target="_blank" rel="noopener noreferrer">↗ GitHub</a>
     </div>
   </div>
 
@@ -239,7 +241,7 @@
             </div>
             <div class="project-visual stock-visual" style="position: relative; background: #05070c; border-bottom: 1px solid var(--border); overflow: hidden; padding: 0;">
               <!-- Embedded Live SignalHub Web App -->
-              <iframe src="https://signalhub-e79ba.web.app" style="width: 100%; height: 100%; border: none; background: #05070c; pointer-events: auto;" title="SignalHub AI Stock Dashboard" loading="lazy"></iframe>
+              <iframe src="https://signalhub-e79ba.web.app" style="width: 100%; height: 100%; border: none; background: #05070c; pointer-events: auto;" title="SignalHub AI Stock Dashboard" loading="lazy" sandbox="allow-scripts allow-same-origin allow-popups allow-forms" referrerpolicy="strict-origin-when-cross-origin"></iframe>
             </div>
 
             <div class="project-details">
