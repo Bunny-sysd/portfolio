@@ -1,206 +1,389 @@
-/* ═══════════════════════════════════════════
-   0xPortfolio — three-bg.js
-   Scroll-Driven Shifting Focal Core Portal
-   Uses GSAP & ScrollTrigger for 3D Camera Journeys
-   Optimized for Desktop & Mobile Viewports
-   ═══════════════════════════════════════════ */
+/* ═════════════════════════════════════════════════════════════════════
+   0xPortfolio — three-bg.js (v2.1 Adaptive Universal Core)
+   Scroll-Driven Holographic Cyber Matrix with GLSL Shaders
+   - Ultra-Lightweight Adaptive Performance Engine
+   - Automatic Software Renderer & Integrated GPU Detection
+   - Dynamic FPS Throttling & Low-Power Auto-Degradation
+   - Mobile Touch & Low-End Device Zero-Lag Guarantee
+   - Live CRT Theme Synchronization (Green / Amber / Cyan / Monokai)
+   - 100% Client-Side Isolated GPU Acceleration + Auto-Sleep
+   ═════════════════════════════════════════════════════════════════════ */
 
-(function initThreeBackground() {
-  // Check WebGL support
-  function isWebGLSupported() {
+(function initThreeCyberMatrix() {
+  'use strict';
+
+  // 1. WebGL Compatibility & Hardware Capability Check
+  function getWebGLContext(canvasEl) {
     try {
-      const canvas = document.createElement('canvas');
-      return !!(window.WebGLRenderingContext && (canvas.getContext('webgl') || canvas.getContext('experimental-webgl')));
+      return canvasEl.getContext('webgl', { powerPreference: 'high-performance', antialias: false }) ||
+             canvasEl.getContext('experimental-webgl');
     } catch (e) {
-      return false;
+      return null;
     }
-  }
-
-  if (!isWebGLSupported()) {
-    console.warn('> WebGL not supported. Falling back to static cyber grid.');
-    document.body.classList.add('no-webgl');
-    return;
   }
 
   const canvas = document.getElementById('bgCanvas');
   if (!canvas) return;
 
-  // Scene setup
-  const scene = new THREE.Scene();
-  // Mobile/Performance detection — checked early so FOV, scale, spacing all adapt
-  const isMobile = /iPhone|iPad|Android/i.test(navigator.userAgent) || window.innerWidth < 768;
+  const testGl = getWebGLContext(canvas);
+  if (!testGl) {
+    console.warn('> [0xPortfolio] WebGL unsupported. Applying static cyber-matrix fallback.');
+    document.body.classList.add('no-webgl');
+    return;
+  }
 
-  scene.fog = new THREE.FogExp2('#02040a', isMobile ? 0.016 : 0.022); // thinner fog on mobile for dome visibility
+  // Detect Software / Non-GPU Renderers (e.g. SwiftShader, LLVMpipe, Virtual Machine adapters)
+  let isSoftwareRenderer = false;
+  try {
+    const debugInfo = testGl.getExtension('WEBGL_debug_renderer_info');
+    if (debugInfo) {
+      const unmaskedRenderer = testGl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL).toLowerCase();
+      if (/swiftshader|llvmpipe|software|mesa|microsoft basic render|virtualbox|vmware/i.test(unmaskedRenderer)) {
+        isSoftwareRenderer = true;
+        console.info('> [0xPortfolio] Software / Non-GPU renderer detected. Activating low-power profile.');
+      }
+    }
+  } catch (e) {}
+
+  // 2. Hardware & Viewport Detection
+  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth < 768;
+  const isLowPowerDevice = isSoftwareRenderer || isMobile;
+
+  // Adaptive DPR capping: strictly 1.0 for low-end / mobile / software renderers; max 1.35 on desktop
+  const baseDPR = isLowPowerDevice ? 1.0 : Math.min(window.devicePixelRatio || 1, 1.35);
+
+  // 3. Scene, Camera & Renderer Setup
+  const scene = new THREE.Scene();
+  const baseFogColor = new THREE.Color('#02040a');
+  scene.fog = new THREE.FogExp2(baseFogColor, isMobile ? 0.016 : 0.020);
+
   const camera = new THREE.PerspectiveCamera(
-    isMobile ? 75 : 60,   // wider FOV on portrait screens so domes actually fit
+    isMobile ? 75 : 60,
     window.innerWidth / window.innerHeight,
-    0.1, 150
+    0.1,
+    180
   );
+
   const renderer = new THREE.WebGLRenderer({
     canvas: canvas,
     alpha: true,
-    antialias: !isMobile   // skip AA on mobile for perf
+    antialias: !isLowPowerDevice,
+    powerPreference: 'high-performance',
+    precision: isLowPowerDevice ? 'mediump' : 'highp'
   });
 
-  renderer.setPixelRatio(isMobile ? 1.0 : Math.min(window.devicePixelRatio, 2));
+  renderer.setPixelRatio(baseDPR);
   renderer.setSize(window.innerWidth, window.innerHeight);
 
-  // Main interactive group containing all visual objects
   const mainGroup = new THREE.Group();
   scene.add(mainGroup);
 
-  // Color Definitions (Cyber Theme)
-  const colorGreen = new THREE.Color('#00ff41'); // Piercing terminal green
-  const colorBlue = new THREE.Color('#008822');  // Dark forest cyber green
-  const colorCyan = new THREE.Color('#ffffff');  // Luminous white contrast
+  // 4. CRT Theme Palettes & Dynamic Interpolation
+  const themePalettes = {
+    green: {
+      primary: new THREE.Color('#00ff41'),
+      secondary: new THREE.Color('#008822'),
+      highlight: new THREE.Color('#ffffff'),
+      fog: new THREE.Color('#02040a')
+    },
+    amber: {
+      primary: new THREE.Color('#ffb000'),
+      secondary: new THREE.Color('#996600'),
+      highlight: new THREE.Color('#fff4cc'),
+      fog: new THREE.Color('#080502')
+    },
+    cyan: {
+      primary: new THREE.Color('#00e5ff'),
+      secondary: new THREE.Color('#006688'),
+      highlight: new THREE.Color('#e0ffff'),
+      fog: new THREE.Color('#02060a')
+    },
+    monokai: {
+      primary: new THREE.Color('#f92672'),
+      secondary: new THREE.Color('#881144'),
+      highlight: new THREE.Color('#ffe4ec'),
+      fog: new THREE.Color('#0a0206')
+    }
+  };
 
-  // Core configurations mapping to the 6 sections in index.html
-  // Mobile: center all domes on x-axis, use compressed Z-spacing, smaller scales
-  const mobileScale = 0.7;  // domes are 70% size on mobile
+  function getCurrentThemeKey() {
+    return document.documentElement.dataset.theme || 'green';
+  }
+
+  let activeThemeKey = getCurrentThemeKey();
+  let currentColors = {
+    primary: themePalettes[activeThemeKey]?.primary.clone() || themePalettes.green.primary.clone(),
+    secondary: themePalettes[activeThemeKey]?.secondary.clone() || themePalettes.green.secondary.clone(),
+    highlight: themePalettes[activeThemeKey]?.highlight.clone() || themePalettes.green.highlight.clone(),
+    fog: themePalettes[activeThemeKey]?.fog.clone() || themePalettes.green.fog.clone()
+  };
+
+  // 5. Core Domes Configurations (Mapping to Section Waypoints)
+  const mobileScale = 0.72;
   const coreConfigs = isMobile ? [
-    { name: 'hero',     color: colorGreen, scale: 1.6 * mobileScale, x: 0.0, y: 0.0,   z: 0.0 },
-    { name: 'about',    color: colorBlue,  scale: 1.3 * mobileScale, x: 0.0, y: -5.0,  z: -8.0 },
-    { name: 'skills',   color: colorGreen, scale: 1.4 * mobileScale, x: 0.0, y: -10.0, z: -16.0 },
-    { name: 'projects', color: colorBlue,  scale: 1.2 * mobileScale, x: 0.0, y: -15.0, z: -24.0 },
-    { name: 'certs',    color: colorCyan,  scale: 1.3 * mobileScale, x: 0.0, y: -20.0, z: -32.0 },
-    { name: 'contact',  color: colorCyan,  scale: 1.5 * mobileScale, x: 0.0, y: -25.0, z: -40.0 }
+    { name: 'hero',     scale: 1.6 * mobileScale, x: 0.0, y: 0.0,   z: 0.0 },
+    { name: 'about',    scale: 1.3 * mobileScale, x: 0.0, y: -5.0,  z: -8.0 },
+    { name: 'skills',   scale: 1.4 * mobileScale, x: 0.0, y: -10.0, z: -16.0 },
+    { name: 'projects', scale: 1.2 * mobileScale, x: 0.0, y: -15.0, z: -24.0 },
+    { name: 'certs',    scale: 1.3 * mobileScale, x: 0.0, y: -20.0, z: -32.0 },
+    { name: 'contact',  scale: 1.5 * mobileScale, x: 0.0, y: -25.0, z: -40.0 }
   ] : [
-    { name: 'hero',     color: colorGreen, scale: 1.6, x: 2.0,  y: 0.0,   z: 0.0 },
-    { name: 'about',    color: colorBlue,  scale: 1.3, x: -2.0, y: -6.0,  z: -12.0 },
-    { name: 'skills',   color: colorGreen, scale: 1.4, x: 2.0,  y: -12.0, z: -24.0 },
-    { name: 'projects', color: colorBlue,  scale: 1.2, x: -1.8, y: -18.0, z: -36.0 },
-    { name: 'certs',    color: colorCyan,  scale: 1.3, x: 1.8,  y: -24.0, z: -48.0 },
-    { name: 'contact',  color: colorCyan,  scale: 1.5, x: 0.0,  y: -30.0, z: -60.0 }
+    { name: 'hero',     scale: 1.65, x: 2.0,  y: 0.0,   z: 0.0 },
+    { name: 'about',    scale: 1.35, x: -2.0, y: -6.0,  z: -12.0 },
+    { name: 'skills',   scale: 1.45, x: 2.0,  y: -12.0, z: -24.0 },
+    { name: 'projects', scale: 1.25, x: -1.8, y: -18.0, z: -36.0 },
+    { name: 'certs',    scale: 1.35, x: 1.8,  y: -24.0, z: -48.0 },
+    { name: 'contact',  scale: 1.55, x: 0.0,  y: -30.0, z: -60.0 }
   ];
 
-  const cores = [];
+  // 6. Custom GLSL Holographic Shader Definition (Optimized Precision)
+  const HolographicShader = {
+    uniforms: {
+      uTime: { value: 0 },
+      uColor: { value: currentColors.primary },
+      uFresnelPower: { value: 2.5 },
+      uScanlineDensity: { value: 14.0 },
+      uOpacity: { value: 0.85 }
+    },
+    vertexShader: `
+      varying vec3 vNormal;
+      varying vec3 vViewDir;
+      varying vec3 vWorldPos;
+      uniform float uTime;
 
-  // Instantiate 6 stationary wireframe cores
+      void main() {
+        vNormal = normalize(normalMatrix * normal);
+        vec4 worldPos = modelMatrix * vec4(position, 1.0);
+        vWorldPos = worldPos.xyz;
+        vViewDir = normalize(-(modelViewMatrix * vec4(position, 1.0)).xyz);
+
+        vec3 displaced = position + normal * (sin(position.y * 3.0 + uTime * 2.0) * 0.03);
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(displaced, 1.0);
+      }
+    `,
+    fragmentShader: `
+      varying vec3 vNormal;
+      varying vec3 vViewDir;
+      varying vec3 vWorldPos;
+      uniform float uTime;
+      uniform vec3 uColor;
+      uniform float uFresnelPower;
+      uniform float uScanlineDensity;
+      uniform float uOpacity;
+
+      void main() {
+        float fresnel = pow(1.0 - max(dot(vNormal, vViewDir), 0.0), uFresnelPower);
+        float scanline = sin(vWorldPos.y * uScanlineDensity - uTime * 4.0) * 0.5 + 0.5;
+        scanline = scanline * scanline;
+
+        vec3 glowColor = uColor * (fresnel * 1.4 + scanline * 0.3 + 0.06);
+        float alpha = (fresnel * 0.7 + scanline * 0.2 + 0.04) * uOpacity;
+
+        gl_FragColor = vec4(glowColor, clamp(alpha, 0.0, 1.0));
+      }
+    `
+  };
+
+  // 7. Instantiate Holographic Cores & Scanner Rings
+  const cores = [];
+  const shaderMaterials = [];
+
   coreConfigs.forEach((cfg) => {
     const coreGroup = new THREE.Group();
     coreGroup.position.set(cfg.x, cfg.y, cfg.z);
     mainGroup.add(coreGroup);
 
-    // Wireframe Outer Globe (The page particle representation)
-    const sphereGeo = new THREE.IcosahedronGeometry(cfg.scale, 2);
-    const sphereMat = new THREE.MeshBasicMaterial({
-      color: cfg.color.clone(),
-      wireframe: true,
+    // Outer Holographic Energy Shell
+    const holoMat = new THREE.ShaderMaterial({
+      vertexShader: HolographicShader.vertexShader,
+      fragmentShader: HolographicShader.fragmentShader,
+      uniforms: {
+        uTime: { value: 0 },
+        uColor: { value: currentColors.primary.clone() },
+        uFresnelPower: { value: isLowPowerDevice ? 2.0 : 2.6 },
+        uScanlineDensity: { value: isLowPowerDevice ? 10.0 : 16.0 },
+        uOpacity: { value: 0.88 }
+      },
       transparent: true,
-      opacity: 0.18
+      side: THREE.DoubleSide,
+      depthWrite: false,
+      blending: THREE.AdditiveBlending
     });
-    const globeMesh = new THREE.Mesh(sphereGeo, sphereMat);
-    coreGroup.add(globeMesh);
+    shaderMaterials.push(holoMat);
 
-    // Inner Solid-ish Globe
-    const innerGeo = new THREE.IcosahedronGeometry(cfg.scale * 0.85, 1);
+    const sphereGeo = new THREE.IcosahedronGeometry(cfg.scale, isLowPowerDevice ? 1 : 2);
+    const holoMesh = new THREE.Mesh(sphereGeo, holoMat);
+    coreGroup.add(holoMesh);
+
+    // Inner Wireframe Geodesic Core
+    const innerGeo = new THREE.IcosahedronGeometry(cfg.scale * 0.82, 1);
     const innerMat = new THREE.MeshBasicMaterial({
-      color: cfg.color.clone(),
+      color: currentColors.secondary.clone(),
       wireframe: true,
       transparent: true,
-      opacity: 0.04
+      opacity: 0.12
     });
     const innerGlobe = new THREE.Mesh(innerGeo, innerMat);
     coreGroup.add(innerGlobe);
 
-    // Scanner Ring 1 (Medium, X-tilted)
-    const ringGeo1 = new THREE.RingGeometry(cfg.scale * 1.48, cfg.scale * 1.51, 64);
+    // Concentric Gyroscope Scanner Rings
+    const ringSegments = isLowPowerDevice ? 28 : 48;
+    
+    const ringGeo1 = new THREE.RingGeometry(cfg.scale * 1.44, cfg.scale * 1.48, ringSegments);
     const ringMat1 = new THREE.MeshBasicMaterial({
-      color: cfg.color.clone(),
+      color: currentColors.primary.clone(),
       side: THREE.DoubleSide,
       transparent: true,
-      opacity: 0.09
+      opacity: 0.16,
+      blending: THREE.AdditiveBlending
     });
-    const scannerRing1 = new THREE.Mesh(ringGeo1, ringMat1);
-    scannerRing1.rotation.x = Math.PI / 3;
-    coreGroup.add(scannerRing1);
+    const ring1 = new THREE.Mesh(ringGeo1, ringMat1);
+    ring1.rotation.x = Math.PI / 3;
+    coreGroup.add(ring1);
 
-    // Scanner Ring 2 (Large, Y-tilted)
-    const ringGeo2 = new THREE.RingGeometry(cfg.scale * 1.54, cfg.scale * 1.57, 64);
+    const ringGeo2 = new THREE.RingGeometry(cfg.scale * 1.56, cfg.scale * 1.60, ringSegments);
     const ringMat2 = new THREE.MeshBasicMaterial({
-      color: cfg.color.clone(),
+      color: currentColors.highlight.clone(),
       side: THREE.DoubleSide,
       transparent: true,
-      opacity: 0.06
+      opacity: 0.10,
+      blending: THREE.AdditiveBlending
     });
-    const scannerRing2 = new THREE.Mesh(ringGeo2, ringMat2);
-    scannerRing2.rotation.y = Math.PI / 4;
-    coreGroup.add(scannerRing2);
+    const ring2 = new THREE.Mesh(ringGeo2, ringMat2);
+    ring2.rotation.y = Math.PI / 4;
+    coreGroup.add(ring2);
 
-    // Scanner Ring 3 (Small, Z-tilted)
-    const ringGeo3 = new THREE.RingGeometry(cfg.scale * 1.42, cfg.scale * 1.45, 64);
+    const ringGeo3 = new THREE.RingGeometry(cfg.scale * 1.36, cfg.scale * 1.40, ringSegments);
     const ringMat3 = new THREE.MeshBasicMaterial({
-      color: cfg.color.clone(),
+      color: currentColors.secondary.clone(),
       side: THREE.DoubleSide,
       transparent: true,
-      opacity: 0.05
+      opacity: 0.12,
+      blending: THREE.AdditiveBlending
     });
-    const scannerRing3 = new THREE.Mesh(ringGeo3, ringMat3);
-    scannerRing3.rotation.z = Math.PI / 6;
-    coreGroup.add(scannerRing3);
+    const ring3 = new THREE.Mesh(ringGeo3, ringMat3);
+    ring3.rotation.z = Math.PI / 6;
+    coreGroup.add(ring3);
+
+    // Vertical Quantum Data Stream Pillar
+    const cylinderGeo = new THREE.CylinderGeometry(0.04, 0.04, cfg.scale * 6.5, 6, 1, true);
+    const cylinderMat = new THREE.MeshBasicMaterial({
+      color: currentColors.primary.clone(),
+      transparent: true,
+      opacity: 0.10,
+      wireframe: true,
+      blending: THREE.AdditiveBlending
+    });
+    const beam = new THREE.Mesh(cylinderGeo, cylinderMat);
+    coreGroup.add(beam);
 
     cores.push({
       group: coreGroup,
-      globe: globeMesh,
+      holo: holoMesh,
+      holoMat: holoMat,
       inner: innerGlobe,
-      ring1: scannerRing1,
-      ring2: scannerRing2,
-      ring3: scannerRing3,
-      matOuter: sphereMat,
-      matInner: innerMat,
-      matRing1: ringMat1,
-      matRing2: ringMat2,
-      matRing3: ringMat3,
-      baseScale: cfg.scale,
-      baseColor: cfg.color
+      innerMat: innerMat,
+      ring1: ring1,
+      ring2: ring2,
+      ring3: ring3,
+      ringMat1: ringMat1,
+      ringMat2: ringMat2,
+      ringMat3: ringMat3,
+      beam: beam,
+      beamMat: cylinderMat,
+      scale: cfg.scale
     });
   });
 
-  // Canvas texture generator for glowing binary characters ('0' or '1')
-  function createBinaryTexture(char) {
+  // 8. Infinite Cyber Perspective Grid Floor (GLSL Grid Shader)
+  const CyberGridShader = {
+    vertexShader: `
+      varying vec3 vWorldPos;
+      void main() {
+        vec4 worldPos = modelMatrix * vec4(position, 1.0);
+        vWorldPos = worldPos.xyz;
+        gl_Position = projectionMatrix * viewMatrix * worldPos;
+      }
+    `,
+    fragmentShader: `
+      varying vec3 vWorldPos;
+      uniform float uTime;
+      uniform vec3 uColor;
+      uniform vec3 uFogColor;
+
+      void main() {
+        vec2 grid = abs(fract(vWorldPos.xz * 0.25 - vec2(0.0, uTime * 0.12)) - 0.5) / fwidth(vWorldPos.xz * 0.25);
+        float line = min(grid.x, grid.y);
+        float gridAlpha = 1.0 - min(line, 1.0);
+
+        float dist = length(vWorldPos.xz);
+        float fog = clamp(exp(-dist * 0.024), 0.0, 1.0);
+
+        vec3 finalColor = mix(uFogColor, uColor, gridAlpha * 0.32);
+        gl_FragColor = vec4(finalColor, gridAlpha * fog * 0.22);
+      }
+    `
+  };
+
+  const gridMat = new THREE.ShaderMaterial({
+    vertexShader: CyberGridShader.vertexShader,
+    fragmentShader: CyberGridShader.fragmentShader,
+    uniforms: {
+      uTime: { value: 0 },
+      uColor: { value: currentColors.primary.clone() },
+      uFogColor: { value: currentColors.fog.clone() }
+    },
+    transparent: true,
+    depthWrite: false,
+    blending: THREE.AdditiveBlending
+  });
+
+  const gridGeo = new THREE.PlaneGeometry(140, 180, 1, 1);
+  const gridFloor = new THREE.Mesh(gridGeo, gridMat);
+  gridFloor.rotation.x = -Math.PI / 2;
+  gridFloor.position.set(0, isMobile ? -26 : -32, -40);
+  mainGroup.add(gridFloor);
+
+  // 9. Procedural Binary Canvas Textures Generator
+  function createGlowingGlyphTexture(char) {
     const size = 64;
-    const canvas = document.createElement('canvas');
-    canvas.width = size;
-    canvas.height = size;
-    const ctx = canvas.getContext('2d');
+    const canvasEl = document.createElement('canvas');
+    canvasEl.width = size;
+    canvasEl.height = size;
+    const ctx = canvasEl.getContext('2d');
 
     ctx.clearRect(0, 0, size, size);
-
-    // Drawmonospace character
-    ctx.font = 'bold 50px monospace';
+    ctx.font = 'bold 44px monospace';
     ctx.fillStyle = '#ffffff';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    
-    // Add green/cyan/blue cyber glow shadow
-    ctx.shadowColor = '#00ff66';
+    ctx.shadowColor = '#00ff41';
     ctx.shadowBlur = 10;
-    
     ctx.fillText(char, size / 2, size / 2);
 
-    const texture = new THREE.CanvasTexture(canvas);
-    return texture;
+    return new THREE.CanvasTexture(canvasEl);
   }
 
-  const texture0 = createBinaryTexture('0');
-  const texture1 = createBinaryTexture('1');
+  const texture0 = createGlowingGlyphTexture('0');
+  const texture1 = createGlowingGlyphTexture('1');
 
-  // Surrounding Network Node Particles (Distributed among the 6 cores, split into binary 0s and 1s)
-  const nodeCount = isMobile ? 100 : 1200; // Reduced further on mobile for perf
-  const connectionNodeCount = isMobile ? 40 : 350;
+  // 10. Adaptive Particle Budgets (Scale dynamically based on device capability)
+  const nodeCount = isSoftwareRenderer ? 80 : (isMobile ? 120 : 800);
+  const globalNodeCount = isSoftwareRenderer ? 150 : (isMobile ? 200 : 1200);
+  let connectionLimit = isSoftwareRenderer ? 0 : (isMobile ? 30 : 220); // Disabled on pure software renderers for max FPS
+
   const nodeCount0 = Math.floor(nodeCount / 2);
   const nodeCount1 = nodeCount - nodeCount0;
 
   const nodesGeo0 = new THREE.BufferGeometry();
   const nodesGeo1 = new THREE.BufferGeometry();
-  
+
   const particleOffsets = [];
   const particleParents = [];
   const nodeSpeeds = [];
 
   const positions0 = new Float32Array(nodeCount0 * 3);
   const colors0 = new Float32Array(nodeCount0 * 3);
-
   const positions1 = new Float32Array(nodeCount1 * 3);
   const colors1 = new Float32Array(nodeCount1 * 3);
 
@@ -209,16 +392,11 @@
     particleParents.push(parentIdx);
 
     const cfg = coreConfigs[parentIdx];
-    const cpX = cfg.x;
-    const cpY = cfg.y;
-    const cpZ = cfg.z;
-
-    // Generate coordinates relative to parent core center
     const u = Math.random();
     const v = Math.random();
     const theta = u * 2.0 * Math.PI;
     const phi = Math.acos(2.0 * v - 1.0);
-    const radius = cfg.scale * 1.2 + Math.random() * (cfg.scale * 1.8);
+    const radius = cfg.scale * 1.15 + Math.random() * (cfg.scale * 1.6);
 
     const xSph = radius * Math.sin(phi) * Math.cos(theta);
     const ySph = radius * Math.sin(phi) * Math.sin(theta);
@@ -226,7 +404,6 @@
 
     particleOffsets.push({ x: xSph, y: ySph, z: zSph });
 
-    // Drifting velocity vector
     nodeSpeeds.push({
       x: (Math.random() - 0.5) * 0.003,
       y: (Math.random() - 0.5) * 0.003,
@@ -235,49 +412,48 @@
 
     if (i < nodeCount0) {
       const idx = i * 3;
-      positions0[idx] = cpX + xSph;
-      positions0[idx + 1] = cpY + ySph;
-      positions0[idx + 2] = cpZ + zSph;
-
-      colors0[idx] = cfg.color.r;
-      colors0[idx + 1] = cfg.color.g;
-      colors0[idx + 2] = cfg.color.b;
+      positions0[idx] = cfg.x + xSph;
+      positions0[idx + 1] = cfg.y + ySph;
+      positions0[idx + 2] = cfg.z + zSph;
+      colors0[idx] = currentColors.primary.r;
+      colors0[idx + 1] = currentColors.primary.g;
+      colors0[idx + 2] = currentColors.primary.b;
     } else {
       const idx = (i - nodeCount0) * 3;
-      positions1[idx] = cpX + xSph;
-      positions1[idx + 1] = cpY + ySph;
-      positions1[idx + 2] = cpZ + zSph;
-
-      colors1[idx] = cfg.color.r;
-      colors1[idx + 1] = cfg.color.g;
-      colors1[idx + 2] = cfg.color.b;
+      positions1[idx] = cfg.x + xSph;
+      positions1[idx + 1] = cfg.y + ySph;
+      positions1[idx + 2] = cfg.z + zSph;
+      colors1[idx] = currentColors.primary.r;
+      colors1[idx + 1] = currentColors.primary.g;
+      colors1[idx + 2] = currentColors.primary.b;
     }
   }
 
   nodesGeo0.setAttribute('position', new THREE.BufferAttribute(positions0, 3));
   nodesGeo0.setAttribute('color', new THREE.BufferAttribute(colors0, 3));
-
   nodesGeo1.setAttribute('position', new THREE.BufferAttribute(positions1, 3));
   nodesGeo1.setAttribute('color', new THREE.BufferAttribute(colors1, 3));
 
   const nodesMat0 = new THREE.PointsMaterial({
-    size: isMobile ? 0.40 : 0.60,
+    size: isMobile ? 0.36 : 0.54,
     map: texture0,
     vertexColors: true,
     transparent: true,
     opacity: 0.85,
-    alphaTest: 0.1,
-    depthWrite: false
+    alphaTest: 0.08,
+    depthWrite: false,
+    blending: THREE.AdditiveBlending
   });
 
   const nodesMat1 = new THREE.PointsMaterial({
-    size: isMobile ? 0.40 : 0.60,
+    size: isMobile ? 0.36 : 0.54,
     map: texture1,
     vertexColors: true,
     transparent: true,
     opacity: 0.85,
-    alphaTest: 0.1,
-    depthWrite: false
+    alphaTest: 0.08,
+    depthWrite: false,
+    blending: THREE.AdditiveBlending
   });
 
   const nodes0 = new THREE.Points(nodesGeo0, nodesMat0);
@@ -285,8 +461,7 @@
   mainGroup.add(nodes0);
   mainGroup.add(nodes1);
 
-  // ── GLOBAL FLOATING BINARY STARFIELD (INSANELY WILD BACKDROP) ──
-  const globalNodeCount = isMobile ? 200 : 1800;
+  // 11. Global Floating Starfield Matrix
   const globalNodeCount0 = Math.floor(globalNodeCount / 2);
   const globalNodeCount1 = globalNodeCount - globalNodeCount0;
 
@@ -295,7 +470,6 @@
 
   const globalPos0 = new Float32Array(globalNodeCount0 * 3);
   const globalCol0 = new Float32Array(globalNodeCount0 * 3);
-
   const globalPos1 = new Float32Array(globalNodeCount1 * 3);
   const globalCol1 = new Float32Array(globalNodeCount1 * 3);
 
@@ -303,20 +477,13 @@
 
   for (let i = 0; i < globalNodeCount; i++) {
     const x = (Math.random() - 0.5) * 55;
-    const y = Math.random() * -50 + 15;
-    const z = Math.random() * -100 + 20;
-
-    let pColor = colorGreen;
-    if (z < -45) {
-      pColor = colorCyan;
-    } else if (z < -15) {
-      pColor = colorBlue;
-    }
+    const y = Math.random() * -45 + 12;
+    const z = Math.random() * -90 + 15;
 
     globalSpeeds.push({
-      x: (Math.random() - 0.5) * 0.005,
-      y: (Math.random() - 0.5) * 0.005,
-      z: (Math.random() - 0.5) * 0.005
+      x: (Math.random() - 0.5) * 0.004,
+      y: (Math.random() - 0.5) * 0.004,
+      z: (Math.random() - 0.5) * 0.004
     });
 
     if (i < globalNodeCount0) {
@@ -324,46 +491,45 @@
       globalPos0[idx] = x;
       globalPos0[idx + 1] = y;
       globalPos0[idx + 2] = z;
-
-      globalCol0[idx] = pColor.r;
-      globalCol0[idx + 1] = pColor.g;
-      globalCol0[idx + 2] = pColor.b;
+      globalCol0[idx] = currentColors.primary.r;
+      globalCol0[idx + 1] = currentColors.primary.g;
+      globalCol0[idx + 2] = currentColors.primary.b;
     } else {
       const idx = (i - globalNodeCount0) * 3;
       globalPos1[idx] = x;
       globalPos1[idx + 1] = y;
       globalPos1[idx + 2] = z;
-
-      globalCol1[idx] = pColor.r;
-      globalCol1[idx + 1] = pColor.g;
-      globalCol1[idx + 2] = pColor.b;
+      globalCol1[idx] = currentColors.primary.r;
+      globalCol1[idx + 1] = currentColors.primary.g;
+      globalCol1[idx + 2] = currentColors.primary.b;
     }
   }
 
   globalGeo0.setAttribute('position', new THREE.BufferAttribute(globalPos0, 3));
   globalGeo0.setAttribute('color', new THREE.BufferAttribute(globalCol0, 3));
-
   globalGeo1.setAttribute('position', new THREE.BufferAttribute(globalPos1, 3));
   globalGeo1.setAttribute('color', new THREE.BufferAttribute(globalCol1, 3));
 
   const globalMat0 = new THREE.PointsMaterial({
-    size: isMobile ? 0.35 : 0.50,
+    size: isMobile ? 0.30 : 0.44,
     map: texture0,
     vertexColors: true,
     transparent: true,
     opacity: 0.55,
-    alphaTest: 0.1,
-    depthWrite: false
+    alphaTest: 0.08,
+    depthWrite: false,
+    blending: THREE.AdditiveBlending
   });
 
   const globalMat1 = new THREE.PointsMaterial({
-    size: isMobile ? 0.35 : 0.50,
+    size: isMobile ? 0.30 : 0.44,
     map: texture1,
     vertexColors: true,
     transparent: true,
     opacity: 0.55,
-    alphaTest: 0.1,
-    depthWrite: false
+    alphaTest: 0.08,
+    depthWrite: false,
+    blending: THREE.AdditiveBlending
   });
 
   const globalNodes0 = new THREE.Points(globalGeo0, globalMat0);
@@ -371,11 +537,11 @@
   mainGroup.add(globalNodes0);
   mainGroup.add(globalNodes1);
 
-  // Proximity Connection Lines
-  const maxConnections = isMobile ? 60 : 350;
+  // 12. Dynamic Proximity Line Web (Lightweight buffer)
   const lineGeo = new THREE.BufferGeometry();
-  const linePositions = new Float32Array(maxConnections * 2 * 3);
-  const lineColors = new Float32Array(maxConnections * 2 * 3);
+  const maxLines = Math.max(connectionLimit, 1);
+  const linePositions = new Float32Array(maxLines * 2 * 3);
+  const lineColors = new Float32Array(maxLines * 2 * 3);
 
   lineGeo.setAttribute('position', new THREE.BufferAttribute(linePositions, 3));
   lineGeo.setAttribute('color', new THREE.BufferAttribute(lineColors, 3));
@@ -383,14 +549,88 @@
   const lineMat = new THREE.LineBasicMaterial({
     vertexColors: true,
     transparent: true,
-    opacity: 0.15
+    opacity: 0.20,
+    blending: THREE.AdditiveBlending
   });
 
   const connectionLines = new THREE.LineSegments(lineGeo, lineMat);
-  mainGroup.add(connectionLines);
+  if (connectionLimit > 0) {
+    mainGroup.add(connectionLines);
+  }
 
+  // 13. GSAP ScrollTrigger Camera Flight
+  if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+    gsap.registerPlugin(ScrollTrigger);
 
-  // ── SCROLL STATE TRACKING FOR CENTER ALIGNMENT ──
+    const CAM_Z_OFFSET = isMobile ? 3.6 : 5.2;
+    const CAM_Y_OFFSET = isMobile ? 1.0 : 1.6;
+
+    function getCamPos(idx) {
+      const c = coreConfigs[idx];
+      return { x: c.x, y: c.y + CAM_Y_OFFSET, z: c.z + CAM_Z_OFFSET };
+    }
+    function getLookTarget(idx) {
+      const c = coreConfigs[idx];
+      return { x: c.x, y: c.y, z: c.z };
+    }
+
+    const initCam = getCamPos(0);
+    const initLook = getLookTarget(0);
+
+    const scrollTarget = {
+      camX: initCam.x,
+      camY: initCam.y,
+      camZ: initCam.z,
+      lookX: initLook.x,
+      lookY: initLook.y,
+      lookZ: initLook.z
+    };
+
+    window.__scrollTarget = scrollTarget;
+
+    const flightTimeline = gsap.timeline({
+      scrollTrigger: {
+        trigger: "body",
+        start: "top top",
+        end: "bottom bottom",
+        scrub: 0.65
+      }
+    });
+
+    for (let i = 1; i < coreConfigs.length; i++) {
+      const cam = getCamPos(i);
+      const look = getLookTarget(i);
+      flightTimeline.to(scrollTarget, {
+        camX: cam.x,
+        camY: cam.y,
+        camZ: cam.z,
+        lookX: look.x,
+        lookY: look.y,
+        lookZ: look.z,
+        duration: 1.0,
+        ease: "none"
+      });
+    }
+
+    const lastCfg = coreConfigs[coreConfigs.length - 1];
+    flightTimeline.to(scrollTarget, {
+      camX: lastCfg.x,
+      camY: lastCfg.y - 5.0,
+      camZ: lastCfg.z - CAM_Z_OFFSET * 2,
+      lookX: lastCfg.x,
+      lookY: lastCfg.y - 8.0,
+      lookZ: lastCfg.z - CAM_Z_OFFSET * 4,
+      duration: 1.0,
+      ease: "none"
+    });
+  }
+
+  // 14. Interactive Mouse Parallax (Throttled & Disabled during fast scrolls or mobile)
+  let mouseX = 0, mouseY = 0;
+  let targetRotationX = 0, targetRotationY = 0;
+  let currentParallaxX = 0, currentParallaxY = 0;
+  const TILT_STRENGTH = isLowPowerDevice ? 0.0 : 0.07;
+
   let isScrolling = false;
   let scrollTimeout;
   window.addEventListener('scroll', () => {
@@ -398,153 +638,170 @@
     clearTimeout(scrollTimeout);
     scrollTimeout = setTimeout(() => {
       isScrolling = false;
-    }, 150);
+    }, 120);
   }, { passive: true });
 
-
-  // ── GSAP SCROLLTRIGGER TIMELINE ─────────────────
-  gsap.registerPlugin(ScrollTrigger);
-
-  // Camera offset: sit IN FRONT of each dome, never inside it
-  // This eliminates the backward-clip effect entirely
-  const CAM_Z_OFFSET = isMobile ? 3.5 : 5.0;  // camera distance in front of dome
-  const CAM_Y_OFFSET = isMobile ? 1.0 : 1.5;   // slight elevation above dome center
-
-  // Build camera waypoints from coreConfigs programmatically
-  // Camera sits at (dome.x, dome.y + offset, dome.z + CAM_Z_OFFSET)
-  // Camera looks at the NEXT dome center (or straight ahead for the last one)
-  function getCamPos(idx) {
-    const c = coreConfigs[idx];
-    return { x: c.x, y: c.y + CAM_Y_OFFSET, z: c.z + CAM_Z_OFFSET };
-  }
-  function getLookTarget(idx) {
-    // Look at the dome we're currently sitting in front of
-    const c = coreConfigs[idx];
-    return { x: c.x, y: c.y, z: c.z };
-  }
-
-  // Initial camera state: in front of Hero dome, looking at Hero dome
-  const initCam = getCamPos(0);
-  const initLook = getLookTarget(0);
-
-  const scrollTarget = {
-    camX:  initCam.x,
-    camY:  initCam.y,
-    camZ:  initCam.z,
-    lookX: initLook.x,
-    lookY: initLook.y,
-    lookZ: initLook.z
-  };
-
-  const tl = gsap.timeline({
-    scrollTrigger: {
-      trigger: "body",
-      start: "top top",
-      end: "bottom bottom",
-      scrub: 0.6   // tighter scrub = less lag = no perceivable bounce
-    }
-  });
-
-  // Camera flight: each keyframe moves camera to sit in front of the NEXT dome
-  // All Z values strictly decrease (move forward), no backwards motion ever
-  for (let i = 1; i < coreConfigs.length; i++) {
-    const cam = getCamPos(i);
-    const look = getLookTarget(i);
-    tl.to(scrollTarget, {
-      camX:  cam.x,
-      camY:  cam.y,
-      camZ:  cam.z,
-      lookX: look.x,
-      lookY: look.y,
-      lookZ: look.z,
-      duration: 1.0,
-      ease: "none"
-    });
-  }
-  // Final keyframe: drift past the last dome (Contact) for exit
-  const lastCfg = coreConfigs[coreConfigs.length - 1];
-  tl.to(scrollTarget, {
-    camX:  lastCfg.x,
-    camY:  lastCfg.y - 5.0,
-    camZ:  lastCfg.z - CAM_Z_OFFSET * 2,
-    lookX: lastCfg.x,
-    lookY: lastCfg.y - 8.0,
-    lookZ: lastCfg.z - CAM_Z_OFFSET * 4,
-    duration: 1.0,
-    ease: "none"
-  });
-
-
-  // ── MOUSE PARALLAX TILT ──────────────────────────
-  let mouseX = 0, mouseY = 0;
-  let targetRotationX = 0, targetRotationY = 0;
-
-  // Mouse parallax: completely disabled on mobile (touch has no hover),
-  // and reduced to very subtle on desktop to prevent misalignment
-  const TILT_STRENGTH = isMobile ? 0.0 : 0.08;  // reduced from 0.12
-
   window.addEventListener('mousemove', (e) => {
-    if (isMobile || isScrolling) {
-      targetRotationX = 0;
-      targetRotationY = 0;
-      return;
-    }
+    if (isLowPowerDevice || isScrolling) return;
     mouseX = (e.clientX / window.innerWidth) * 2 - 1;
     mouseY = -(e.clientY / window.innerHeight) * 2 + 1;
 
     targetRotationY = mouseX * TILT_STRENGTH;
     targetRotationX = -mouseY * TILT_STRENGTH;
+  }, { passive: true });
+
+  // 15. Dynamic Theme Colors Updater
+  function updateThemeColors(newThemeKey) {
+    const pal = themePalettes[newThemeKey] || themePalettes.green;
+    activeThemeKey = newThemeKey;
+
+    currentColors.primary.copy(pal.primary);
+    currentColors.secondary.copy(pal.secondary);
+    currentColors.highlight.copy(pal.highlight);
+    currentColors.fog.copy(pal.fog);
+
+    scene.fog.color.copy(pal.fog);
+    gridMat.uniforms.uColor.value.copy(pal.primary);
+    gridMat.uniforms.uFogColor.value.copy(pal.fog);
+
+    cores.forEach(core => {
+      core.holoMat.uniforms.uColor.value.copy(pal.primary);
+      core.innerMat.color.copy(pal.secondary);
+      core.ringMat1.color.copy(pal.primary);
+      core.ringMat2.color.copy(pal.highlight);
+      core.ringMat3.color.copy(pal.secondary);
+      core.beamMat.color.copy(pal.primary);
+    });
+
+    const c0 = nodesGeo0.getAttribute('color');
+    const c1 = nodesGeo1.getAttribute('color');
+    const gc0 = globalGeo0.getAttribute('color');
+    const gc1 = globalGeo1.getAttribute('color');
+
+    for (let i = 0; i < c0.count; i++) c0.setXYZ(i, pal.primary.r, pal.primary.g, pal.primary.b);
+    for (let i = 0; i < c1.count; i++) c1.setXYZ(i, pal.primary.r, pal.primary.g, pal.primary.b);
+    for (let i = 0; i < gc0.count; i++) gc0.setXYZ(i, pal.primary.r, pal.primary.g, pal.primary.b);
+    for (let i = 0; i < gc1.count; i++) gc1.setXYZ(i, pal.primary.r, pal.primary.g, pal.primary.b);
+
+    c0.needsUpdate = true;
+    c1.needsUpdate = true;
+    gc0.needsUpdate = true;
+    gc1.needsUpdate = true;
+  }
+
+  const themeObserver = new MutationObserver(() => {
+    const currentTheme = getCurrentThemeKey();
+    if (currentTheme !== activeThemeKey) {
+      updateThemeColors(currentTheme);
+    }
+  });
+  themeObserver.observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ['data-theme']
   });
 
+  window.addEventListener('themechange', (e) => {
+    if (e.detail?.theme) {
+      updateThemeColors(e.detail.theme);
+    }
+  });
 
-  // Handle Resize — also re-check mobile for orientation changes
+  // 16. Window Resize Handler with Orientation Change Detection
   window.addEventListener('resize', () => {
-    const nowMobile = window.innerWidth < 768;
-    camera.fov = nowMobile ? 75 : 60;
+    const isNowMobile = window.innerWidth < 768;
+    camera.fov = isNowMobile ? 75 : 60;
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
+  }, { passive: true });
+
+  // 17. Battery & Performance Auto-Sleep (Visibility API)
+  let isPageVisible = !document.hidden;
+  document.addEventListener('visibilitychange', () => {
+    isPageVisible = !document.hidden;
+    if (isPageVisible) {
+      lastFrameTime = performance.now();
+      requestAnimationFrame(renderLoop);
+    }
   });
 
+  // 18. Dynamic Adaptive Performance & FPS Monitor
+  let lastFrameTime = performance.now();
   let prevCamZ = 0.0;
-  let currentParallaxX = 0.0;
-  let currentParallaxY = 0.0;
+  let pulsePhase = 0.0;
+  let slowFrameCount = 0;
+  let isAutoThrottled = isLowPowerDevice;
 
-  // ── RENDER LOOP ─────────────────────────────────
-  function animate() {
-    requestAnimationFrame(animate);
+  function renderLoop(now) {
+    if (!isPageVisible) return; // Automatic Sleep when tab backgrounded
 
-    // Track scroll velocity for warp effects
+    requestAnimationFrame(renderLoop);
+
+    const deltaMs = now - lastFrameTime;
+    const delta = Math.min(deltaMs * 0.001, 0.1);
+    lastFrameTime = now;
+
+    // Automatic Performance Guardrail:
+    // If the device struggles (frame time > 42ms / < 24 FPS) over 30 consecutive frames,
+    // automatically reduce resolution and disable line calculations.
+    if (deltaMs > 42) {
+      slowFrameCount++;
+      if (slowFrameCount > 30 && !isAutoThrottled) {
+        isAutoThrottled = true;
+        renderer.setPixelRatio(0.9);
+        connectionLimit = 0;
+        if (connectionLines.parent) {
+          mainGroup.remove(connectionLines);
+        }
+        console.info('> [0xPortfolio] Adaptive throttle engaged for 60 FPS stability.');
+      }
+    } else {
+      slowFrameCount = Math.max(0, slowFrameCount - 1);
+    }
+
+    const scrollTarget = window.__scrollTarget || {
+      camX: coreConfigs[0].x,
+      camY: coreConfigs[0].y + (isMobile ? 1.0 : 1.6),
+      camZ: coreConfigs[0].z + (isMobile ? 3.6 : 5.2),
+      lookX: coreConfigs[0].x,
+      lookY: coreConfigs[0].y,
+      lookZ: coreConfigs[0].z
+    };
+
     const deltaZ = scrollTarget.camZ - prevCamZ;
-    const absoluteSpeedZ = Math.abs(deltaZ);
+    const scrollSpeedZ = Math.abs(deltaZ);
     prevCamZ = scrollTarget.camZ;
 
-    // Smoothly interpolate current parallax offset (damped to 0 while scrolling)
-    const activeTargetX = isScrolling ? 0.0 : targetRotationX;
-    const activeTargetY = isScrolling ? 0.0 : targetRotationY;
-    currentParallaxX += (activeTargetX - currentParallaxX) * 0.05;
-    currentParallaxY += (activeTargetY - currentParallaxY) * 0.05;
+    const activeTargetX = (isScrolling || isAutoThrottled) ? 0.0 : targetRotationX;
+    const activeTargetY = (isScrolling || isAutoThrottled) ? 0.0 : targetRotationY;
+    currentParallaxX += (activeTargetX - currentParallaxX) * 0.06;
+    currentParallaxY += (activeTargetY - currentParallaxY) * 0.06;
 
-    // Apply scroll-driven camera coordinates + camera mouse parallax shift (lookAt keeps targets centered!)
     camera.position.set(
-      scrollTarget.camX + currentParallaxY * 4.0, // horizontal camera shift
-      scrollTarget.camY + currentParallaxX * 4.0, // vertical camera shift
+      scrollTarget.camX + currentParallaxY * 3.5,
+      scrollTarget.camY + currentParallaxX * 3.5,
       scrollTarget.camZ
     );
     camera.lookAt(scrollTarget.lookX, scrollTarget.lookY, scrollTarget.lookZ);
 
-    // Core rotations (spins much faster in projects section)
-    cores.forEach((core, idx) => {
-      const spinMultiplier = (idx === 3) ? 4.5 : 1.0;
-      core.globe.rotation.y += 0.0012 * spinMultiplier;
-      core.globe.rotation.x += 0.0005 * spinMultiplier;
-      core.inner.rotation.y -= 0.0006 * spinMultiplier;
-      core.ring1.rotation.z += 0.0025 * spinMultiplier;
-      core.ring2.rotation.x -= 0.0015 * spinMultiplier;
-      core.ring3.rotation.y += 0.0020 * spinMultiplier;
+    const timeVal = now * 0.001;
+    gridMat.uniforms.uTime.value = timeVal;
+    shaderMaterials.forEach(mat => {
+      mat.uniforms.uTime.value = timeVal;
     });
 
-    // Update node positions with drift & orbit for both binary meshes
+    cores.forEach((core, idx) => {
+      const spinSpeed = (idx === 3) ? 3.0 : 1.0;
+      core.holo.rotation.y += 0.0010 * spinSpeed;
+      core.holo.rotation.x += 0.0005 * spinSpeed;
+      core.inner.rotation.y -= 0.0006 * spinSpeed;
+      core.ring1.rotation.z += 0.0024 * spinSpeed;
+      core.ring2.rotation.x -= 0.0015 * spinSpeed;
+      core.ring3.rotation.y += 0.0018 * spinSpeed;
+      core.beam.rotation.y += 0.0035 * spinSpeed;
+    });
+
+    // Update Local Binary Particles
     const posAttr0 = nodesGeo0.getAttribute('position');
     const posAttr1 = nodesGeo1.getAttribute('position');
     const nodesArray0 = posAttr0.array;
@@ -553,19 +810,16 @@
     for (let i = 0; i < nodeCount; i++) {
       const parentIdx = particleParents[i];
       const cfg = coreConfigs[parentIdx];
-      const cpX = cfg.x;
-      const cpY = cfg.y;
-      const cpZ = cfg.z;
-
       const offset = particleOffsets[i];
+
       offset.x += nodeSpeeds[i].x;
       offset.y += nodeSpeeds[i].y;
       offset.z += nodeSpeeds[i].z;
 
-      // Wrap-around bounds relative to parent core scale
-      const dist = Math.sqrt(offset.x*offset.x + offset.y*offset.y + offset.z*offset.z);
-      const maxDist = cfg.scale * 3.5;
-      const minDist = cfg.scale * 1.0;
+      const dist = Math.sqrt(offset.x * offset.x + offset.y * offset.y + offset.z * offset.z);
+      const maxDist = cfg.scale * 3.2;
+      const minDist = cfg.scale * 0.95;
+
       if (dist > maxDist || dist < minDist) {
         nodeSpeeds[i].x *= -1;
         nodeSpeeds[i].y *= -1;
@@ -574,174 +828,120 @@
 
       if (i < nodeCount0) {
         const idx = i * 3;
-        nodesArray0[idx] = cpX + offset.x;
-        nodesArray0[idx + 1] = cpY + offset.y;
-        nodesArray0[idx + 2] = cpZ + offset.z;
+        nodesArray0[idx] = cfg.x + offset.x;
+        nodesArray0[idx + 1] = cfg.y + offset.y;
+        nodesArray0[idx + 2] = cfg.z + offset.z;
       } else {
         const idx = (i - nodeCount0) * 3;
-        nodesArray1[idx] = cpX + offset.x;
-        nodesArray1[idx + 1] = cpY + offset.y;
-        nodesArray1[idx + 2] = cpZ + offset.z;
+        nodesArray1[idx] = cfg.x + offset.x;
+        nodesArray1[idx + 1] = cfg.y + offset.y;
+        nodesArray1[idx + 2] = cfg.z + offset.z;
       }
     }
     posAttr0.needsUpdate = true;
     posAttr1.needsUpdate = true;
 
-    // Gentle pulsing micro-animation for local particles
-    const pulse = 1.0 + Math.sin(Date.now() * 0.0035) * 0.12;
-    nodesMat0.size = (isMobile ? 0.40 : 0.60) * pulse;
-    nodesMat1.size = (isMobile ? 0.40 : 0.60) * pulse;
+    pulsePhase += delta * 3.0;
+    const pulse = 1.0 + Math.sin(pulsePhase) * 0.10;
+    nodesMat0.size = (isMobile ? 0.36 : 0.54) * pulse;
+    nodesMat1.size = (isMobile ? 0.36 : 0.54) * pulse;
 
-    // Update global drifting particles with scroll-speed warp amplification
+    // Update Global Starfield
     const gPosAttr0 = globalGeo0.getAttribute('position');
     const gPosAttr1 = globalGeo1.getAttribute('position');
     const gNodesArray0 = gPosAttr0.array;
     const gNodesArray1 = gPosAttr1.array;
 
-    const warpFactor = 1.0 + Math.min(absoluteSpeedZ * 12.0, 18.0);
-    
-    // Scale global particles size & opacity slightly during fast scrolls
-    globalMat0.size = (isMobile ? 0.35 : 0.50) * (1.0 + Math.min(absoluteSpeedZ * 1.5, 0.8));
-    globalMat1.size = (isMobile ? 0.35 : 0.50) * (1.0 + Math.min(absoluteSpeedZ * 1.5, 0.8));
-    globalMat0.opacity = 0.55 + Math.min(absoluteSpeedZ * 0.3, 0.35);
-    globalMat1.opacity = 0.55 + Math.min(absoluteSpeedZ * 0.3, 0.35);
+    const warpAmp = 1.0 + Math.min(scrollSpeedZ * 12.0, 16.0);
 
     for (let i = 0; i < globalNodeCount; i++) {
       const speed = globalSpeeds[i];
-      // Add relative camera speed translation along Z axis (flying opposite of scroll flight direction)
-      const dynamicZSpeed = speed.z - deltaZ * 0.45;
+      const dynamicZSpeed = speed.z - deltaZ * 0.40;
 
       if (i < globalNodeCount0) {
         const idx = i * 3;
         gNodesArray0[idx] += speed.x;
         gNodesArray0[idx + 1] += speed.y;
-        gNodesArray0[idx + 2] += dynamicZSpeed * warpFactor;
+        gNodesArray0[idx + 2] += dynamicZSpeed * warpAmp;
 
-        if (gNodesArray0[idx] > 27.5 || gNodesArray0[idx] < -27.5) speed.x *= -1;
-        if (gNodesArray0[idx + 1] > 15 || gNodesArray0[idx + 1] < -45) speed.y *= -1;
-        
-        // Wrap-around bounds for depth to keep them inside the active flight volume
-        if (gNodesArray0[idx + 2] > 20) {
-          gNodesArray0[idx + 2] = -80;
-        } else if (gNodesArray0[idx + 2] < -80) {
-          gNodesArray0[idx + 2] = 20;
-        }
+        if (gNodesArray0[idx] > 28.0 || gNodesArray0[idx] < -28.0) speed.x *= -1;
+        if (gNodesArray0[idx + 1] > 15.0 || gNodesArray0[idx + 1] < -46.0) speed.y *= -1;
+        if (gNodesArray0[idx + 2] > 18.0) gNodesArray0[idx + 2] = -82.0;
+        else if (gNodesArray0[idx + 2] < -82.0) gNodesArray0[idx + 2] = 18.0;
       } else {
         const idx = (i - globalNodeCount0) * 3;
         gNodesArray1[idx] += speed.x;
         gNodesArray1[idx + 1] += speed.y;
-        gNodesArray1[idx + 2] += dynamicZSpeed * warpFactor;
+        gNodesArray1[idx + 2] += dynamicZSpeed * warpAmp;
 
-        if (gNodesArray1[idx] > 27.5 || gNodesArray1[idx] < -27.5) speed.x *= -1;
-        if (gNodesArray1[idx + 1] > 15 || gNodesArray1[idx + 1] < -45) speed.y *= -1;
-
-        if (gNodesArray1[idx + 2] > 20) {
-          gNodesArray1[idx + 2] = -80;
-        } else if (gNodesArray1[idx + 2] < -80) {
-          gNodesArray1[idx + 2] = 20;
-        }
+        if (gNodesArray1[idx] > 28.0 || gNodesArray1[idx] < -28.0) speed.x *= -1;
+        if (gNodesArray1[idx + 1] > 15.0 || gNodesArray1[idx + 1] < -46.0) speed.y *= -1;
+        if (gNodesArray1[idx + 2] > 18.0) gNodesArray1[idx + 2] = -82.0;
+        else if (gNodesArray1[idx + 2] < -82.0) gNodesArray1[idx + 2] = 18.0;
       }
     }
     gPosAttr0.needsUpdate = true;
     gPosAttr1.needsUpdate = true;
 
-    // Helper reader for absolute particle positions
-    function getParticlePosition(idx) {
-      if (idx < nodeCount0) {
-        return {
-          x: nodesArray0[idx * 3],
-          y: nodesArray0[idx * 3 + 1],
-          z: nodesArray0[idx * 3 + 2]
-        };
-      } else {
-        const oIdx = (idx - nodeCount0) * 3;
-        return {
-          x: nodesArray1[oIdx],
-          y: nodesArray1[oIdx + 1],
-          z: nodesArray1[oIdx + 2]
-        };
+    // Proximity Line Web (Only calculated if not throttled)
+    if (connectionLimit > 0 && !isAutoThrottled) {
+      function getNodePos(idx) {
+        if (idx < nodeCount0) {
+          return { x: nodesArray0[idx * 3], y: nodesArray0[idx * 3 + 1], z: nodesArray0[idx * 3 + 2] };
+        } else {
+          const oIdx = (idx - nodeCount0) * 3;
+          return { x: nodesArray1[oIdx], y: nodesArray1[oIdx + 1], z: nodesArray1[oIdx + 2] };
+        }
       }
-    }
 
-    // Calculate proximity connection lines dynamically
-    const linePosAttr = connectionLines.geometry.getAttribute('position');
-    const lineColAttr = connectionLines.geometry.getAttribute('color');
-    const linePosArray = linePosAttr.array;
-    const lineColArray = lineColAttr.array;
+      const linePosAttr = connectionLines.geometry.getAttribute('position');
+      const lineColAttr = connectionLines.geometry.getAttribute('color');
+      const lPos = linePosAttr.array;
+      const lCol = lineColAttr.array;
 
-    let lineIndex = 0;
-    const threshold = 2.8;
-    const thresholdSq = threshold * threshold;
+      let lineIdx = 0;
+      const thresholdSq = 2.8 * 2.8;
 
-    for (let i = 0; i < connectionNodeCount && lineIndex < maxConnections; i++) {
-      const p1 = getParticlePosition(i);
-      const parentIdx1 = particleParents[i];
-      const cfg1 = coreConfigs[parentIdx1];
+      for (let i = 0; i < connectionLimit && lineIdx < connectionLimit; i++) {
+        const p1 = getNodePos(i);
+        const parent1 = particleParents[i];
 
-      for (let j = i + 1; j < connectionNodeCount && lineIndex < maxConnections; j++) {
-        // Fast optimization: only calculate lines between nodes belonging to the same or adjacent cores
-        if (particleParents[i] !== particleParents[j]) {
-          if (Math.abs(particleParents[i] - particleParents[j]) > 1) {
+        for (let j = i + 1; j < connectionLimit && lineIdx < connectionLimit; j++) {
+          if (particleParents[i] !== particleParents[j] && Math.abs(particleParents[i] - particleParents[j]) > 1) {
             continue;
           }
-        }
 
-        const p2 = getParticlePosition(j);
+          const p2 = getNodePos(j);
+          const dx = p1.x - p2.x;
+          const dy = p1.y - p2.y;
+          const dz = p1.z - p2.z;
+          const distSq = dx * dx + dy * dy + dz * dz;
 
-        const dx = p1.x - p2.x;
-        const dy = p1.y - p2.y;
-        const dz = p1.z - p2.z;
-        const distSq = dx * dx + dy * dy + dz * dz;
+          if (distSq < thresholdSq) {
+            const idx = lineIdx * 6;
+            lPos[idx] = p1.x;     lPos[idx + 1] = p1.y;     lPos[idx + 2] = p1.z;
+            lPos[idx + 3] = p2.x; lPos[idx + 4] = p2.y; lPos[idx + 5] = p2.z;
 
-        // Perform fast squared distance check first to avoid Math.sqrt overhead on millions of checks
-        if (distSq < thresholdSq) {
-          const distance = Math.sqrt(distSq);
-          const idx = lineIndex * 6;
-          
-          linePosArray[idx] = p1.x;
-          linePosArray[idx + 1] = p1.y;
-          linePosArray[idx + 2] = p1.z;
-          
-          linePosArray[idx + 3] = p2.x;
-          linePosArray[idx + 4] = p2.y;
-          linePosArray[idx + 5] = p2.z;
+            lCol[idx] = currentColors.primary.r;     lCol[idx + 1] = currentColors.primary.g;     lCol[idx + 2] = currentColors.primary.b;
+            lCol[idx + 3] = currentColors.primary.r; lCol[idx + 4] = currentColors.primary.g; lCol[idx + 5] = currentColors.primary.b;
 
-          // Connect matching gradient colors
-          const parentIdx2 = particleParents[j];
-          const cfg2 = coreConfigs[parentIdx2];
-
-          lineColArray[idx] = cfg1.color.r;
-          lineColArray[idx + 1] = cfg1.color.g;
-          lineColArray[idx + 2] = cfg1.color.b;
-
-          lineColArray[idx + 3] = cfg2.color.r;
-          lineColArray[idx + 4] = cfg2.color.g;
-          lineColArray[idx + 5] = cfg2.color.b;
-
-          lineIndex++;
+            lineIdx++;
+          }
         }
       }
+
+      for (let k = lineIdx; k < connectionLimit; k++) {
+        const idx = k * 6;
+        lPos[idx] = 0; lPos[idx + 1] = 0; lPos[idx + 2] = 0;
+        lPos[idx + 3] = 0; lPos[idx + 4] = 0; lPos[idx + 5] = 0;
+      }
+
+      linePosAttr.needsUpdate = true;
+      lineColAttr.needsUpdate = true;
     }
-
-    // Zero out unused line segments
-    for (let k = lineIndex; k < maxConnections; k++) {
-      const idx = k * 6;
-      linePosArray[idx] = 0;
-      linePosArray[idx + 1] = 0;
-      linePosArray[idx + 2] = 0;
-      linePosArray[idx + 3] = 0;
-      linePosArray[idx + 4] = 0;
-      linePosArray[idx + 5] = 0;
-    }
-
-    linePosAttr.needsUpdate = true;
-    lineColAttr.needsUpdate = true;
-
-    // mainGroup rotation removed to prevent pendulum/alignment shifts on domes.
-    // Parallax is now applied directly to camera positioning.
 
     renderer.render(scene, camera);
   }
 
-  animate();
+  requestAnimationFrame(renderLoop);
 })();

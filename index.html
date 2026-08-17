@@ -4,27 +4,27 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
-  <title>Aaron Alva — Cybersecurity Researcher & AI Security Developer</title>
+  <title>Aaron Alva — Cybersecurity Researcher &amp; Systems Developer</title>
   <meta name="description"
-    content="Cybersecurity researcher and creator of Mutagen, an autonomous AI zero-day fuzzer. TryHackMe certified (91 badges). OWASP | MITRE ATT&CK | Hugging Face | Ghidra." />
-  <meta property="og:title" content="Aaron Alva — Cybersecurity Researcher & AI Security Developer" />
-  <meta property="og:description" content="I build autonomous AI tools that find and fix zero-day vulnerabilities. Creator of Mutagen. TryHackMe certified." />
+    content="Grade 11 Cybersecurity Researcher &amp; creator of Mutagen. GIAC GFACT Candidate (CyberStart Canada Top Performer), TryHackMe Top 1% (91 rooms completed), and active Hack The Box CTF player." />
+  <meta property="og:title" content="Aaron Alva — Cybersecurity Researcher &amp; Systems Developer" />
+  <meta property="og:description" content="Open-source Python security tools, autonomous fuzzer pipelines, GIAC GFACT Scholar, and TryHackMe Top 1% ranking." />
   <meta property="og:image" content="og-image.png" />
   <meta property="og:type" content="website" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Aaron Alva — Cybersecurity Researcher & AI Security Developer" />
-  <meta name="twitter:description" content="I build autonomous AI tools that find and fix zero-day vulnerabilities. Creator of Mutagen." />
+  <meta name="twitter:title" content="Aaron Alva — Cybersecurity Researcher &amp; Systems Developer" />
+  <meta name="twitter:description" content="Open-source Python security tools, autonomous fuzzer pipelines, GIAC GFACT Scholar, and TryHackMe Top 1% ranking." />
   <meta name="twitter:image" content="og-image.png" />
   <meta name="theme-color" content="#0A0A0C" />
   <meta http-equiv="X-Content-Type-Options" content="nosniff" />
   <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preconnect" href="https://fonts.gstatic.com" />
   <link
     href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap"
     rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="style.css?v=1.4" />
+  <link rel="stylesheet" href="style.css?v=1.5" />
 </head>
 
 <body class="terminal-theme">
@@ -56,6 +56,18 @@
         <a href="#certs" class="nav-link" data-section="certs">Certs</a>
         <a href="#contact" class="nav-link contact-btn" data-section="contact">Contact</a>
       </nav>
+
+      <!-- ── NAV ACTIONS: AUDIO & CMD PALETTE ── -->
+      <div class="nav-actions">
+        <button class="nav-action-btn" id="audioToggleBtn" title="Toggle Web Audio SFX" aria-label="Toggle Sound Effects">
+          <span class="action-icon" id="audioIcon">🔊</span>
+          <span class="action-label">SFX</span>
+        </button>
+        <button class="nav-action-btn cmd-trigger-btn" id="cmdTriggerBtn" title="Open Command Palette (Ctrl+K)" aria-label="Open Command Palette">
+          <span class="cmd-badge">⌘K</span>
+        </button>
+      </div>
+
       <button class="hamburger" id="hamburger" aria-label="Open menu">
         <span></span><span></span><span></span>
       </button>
@@ -100,14 +112,14 @@
             <div class="card-edge-glow"></div>
             <h3 class="bento-heading">Profiling</h3>
             <p class="about-bio">
-              I am a <span class="highlight">Cybersecurity Researcher</span> and systems developer focused on automated vulnerability analysis, threat intelligence, and security log parsing. I build tools that inspect source code repositories, map system flaws to public CVE databases, and automate security auditing.
+              I am a <span class="highlight">Grade 11 student and cybersecurity researcher</span> building security automation tools and vulnerability discovery workflows. My primary language is <span class="highlight">Python</span>, which I use to develop tools that ingest security logs, correlate threat signatures, and safely run fuzzer payloads inside isolated Docker containers.
             </p>
             <p class="about-bio mt-4">
-              My technical background spans Linux systems, isolated virtual test environments, and network defense tools (including Nmap, Wireshark, Burp Suite, and Metasploit). Through projects like <span class="highlight">Mutagen</span> and <span class="highlight">Vigil Hunter</span>, I combine disassemblers, log aggregators, and fine-tuned AI models to streamline threat detection and code auditing.
+              I was awarded a full national scholarship to pursue the <span class="highlight">GIAC GFACT</span> certification as a <span class="highlight">Top Performer in CyberStart Canada</span>. I practice offensive security regularly through <span class="highlight">Hack The Box (HTB)</span> machines and <span class="highlight">TryHackMe (91 completed rooms, Top 1% worldwide)</span>, focusing on Linux privilege escalation, network recon, and LLM security testing.
             </p>
             <div class="about-nav-links mt-6">
-              <a href="#certs" class="text-link">→ View Certifications</a>
-              <a href="#projects" class="text-link">→ Analyze Projects</a>
+              <a href="#certs" class="text-link">→ View Credentials &amp; Scholarship</a>
+              <a href="#projects" class="text-link">→ View Projects</a>
             </div>
           </div>
 
@@ -148,25 +160,25 @@
                   <span class="mth-dot"></span>
                   <span class="mth-dot"></span>
                   <span class="mth-dot"></span>
-                  <span class="mth-title">mutagen@agentic-fuzzer:~</span>
+                  <span class="mth-title">mutagen@fuzzer-loop:~</span>
                 </div>
                 <div class="mutagen-terminal-body" id="mutagenLiveLogs">
                   <!-- Populated dynamically via app.js -->
-                  <div class="mutagen-log-line"><span class="log-time">[08:42:01]</span> <span class="log-tag tag-sys">SYS</span> AI zero-day scanner started...</div>
-                  <div class="mutagen-log-line"><span class="log-time">[08:42:03]</span> <span class="log-tag tag-agent">Ghidra</span> Disassembled functions successfully.</div>
+                  <div class="mutagen-log-line"><span class="log-time">[Phase 1]</span> <span class="log-tag tag-sys">AST</span> Analyzing C code semantics...</div>
+                  <div class="mutagen-log-line"><span class="log-time">[Phase 3]</span> <span class="log-tag tag-agent">Docker</span> Fuzzing in --network=none container</div>
                 </div>
               </div>
             </div>
             <div class="project-details">
               <h3 class="project-title text-white decrypt-trigger" data-text="Mutagen Zero-Day Fuzzer">Mutagen Zero-Day Fuzzer</h3>
               <p class="project-desc text-dim">
-                Autonomous agentic vulnerability platform. Runs Ghidra decompiler on C binaries, generates exploits to confirm vulnerability, applies source patches, and audits target stability.
+                Autonomous 5-phase fuzzer and auto-patcher built in Python. Uses LLMs to analyze C code semantics, generates targeted input payloads, runs executions inside isolated <span class="highlight">--network=none Docker sandboxes</span>, verifies crashes, and drafts source patches.
               </p>
               <div class="project-tags">
-                <span>Python</span><span class="clickable-cert-trigger" data-cert="cert-ai" style="cursor: pointer;">Gemini API</span><span>Ghidra</span><span>Docker</span>
+                <span>Python</span><span>AST Analysis</span><span>Docker Sandbox</span><span>Magic Byte Repair</span><span>Ghidra</span>
               </div>
               <div class="project-links mt-4">
-                <a href="https://github.com/Bunny-sysd/mutagen" target="_blank" rel="noopener noreferrer" class="proj-link live-btn">View Source</a>
+                <a href="https://github.com/Bunny-sysd/mutagen" target="_blank" rel="noopener noreferrer" class="proj-link live-btn">View Repository</a>
               </div>
             </div>
           </div>
@@ -176,24 +188,20 @@
             <div class="glitch-flash"></div>
             <div class="project-card-header">
               <span class="project-year">2026</span>
-              <span class="project-category">THREAT_INTEL / ENGINE</span>
+              <span class="project-category">THREAT_INTEL / CLI</span>
             </div>
             <div class="project-visual vigil-visual" style="position: relative; background: #06060a; display: flex; align-items: center; justify-content: space-between; padding: 1rem; border-bottom: 1px solid var(--border); overflow: hidden;">
-              <!-- Animated Glowing Red Scanner Eye (Nmap Red Eye style) -->
+              <!-- Animated Glowing Red Scanner Eye -->
               <div class="vigil-eye-container" style="position: relative; width: 90px; height: 90px; flex-shrink: 0; display: flex; align-items: center; justify-content: center;">
                 <div class="vigil-radar-pulse"></div>
                 <svg class="vigil-eye-svg" viewBox="0 0 100 100" style="width: 100%; height: 100%; filter: drop-shadow(0 0 10px rgba(255, 30, 67, 0.75));">
-                  <!-- Outer Target Radar Arc -->
                   <circle cx="50" cy="50" r="44" fill="none" stroke="#ff1e43" stroke-width="1.5" stroke-dasharray="8 4" opacity="0.6" class="spin-slow" />
                   <circle cx="50" cy="50" r="36" fill="none" stroke="rgba(255, 30, 67, 0.25)" stroke-width="1" />
-                  <!-- Cybernetic Eye Aperture Outline -->
                   <path d="M 10,50 Q 50,14 90,50 Q 50,86 10,50 Z" fill="rgba(18, 2, 8, 0.8)" stroke="#ff1e43" stroke-width="2" />
-                  <!-- Glowing Iris & Pupil (Looking Around Animation) -->
                   <g class="vigil-iris-group" id="vigilIris">
                     <circle cx="50" cy="50" r="18" fill="#38000a" stroke="#ff1e43" stroke-width="2" />
                     <circle cx="50" cy="50" r="12" fill="url(#redGlowGrad)" />
                     <circle cx="50" cy="50" r="5" fill="#ffffff" />
-                    <!-- Reticle Crosshair overlay -->
                     <line x1="50" y1="32" x2="50" y2="68" stroke="#ff4d6d" stroke-width="1" opacity="0.8" />
                     <line x1="32" y1="50" x2="68" y2="50" stroke="#ff4d6d" stroke-width="1" opacity="0.8" />
                   </g>
@@ -211,20 +219,20 @@
               <div class="terminal-window" style="flex: 1; height: 100%; font-family: var(--font-mono); font-size: 0.65rem; line-height: 1.5; color: var(--text-dim); background: #040407; border-radius: 4px; padding: 0.6rem 0.75rem; margin-left: 0.75rem; overflow: hidden; border: 1px solid rgba(255, 30, 67, 0.25);">
                 <div style="color: #ff4d6d; font-weight: bold; margin-bottom: 4px; display: flex; align-items: center; gap: 6px;">
                   <span class="status-dot animate-pulse" style="display:inline-block; width:6px; height:6px; border-radius:50%; background:#ff1e43; box-shadow:0 0 6px #ff1e43;"></span>
-                  VIGIL_SCANNER
+                  VIGIL_ENGINE
                 </div>
-                <div><span style="color: #ff1e43;">[SCAN]</span> Searching logs...</div>
-                <div><span style="color: var(--green);">[MATCH]</span> CVE-2026-1184</div>
-                <div><span style="color: #ffbd2e;">[POC]</span> 2 Exploits Found</div>
+                <div><span style="color: #ff1e43;">[INGEST]</span> Parsed Nmap XML + PEASS log</div>
+                <div><span style="color: var(--green);">[CORRELATE]</span> CVE-2026-1184 (NVD API v2.0)</div>
+                <div><span style="color: #ffbd2e;">[POC]</span> Verified GitHub exploit matched</div>
               </div>
             </div>
             <div class="project-details">
               <h3 class="project-title text-white decrypt-trigger" data-text="Vigil Threat Hunter">Vigil Threat Hunter</h3>
               <p class="project-desc text-dim">
-                Threat intelligence and vulnerability hunting engine. Ingests security logs, matches identified threats against CVE databases, discovers real-time GitHub PoC exploits, and audits source code dependencies.
+                CLI threat intelligence tool built in Python. Ingests Nmap scans, auth logs, and PEASS outputs, correlates findings with live CVE databases (NVD API, OSV.dev), discovers verified GitHub PoC exploits, and outputs structured SARIF and HTML reports.
               </p>
               <div class="project-tags">
-                <span>Python</span><span>CVE Search</span><span>GitHub API</span><span>Log Parser</span>
+                <span>Python</span><span>8 Log Parsers</span><span>NVD / OSV.dev</span><span>MITRE ATT&amp;CK</span><span>SARIF v2.1</span>
               </div>
               <div class="project-links mt-4">
                 <a href="https://github.com/Bunny-sysd/vigil-hunter" target="_blank" rel="noopener noreferrer" class="proj-link live-btn">View Repository</a>
@@ -239,22 +247,77 @@
               <span class="project-year">2025</span>
               <span class="project-category">LIVE_APP / FIREBASE</span>
             </div>
-            <div class="project-visual stock-visual" style="position: relative; background: #05070c; border-bottom: 1px solid var(--border); overflow: hidden; padding: 0;">
-              <!-- Embedded Live SignalHub Web App -->
-              <iframe src="https://signalhub-e79ba.web.app" style="width: 100%; height: 100%; border: none; background: #05070c; pointer-events: auto;" title="SignalHub AI Stock Dashboard" loading="lazy" sandbox="allow-scripts allow-same-origin allow-popups allow-forms" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+            <div class="project-visual stock-visual" style="position: relative; background: #04060c; border-bottom: 1px solid var(--border); overflow: hidden; padding: 0;">
+              <!-- Interactive Live SignalHub AI Radar HUD -->
+              <div class="signalhub-radar-container" id="signalhubRadar">
+                <!-- Ticker Header Bar -->
+                <div class="radar-ticker-bar">
+                  <div class="radar-status">
+                    <span class="radar-dot"></span>
+                    <span class="radar-feed-label">AI_FEED: LIVE</span>
+                  </div>
+                  <div class="radar-tabs" id="radarTabs">
+                    <button class="radar-tab active" data-ticker="NVDA">NVDA</button>
+                    <button class="radar-tab" data-ticker="SPY">SPY</button>
+                    <button class="radar-tab" data-ticker="TSLA">TSLA</button>
+                    <button class="radar-tab" data-ticker="BTC">BTC</button>
+                    <button class="radar-tab" data-ticker="LLY">LLY</button>
+                  </div>
+                </div>
+
+                <!-- Price & AI Metrics Display -->
+                <div class="radar-data-display">
+                  <div class="radar-price-block">
+                    <div class="radar-symbol-wrap">
+                      <span class="radar-symbol" id="radarSymbol">NVDA</span>
+                      <span class="radar-asset-name" id="radarAssetName">NVIDIA Corp</span>
+                    </div>
+                    <div class="radar-price-line">
+                      <span class="radar-price" id="radarPrice">$138.40</span>
+                      <span class="radar-change positive" id="radarChange">+4.25%</span>
+                    </div>
+                  </div>
+                  <div class="radar-ai-metric">
+                    <div class="metric-row">
+                      <span class="metric-title">AI SIGNAL</span>
+                      <span class="metric-val buy" id="radarSignal">STRONG BUY</span>
+                    </div>
+                    <div class="metric-row">
+                      <span class="metric-title">CONVICTION</span>
+                      <span class="metric-val" id="radarScore">94.2%</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Live Glowing Canvas Sparkline Chart -->
+                <div class="radar-canvas-wrap">
+                  <canvas id="radarSparklineCanvas"></canvas>
+                  <div class="canvas-grid-lines"></div>
+                </div>
+
+                <!-- Live Stream Feed Ticker Log -->
+                <div class="radar-footer">
+                  <div class="radar-eval-row">
+                    <span class="radar-eval-label">> MODEL:</span>
+                    <span class="radar-eval-val" id="radarModel">GEMMA_QUANT_V4</span>
+                    <span class="radar-eval-latency" id="radarLatency">42ms</span>
+                  </div>
+                  <div class="radar-action-hint">Click tickers above to switch feed</div>
+                </div>
+              </div>
             </div>
 
             <div class="project-details">
               <h3 class="project-title text-white decrypt-trigger" data-text="SignalHub Market AI Pipeline">SignalHub Market AI Pipeline</h3>
               <p class="project-desc text-dim">
-                Live AI-powered market intelligence dashboard deployed at <span class="highlight">signalhub-e79ba.web.app</span>. Ingests real-time financial feeds, parses JSON sentiment indicators, and executes LLM agent evaluations for trading signals.
+                Deployed market intelligence web application hosted on Firebase (<span class="highlight">signalhub-e79ba.web.app</span>). Ingests real-time financial market feeds, parses JSON sentiment data, and runs LLM evaluation pipelines.
               </p>
               <div class="project-tags">
-                <span>Live Web App</span><span>Firebase Cloud</span><span>Stock API</span><span>LLM Prompting</span><span>JSON Pipeline</span>
+                <span>Live Web App</span><span>Firebase Hosting</span><span>Stock APIs</span><span>LLM Pipelines</span><span>JSON Parsers</span>
               </div>
               <div class="project-links mt-4" style="display: flex; gap: 10px; flex-wrap: wrap;">
-                <a href="https://signalhub-e79ba.web.app" target="_blank" rel="noopener noreferrer" class="proj-link live-btn">Launch Live App ↗</a>
-                <a href="https://github.com/Bunny-sysd/portfolio" target="_blank" rel="noopener noreferrer" class="proj-link live-btn" style="background: rgba(255,255,255,0.05); border-color: var(--border);">Architecture Specs</a>
+                <a href="https://signalhub-e79ba.web.app" target="_blank" rel="noopener noreferrer" class="proj-link live-btn">Launch App ↗</a>
+                <a href="https://github.com/Bunny-sysd/portfolio" target="_blank" rel="noopener noreferrer" class="proj-link live-btn" style="background: rgba(255,255,255,0.05); border-color: var(--border);">Specs</a>
               </div>
             </div>
           </div>
@@ -272,7 +335,7 @@
                   <span class="tb-dot red" style="width: 6px; height: 6px; border-radius: 50%; background: #ff5f56;"></span>
                   <span class="tb-dot yellow" style="width: 6px; height: 6px; border-radius: 50%; background: #ffbd2e;"></span>
                   <span class="tb-dot green" style="width: 6px; height: 6px; border-radius: 50%; background: #27c93f;"></span>
-                  <span class="tb-title" style="font-family: var(--font-mono); font-size: 0.65rem; color: var(--text-muted); margin-left: 0.4rem;">kali@thm-target-box:~</span>
+                  <span class="tb-title" style="font-family: var(--font-mono); font-size: 0.65rem; color: var(--text-muted); margin-left: 0.4rem;">kali@thm-box:~</span>
                 </div>
                 <div class="terminal-body" id="thmLiveTerminal" style="padding: 0.85rem 1.25rem; font-family: var(--font-mono); font-size: 0.72rem; line-height: 1.6; height: calc(100% - 28px); overflow-y: hidden; background: #060608;">
                   <!-- Live typist content injected via app.js -->
@@ -280,15 +343,15 @@
               </div>
             </div>
             <div class="project-details">
-              <h3 class="project-title text-white decrypt-trigger" data-text="TryHackMe Offensive Operations">TryHackMe Offensive Operations</h3>
+              <h3 class="project-title text-white decrypt-trigger" data-text="Hands-on CTF Operations">Hands-on CTF Operations</h3>
               <p class="project-desc text-dim">
-                Practical penetration testing across active lab environments. Executes Nmap network reconnaissance, Metasploit exploitation, hash cracking with John the Ripper, privilege escalation, and Active Directory domain takeovers.
+                Practical penetration testing across active lab networks. Completed 91 rooms on TryHackMe (Top 1% Global ranking) alongside daily Hack The Box machines, practicing Nmap recon, hash cracking, privilege escalation, and Active Directory assessments.
               </p>
               <div class="project-tags">
-                <span class="clickable-cert-trigger" data-cert="cert-cyber" style="cursor: pointer;">Metasploit</span><span class="clickable-cert-trigger" data-cert="cert-cyber" style="cursor: pointer;">Nmap</span><span>John the Ripper</span><span>Burp Suite</span><span>Wireshark</span>
+                <span class="clickable-cert-trigger" data-cert="cert-cyber" style="cursor: pointer;">Metasploit</span><span class="clickable-cert-trigger" data-cert="cert-cyber" style="cursor: pointer;">Nmap</span><span>John the Ripper</span><span>Burp Suite</span><span>Wireshark</span><span>91 Rooms</span>
               </div>
               <div class="project-links mt-4">
-                <a href="https://tryhackme.com/p/354221973" target="_blank" rel="noopener noreferrer" class="proj-link live-btn">View Verified THM Profile</a>
+                <a href="https://tryhackme.com/p/354221973" target="_blank" rel="noopener noreferrer" class="proj-link live-btn">View TryHackMe Profile</a>
               </div>
             </div>
           </div>
@@ -328,13 +391,13 @@
             <div class="project-details">
               <h3 class="project-title text-white decrypt-trigger" data-text="Isolated Security Lab Sandbox">Isolated Security Lab Sandbox</h3>
               <p class="project-desc text-dim">
-                Custom-built VirtualBox isolated networking laboratory running Linux attacker and target virtual machines. Captures PCAP network traffic, analyzes malware execution vectors, and tests exploit payloads safely.
+                VirtualBox isolated network environment hosting Linux attacker and target virtual machines. Captures PCAP network traffic, analyzes malware execution vectors, and tests security configurations safely.
               </p>
               <div class="project-tags">
-                <span>VirtualBox</span><span>Arch Linux</span><span>Ubuntu</span><span>Wireshark PCAP</span><span>Isolated Sandbox</span>
+                <span>VirtualBox</span><span>Arch Linux</span><span>Ubuntu</span><span>Wireshark PCAP</span><span>Network Sandbox</span>
               </div>
               <div class="project-links mt-4">
-                <button class="proj-link live-btn" onclick="event.stopPropagation(); if(window.openProjectModal) window.openProjectModal('proj-vm');" style="cursor: pointer; border: none; font-family: var(--font-mono); outline: none;">Launch Interactive Topology ▶</button>
+                <button class="proj-link live-btn" onclick="event.stopPropagation(); if(window.openProjectModal) window.openProjectModal('proj-vm');" style="cursor: pointer; border: none; font-family: var(--font-mono); outline: none;">Topology View ▶</button>
               </div>
             </div>
           </div>
@@ -358,16 +421,16 @@
               </div>
               <div class="pentestai-status" style="text-align: center; font-family: var(--font-mono); font-size: 0.65rem; color: var(--green); display: flex; align-items: center; justify-content: center; gap: 6px;">
                 <span class="status-dot animate-pulse" style="display:inline-block; width:6px; height:6px; border-radius:50%; background:var(--green);"></span>
-                <span id="llmStatus">MODEL FINETUNING</span>
+                <span id="llmStatus">MODEL TRAINING</span>
               </div>
             </div>
             <div class="project-details">
               <h3 class="project-title text-white decrypt-trigger" data-text="Security LLM Training">Security LLM Training</h3>
               <p class="project-desc text-dim">
-                Fine-tuning large language models to categorize target software code vulnerabilities.
+                Fine-tuning language models on structured vulnerability datasets to test code analysis and automated report generation.
               </p>
               <div class="project-tags">
-                <span>HF API</span><span class="clickable-cert-trigger" data-cert="cert-ai" style="cursor: pointer;">Transformers</span>
+                <span>HF API</span><span class="clickable-cert-trigger" data-cert="cert-ai" style="cursor: pointer;">Transformers</span><span>PyTorch</span>
               </div>
               <div class="project-links mt-4">
                 <a href="https://huggingface.co/Bunny-sysd" target="_blank" rel="noopener noreferrer" class="proj-link live-btn">View Repository</a>
@@ -379,17 +442,71 @@
       </div>
     </section>
 
-    <!-- ── CERTIFICATIONS SECTION ── -->
+    <!-- ── CERTIFICATIONS & SCHOLARSHIPS SECTION ── -->
     <section class="section certs-section" id="certs">
       <div class="section-inner">
         <div class="section-header reveal-up">
           <span class="section-tag">04_CREDENTIALS</span>
-          <h2 class="section-title text-white decrypt-trigger" data-text="CERTIFICATIONS">CERTIFICATIONS</h2>
+          <h2 class="section-title text-white decrypt-trigger" data-text="CERTIFICATIONS">CREDENTIALS &amp; SCHOLARSHIPS</h2>
         </div>
 
-        <div class="certs-grid">
+        <div class="certs-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem;">
           
-          <!-- Cert 1 -->
+          <!-- Cert 1: GFACT Scholarship -->
+          <div class="cert-card glass-panel active-edge-green reveal-up" id="cert-gfact">
+            <div class="cert-header">
+              <div class="cert-badge">
+                <svg viewBox="0 0 60 60" width="60" height="60">
+                  <circle cx="30" cy="30" r="28" fill="none" stroke="#00ff66" stroke-width="2" stroke-dasharray="4 2" class="cert-ring" />
+                  <text x="50%" y="52%" dominant-baseline="middle" text-anchor="middle" fill="#00ff66" font-size="14" font-family="JetBrains Mono">★</text>
+                </svg>
+              </div>
+              <div class="cert-issuer">
+                <span class="cert-platform">CyberStart Canada</span>
+                <span class="cert-year">2025 – 2026</span>
+              </div>
+            </div>
+            <h3 class="cert-title text-white decrypt-trigger" data-text="GIAC GFACT Scholar">GIAC GFACT Scholar</h3>
+            <p class="cert-desc text-dim">
+              Awarded full national scholarship for top-tier performance in CyberStart Canada. Program coursework covers computer systems, networking protocols, Linux security, and Python scripting.
+            </p>
+            <div class="cert-modules">
+              <span>National Scholar</span><span>GFACT Candidate</span><span>Linux Security</span><span>Python</span>
+            </div>
+            <div class="cert-footer">
+              <span class="cert-status verified">SCHOLARSHIP AWARDED</span>
+              <span class="cert-link" style="color: var(--green); font-size: 0.72rem;">Top Performer</span>
+            </div>
+          </div>
+
+          <!-- Cert 2: TryHackMe Cybersecurity 101 (NEW) -->
+          <div class="cert-card glass-panel active-edge-green reveal-up" id="cert-cyber-101">
+            <div class="cert-header">
+              <div class="cert-badge">
+                <svg viewBox="0 0 60 60" width="60" height="60">
+                  <circle cx="30" cy="30" r="28" fill="none" stroke="#00ff66" stroke-width="2" stroke-dasharray="4 2" class="cert-ring" />
+                  <text x="50%" y="52%" dominant-baseline="middle" text-anchor="middle" fill="#00ff66" font-size="14" font-family="JetBrains Mono">#</text>
+                </svg>
+              </div>
+              <div class="cert-issuer">
+                <span class="cert-platform">TryHackMe</span>
+                <span class="cert-year">2026</span>
+              </div>
+            </div>
+            <h3 class="cert-title text-white decrypt-trigger" data-text="Cybersecurity 101">Cybersecurity 101</h3>
+            <p class="cert-desc text-dim">
+              Core security foundations pathway: Linux system fundamentals, networking architecture, web application security, offensive methods, and defensive SOC analysis.
+            </p>
+            <div class="cert-modules">
+              <span>Linux Fundamentals</span><span>Networking</span><span>Web Security</span><span>Defensive Ops</span>
+            </div>
+            <div class="cert-footer">
+              <span class="cert-status verified">VERIFIED</span>
+              <a href="https://tryhackme-certificates.s3-eu-west-1.amazonaws.com/THM-QTQSRVH3QE.pdf" target="_blank" rel="noopener noreferrer" class="cert-link">View Certificate</a>
+            </div>
+          </div>
+
+          <!-- Cert 3: TryHackMe Intro to Cybersecurity -->
           <div class="cert-card glass-panel active-edge-green reveal-up" id="cert-cyber">
             <div class="cert-header">
               <div class="cert-badge">
@@ -399,8 +516,8 @@
                 </svg>
               </div>
               <div class="cert-issuer">
-                <span class="cert-platform">TryHackMe</span>
-                <span class="cert-year">2025</span>
+                <span class="cert-platform">TryHackMe (Top 1%)</span>
+                <span class="cert-year">91 Rooms Completed</span>
               </div>
             </div>
             <h3 class="cert-title text-white decrypt-trigger" data-text="Intro to Cybersecurity">Intro to Cybersecurity</h3>
@@ -408,7 +525,7 @@
               Offensive and defensive security paths: Nmap, Metasploit, password cracking, web payloads, and network frame validation.
             </p>
             <div class="cert-modules">
-              <span>Nmap</span><span>Metasploit</span><span>John</span><span>Web</span>
+              <span>Nmap</span><span>Metasploit</span><span>John the Ripper</span><span>91 Rooms</span>
             </div>
             <div class="cert-footer">
               <span class="cert-status verified">VERIFIED</span>
@@ -416,7 +533,7 @@
             </div>
           </div>
 
-          <!-- Cert 2 -->
+          <!-- Cert 4: AI Security -->
           <div class="cert-card glass-panel active-edge-green reveal-up" id="cert-ai">
             <div class="cert-header">
               <div class="cert-badge">
@@ -432,7 +549,7 @@
             </div>
             <h3 class="cert-title text-white decrypt-trigger" data-text="AI Security">AI Security</h3>
             <p class="cert-desc text-dim">
-              Threat vectors, adversarial ML, prompt injection defenses, model theft safety, and data sanitization.
+              Threat vectors, adversarial ML, prompt injection defenses, model safety, and data sanitization.
             </p>
             <div class="cert-modules">
               <span>Adversarial ML</span><span>LLM Threat Models</span><span>Data Privacy</span>
@@ -447,12 +564,15 @@
 
         <!-- Familiar With -->
         <div class="knowledge-section glass-panel reveal-up mt-6">
-          <h3 class="knowledge-title text-white">System Familiarity</h3>
+          <h3 class="knowledge-title text-white">System Familiarity &amp; Practice</h3>
           <div class="knowledge-badges">
+            <div class="know-badge"><span>Hack The Box (Daily CTFs)</span></div>
+            <div class="know-badge"><span>TryHackMe (91 Rooms)</span></div>
+            <div class="know-badge"><span>Docker Sandboxing</span></div>
+            <div class="know-badge"><span>Python Security Tooling</span></div>
+            <div class="know-badge"><span>Ghidra RE</span></div>
             <div class="know-badge"><span>OWASP Top 10</span></div>
             <div class="know-badge"><span>MITRE ATT&amp;CK</span></div>
-            <div class="know-badge"><span>CVE Research</span></div>
-            <div class="know-badge"><span>Windows Exploits</span></div>
             <div class="know-badge"><span>Linux Privesc</span></div>
           </div>
         </div>
@@ -475,7 +595,7 @@
           </div>
           <div class="contact-term-body" id="contactTermBody">
             <div class="contact-term-line text-green">Ready to connect</div>
-            <div class="contact-term-line text-dim">Drop me a message — I'd love to hear from you.</div>
+            <div class="contact-term-line text-dim">Feel free to send a message.</div>
 
             <div class="contact-field-group">
               <label class="contact-field-label" for="contactName">Your Name:</label>
@@ -514,14 +634,12 @@
       <div class="cooling-fan" style="animation-delay: 0.03s;"></div>
     </div>
     <div class="fault-details-log">
-      *** CRITICAL SYSTEM ERROR // ALLOC FAULT EXCEPTION ***<br>
-      SYSTEM FAULT ALARM TRIGGERS // HEAP INHIBITED<br>
-      AUTOMATICALLY RESEATING VIRTUAL MEMORY BANK 3...
+      *** SYSTEM MEMORY FAULT EXCEPTION ***<br>
+      RESEATING VIRTUAL MEMORY BANK...
     </div>
   </div>
 
   <!-- ── PROJECT DETAIL MODAL ── -->
-  <!-- Floating Terminal Tooltip for Skills Hover -->
   <div id="terminalTooltip" class="terminal-tooltip glass-panel">
     <div class="tooltip-header">
       <span class="tooltip-dot"></span>
@@ -561,9 +679,8 @@
         <p class="fault-subtitle">RAM MODULE UNSEATED // BUS_LIMIT_EXCEEDED</p>
       </div>
 
-      <!-- Desktop interactive drag-drop game -->
       <div class="fault-desktop-game" id="faultDesktopGame">
-        <p class="fault-instruction">> drag the unstable memory module back into slot_0 to reseat connection:</p>
+        <p class="fault-instruction">> drag the memory module back into slot_0 to reseat connection:</p>
         <div class="ram-game-arena">
           <div class="ram-slot-target" id="ramSlot">
             <span class="slot-label">SLOT_0 // [EMPTY]</span>
@@ -574,7 +691,6 @@
         </div>
       </div>
 
-      <!-- Mobile interactive accelerometer shake game -->
       <div class="fault-mobile-game" id="faultMobileGame">
         <p class="fault-instruction">> physically shake device to seat memory controller, or tap module to override:</p>
         <div class="ram-game-arena">
@@ -587,7 +703,7 @@
       </div>
 
       <div class="fault-diagnostic-term">
-        <div class="diagnostic-line">> ALLOCATING CORE WEIGHTS FOR GEMMA_4 FINE-TUNING...</div>
+        <div class="diagnostic-line">> ALLOCATING CORE WEIGHTS FOR GEMMA_4 TRAINING...</div>
         <div class="diagnostic-line error">> [ERR_MEM_LIMIT] OUT OF MEMORY AT TRANSFORMATION LAYER 12</div>
         <div class="diagnostic-line error">> FAN CONTROLLER OVER-SPINNING // OVERHEATING PROBABLE</div>
       </div>
@@ -601,12 +717,147 @@
     </div>
   </div>
 
+  <!-- ── CYBER COMMAND PALETTE (CTRL+K) ── -->
+  <div id="cmdPalette" class="cmd-palette-overlay" aria-hidden="true">
+    <div class="cmd-palette-dialog glass-panel">
+      <div class="cmd-search-wrap">
+        <span class="cmd-search-icon">></span>
+        <input type="text" id="cmdInput" class="cmd-input" placeholder="Type a command or jump to section... (e.g. 'projects', 'theme', 'email')" autocomplete="off" spellcheck="false" />
+        <span class="cmd-esc-badge" id="cmdCloseBadge">ESC</span>
+      </div>
+
+      <div class="cmd-body" id="cmdBody">
+        <div class="cmd-group">
+          <div class="cmd-group-title">NAVIGATION</div>
+          <div class="cmd-item active" data-action="nav" data-target="#about">
+            <span class="cmd-item-icon">👤</span>
+            <div class="cmd-item-text">
+              <span class="cmd-item-title">About Me</span>
+              <span class="cmd-item-desc">Profiling &amp; technical background</span>
+            </div>
+            <span class="cmd-item-key">G A</span>
+          </div>
+          <div class="cmd-item" data-action="nav" data-target="#projects">
+            <span class="cmd-item-icon">🚀</span>
+            <div class="cmd-item-text">
+              <span class="cmd-item-title">Projects &amp; Tools</span>
+              <span class="cmd-item-desc">Mutagen, Vigil Hunter, SignalHub</span>
+            </div>
+            <span class="cmd-item-key">G P</span>
+          </div>
+          <div class="cmd-item" data-action="nav" data-target="#skills">
+            <span class="cmd-item-icon">⚡</span>
+            <div class="cmd-item-text">
+              <span class="cmd-item-title">Skills &amp; Tooling</span>
+              <span class="cmd-item-desc">Python, Kali Linux, Docker, Ghidra</span>
+            </div>
+            <span class="cmd-item-key">G S</span>
+          </div>
+          <div class="cmd-item" data-action="nav" data-target="#certs">
+            <span class="cmd-item-icon">🛡️</span>
+            <div class="cmd-item-text">
+              <span class="cmd-item-title">Credentials &amp; Scholarship</span>
+              <span class="cmd-item-desc">91 THM rooms, CyberStart Canada &amp; GFACT</span>
+            </div>
+            <span class="cmd-item-key">G C</span>
+          </div>
+          <div class="cmd-item" data-action="nav" data-target="#contact">
+            <span class="cmd-item-icon">📡</span>
+            <div class="cmd-item-text">
+              <span class="cmd-item-title">Contact</span>
+              <span class="cmd-item-desc">Direct messaging &amp; email</span>
+            </div>
+            <span class="cmd-item-key">G M</span>
+          </div>
+        </div>
+
+        <div class="cmd-group">
+          <div class="cmd-group-title">CRT PHOSPHOR THEMES</div>
+          <div class="cmd-item" data-action="theme" data-theme="green">
+            <span class="cmd-theme-swatch" style="background: #00ff66; box-shadow: 0 0 8px #00ff66;"></span>
+            <div class="cmd-item-text">
+              <span class="cmd-item-title">Matrix Green (Default)</span>
+              <span class="cmd-item-desc">Phosphor 0x00FF41</span>
+            </div>
+            <span class="cmd-item-key">T 1</span>
+          </div>
+          <div class="cmd-item" data-action="theme" data-theme="amber">
+            <span class="cmd-theme-swatch" style="background: #ffb000; box-shadow: 0 0 8px #ffb000;"></span>
+            <div class="cmd-item-text">
+              <span class="cmd-item-title">Cyber Amber</span>
+              <span class="cmd-item-desc">VT220 Phosphor Terminal</span>
+            </div>
+            <span class="cmd-item-key">T 2</span>
+          </div>
+          <div class="cmd-item" data-action="theme" data-theme="cyan">
+            <span class="cmd-theme-swatch" style="background: #00e5ff; box-shadow: 0 0 8px #00e5ff;"></span>
+            <div class="cmd-item-text">
+              <span class="cmd-item-title">Ice Cyan</span>
+              <span class="cmd-item-desc">Teal Terminal</span>
+            </div>
+            <span class="cmd-item-key">T 3</span>
+          </div>
+          <div class="cmd-item" data-action="theme" data-theme="monokai">
+            <span class="cmd-theme-swatch" style="background: #f92672; box-shadow: 0 0 8px #f92672;"></span>
+            <div class="cmd-item-text">
+              <span class="cmd-item-title">Stealth Monokai</span>
+              <span class="cmd-item-desc">Crimson Terminal</span>
+            </div>
+            <span class="cmd-item-key">T 4</span>
+          </div>
+        </div>
+
+        <div class="cmd-group">
+          <div class="cmd-group-title">QUICK ACTIONS</div>
+          <div class="cmd-item" data-action="copy-email">
+            <span class="cmd-item-icon">📋</span>
+            <div class="cmd-item-text">
+              <span class="cmd-item-title">Copy Email Address</span>
+              <span class="cmd-item-desc">aaronalva@yahoo.com</span>
+            </div>
+            <span class="cmd-item-badge" id="cmdCopyBadge">COPY</span>
+          </div>
+          <div class="cmd-item" data-action="open-github">
+            <span class="cmd-item-icon">🐙</span>
+            <div class="cmd-item-text">
+              <span class="cmd-item-title">Open GitHub</span>
+              <span class="cmd-item-desc">github.com/Bunny-sysd</span>
+            </div>
+            <span class="cmd-item-key">↗</span>
+          </div>
+          <div class="cmd-item" data-action="open-thm">
+            <span class="cmd-item-icon">🎯</span>
+            <div class="cmd-item-text">
+              <span class="cmd-item-title">Open TryHackMe Profile</span>
+              <span class="cmd-item-desc">tryhackme.com/p/354221973</span>
+            </div>
+            <span class="cmd-item-key">↗</span>
+          </div>
+          <div class="cmd-item" data-action="toggle-sound">
+            <span class="cmd-item-icon" id="cmdSoundIcon">🔊</span>
+            <div class="cmd-item-text">
+              <span class="cmd-item-title">Toggle Web Audio SFX</span>
+              <span class="cmd-item-desc" id="cmdSoundDesc">Sound synthesizer is currently active</span>
+            </div>
+            <span class="cmd-item-key">M</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="cmd-footer">
+        <span><kbd>↑</kbd> <kbd>↓</kbd> navigate</span>
+        <span><kbd>↵</kbd> select</span>
+        <span><kbd>ESC</kbd> close</span>
+      </div>
+    </div>
+  </div>
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
   <script type="module" src="src/main.jsx"></script>
-  <script src="three-bg.js?v=1.6"></script>
-  <script src="app.js?v=1.5"></script>
+  <script src="three-bg.js?v=2.3"></script>
+  <script src="app.js?v=2.3"></script>
 </body>
 
 </html>

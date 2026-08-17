@@ -193,7 +193,7 @@ function runHeroTerminalDiagnostics() {
     { text: '> [SYS] Initializing local Gemma 4 environment... [OK]', delay: 100, class: 'text-dim' },
     { text: '> [SYS] Establishing secure VM pipeline link... [OK]', delay: 350, class: 'text-dim' },
     { text: '> [SYS] Loading user profile: Aaron Lawrence Alva... [OK]', delay: 600, class: 'text-dim' },
-    { text: '> [SYS] Mapping 91 TryHackMe active badges... [OK]', delay: 850, class: 'text-dim' },
+    { text: '> [SYS] Mapping 91 TryHackMe completed rooms (Top 1%)... [OK]', delay: 850, class: 'text-dim' },
     { text: '> [SYS] Initializing NLP processing translation agent... [OK]', delay: 1100, class: 'text-green' },
     { text: '> Available modules loaded. Click any highlighted command below or type your inquiry.', delay: 1350, class: 'text-cyan' },
     { text: '==================================================', delay: 1500, class: 'separator' },
@@ -294,7 +294,7 @@ function runHeroTerminalDiagnostics() {
         printLine('------------------------------------------------------------', 'text-muted');
         printLine('LEGAL NAME: Aaron Lawrence Alva', 'text-white');
         printLine('VERIFIED CREDENTIALS:', 'text-green');
-        printLine('  1. TryHackMe Intro to Cybersecurity (91 Badges Map) - VERIFIED', 'text-dim');
+        printLine('  1. TryHackMe Intro to Cybersecurity (91 Rooms Completed (Top 1% Global)) - VERIFIED', 'text-dim');
         printLine('  2. TryHackMe AI Security (Prompt Injection / Attack Mapping) - VERIFIED', 'text-dim');
         printLine('------------------------------------------------------------', 'text-muted');
       }, 200);
@@ -308,7 +308,7 @@ function runHeroTerminalDiagnostics() {
         printLine('AARON ALVA // Mississauga, ON // Email: aaron.lawrence.alva@gmail.com', 'text-white');
         printLine('------------------------------------------------------------', 'text-muted');
         printLine('SUMMARY:', 'text-green');
-        printLine('  Motivated Grade 10 honours student with deep passion for network defense,', 'text-dim');
+        printLine('  Motivated Grade 11 honours student with deep passion for network defense,', 'text-dim');
         printLine('  ethical hacking, and automated security pipelines. Self-taught with fully', 'text-dim');
         printLine('  operational VirtualBox home lab running threat simulations.', 'text-dim');
         printLine('------------------------------------------------------------', 'text-muted');
@@ -325,7 +325,7 @@ function runHeroTerminalDiagnostics() {
         printLine('  - Gemma 4 Fine-Tuning: Finetuned local transformer model for red team pentesting.', 'text-dim');
         printLine('------------------------------------------------------------', 'text-muted');
         printLine('EDUCATION:', 'text-green');
-        printLine('  - Ontario Secondary School Diploma (St. Joseph, Mississauga, ON) // Grade 10', 'text-dim');
+        printLine('  - Ontario Secondary School Diploma (St. Joseph, Mississauga, ON) // Grade 11 (GFACT Scholar)', 'text-dim');
         printLine('  - Standing: Honours (80+) // Computer Science & Math coursework', 'text-dim');
         printLine('============================================================', 'text-muted');
       }, 200);
@@ -1876,23 +1876,593 @@ function playSystemAlarmBeep() {
   });
 })();
 
-// ── SIGNALHUB REAL-TIME JSON MARKET FEED SIMULATOR ──
-(function initSignalHubStream() {
-  const streamEl = document.getElementById('stockJsonStream');
-  if (!streamEl) return;
+// ═════════════════════════════════════════════════════════
+// 1. PROCEDURAL WEB AUDIO SFX ENGINE
+// ═════════════════════════════════════════════════════════
+const SoundFX = (function initWebAudioSFX() {
+  let audioCtx = null;
+  let isSoundEnabled = localStorage.getItem('sfx_enabled') !== 'false'; // Default enabled
 
-  const marketFeeds = [
-    { spy: { symbol: "SPY", name: "S&P 500 Index", last_price: 768.56, daily_change_percent: -0.16 }, qqq: { symbol: "QQQ", name: "Nasdaq 100", last_price: 714.65, daily_change_percent: -0.37 }, dia: { symbol: "DIA", name: "Dow Jones", last_price: 538.19, daily_change_percent: -0.85 } },
-    { nvda: { symbol: "NVDA", name: "NVIDIA Corp", last_price: 138.40, daily_change_percent: 4.25 }, tsla: { symbol: "TSLA", name: "Tesla Inc", last_price: 248.10, daily_change_percent: 3.72 }, msft: { symbol: "MSFT", name: "Microsoft", last_price: 442.50, daily_change_percent: 2.15 } },
-    { signal: "BUY_CONFIRMED", confidence: 0.942, target: 148.50, stop_loss: 132.00, eval_model: "gemini-flash-1.5", latency_ms: 42 }
-  ];
+  function getAudioContext() {
+    if (!audioCtx) {
+      const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+      if (AudioContextClass) {
+        audioCtx = new AudioContextClass();
+      }
+    }
+    if (audioCtx && audioCtx.state === 'suspended') {
+      audioCtx.resume();
+    }
+    return audioCtx;
+  }
 
-  let feedIdx = 0;
+  function playTone(freq, type, duration, gainVal = 0.05, rampDown = true) {
+    if (!isSoundEnabled) return;
+    try {
+      const ctx = getAudioContext();
+      if (!ctx) return;
+
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+
+      osc.type = type;
+      osc.frequency.setValueAtTime(freq, ctx.currentTime);
+
+      gain.gain.setValueAtTime(gainVal, ctx.currentTime);
+      if (rampDown) {
+        gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + duration);
+      }
+
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+
+      osc.start();
+      osc.stop(ctx.currentTime + duration);
+    } catch (e) {
+      // Ignore audio synthesis errors on locked browsers
+    }
+  }
+
+  // Preset cyber sound effects
+  const sfx = {
+    click: () => {
+      // Mechanical switch click
+      playTone(1800, 'square', 0.015, 0.025);
+      setTimeout(() => playTone(600, 'triangle', 0.02, 0.03), 8);
+    },
+    hover: () => {
+      // Subtle micro-tick
+      playTone(3200, 'sine', 0.008, 0.008);
+    },
+    chime: () => {
+      // High-tech terminal acknowledgment chime
+      playTone(880, 'sine', 0.08, 0.03);
+      setTimeout(() => playTone(1320, 'sine', 0.12, 0.04), 45);
+    },
+    action: () => {
+      // Success confirmation chirp
+      playTone(520, 'triangle', 0.05, 0.03);
+      setTimeout(() => playTone(1040, 'sine', 0.09, 0.04), 35);
+    },
+    toggle: () => {
+      // Toggle sound
+      playTone(700, 'sine', 0.04, 0.025);
+      setTimeout(() => playTone(450, 'triangle', 0.05, 0.025), 30);
+    }
+  };
+
+  // Bind sound toggle button in header
+  const toggleBtn = document.getElementById('audioToggleBtn');
+  const audioIcon = document.getElementById('audioIcon');
+
+  function updateAudioUI() {
+    if (toggleBtn) {
+      toggleBtn.classList.toggle('active-sfx', isSoundEnabled);
+      if (audioIcon) {
+        audioIcon.textContent = isSoundEnabled ? '🔊' : '🔇';
+      }
+    }
+    const cmdDesc = document.getElementById('cmdSoundDesc');
+    const cmdIcon = document.getElementById('cmdSoundIcon');
+    if (cmdDesc) {
+      cmdDesc.textContent = isSoundEnabled ? 'Sound synthesizer: Active (Enabled)' : 'Sound synthesizer: Muted (Disabled)';
+    }
+    if (cmdIcon) {
+      cmdIcon.textContent = isSoundEnabled ? '🔊' : '🔇';
+    }
+  }
+
+  if (toggleBtn) {
+    toggleBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      isSoundEnabled = !isSoundEnabled;
+      localStorage.setItem('sfx_enabled', isSoundEnabled ? 'true' : 'false');
+      updateAudioUI();
+      if (isSoundEnabled) {
+        sfx.chime();
+      }
+    });
+  }
+
+  // Attach tactile audio to interactive buttons & links
+  document.addEventListener('click', (e) => {
+    const target = e.target.closest('a, button, .cmd-item, .radar-tab, .cert-card, .know-badge');
+    if (target) {
+      sfx.click();
+    }
+  });
+
+  updateAudioUI();
+
+  return {
+    ...sfx,
+    toggleState: () => {
+      isSoundEnabled = !isSoundEnabled;
+      localStorage.setItem('sfx_enabled', isSoundEnabled ? 'true' : 'false');
+      updateAudioUI();
+      return isSoundEnabled;
+    }
+  };
+})();
+
+// ═════════════════════════════════════════════════════════
+// 2. SIGNALHUB LIVE AI MARKET RADAR CONTROLLER
+// ═════════════════════════════════════════════════════════
+(function initSignalHubRadar() {
+  const radarRoot = document.getElementById('signalhubRadar');
+  if (!radarRoot) return;
+
+  const canvas = document.getElementById('radarSparklineCanvas');
+  const tabs = document.querySelectorAll('.radar-tab');
+  const symbolEl = document.getElementById('radarSymbol');
+  const nameEl = document.getElementById('radarAssetName');
+  const priceEl = document.getElementById('radarPrice');
+  const changeEl = document.getElementById('radarChange');
+  const signalEl = document.getElementById('radarSignal');
+  const scoreEl = document.getElementById('radarScore');
+  const latencyEl = document.getElementById('radarLatency');
+
+  // Stock telemetry dataset
+  const tickersData = {
+    NVDA: {
+      name: "NVIDIA Corp",
+      price: 138.40,
+      change: "+4.25%",
+      positive: true,
+      signal: "STRONG BUY",
+      score: "94.2%",
+      latency: "42ms",
+      points: [126.5, 128.2, 127.8, 131.0, 130.4, 134.2, 133.8, 136.5, 138.4]
+    },
+    SPY: {
+      name: "S&P 500 Index",
+      price: 588.56,
+      change: "+0.40%",
+      positive: true,
+      signal: "ACCUMULATION",
+      score: "88.0%",
+      latency: "36ms",
+      points: [584.2, 585.1, 584.8, 586.3, 585.9, 587.4, 586.8, 588.1, 588.56]
+    },
+    TSLA: {
+      name: "Tesla Inc",
+      price: 241.13,
+      change: "-3.09%",
+      positive: false,
+      signal: "AVOID / ROTATION",
+      score: "16.5%",
+      latency: "48ms",
+      points: [252.0, 249.5, 250.2, 246.8, 248.0, 244.3, 245.1, 242.0, 241.13]
+    },
+    BTC: {
+      name: "Bitcoin / USD",
+      price: 96450.00,
+      change: "+2.85%",
+      positive: true,
+      signal: "MOMENTUM BUY",
+      score: "91.8%",
+      latency: "28ms",
+      points: [93100, 93800, 93400, 94600, 94200, 95400, 95100, 96000, 96450]
+    },
+    LLY: {
+      name: "Eli Lilly & Co",
+      price: 888.65,
+      change: "+4.72%",
+      positive: true,
+      signal: "STRONG BUY",
+      score: "92.4%",
+      latency: "39ms",
+      points: [846.0, 852.5, 849.0, 865.2, 861.8, 874.0, 871.2, 882.5, 888.65]
+    }
+  };
+
+  let activeTicker = "NVDA";
+  let pulsePhase = 0;
+  let chartPoints = [...tickersData.NVDA.points];
+
+  // Canvas drawing loop
+  function drawSparkline() {
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const dpr = window.devicePixelRatio || 1;
+    const rect = canvas.getBoundingClientRect();
+
+    if (canvas.width !== rect.width * dpr || canvas.height !== rect.height * dpr) {
+      canvas.width = rect.width * dpr;
+      canvas.height = rect.height * dpr;
+    }
+
+    ctx.save();
+    ctx.scale(dpr, dpr);
+    const w = rect.width;
+    const h = rect.height;
+
+    ctx.clearRect(0, 0, w, h);
+
+    const data = chartPoints;
+    if (data.length < 2) return;
+
+    const min = Math.min(...data);
+    const max = Math.max(...data);
+    const range = (max - min) || 1;
+    const padding = 14;
+
+    const coords = data.map((val, idx) => {
+      const x = padding + (idx / (data.length - 1)) * (w - padding * 2);
+      const y = h - padding - ((val - min) / range) * (h - padding * 2);
+      return { x, y };
+    });
+
+    const isPositive = tickersData[activeTicker].positive;
+    const strokeColor = isPositive ? 'rgba(0, 255, 102, 0.95)' : 'rgba(255, 74, 90, 0.95)';
+    const fillColor = isPositive ? 'rgba(0, 255, 102, 0.12)' : 'rgba(255, 74, 90, 0.12)';
+
+    // Draw area fill
+    ctx.beginPath();
+    ctx.moveTo(coords[0].x, coords[0].y);
+    for (let i = 0; i < coords.length - 1; i++) {
+      const xc = (coords[i].x + coords[i + 1].x) / 2;
+      const yc = (coords[i].y + coords[i + 1].y) / 2;
+      ctx.quadraticCurveTo(coords[i].x, coords[i].y, xc, yc);
+    }
+    ctx.lineTo(coords[coords.length - 1].x, coords[coords.length - 1].y);
+    ctx.lineTo(coords[coords.length - 1].x, h);
+    ctx.lineTo(coords[0].x, h);
+    ctx.closePath();
+
+    const gradient = ctx.createLinearGradient(0, 0, 0, h);
+    gradient.addColorStop(0, fillColor);
+    gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+    ctx.fillStyle = gradient;
+    ctx.fill();
+
+    // Draw main stroke line
+    ctx.beginPath();
+    ctx.moveTo(coords[0].x, coords[0].y);
+    for (let i = 0; i < coords.length - 1; i++) {
+      const xc = (coords[i].x + coords[i + 1].x) / 2;
+      const yc = (coords[i].y + coords[i + 1].y) / 2;
+      ctx.quadraticCurveTo(coords[i].x, coords[i].y, xc, yc);
+    }
+    ctx.lineTo(coords[coords.length - 1].x, coords[coords.length - 1].y);
+
+    ctx.strokeStyle = strokeColor;
+    ctx.lineWidth = 2.2;
+    ctx.shadowColor = strokeColor;
+    ctx.shadowBlur = 10;
+    ctx.stroke();
+
+    // Draw end pulsing point
+    const lastCoord = coords[coords.length - 1];
+    pulsePhase += 0.06;
+    const pulseSize = 4 + Math.sin(pulsePhase) * 2;
+
+    ctx.beginPath();
+    ctx.arc(lastCoord.x, lastCoord.y, pulseSize, 0, Math.PI * 2);
+    ctx.fillStyle = strokeColor;
+    ctx.shadowBlur = 12;
+    ctx.fill();
+
+    ctx.restore();
+    requestAnimationFrame(drawSparkline);
+  }
+
+  function updateTickerDisplay(tickerKey) {
+    activeTicker = tickerKey;
+    const d = tickersData[tickerKey];
+    if (!d) return;
+
+    chartPoints = [...d.points];
+
+    if (symbolEl) symbolEl.textContent = tickerKey;
+    if (nameEl) nameEl.textContent = d.name;
+    if (priceEl) {
+      priceEl.textContent = tickerKey === 'BTC'
+        ? `$${d.price.toLocaleString('en-US', { minimumFractionDigits: 2 })}`
+        : `$${d.price.toFixed(2)}`;
+      priceEl.style.color = d.positive ? 'var(--green)' : '#ff4a5a';
+    }
+    if (changeEl) {
+      changeEl.textContent = d.change;
+      changeEl.className = `radar-change ${d.positive ? 'positive' : 'negative'}`;
+    }
+    if (signalEl) {
+      signalEl.textContent = d.signal;
+      signalEl.className = `metric-val ${d.positive ? 'buy' : 'avoid'}`;
+    }
+    if (scoreEl) scoreEl.textContent = d.score;
+    if (latencyEl) latencyEl.textContent = d.latency;
+
+    tabs.forEach(t => {
+      t.classList.toggle('active', t.dataset.ticker === tickerKey);
+    });
+  }
+
+  // Tab click listeners
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      const ticker = tab.dataset.ticker;
+      if (ticker && ticker !== activeTicker) {
+        SoundFX.hover();
+        updateTickerDisplay(ticker);
+      }
+    });
+  });
+
+  // Micro-fluctuation simulation to keep radar alive
   setInterval(() => {
-    const feedData = marketFeeds[feedIdx % marketFeeds.length];
-    streamEl.textContent = JSON.stringify(feedData, null, 2);
-    feedIdx++;
-  }, 3500);
+    if (chartPoints.length > 0) {
+      const last = chartPoints[chartPoints.length - 1];
+      const delta = (Math.random() - 0.48) * (last * 0.0035);
+      chartPoints[chartPoints.length - 1] = Math.max(1, last + delta);
+    }
+  }, 2200);
+
+  updateTickerDisplay('NVDA');
+  requestAnimationFrame(drawSparkline);
+})();
+
+// ═════════════════════════════════════════════════════════
+// 3. CRT THEME ENGINE & PERSISTENCE
+// ═════════════════════════════════════════════════════════
+const ThemeEngine = (function initThemeEngine() {
+  const THEME_KEY = 'portfolio_crt_theme';
+  const validThemes = ['green', 'amber', 'cyan', 'monokai'];
+
+  function applyTheme(themeName, playSound = false) {
+    if (!validThemes.includes(themeName)) themeName = 'green';
+
+    if (themeName === 'green') {
+      delete document.documentElement.dataset.theme;
+    } else {
+      document.documentElement.dataset.theme = themeName;
+    }
+
+    localStorage.setItem(THEME_KEY, themeName);
+
+    if (playSound) {
+      SoundFX.action();
+    }
+  }
+
+  // Load saved theme on boot
+  const savedTheme = localStorage.getItem(THEME_KEY) || 'green';
+  applyTheme(savedTheme, false);
+
+  return {
+    setTheme: applyTheme,
+    getTheme: () => localStorage.getItem(THEME_KEY) || 'green'
+  };
+})();
+
+// ═════════════════════════════════════════════════════════
+// 4. CYBER COMMAND PALETTE (CTRL+K / CMD+K) CONTROLLER
+// ═════════════════════════════════════════════════════════
+(function initCommandPalette() {
+  const palette = document.getElementById('cmdPalette');
+  const input = document.getElementById('cmdInput');
+  const closeBadge = document.getElementById('cmdCloseBadge');
+  const triggerBtn = document.getElementById('cmdTriggerBtn');
+  const itemsContainer = document.getElementById('cmdBody');
+
+  if (!palette || !input) return;
+
+  let isOpen = false;
+  let activeIndex = 0;
+
+  function getVisibleItems() {
+    return Array.from(palette.querySelectorAll('.cmd-item')).filter(
+      item => item.style.display !== 'none'
+    );
+  }
+
+  function openPalette() {
+    isOpen = true;
+    palette.classList.add('open');
+    palette.setAttribute('aria-hidden', 'false');
+    input.value = '';
+    filterItems('');
+    input.focus();
+    SoundFX.chime();
+  }
+
+  function closePalette() {
+    if (!isOpen) return;
+    isOpen = false;
+    palette.classList.remove('open');
+    palette.setAttribute('aria-hidden', 'true');
+    input.blur();
+    SoundFX.click();
+  }
+
+  function highlightItem(index) {
+    const visible = getVisibleItems();
+    if (visible.length === 0) return;
+
+    if (index < 0) index = visible.length - 1;
+    if (index >= visible.length) index = 0;
+
+    activeIndex = index;
+    visible.forEach((item, i) => {
+      item.classList.toggle('active', i === activeIndex);
+    });
+
+    // Scroll into view if needed
+    visible[activeIndex]?.scrollIntoView({ block: 'nearest' });
+  }
+
+  function executeItem(item) {
+    if (!item) return;
+    const action = item.dataset.action;
+
+    if (action === 'nav') {
+      const targetId = item.dataset.target;
+      closePalette();
+      const sec = document.querySelector(targetId);
+      if (sec) {
+        sec.scrollIntoView({ behavior: 'smooth' });
+        SoundFX.action();
+      }
+    } else if (action === 'theme') {
+      const theme = item.dataset.theme;
+      ThemeEngine.setTheme(theme, true);
+      closePalette();
+    } else if (action === 'copy-email') {
+      const email = 'aaronalva@yahoo.com';
+      navigator.clipboard.writeText(email).then(() => {
+        const badge = document.getElementById('cmdCopyBadge');
+        if (badge) {
+          badge.textContent = 'COPIED!';
+          badge.style.background = 'var(--green)';
+          badge.style.color = '#000';
+          setTimeout(() => {
+            badge.textContent = 'COPY';
+            badge.style.background = '';
+            badge.style.color = '';
+          }, 2000);
+        }
+        SoundFX.action();
+      });
+    } else if (action === 'open-github') {
+      window.open('https://github.com/Bunny-sysd', '_blank');
+      closePalette();
+    } else if (action === 'open-thm') {
+      window.open('https://tryhackme.com/p/354221973', '_blank');
+      closePalette();
+    } else if (action === 'toggle-sound') {
+      SoundFX.toggleState();
+    }
+  }
+
+  function filterItems(query) {
+    query = query.trim().toLowerCase();
+    const allGroups = palette.querySelectorAll('.cmd-group');
+
+    allGroups.forEach(group => {
+      let hasVisibleInGroup = false;
+      const items = group.querySelectorAll('.cmd-item');
+
+      items.forEach(item => {
+        const title = item.querySelector('.cmd-item-title')?.textContent.toLowerCase() || '';
+        const desc = item.querySelector('.cmd-item-desc')?.textContent.toLowerCase() || '';
+        const matches = !query || title.includes(query) || desc.includes(query);
+
+        item.style.display = matches ? 'flex' : 'none';
+        if (matches) hasVisibleInGroup = true;
+      });
+
+      group.style.display = hasVisibleInGroup ? 'block' : 'none';
+    });
+
+    highlightItem(0);
+  }
+
+  // Keyboard shortcut listener (Ctrl+K, Cmd+K, /, ESC)
+  document.addEventListener('keydown', (e) => {
+    // Open on Ctrl+K or Cmd+K
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+      e.preventDefault();
+      if (isOpen) closePalette();
+      else openPalette();
+      return;
+    }
+
+    // Open on '/' if not inside an input/textarea
+    if (e.key === '/' && !isOpen && !['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) {
+      e.preventDefault();
+      openPalette();
+      return;
+    }
+
+    if (!isOpen) return;
+
+    if (e.key === 'Escape') {
+      e.preventDefault();
+      closePalette();
+    } else if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      highlightItem(activeIndex + 1);
+      SoundFX.hover();
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      highlightItem(activeIndex - 1);
+      SoundFX.hover();
+    } else if (e.key === 'Enter') {
+      e.preventDefault();
+      const visible = getVisibleItems();
+      if (visible[activeIndex]) {
+        executeItem(visible[activeIndex]);
+      }
+    }
+  });
+
+  // Input typing listener
+  input.addEventListener('input', (e) => {
+    filterItems(e.target.value);
+  });
+
+  // Click on items
+  itemsContainer.addEventListener('click', (e) => {
+    const item = e.target.closest('.cmd-item');
+    if (item) {
+      executeItem(item);
+    }
+  });
+
+  // Hover item highlights
+  itemsContainer.addEventListener('mousemove', (e) => {
+    const item = e.target.closest('.cmd-item');
+    if (item) {
+      const visible = getVisibleItems();
+      const idx = visible.indexOf(item);
+      if (idx !== -1 && idx !== activeIndex) {
+        activeIndex = idx;
+        visible.forEach((el, i) => el.classList.toggle('active', i === activeIndex));
+      }
+    }
+  });
+
+  // Header trigger button
+  if (triggerBtn) {
+    triggerBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      openPalette();
+    });
+  }
+
+  // Close badge
+  if (closeBadge) {
+    closeBadge.addEventListener('click', closePalette);
+  }
+
+  // Click backdrop outside dialog to close
+  palette.addEventListener('click', (e) => {
+    if (e.target === palette) {
+      closePalette();
+    }
+  });
 })();
 
 // Console log egg easter header

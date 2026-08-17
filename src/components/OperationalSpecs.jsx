@@ -1,107 +1,71 @@
 import React from 'react';
-import { motion } from 'framer-motion';
-import { Terminal, Brain, Layers, ShieldCheck, Cpu, Activity } from 'lucide-react';
+import { Terminal, Shield, Code, Cpu, Award } from 'lucide-react';
 
 export default function OperationalSpecs() {
   const specs = [
     {
-      label: 'HOST_OS',
-      value: 'Kali Linux / Kernel v6.12',
-      desc: 'Base operating environment hosting secure scripts.',
-      icon: Cpu,
-      color: 'text-cyan'
+      icon: Code,
+      label: 'Primary Stack',
+      value: 'Python 3.12 (Security Automation & Agents)',
     },
     {
-      label: 'LOCAL_MODEL',
-      value: 'Gemma-4-Security-FineTune',
-      desc: 'Locally hosted AI model for autonomous auditing.',
-      icon: Brain,
-      color: 'text-green'
-    },
-    {
-      label: 'TARGET_ARCH',
-      value: 'x86_64 ELF / PE32 Binaries',
-      desc: 'Primary binary compilation architectures targets audited.',
-      icon: Layers,
-      color: 'text-cyan'
-    },
-    {
-      label: 'ACTIVE_MISSION',
-      value: 'Closed-Loop Binary Patching',
-      desc: 'Main system objective for autonomous code vulnerability remediation.',
-      icon: ShieldCheck,
-      color: 'text-green'
-    },
-    {
-      label: 'SANDBOX_LAB',
-      value: 'VM Sandbox / Host Isolation',
-      desc: 'Isolated network sandbox environment for malware safety.',
       icon: Terminal,
-      color: 'text-cyan'
-    }
+      label: 'Security Systems',
+      value: 'Kali Linux, Docker Sandboxes, Ghidra',
+    },
+    {
+      icon: Shield,
+      label: 'Hands-on CTF',
+      value: 'TryHackMe (Top 1%, 91 Rooms) & Daily HTB',
+    },
+    {
+      icon: Award,
+      label: 'Scholarship / Award',
+      value: 'CyberStart Canada Top Performer (GFACT Candidate)',
+    },
   ];
 
   return (
-    <div className="grid grid-cols-1 gap-4 mt-6">
-      {specs.map((spec, i) => {
-        const IconComponent = spec.icon;
-        return (
-          <motion.div
-            key={spec.label}
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.35, delay: i * 0.08 }}
-            className="p-4 border border-[rgba(255,255,255,0.05)] bg-[rgba(15,20,36,0.35)] backdrop-blur-md rounded-[4px] relative overflow-hidden group hover:border-[rgba(0,255,102,0.2)] transition-all duration-300"
-          >
-            <div className="flex items-start justify-between gap-3">
-              <div className="flex-1">
-                <span className="text-[10px] tracking-wider text-[#4f5e75] font-mono block mb-1">
-                  {spec.label}:
-                </span>
-                <span className="text-sm font-semibold text-white font-mono block leading-snug">
-                  {spec.value}
-                </span>
-                <p className="text-[11px] text-[#A0AAB0] mt-1 leading-normal">
-                  {spec.desc}
-                </p>
-              </div>
-              <IconComponent className={`w-4 h-4 mt-0.5 opacity-60 group-hover:opacity-100 transition-opacity duration-300 ${spec.color === 'text-green' ? 'text-[#00ff66]' : 'text-[#00d4ff]'}`} />
-            </div>
-          </motion.div>
-        );
-      })}
+    <div
+      className="border border-white/5 rounded-xl p-6"
+      style={{
+        position: 'relative',
+        zIndex: 10,
+        backdropFilter: 'blur(16px)',
+        WebkitBackdropFilter: 'blur(16px)',
+        background: 'rgba(2, 4, 10, 0.40)',
+      }}
+    >
+      <div className="flex items-center gap-2 mb-4">
+        <Cpu className="w-4 h-4 text-[#00ff66]" />
+        <h4 className="text-xs font-mono font-bold tracking-widest text-white uppercase">
+          Profile Specs
+        </h4>
+      </div>
 
-      {/* PIPELINE STATUS */}
-      <motion.div
-        initial={{ opacity: 0, y: 15 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.35, delay: specs.length * 0.08 }}
-        className="p-4 border border-[rgba(255,255,255,0.05)] bg-[rgba(15,20,36,0.35)] backdrop-blur-md rounded-[4px] relative overflow-hidden group hover:border-[rgba(0,255,102,0.2)] transition-all duration-300"
-      >
-        <div className="flex items-center justify-between gap-3">
-          <div>
-            <span className="text-[10px] tracking-wider text-[#4f5e75] font-mono block mb-1">
-              PIPELINE_STATUS:
-            </span>
-            <div className="flex items-center gap-2">
-              <span className="text-sm font-bold text-[#00ff66] font-mono">
-                [ ACTIVE_MONITORING ]
-              </span>
+      <div className="space-y-4">
+        {specs.map((item) => {
+          const Icon = item.icon;
+          return (
+            <div key={item.label} className="border-b border-white/5 pb-3 last:border-b-0 last:pb-0">
+              <div className="flex items-center gap-2 mb-1">
+                <Icon className="w-3.5 h-3.5 text-gray-400" />
+                <span className="text-[11px] font-mono text-gray-400 uppercase tracking-wider">
+                  {item.label}
+                </span>
+              </div>
+              <p className="text-sm font-mono text-slate-200 pl-5.5">
+                {item.value}
+              </p>
             </div>
-            <p className="text-[11px] text-[#A0AAB0] mt-1 leading-normal">
-              Continuous integration status monitors.
-            </p>
-          </div>
-          <div className="flex items-center gap-2 pr-1">
-            <motion.span
-              animate={{ scale: [1, 1.25, 1] }}
-              transition={{ repeat: Infinity, duration: 1.5 }}
-              className="w-2.5 h-2.5 rounded-full bg-[#00ff66] shadow-[0_0_8px_#00ff66]"
-            />
-            <Activity className="w-4 h-4 text-[#00ff66] opacity-60" />
-          </div>
-        </div>
-      </motion.div>
+          );
+        })}
+      </div>
+
+      <div className="mt-6 pt-4 border-t border-white/5 flex items-center justify-between text-[11px] font-mono">
+        <span className="text-gray-400">Current Standing:</span>
+        <span className="text-[#00ff66] font-semibold">Grade 11 Student Researcher</span>
+      </div>
     </div>
   );
 }
