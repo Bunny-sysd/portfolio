@@ -326,42 +326,195 @@
   // Deep-Dive Particle Transition State
   let deepDiveScatter = 0; // 0 = normal, 1 = fully scattered
 
-  // 4. Opening Hero Refractive Glass Emblem (Top Crown Anchor)
-  const heroEmblemGroup = new THREE.Group();
-  heroEmblemGroup.position.set(0, 8.2, -4.5);
-  rootGroup.add(heroEmblemGroup);
+  // 4. PHOTOREALISTIC KINETIC DOC OCK ROBOTIC ARM & 4-CLAW HEAD (Reference Photo Design)
+  const docOckArmGroup = new THREE.Group();
+  rootGroup.add(docOckArmGroup);
 
-  const emblemRingGeo = new THREE.TorusGeometry(3.2, 0.22, 24, isLowPower ? 36 : 64);
-  const emblemGlassMat = new THREE.MeshPhysicalMaterial({
-    color: 0xffffff,
-    emissive: currentColors.primary.clone(),
-    emissiveIntensity: 0.35,
-    metalness: 0.1,
-    roughness: 0.15,
-    transparent: true,
-    opacity: 0.85
+  // High-Grade Materials: Charcoal Cast Iron & Industrial Hazard Gold Joints
+  const castIronMat = new THREE.MeshStandardMaterial({
+    color: 0x141820,
+    metalness: 0.95,
+    roughness: 0.28,
+    emissive: 0x040608,
+    emissiveIntensity: 0.25
   });
-  const emblemRing = new THREE.Mesh(emblemRingGeo, emblemGlassMat);
-  heroEmblemGroup.add(emblemRing);
 
-  const innerEmblemGeo = new THREE.OctahedronGeometry(1.6, 1);
-  const innerEmblemMat = new THREE.MeshBasicMaterial({
-    color: currentColors.accent.clone(),
-    wireframe: true,
-    transparent: true,
-    opacity: 0.85,
-    blending: THREE.AdditiveBlending
+  const industrialBrassMat = new THREE.MeshStandardMaterial({
+    color: 0xd4a017,
+    metalness: 0.88,
+    roughness: 0.32,
+    emissive: 0x332200,
+    emissiveIntensity: 0.30
   });
-  const innerEmblem = new THREE.Mesh(innerEmblemGeo, innerEmblemMat);
-  heroEmblemGroup.add(innerEmblem);
 
-  const orbitHaloGeo = new THREE.TorusGeometry(4.2, 0.03, 8, 48);
-  const orbitHaloMat = new THREE.MeshBasicMaterial({ color: currentColors.primary.clone(), transparent: true, opacity: 0.5, blending: THREE.AdditiveBlending });
-  const orbitHalo = new THREE.Mesh(orbitHaloGeo, orbitHaloMat);
-  orbitHalo.rotation.x = Math.PI / 3;
-  heroEmblemGroup.add(orbitHalo);
+  const laserEyeCoreMat = new THREE.MeshBasicMaterial({
+    color: 0xff0033
+  });
 
-  // 5. Central Titanium Cyber-Spine with Integrated Doc Ock Tentacle Arms
+  const laserBeamMat = new THREE.MeshBasicMaterial({
+    color: 0xff0033,
+    transparent: true,
+    opacity: 0.22,
+    blending: THREE.AdditiveBlending,
+    side: THREE.DoubleSide
+  });
+
+  // Segmented Arched Spine (28 Interlocking Vertebrae Plates)
+  const armCurve = new THREE.CubicBezierCurve3(
+    new THREE.Vector3(0, 16.5, -12),
+    new THREE.Vector3(0, 12.0, -6.5),
+    new THREE.Vector3(0, 7.8, -2.2),
+    new THREE.Vector3(0, 4.4, 0.6)
+  );
+
+  const armSegCount = 28;
+  const armPoints = armCurve.getPoints(armSegCount);
+  const armSegments = [];
+
+  const vertebraOuterGeo = new THREE.TorusGeometry(1.45, 0.22, 14, 28, Math.PI * 0.95);
+  const vertebraPinGeo = new THREE.CylinderGeometry(0.12, 0.12, 0.65, 12);
+  const vertebraKnuckleGeo = new THREE.BoxGeometry(0.32, 0.32, 0.35);
+  const conduitGeo = new THREE.CylinderGeometry(0.35, 0.35, 0.8, 16);
+
+  for (let s = 0; s < armSegCount; s++) {
+    const segGroup = new THREE.Group();
+    const pt = armPoints[s];
+    const nextPt = armPoints[Math.min(armSegCount, s + 1)];
+    segGroup.position.copy(pt);
+
+    // Look along curve tangent
+    const dir = new THREE.Vector3().subVectors(nextPt, pt).normalize();
+    segGroup.quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, 1), dir);
+
+    // Charcoal iron outer plate shell
+    const plate = new THREE.Mesh(vertebraOuterGeo, castIronMat);
+    plate.rotation.x = Math.PI / 2;
+    segGroup.add(plate);
+
+    // Industrial brass hinge knuckles on both flanks (Photo 2 yellow joint brackets)
+    const pinL = new THREE.Mesh(vertebraPinGeo, industrialBrassMat);
+    pinL.position.set(-1.42, 0, 0);
+    const pinR = new THREE.Mesh(vertebraPinGeo, industrialBrassMat);
+    pinR.position.set(1.42, 0, 0);
+
+    const knuckleL = new THREE.Mesh(vertebraKnuckleGeo, castIronMat);
+    knuckleL.position.set(-1.42, 0, 0);
+    const knuckleR = new THREE.Mesh(vertebraKnuckleGeo, castIronMat);
+    knuckleR.position.set(1.42, 0, 0);
+
+    segGroup.add(pinL, pinR, knuckleL, knuckleR);
+
+    // Internal power core conduit running inside the vertebrae
+    if (s % 2 === 0) {
+      const conduit = new THREE.Mesh(conduitGeo, industrialBrassMat);
+      conduit.rotation.x = Math.PI / 2;
+      segGroup.add(conduit);
+    }
+
+    docOckArmGroup.add(segGroup);
+    armSegments.push({
+      group: segGroup,
+      basePos: pt.clone(),
+      index: s,
+      phase: s * 0.2
+    });
+  }
+
+  // 4-Claw Head Hub (Positioned at end of arm curve)
+  const clawHeadGroup = new THREE.Group();
+  clawHeadGroup.position.copy(armPoints[armSegCount]);
+  // Pitch down slightly to face viewer/cards squarely
+  clawHeadGroup.rotation.x = 0.42;
+  docOckArmGroup.add(clawHeadGroup);
+
+  // Heavy Machined Hub Base
+  const hubGeo = new THREE.CylinderGeometry(1.45, 1.25, 0.65, 24);
+  const hubMesh = new THREE.Mesh(hubGeo, castIronMat);
+  hubMesh.rotation.x = Math.PI / 2;
+  clawHeadGroup.add(hubMesh);
+
+  // Outer Brass Trim Ring
+  const hubRingGeo = new THREE.TorusGeometry(1.48, 0.10, 12, 32);
+  const hubRing = new THREE.Mesh(hubRingGeo, industrialBrassMat);
+  clawHeadGroup.add(hubRing);
+
+  // Central Crimson Red Laser Eye Aperture (Photo 1)
+  const laserHousingGeo = new THREE.TorusGeometry(0.55, 0.14, 16, 24);
+  const laserHousing = new THREE.Mesh(laserHousingGeo, castIronMat);
+  laserHousing.position.z = 0.35;
+  clawHeadGroup.add(laserHousing);
+
+  const laserCoreGeo = new THREE.SphereGeometry(0.42, 20, 20);
+  const laserCore = new THREE.Mesh(laserCoreGeo, laserEyeCoreMat);
+  laserCore.position.z = 0.38;
+  clawHeadGroup.add(laserCore);
+
+  const clawRedLight = new THREE.PointLight(0xff0033, 2.8, 22);
+  clawRedLight.position.set(0, 0, 0.65);
+  clawHeadGroup.add(clawRedLight);
+
+  // Volumetric Conical Red Laser Beam
+  const beamGeo = new THREE.ConeGeometry(0.85, 8.0, 20, 1, true);
+  const laserBeam = new THREE.Mesh(beamGeo, laserBeamMat);
+  laserBeam.position.set(0, -4.0, 0.5);
+  laserBeam.rotation.x = -Math.PI / 2;
+  clawHeadGroup.add(laserBeam);
+
+  // 4 Articulated Claw Pincers (Top, Right, Bottom, Left - 90 deg spacing)
+  const clawPincers = [];
+  const pincerAngles = [0, Math.PI / 2, Math.PI, (3 * Math.PI) / 2];
+
+  pincerAngles.forEach((angle) => {
+    const clawRoot = new THREE.Group();
+    clawRoot.rotation.z = angle;
+    clawHeadGroup.add(clawRoot);
+
+    // Pivot mount at radius 1.25 from center
+    const clawPivot = new THREE.Group();
+    clawPivot.position.set(0, 1.25, 0.25);
+    clawRoot.add(clawPivot);
+
+    // Industrial brass base hinge bracket
+    const hingeBox = new THREE.Mesh(new THREE.BoxGeometry(0.42, 0.35, 0.45), industrialBrassMat);
+    clawPivot.add(hingeBox);
+
+    // Hydraulic piston cylinder
+    const piston = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.12, 0.75, 12), castIronMat);
+    piston.position.set(0, 0.35, 0.15);
+    clawPivot.add(piston);
+
+    // Heavy Triangular Curved Armored Claw Blade (Photo 1 & 2)
+    const bladeGroup = new THREE.Group();
+    bladeGroup.position.set(0, 0.65, 0.25);
+    clawPivot.add(bladeGroup);
+
+    // Primary curved iron armor blade
+    const bladeGeo = new THREE.ConeGeometry(0.38, 2.6, 4);
+    const blade = new THREE.Mesh(bladeGeo, castIronMat);
+    blade.position.set(0, 1.25, 0);
+    blade.scale.set(0.65, 1.0, 1.25);
+    blade.rotation.z = Math.PI;
+    blade.rotation.x = 0.15;
+    bladeGroup.add(blade);
+
+    // Inner serrated grip ridges (brass accent teeth)
+    for (let t = 0; t < 3; t++) {
+      const tooth = new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.14, 0.18), industrialBrassMat);
+      tooth.position.set(0, 0.6 + t * 0.5, -0.15);
+      bladeGroup.add(tooth);
+    }
+
+    clawPincers.push({
+      root: clawRoot,
+      pivot: clawPivot,
+      bladeGroup: bladeGroup
+    });
+  });
+
+  // Interactive Claw Clamping State
+  let clawOpenProgress = 1.0; // 1.0 = wide open (Photo 1), 0.0 = clamped closed (Photo 2)
+
+  // 5. Central Titanium Cyber-Spine
   const spineGroup = new THREE.Group();
   spineGroup.position.set(0, 0, -8);
   rootGroup.add(spineGroup);
@@ -446,120 +599,17 @@
     });
   }
 
-  // 4 Articulated Doc Ock Robotic Tentacles emerging from Spine
-  const docOckTentacles = [];
-  const clawFingerGeos = {
-    base: new THREE.BoxGeometry(0.20, 0.24, 0.80),
-    mid: new THREE.BoxGeometry(0.15, 0.18, 0.70),
-    tip: new THREE.ConeGeometry(0.11, 0.80, 8)
-  };
-  const clawCoreGeo = new THREE.SphereGeometry(0.34, 16, 16);
-  const clawCoreMat = new THREE.MeshStandardMaterial({
-    color: 0x00ff66,
-    emissive: 0x00ff66,
-    emissiveIntensity: 2.5,
-    metalness: 0.2,
-    roughness: 0.2
-  });
-
-  const tentacleArmConfigs = [
-    { name: 'TL', originY: 5.5, curveOut: new THREE.Vector3(-8.5, 6.5, -4.5), target: new THREE.Vector3(-7.2, 3.2, -2.0), isLeft: true },
-    { name: 'TR', originY: 5.5, curveOut: new THREE.Vector3(8.5, 6.5, -4.5), target: new THREE.Vector3(7.2, 3.2, -2.0), isLeft: false },
-    { name: 'BL', originY: -5.5, curveOut: new THREE.Vector3(-8.5, -6.5, -4.5), target: new THREE.Vector3(-7.2, -3.2, -2.0), isLeft: true },
-    { name: 'BR', originY: -5.5, curveOut: new THREE.Vector3(8.5, -6.5, -4.5), target: new THREE.Vector3(7.2, -3.2, -2.0), isLeft: false }
-  ];
-
-  tentacleArmConfigs.forEach((cfg, tIdx) => {
-    const tGroup = new THREE.Group();
-    spineGroup.add(tGroup);
-
-    const segCount = 20;
-    const segments = [];
-    const origin = new THREE.Vector3(cfg.isLeft ? -1.5 : 1.5, cfg.originY, 0);
-    const curve = new THREE.QuadraticBezierCurve3(origin, cfg.curveOut, cfg.target);
-    const points = curve.getPoints(segCount);
-
-    for (let s = 0; s < segCount; s++) {
-      const segMeshGroup = new THREE.Group();
-      const p = points[s];
-      segMeshGroup.position.copy(p);
-
-      const collar = new THREE.Mesh(new THREE.TorusGeometry(0.72, 0.16, 12, 20), titaniumCoreMat);
-      collar.rotation.x = Math.PI / 2;
-      segMeshGroup.add(collar);
-
-      tGroup.add(segMeshGroup);
-      segments.push({ group: segMeshGroup, basePos: p.clone(), index: s });
-    }
-
-    // 3-Prong Claw Head
-    const clawHeadGroup = new THREE.Group();
-    clawHeadGroup.position.copy(cfg.target);
-    tGroup.add(clawHeadGroup);
-
-    const clawHub = new THREE.Mesh(new THREE.CylinderGeometry(0.55, 0.45, 0.4, 16), titaniumCoreMat);
-    clawHub.rotation.x = Math.PI / 2;
-    clawHeadGroup.add(clawHub);
-
-    // Glowing Red Laser Eye
-    const redEye = new THREE.Mesh(clawCoreGeo, clawCoreMat);
-    redEye.position.set(0, 0, 0.35);
-    clawHeadGroup.add(redEye);
-
-    const redLight = new THREE.PointLight(0xff0033, 1.8, 12);
-    redLight.position.set(0, 0, 0.5);
-    clawHeadGroup.add(redLight);
-
-    // 3 Articulated Pincer Fingers
-    const prongs = [];
-    for (let p = 0; p < 3; p++) {
-      const prongPivot = new THREE.Group();
-      const angle = (p * Math.PI * 2) / 3;
-      prongPivot.rotation.z = angle;
-
-      const baseKnuckle = new THREE.Mesh(clawFingerGeos.base, vertebraChassisMat);
-      baseKnuckle.position.set(0, 0.55, 0.4);
-      prongPivot.add(baseKnuckle);
-
-      const midPivot = new THREE.Group();
-      midPivot.position.set(0, 0.55, 0.8);
-      prongPivot.add(midPivot);
-
-      const midKnuckle = new THREE.Mesh(clawFingerGeos.mid, titaniumCoreMat);
-      midKnuckle.position.set(0, 0.08, 0.35);
-      midPivot.add(midKnuckle);
-
-      const tipClaw = new THREE.Mesh(clawFingerGeos.tip, vertebraChassisMat);
-      tipClaw.position.set(0, 0.08, 1.0);
-      tipClaw.rotation.x = Math.PI / 2 + 0.35;
-      midPivot.add(tipClaw);
-
-      clawHeadGroup.add(prongPivot);
-      prongs.push({ pivot: prongPivot, midPivot });
-    }
-
-    docOckTentacles.push({
-      group: tGroup,
-      clawHead: clawHeadGroup,
-      segments,
-      prongs,
-      redLight,
-      config: cfg,
-      phase: tIdx * 1.5
-    });
-  });
-
   // Bottom Anchor: Quantum Transceiver Core Emblem
   const endEmblemGroup = new THREE.Group();
   endEmblemGroup.position.set(0, 20 - spineHeight, -12);
   spineGroup.add(endEmblemGroup);
 
   const endRingGeo = new THREE.TorusGeometry(3.2, 0.22, 16, 48);
-  const endRing = new THREE.Mesh(endRingGeo, emblemGlassMat.clone());
+  const endRing = new THREE.Mesh(endRingGeo, castIronMat);
   endEmblemGroup.add(endRing);
 
   const endOctGeo = new THREE.OctahedronGeometry(1.6, 0);
-  const endOct = new THREE.Mesh(endOctGeo, innerEmblemMat.clone());
+  const endOct = new THREE.Mesh(endOctGeo, industrialBrassMat);
   endEmblemGroup.add(endOct);
 
   // 6. True Active Theory 3D Helical Card Spiral (Authentic Portfolio Architecture)
@@ -683,11 +733,11 @@
     const ctx = c.getContext('2d');
     const col = data.color || '#00ff66';
 
-    // 1. Deep Obsidian Gradient Base
+    // 1. Translucent Obsidian Glass Base (Active Theory Cyber Jello)
     const bgGrad = ctx.createLinearGradient(0, 0, w, h);
-    bgGrad.addColorStop(0, '#060a14');
-    bgGrad.addColorStop(0.5, '#040711');
-    bgGrad.addColorStop(1, '#0a0510');
+    bgGrad.addColorStop(0, 'rgba(6, 10, 20, 0.72)');
+    bgGrad.addColorStop(0.5, 'rgba(4, 7, 17, 0.65)');
+    bgGrad.addColorStop(1, 'rgba(10, 5, 16, 0.75)');
     ctx.fillStyle = bgGrad;
     ctx.fillRect(0, 0, w, h);
 
@@ -885,23 +935,8 @@
     return tex;
   }
 
-  // Create 3D Card Meshes & Unique 3D Holographic Artifacts
-  const cardGeo = new THREE.PlaneGeometry(cardWidth, cardHeight);
-  const holographicArtifacts = [];
-
-  // Helper to create holographic line/wireframe material with theme support
-  function createHoloMaterial(color, isWireframe = true, opacity = 0.85) {
-    return new THREE.MeshStandardMaterial({
-      color: color,
-      emissive: color,
-      emissiveIntensity: 0.6,
-      wireframe: isWireframe,
-      transparent: true,
-      opacity: opacity,
-      roughness: 0.2,
-      metalness: 0.8
-    });
-  }
+  // Create Subdivided 32x40 3D Card Meshes (Active Theory Cyber Jello Geometry)
+  const cardGeo = new THREE.PlaneGeometry(cardWidth, cardHeight, 32, 40);
 
   cardData.forEach((data, i) => {
     const tex = generateCardTexture(data);
@@ -909,157 +944,151 @@
       map: tex,
       transparent: true,
       opacity: 0.95,
-      roughness: 0.15,
-      metalness: 0.10,
+      roughness: 0.18,
+      metalness: 0.12,
       side: THREE.DoubleSide
     });
+
+    // Uniforms for cyber jello fluid splitting & elastic spring recovery
+    const jelloUniforms = {
+      uPointerUV: { value: new THREE.Vector2(-999, -999) },
+      uPointerActive: { value: 0.0 },
+      uJelloTime: { value: 0.0 }
+    };
+
+    mat.onBeforeCompile = (shader) => {
+      shader.uniforms.uPointerUV = jelloUniforms.uPointerUV;
+      shader.uniforms.uPointerActive = jelloUniforms.uPointerActive;
+      shader.uniforms.uJelloTime = jelloUniforms.uJelloTime;
+
+      shader.vertexShader = shader.vertexShader.replace(
+        '#include <common>',
+        `#include <common>
+        uniform vec2 uPointerUV;
+        uniform float uPointerActive;
+        uniform float uJelloTime;`
+      );
+
+      shader.vertexShader = shader.vertexShader.replace(
+        '#include <begin_vertex>',
+        `#include <begin_vertex>
+        #ifdef USE_UV
+        if (uPointerActive > 0.001) {
+          float d = distance(uv, uPointerUV);
+          float radius = 0.38;
+          if (d < radius) {
+            float norm = d / radius;
+            float factor = (1.0 - norm) * uPointerActive;
+            // Radial fluid splitting / parting away from pointer
+            vec2 splitDir = normalize(uv - uPointerUV + vec2(0.0001, 0.0001));
+            transformed.x += splitDir.x * factor * 0.75;
+            transformed.y += splitDir.y * factor * 0.75;
+            // Tactile fluid ripple wave along Z
+            float wave = sin(norm * 14.0 - uJelloTime * 7.0) * exp(-norm * 2.8);
+            transformed.z += wave * factor * 0.45;
+          }
+        }
+        #endif`
+      );
+    };
 
     const mesh = new THREE.Mesh(cardGeo, mat);
     mesh.userData = {
       cardIndex: i,
       cardId: data.id,
       cardData: data,
-      isHovered: false
+      isHovered: false,
+      jelloUniforms: jelloUniforms,
+      targetActive: 0.0
     };
 
-    // ── UNIQUE 3D HOLOGRAPHIC SCULPTURE PER CARD ──
-    const artifactGroup = new THREE.Group();
-    artifactGroup.position.set(0, cardHeight * 0.15, 0.45); // Float on upper half of card
-    const colHex = parseInt(data.color.replace('#', '0x'), 16) || 0x00ff66;
-
-    if (i === 0) {
-      // 01: IDENTITY // 3D Cyber Icosahedron + Dual Gimbal Rings
-      const icoGeo = new THREE.IcosahedronGeometry(1.25, 1);
-      const icoMat = createHoloMaterial(colHex, true, 0.9);
-      const icoMesh = new THREE.Mesh(icoGeo, icoMat);
-      
-      const coreGeo = new THREE.SphereGeometry(0.55, 16, 16);
-      const coreMat = new THREE.MeshStandardMaterial({ color: 0xffffff, emissive: colHex, emissiveIntensity: 1.2, roughness: 0.1 });
-      const coreMesh = new THREE.Mesh(coreGeo, coreMat);
-
-      const ringGeo1 = new THREE.TorusGeometry(1.85, 0.035, 16, 64);
-      const ringMat1 = createHoloMaterial(colHex, false, 0.75);
-      const ring1 = new THREE.Mesh(ringGeo1, ringMat1);
-
-      const ringGeo2 = new THREE.TorusGeometry(2.15, 0.025, 16, 64);
-      const ringMat2 = createHoloMaterial(0xffffff, false, 0.6);
-      const ring2 = new THREE.Mesh(ringGeo2, ringMat2);
-      ring2.rotation.x = Math.PI / 2.5;
-
-      artifactGroup.add(icoMesh, coreMesh, ring1, ring2);
-      artifactGroup.userData = { type: 'identity', ico: icoMesh, core: coreMesh, ring1, ring2 };
-
-    } else if (i === 1) {
-      // 02: MUTAGEN // 3D Quantum Torus Knot & Orbiting Particles
-      const knotGeo = new THREE.TorusKnotGeometry(1.05, 0.26, 100, 16, 2, 3);
-      const knotMat = createHoloMaterial(colHex, true, 0.85);
-      const knotMesh = new THREE.Mesh(knotGeo, knotMat);
-
-      // Orbiting Quantum Particle Ring
-      const pCount = 80;
-      const pGeo = new THREE.BufferGeometry();
-      const pPos = new Float32Array(pCount * 3);
-      for (let p = 0; p < pCount; p++) {
-        const theta = (p / pCount) * Math.PI * 2;
-        const rad = 1.9 + (Math.random() - 0.5) * 0.4;
-        pPos[p * 3] = Math.cos(theta) * rad;
-        pPos[p * 3 + 1] = (Math.random() - 0.5) * 0.6;
-        pPos[p * 3 + 2] = Math.sin(theta) * rad;
-      }
-      pGeo.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
-      const pMat = new THREE.PointsMaterial({ color: 0xffffff, size: 0.12, transparent: true, opacity: 0.9 });
-      const pSystem = new THREE.Points(pGeo, pMat);
-
-      artifactGroup.add(knotMesh, pSystem);
-      artifactGroup.userData = { type: 'mutagen', knot: knotMesh, particles: pSystem };
-
-    } else if (i === 2) {
-      // 03: VIGIL // 3D Cyber Threat Radar Globe & Laser Sweep
-      const sphereGeo = new THREE.SphereGeometry(1.35, 18, 14);
-      const sphereMat = createHoloMaterial(colHex, true, 0.75);
-      const sphereMesh = new THREE.Mesh(sphereGeo, sphereMat);
-
-      const sweepGeo = new THREE.RingGeometry(0.1, 1.6, 32, 1, 0, Math.PI / 2.5);
-      const sweepMat = new THREE.MeshBasicMaterial({ color: colHex, side: THREE.DoubleSide, transparent: true, opacity: 0.55 });
-      const sweepMesh = new THREE.Mesh(sweepGeo, sweepMat);
-      sweepMesh.rotation.x = Math.PI / 2;
-
-      // Target blips on radar
-      const blipGeo = new THREE.BoxGeometry(0.15, 0.15, 0.15);
-      const blipMat = new THREE.MeshBasicMaterial({ color: 0xff3366 });
-      const blip1 = new THREE.Mesh(blipGeo, blipMat); blip1.position.set(0.8, 0.4, 0.6);
-      const blip2 = new THREE.Mesh(blipGeo, blipMat); blip2.position.set(-0.7, -0.3, 0.9);
-
-      artifactGroup.add(sphereMesh, sweepMesh, blip1, blip2);
-      artifactGroup.userData = { type: 'vigil', sphere: sphereMesh, sweep: sweepMesh, blip1, blip2 };
-
-    } else if (i === 3) {
-      // 04: SIGNALHUB // 3D Financial Wave Grid & Pulse Pillars
-      const waveGeo = new THREE.PlaneGeometry(2.8, 1.8, 14, 14);
-      const waveMat = createHoloMaterial(colHex, true, 0.85);
-      const waveMesh = new THREE.Mesh(waveGeo, waveMat);
-      waveMesh.rotation.x = -Math.PI / 3;
-
-      // Pulse pillars
-      const pillarGroup = new THREE.Group();
-      const pGeo = new THREE.BoxGeometry(0.12, 1.0, 0.12);
-      for (let bar = 0; bar < 5; bar++) {
-        const pMat = new THREE.MeshStandardMaterial({ color: colHex, emissive: colHex, emissiveIntensity: 0.8 });
-        const pMesh = new THREE.Mesh(pGeo, pMat);
-        pMesh.position.set(-0.8 + bar * 0.4, 0.3, 0);
-        pillarGroup.add(pMesh);
-      }
-
-      artifactGroup.add(waveMesh, pillarGroup);
-      artifactGroup.userData = { type: 'signalhub', wave: waveMesh, pillars: pillarGroup, waveGeo };
-
-    } else if (i === 4) {
-      // 05: PROVING GROUNDS // 3D Cyber Tesseract (Nested Hypercube)
-      const outerCubeGeo = new THREE.BoxGeometry(2.0, 2.0, 2.0);
-      const outerCubeMat = createHoloMaterial(colHex, true, 0.7);
-      const outerCube = new THREE.Mesh(outerCubeGeo, outerCubeMat);
-
-      const innerCubeGeo = new THREE.BoxGeometry(1.0, 1.0, 1.0);
-      const innerCubeMat = createHoloMaterial(0xffffff, true, 0.95);
-      const innerCube = new THREE.Mesh(innerCubeGeo, innerCubeMat);
-
-      artifactGroup.add(outerCube, innerCube);
-      artifactGroup.userData = { type: 'thm', outer: outerCube, inner: innerCube };
-
-    } else if (i === 5) {
-      // 06: TRANSMISSION // 3D Quantum Signal Dish & Radiating Pulse Rings
-      const dishGeo = new THREE.CylinderGeometry(0.2, 1.5, 0.5, 32, 1, true);
-      const dishMat = createHoloMaterial(colHex, true, 0.85);
-      const dishMesh = new THREE.Mesh(dishGeo, dishMat);
-      dishMesh.rotation.x = Math.PI / 2.5;
-
-      const emitterGeo = new THREE.SphereGeometry(0.35, 16, 16);
-      const emitterMat = new THREE.MeshStandardMaterial({ color: 0xffffff, emissive: colHex, emissiveIntensity: 1.5 });
-      const emitter = new THREE.Mesh(emitterGeo, emitterMat);
-      emitter.position.set(0, 0, 0.4);
-
-      // Radiating Wave Rings
-      const waveRings = [];
-      for (let r = 0; r < 3; r++) {
-        const ringGeo = new THREE.RingGeometry(1.2 + r * 0.5, 1.25 + r * 0.5, 32);
-        const ringMat = new THREE.MeshBasicMaterial({ color: colHex, side: THREE.DoubleSide, transparent: true, opacity: 0.6 - r * 0.18 });
-        const ring = new THREE.Mesh(ringGeo, ringMat);
-        ring.position.set(0, 0, 0.6 + r * 0.35);
-        artifactGroup.add(ring);
-        waveRings.push(ring);
-      }
-
-      artifactGroup.add(dishMesh, emitter);
-      artifactGroup.userData = { type: 'transmission', dish: dishMesh, emitter, rings: waveRings };
-    }
-
-    mesh.add(artifactGroup);
-    mesh.userData.artifact = artifactGroup;
-    holographicArtifacts.push(artifactGroup);
-
+    // Clean, unobstructed card face (front 3D rotating symbols removed per user directive)
     rootGroup.add(mesh);
     cardMeshes.push(mesh);
   });
+
+  // ── VOLUMETRIC CYBER GAS PARTICLE CLOUD (Puff / Plasma Mist) ──
+  const gasParticleCount = 180;
+  const gasGeo = new THREE.BufferGeometry();
+  const gasPositions = new Float32Array(gasParticleCount * 3);
+  const gasColors = new Float32Array(gasParticleCount * 3);
+  const gasSizes = new Float32Array(gasParticleCount);
+  const gasVelocities = [];
+
+  for (let g = 0; g < gasParticleCount; g++) {
+    gasPositions[g * 3] = 0;
+    gasPositions[g * 3 + 1] = 0;
+    gasPositions[g * 3 + 2] = 0;
+    gasColors[g * 3] = 0.0;
+    gasColors[g * 3 + 1] = 1.0;
+    gasColors[g * 3 + 2] = 0.4;
+    gasSizes[g] = 1.8 + Math.random() * 2.5;
+
+    const angle = Math.random() * Math.PI * 2;
+    const speed = 0.04 + Math.random() * 0.09;
+    gasVelocities.push({
+      vx: Math.cos(angle) * speed,
+      vy: Math.sin(angle) * speed,
+      vz: (Math.random() - 0.5) * speed * 0.6,
+      baseSpeed: speed,
+      angle: angle,
+      life: 0.0
+    });
+  }
+  gasGeo.setAttribute('position', new THREE.BufferAttribute(gasPositions, 3));
+  gasGeo.setAttribute('color', new THREE.BufferAttribute(gasColors, 3));
+  gasGeo.setAttribute('size', new THREE.BufferAttribute(gasSizes, 1));
+
+  function createGasCloudTexture() {
+    const gc = document.createElement('canvas');
+    gc.width = 128; gc.height = 128;
+    const gctx = gc.getContext('2d');
+    const gGrad = gctx.createRadialGradient(64, 64, 4, 64, 64, 64);
+    gGrad.addColorStop(0, 'rgba(255, 255, 255, 0.95)');
+    gGrad.addColorStop(0.2, 'rgba(255, 255, 255, 0.65)');
+    gGrad.addColorStop(0.5, 'rgba(255, 255, 255, 0.18)');
+    gGrad.addColorStop(1.0, 'rgba(255, 255, 255, 0.0)');
+    gctx.fillStyle = gGrad;
+    gctx.fillRect(0, 0, 128, 128);
+    return new THREE.CanvasTexture(gc);
+  }
+
+  const gasMaterial = new THREE.PointsMaterial({
+    size: 3.5,
+    map: createGasCloudTexture(),
+    vertexColors: true,
+    transparent: true,
+    opacity: 0.0,
+    blending: THREE.AdditiveBlending,
+    depthWrite: false
+  });
+  const gasCloud = new THREE.Points(gasGeo, gasMaterial);
+  gasCloud.visible = false;
+  rootGroup.add(gasCloud);
+
+  let gasBurstActive = false;
+  let gasBurstTime = 0;
+  let gasBurstColor = new THREE.Color(0x00ff66);
+
+  function triggerGasBurst(cardColorHex, originPos) {
+    gasBurstActive = true;
+    gasBurstTime = 0;
+    gasBurstColor.set(cardColorHex || '#00ff66');
+    gasCloud.visible = true;
+    gasCloud.position.copy(originPos || new THREE.Vector3(0, 0, 0));
+
+    const posAttr = gasGeo.attributes.position;
+    const colAttr = gasGeo.attributes.color;
+    for (let g = 0; g < gasParticleCount; g++) {
+      const r = 0.4 + Math.random() * 2.2;
+      const theta = Math.random() * Math.PI * 2;
+      posAttr.setXYZ(g, Math.cos(theta) * r, Math.sin(theta) * r, (Math.random() - 0.5) * 0.8);
+      colAttr.setXYZ(g, gasBurstColor.r, gasBurstColor.g, gasBurstColor.b);
+      gasVelocities[g].life = 1.0;
+    }
+    posAttr.needsUpdate = true;
+    colAttr.needsUpdate = true;
+  }
 
   // 7. Scroll Physics & Smooth Damping Engine
   let scrollProgress = 0;
@@ -1123,6 +1152,12 @@
     deepDiveTransitionTarget = 1;
     targetCameraZ = 18.0;
     cardEmissiveGlow = 1.0;
+
+    // Trigger Atmospheric Volumetric Cyber Gas Particle Burst
+    const activeColor = (cardData[targetIdx] && cardData[targetIdx].color) ? cardData[targetIdx].color : '#00ff66';
+    const cardObj = cardMeshes[targetIdx];
+    const cardPos = cardObj ? cardObj.position.clone() : new THREE.Vector3(0, 0, 0);
+    triggerGasBurst(activeColor, cardPos);
 
     // Trigger Cyber Audio SFX if available
     if (typeof window.playCyberSFX === 'function') {
@@ -1224,10 +1259,6 @@
     currentColors.spine2.copy(pal.spine2);
 
     scene.fog.color.copy(pal.fog);
-    emblemGlassMat.emissive.copy(pal.primary);
-    innerEmblemMat.color.copy(pal.accent);
-    orbitHaloMat.color.copy(pal.primary);
-
     spinePointLight.color.copy(pal.primary);
     spineAccentLight.color.copy(pal.accent);
     rimLight.color.copy(pal.accent);
@@ -1307,10 +1338,15 @@
       const intersects = raycaster.intersectObjects(cardMeshes);
 
       if (intersects.length > 0) {
-        const hit = intersects[0].object;
-        if (hoveredCard !== hit) {
+        const hit = intersects[0];
+        const hitMesh = hit.object;
+        if (hitMesh.userData.jelloUniforms && hit.uv) {
+          hitMesh.userData.jelloUniforms.uPointerUV.value.copy(hit.uv);
+          hitMesh.userData.targetActive = 1.0;
+        }
+        if (hoveredCard !== hitMesh) {
           if (hoveredCard) hoveredCard.userData.isHovered = false;
-          hoveredCard = hit;
+          hoveredCard = hitMesh;
           hoveredCard.userData.isHovered = true;
           document.body.style.cursor = 'pointer';
           if (typeof window.playCyberSFX === 'function') {
@@ -1412,59 +1448,13 @@
         mesh.scale.set(scale, scale, scale);
       }
 
-      // ── ANIMATE UNIQUE 3D HOLOGRAPHIC ARTIFACTS ──
-      const art = mesh.userData.artifact;
-      if (art && art.userData) {
-        const u = art.userData;
-        if (u.type === 'identity') {
-          u.ico.rotation.y = timeVal * 0.6;
-          u.ico.rotation.x = timeVal * 0.4;
-          u.core.scale.setScalar(0.9 + Math.sin(timeVal * 4.0) * 0.15);
-          u.ring1.rotation.y = timeVal * 0.9;
-          u.ring1.rotation.z = timeVal * 0.4;
-          u.ring2.rotation.x = -timeVal * 0.7;
-          u.ring2.rotation.z = timeVal * 0.5;
-        } else if (u.type === 'mutagen') {
-          u.knot.rotation.x = timeVal * 0.7;
-          u.knot.rotation.y = timeVal * 0.9;
-          u.knot.rotation.z = timeVal * 0.3;
-          u.particles.rotation.y = -timeVal * 1.4;
-        } else if (u.type === 'vigil') {
-          u.sphere.rotation.y = timeVal * 0.3;
-          u.sweep.rotation.z = -timeVal * 2.2;
-          const blipPulse = 0.8 + Math.sin(timeVal * 6.0) * 0.4;
-          u.blip1.scale.setScalar(blipPulse);
-          u.blip2.scale.setScalar(1.4 - blipPulse * 0.4);
-        } else if (u.type === 'signalhub') {
-          if (u.waveGeo) {
-            const pos = u.waveGeo.attributes.position;
-            for (let v = 0; v < pos.count; v++) {
-              const vx = pos.getX(v);
-              const vy = pos.getY(v);
-              pos.setZ(v, Math.sin(vx * 3.0 + timeVal * 4.0) * 0.25 + Math.cos(vy * 2.5 + timeVal * 3.0) * 0.2);
-            }
-            pos.needsUpdate = true;
-          }
-          u.pillars.children.forEach((p, pIdx) => {
-            const h = 0.4 + Math.sin(timeVal * 4.0 + pIdx * 1.2) * 0.35 + 0.35;
-            p.scale.y = Math.max(0.2, h);
-            p.position.y = (p.scale.y * 1.0) / 2;
-          });
-        } else if (u.type === 'thm') {
-          u.outer.rotation.x = timeVal * 0.4;
-          u.outer.rotation.y = timeVal * 0.6;
-          u.inner.rotation.x = -timeVal * 0.8;
-          u.inner.rotation.y = -timeVal * 1.1;
-        } else if (u.type === 'transmission') {
-          u.dish.rotation.z = Math.sin(timeVal * 1.2) * 0.2;
-          u.emitter.scale.setScalar(0.85 + Math.sin(timeVal * 6.0) * 0.2);
-          u.rings.forEach((r, rIdx) => {
-            const phase = (timeVal * 1.5 + rIdx * 0.8) % 2.5;
-            const rScale = 0.6 + phase * 0.5;
-            r.scale.set(rScale, rScale, 1.0);
-            r.material.opacity = Math.max(0, 0.7 - (phase / 2.5) * 0.7);
-          });
-        }
+      // ── CYBER JELLO FLUID SPRING RESTORATION ──
+      const ju = mesh.userData.jelloUniforms;
+      if (ju) {
+        const target = mesh.userData.targetActive || 0.0;
+        ju.uPointerActive.value += (target - ju.uPointerActive.value) * 0.14;
+        ju.uJelloTime.value = timeVal;
+        mesh.userData.targetActive = 0.0; // Decay target active back to 0 unless re-triggered by hover
       }
     });
 
@@ -1478,10 +1468,6 @@
       window.dispatchEvent(new CustomEvent('activetheory-card-active', { detail: cardData[activeCardIndex] }));
     }
 
-    // Hero Emblem Animation & Scaling
-    emblemRing.rotation.y = timeVal * 0.4;
-    innerEmblem.rotation.y = -timeVal * 0.6;
-    orbitHalo.rotation.z = timeVal * 0.3;
 
     // Dynamic Active Card Spotlight & Cyber Rim Light Tracking
     if (closestIndex !== -1 && cardMeshes[closestIndex]) {
@@ -1500,11 +1486,6 @@
       activeCardRimLight.intensity = 0.5;
     }
 
-    // Hero Opening Emblem position & subtle breathe
-    heroEmblemGroup.position.y = 8.2 + scrollProgress * verticalStep * 0.45;
-    heroEmblemGroup.position.z = -4.5;
-    const emblemScale = Math.max(0.65, 1.0 - scrollProgress * 0.15);
-    heroEmblemGroup.scale.set(emblemScale, emblemScale, emblemScale);
 
     // Smooth deep-dive scatter interpolation (warp speed explosion)
     deepDiveScatter += (deepDiveTransitionTarget - deepDiveScatter) * 0.08;
@@ -1625,52 +1606,57 @@
     ePosAttr.needsUpdate = true;
     eColAttr.needsUpdate = true;
 
-    // Doc Ock Tentacle Kinematics: Wide Open at Hero, Close during Scroll, Re-open at Bottom
-    let targetClawAngle = 0.10;
-    let clawCenterWeight = 0.0;
-    let clawSpreadFactor = 0.0;
-    if (scrollProgress < 0.5) {
-      clawCenterWeight = Math.max(0.0, 1.0 - scrollProgress * 2.0);
-      clawSpreadFactor = clawCenterWeight;
-      // Wide open in hero, gradually closing as you scroll
-      targetClawAngle = 0.85 * clawCenterWeight + 0.08 * (1.0 - clawCenterWeight);
-    } else if (scrollProgress >= 5.0) {
-      const reopenT = Math.min(1.0, (scrollProgress - 5.0) / 1.0);
-      clawSpreadFactor = reopenT * 0.7;
-      targetClawAngle = 0.08 + 0.77 * reopenT;
-    }
+    // ── KINETIC DOC OCK 4-CLAW CLAMPING MECHANISM (Photo 1 Open -> Photo 2 Clamped) ──
+    const targetClawOpen = Math.max(0.0, Math.min(1.0, 1.0 - scrollProgress * 1.8));
+    clawOpenProgress += (targetClawOpen - clawOpenProgress) * 0.10;
 
-    docOckTentacles.forEach((t, tIdx) => {
-      // Tentacles reach forward in hero, pull back when scrolled
-      const targetX = t.config.target.x * (1.0 - clawCenterWeight * 0.35);
-      const targetY = t.config.target.y * (1.0 - clawCenterWeight * 0.25);
-      const targetZ = t.config.target.z * (1.0 - clawSpreadFactor) + 3.5 * clawSpreadFactor;
+    // Flared open (+0.65 rad) at hero, tightly clamped shut (-0.16 rad) when scrolled
+    const currentClawAngle = THREE.MathUtils.lerp(-0.16, 0.65, clawOpenProgress);
 
-      t.segments.forEach((s) => {
-        const wave = Math.sin(timeVal * 1.6 + s.index * 0.25 + t.phase);
-        const waveCos = Math.cos(timeVal * 1.2 + s.index * 0.25 + t.phase);
-        // Electricity-like high freq oscillation on segments
-        const elecJitter = Math.sin(timeVal * 18.0 + s.index * 2.5 + tIdx * 7.0) * 0.04 * clawSpreadFactor;
-        s.group.position.x = s.basePos.x * (1.0 - clawCenterWeight * 0.4) + wave * 0.35 + elecJitter;
-        s.group.position.y = s.basePos.y * (1.0 - clawCenterWeight * 0.3) + waveCos * 0.25 + elecJitter;
-        s.group.position.z = s.basePos.z * (1.0 - clawSpreadFactor) + (s.index / 20) * 2.2 * clawSpreadFactor;
-      });
-
-      t.clawHead.position.set(targetX, targetY, targetZ);
-      // Animate claw prongs with slight independent jitter for organic feel
-      t.prongs.forEach((prong, pIdx) => {
-        const prongJitter = Math.sin(timeVal * 12.0 + pIdx * 2.1 + tIdx) * 0.06 * clawSpreadFactor;
-        prong.pivot.rotation.x = -targetClawAngle + prongJitter;
-        prong.midPivot.rotation.x = targetClawAngle * 0.65 - prongJitter * 0.5;
-      });
-
-      // Pulsing red core intensity based on claw state
-      const isCoreHot = (scrollProgress < 0.3 || scrollProgress >= 5.0);
-      const pulseIntensity = isCoreHot
-        ? 3.5 + Math.sin(timeVal * 6.0 + tIdx * 1.5) * 1.5
-        : 0.6 + Math.sin(timeVal * 2.0 + tIdx) * 0.3;
-      t.redLight.intensity = pulseIntensity;
+    clawPincers.forEach((pincer, pIdx) => {
+      const organicJitter = Math.sin(timeVal * 7.0 + pIdx * 1.5) * 0.015 * clawOpenProgress;
+      pincer.pivot.rotation.x = -currentClawAngle + organicJitter;
     });
+
+    // Central Crimson Red Laser Eye & Volumetric Beam Pulse (Photo 1)
+    const laserPulse = 2.4 + Math.sin(timeVal * 5.0) * 0.8 + (1.0 - clawOpenProgress) * 1.5;
+    clawRedLight.intensity = laserPulse;
+    laserBeam.material.opacity = (0.16 + (1.0 - clawOpenProgress) * 0.28) * (0.8 + Math.sin(timeVal * 9.0) * 0.2);
+
+    // Segmented Arched Spine Organic Wave
+    armSegments.forEach((seg) => {
+      const wave = Math.sin(timeVal * 1.4 + seg.phase) * 0.12;
+      seg.group.position.x = seg.basePos.x + wave;
+      seg.group.rotation.y = wave * 0.06;
+    });
+
+    // Translate Doc Ock Arm with Scroll so it clears card heads
+    docOckArmGroup.position.y = 2.6 + scrollProgress * (verticalStep * 0.35);
+
+    // ── VOLUMETRIC CYBER GAS PARTICLE BURST PHYSICS ──
+    if (gasBurstActive) {
+      gasBurstTime += 0.016;
+      const posAttr = gasGeo.attributes.position;
+      for (let g = 0; g < gasParticleCount; g++) {
+        const v = gasVelocities[g];
+        posAttr.setX(g, posAttr.getX(g) + v.vx);
+        posAttr.setY(g, posAttr.getY(g) + v.vy);
+        posAttr.setZ(g, posAttr.getZ(g) + v.vz);
+        v.vx += Math.sin(posAttr.getY(g) * 2.0 + timeVal * 3.0) * 0.001;
+        v.vy += Math.cos(posAttr.getX(g) * 2.0 + timeVal * 3.0) * 0.001;
+      }
+      posAttr.needsUpdate = true;
+
+      if (gasBurstTime < 0.35) {
+        gasMaterial.opacity = (gasBurstTime / 0.35) * 0.85;
+      } else {
+        gasMaterial.opacity = Math.max(0.0, 0.85 - (gasBurstTime - 0.35) * 0.45);
+        if (gasMaterial.opacity <= 0.01) {
+          gasBurstActive = false;
+          gasCloud.visible = false;
+        }
+      }
+    }
 
     // Sleek Central Spine Undulation
     spineSegments.forEach((seg) => {

@@ -3478,15 +3478,94 @@ console.log(
     };
   });
 
-  // Hook into drawer open events to trigger canvas loops
+  // ── SEQUENTIAL DYNAMIC TYPEWRITER TERMINAL ENGINE ──
+  window.runSequentialTypewriterLogs = function() {
+    const logsEl = document.getElementById('fuzzerSimLogs');
+    const statusEl = document.getElementById('simStatusTag');
+    if (!logsEl) return;
+
+    if (statusEl) {
+      statusEl.innerHTML = '<span style="color: #00e5ff;">● EXECUTING DYNAMIC FUZZ WORKERS...</span>';
+    }
+
+    const logLines = [
+      { text: '> [SYS_INIT] Initializing Mutagen AST Mutation Engine & Docker ASan Sandbox...', color: '' },
+      { text: '> [AST_PARSER] Loaded target source: /sandbox/targets/target_cjson.c (12 functions, 4 API sinks)', color: 'dim' },
+      { text: '> [AST_MUTATOR] Generating high-entropy JSON payloads with overlong hex escapes (\'\\x41\\x41...\')...', color: 'cyan' },
+      { text: '> [DOCKER_EXEC] Detonating payload in isolated container (PID 4912, --network=none)...', color: '' },
+      { text: '> [ASAN_SIGNAL] AddressSanitizer: heap-buffer-overflow on address 0x7fffa1 at pc 0x00000040182b', color: 'cyan' },
+      { text: '> [CRASH_LOC] READ of size 128 at 0x7fffa1 thread T0 in cjson_unescape() (RIP: 0x40182b)', color: '#ff3366' },
+      { text: '> [RCA_ENGINE] Isolated minimal testcase: "\\x41" * 256. Out-of-bounds offset: +128 bytes.', color: 'warn' },
+      { text: '> [AST_SYNTHESIS] Generating dynamic capacity tracking bounds check patch...', color: '' },
+      { text: '> [VERIFY] Recompiling target with synthesized AST patch in ASan harness... PASSED.', color: '#00ff66' },
+      { text: '> [AUTO_PATCH] 0 crashes in 5,000 fuzz cycles. Exporting patch diff & SARIF v2.1 report.', color: '#00ff66' }
+    ];
+
+    logsEl.innerHTML = '';
+    let lineIdx = 0;
+
+    function streamNextLine() {
+      if (lineIdx >= logLines.length) {
+        if (statusEl) {
+          statusEl.innerHTML = '<span style="color: #00ff66;">● MUTAGEN CYCLE COMPLETE // 0 CRASHES</span>';
+        }
+        return;
+      }
+
+      const item = logLines[lineIdx];
+      const div = document.createElement('div');
+      if (item.color.startsWith('#')) {
+        div.style.color = item.color;
+      } else if (item.color) {
+        div.className = item.color;
+      }
+      div.innerHTML = '<span class="tw-text"></span><span class="typewriter-cursor"></span>';
+      logsEl.appendChild(div);
+      logsEl.scrollTop = logsEl.scrollHeight;
+
+      const twSpan = div.querySelector('.tw-text');
+      const cursorSpan = div.querySelector('.typewriter-cursor');
+      let charIdx = 0;
+      const fullText = item.text;
+
+      function typeChar() {
+        if (charIdx < fullText.length) {
+          twSpan.textContent += fullText.charAt(charIdx);
+          charIdx++;
+          setTimeout(typeChar, Math.max(6, Math.min(22, 160 / fullText.length)));
+        } else {
+          if (cursorSpan) cursorSpan.remove();
+          lineIdx++;
+          setTimeout(streamNextLine, 110);
+        }
+      }
+
+      typeChar();
+    }
+
+    streamNextLine();
+  };
+
+  // Hook into drawer open events to trigger canvas loops & sequential typewriter
   const originalOpenDrawer = window.openActiveTheoryDrawer;
   window.openActiveTheoryDrawer = function(cardId) {
     if (typeof originalOpenDrawer === 'function') originalOpenDrawer(cardId);
     setTimeout(() => {
       if (cardId === 'profile') renderSkillRadar();
+      if (cardId === 'mutagen') window.runSequentialTypewriterLogs();
       if (cardId === 'signalhub') renderMarketChart();
     }, 320);
   };
+
+  // Interactive Phase Pipeline Nodes Sound & Wave Interaction
+  document.querySelectorAll('.cpp-stage-node').forEach((node) => {
+    node.addEventListener('click', () => {
+      if (typeof window.playCyberSFX === 'function') window.playCyberSFX('warpTransition');
+    });
+    node.addEventListener('mouseenter', () => {
+      if (typeof window.playCyberSFX === 'function') window.playCyberSFX('hover');
+    });
+  });
 
   // 6. Interactive In-Browser CTF Flag Solver
   const btnSolveFlag = document.getElementById('btnSolveFlag');

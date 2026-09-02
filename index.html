@@ -44,39 +44,124 @@
 
     .hero-scroll-prompt {
       position: fixed;
-      top: 5.5rem;
-      right: 2.5rem;
+      bottom: 5.2rem;
+      left: 50%;
+      transform: translateX(-50%);
       display: flex;
+      flex-direction: column;
       align-items: center;
-      gap: 0.6rem;
-      font-family: var(--font-mono);
-      font-size: 0.75rem;
-      font-weight: 700;
-      color: var(--green);
-      letter-spacing: 0.15em;
-      background: rgba(0, 255, 102, 0.06);
-      border: 1px solid rgba(0, 255, 102, 0.25);
-      padding: 0.5rem 1rem;
-      border-radius: 9999px;
-      z-index: 100;
-      pointer-events: none;
-      transition: opacity 0.4s ease, transform 0.4s ease;
-      animation: pulsePrompt 2s infinite ease-in-out;
-    }
-
-    @keyframes pulsePrompt {
-      0%, 100% { opacity: 0.9; transform: translateY(0); }
-      50% { opacity: 0.4; transform: translateY(4px); }
+      gap: 0.5rem;
+      z-index: 120;
+      cursor: pointer;
+      pointer-events: auto !important;
+      transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     .hero-scroll-prompt.hidden {
       opacity: 0 !important;
-      transform: translateY(-10px) !important;
+      transform: translate(-50%, 25px) !important;
+      pointer-events: none !important;
+    }
+
+    .hsp-badge {
+      display: flex;
+      align-items: center;
+      gap: 0.9rem;
+      padding: 0.85rem 2.0rem;
+      background: rgba(6, 12, 24, 0.85);
+      border: 1.5px solid var(--green);
+      border-radius: 6px;
+      box-shadow: 0 0 30px rgba(var(--green-rgb), 0.38), inset 0 0 16px rgba(var(--green-rgb), 0.15);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      transition: all 0.25s ease;
+    }
+
+    .hero-scroll-prompt:hover .hsp-badge {
+      background: rgba(0, 255, 102, 0.14);
+      border-color: #ffffff;
+      box-shadow: 0 0 45px rgba(var(--green-rgb), 0.7), inset 0 0 22px rgba(var(--green-rgb), 0.3);
+      transform: scale(1.04);
+    }
+
+    .hsp-bracket {
+      font-family: var(--font-mono);
+      font-size: 1.6rem;
+      font-weight: 900;
+      color: var(--green);
+      text-shadow: 0 0 12px var(--green);
+    }
+
+    .hsp-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    .hsp-headline {
+      font-family: var(--font-mono);
+      font-size: 1.35rem;
+      font-weight: 900;
+      letter-spacing: 0.24em;
+      color: #ffffff;
+      text-shadow: 0 0 14px rgba(var(--green-rgb), 0.85), 0 0 28px var(--green);
+    }
+
+    .hsp-subtext {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      color: var(--green);
+      opacity: 0.92;
+    }
+
+    .hsp-mouse-icon {
+      width: 20px;
+      height: 32px;
+      border: 1.8px solid var(--green);
+      border-radius: 10px;
+      display: flex;
+      justify-content: center;
+      padding-top: 5px;
+      box-shadow: 0 0 12px rgba(var(--green-rgb), 0.35);
+    }
+
+    .hsp-wheel {
+      width: 4px;
+      height: 7px;
+      background: var(--green);
+      border-radius: 2px;
+      animation: hspWheelRoll 1.6s infinite ease-in-out;
+    }
+
+    @keyframes hspWheelRoll {
+      0% { transform: translateY(0); opacity: 1; }
+      100% { transform: translateY(11px); opacity: 0; }
     }
 
     @media (max-width: 768px) {
       .hero-scroll-prompt {
-        display: none !important;
+        bottom: 4.8rem !important;
+        display: flex !important;
+      }
+      .hsp-badge {
+        padding: 0.65rem 1.3rem;
+        gap: 0.6rem;
+      }
+      .hsp-headline {
+        font-size: 1.05rem;
+        letter-spacing: 0.16em;
+      }
+      .hsp-subtext {
+        font-size: 0.60rem;
+      }
+      .hsp-bracket {
+        font-size: 1.25rem;
+      }
+      .hsp-mouse-icon {
+        display: none;
       }
     }
 
@@ -105,10 +190,19 @@
   <!-- ── NOISE OVERLAY ── -->
   <div class="noise"></div>
 
-  <!-- ── HERO SCROLL DOWN PROMPT ── -->
-  <div id="heroScrollPrompt" class="hero-scroll-prompt">
-    <span>SCROLL DOWN</span>
-    <span class="scroll-arrow">↓</span>
+  <!-- ── BIG EXPLICIT HERO SCROLL DOWN PROMPT (ACTIVE THEORY HUD) ── -->
+  <div id="heroScrollPrompt" class="hero-scroll-prompt interactive-ui" onclick="window.rotateCylinderToCard(1)" role="button" tabindex="0" title="Click or scroll down to explore projects">
+    <div class="hsp-badge">
+      <div class="hsp-bracket">[</div>
+      <div class="hsp-content">
+        <span class="hsp-headline">SCROLL DOWN ↓</span>
+        <span class="hsp-subtext">CLICK OR SCROLL TO ENTER 06 OPERATIONAL TIERS</span>
+      </div>
+      <div class="hsp-bracket">]</div>
+    </div>
+    <div class="hsp-mouse-icon">
+      <div class="hsp-wheel"></div>
+    </div>
   </div>
 
   <!-- ── 3D MATRIX CANVAS BG (ACTIVE THEORY CYLINDER) ── -->
@@ -530,29 +624,75 @@
             </div>
           </div>
 
-          <!-- 3-Stage Archify Visual Workflow Diagram -->
-          <div class="archify-diagram-wrap">
-            <div class="archify-diagram-header">
-              <span class="archify-diagram-title">[ARCHIFY] 3-STAGE AUTONOMOUS MUTATION &amp; TRIAGE WORKFLOW</span>
-              <span style="font-family: var(--font-mono); font-size: 0.68rem; color: var(--green);">● SYSTEM READY</span>
+          <!-- 3-Phase Interactive Visual Reaction Matrix with Traveling Electrical Signals -->
+          <div class="cyber-phase-pipeline">
+            <div class="cpp-header">
+              <span class="cpp-title">[PIPELINE] 3-PHASE VISUAL REACTION MATRIX</span>
+              <span class="cpp-status"><span class="pulse-dot">●</span> TRAVELING ELECTRICAL BUS ACTIVE</span>
             </div>
-            <div class="archify-diagram">
-              <div class="archify-node">
-                <span class="archify-node-step">01 // INGEST</span>
-                <span class="archify-node-label">Source &amp; Binary AST</span>
-                <span class="archify-node-desc">Parse target C/C++ source code via Clang AST, map memory-sensitive API sinks (<code>strcpy</code>, <code>malloc</code>), and build tainted input entrypoints.</span>
+            <div class="cpp-stages-row">
+              <!-- Phase 1 Circle -->
+              <div class="cpp-stage-node" id="cpp-stage-1" title="Phase 1: Ingestion & AST Tree Extraction">
+                <div class="cpp-circle-outer">
+                  <div class="cpp-circle-inner">
+                    <span class="cpp-phase-num">01</span>
+                    <span class="cpp-phase-icon">⚡</span>
+                  </div>
+                </div>
+                <div class="cpp-stage-meta">
+                  <div class="cpp-stage-name">INGEST &amp; AST</div>
+                  <div class="cpp-stage-def">Converts raw C/C++ source code into a structured Abstract Syntax Tree (AST) to map dangerous memory functions like <code>malloc</code> and <code>strcpy</code>.</div>
+                </div>
               </div>
-              <div class="archify-arrow">›</div>
-              <div class="archify-node node-process">
-                <span class="archify-node-step">02 // MUTATE &amp; EXECUTE</span>
-                <span class="archify-node-label">LLM Mutation Engine</span>
-                <span class="archify-node-desc">Synthesize high-entropy seed variations with semantic boundary conditions. Detonate inside isolated non-root Docker sandboxes with <code>--network=none</code>.</span>
+
+              <!-- Electrical Conduit 1-2 -->
+              <div class="cpp-conduit-wrap">
+                <div class="cpp-conduit-line">
+                  <div class="cpp-electrical-pulse pulse-1"></div>
+                </div>
+                <div class="cpp-conduit-label">
+                  <span class="ccl-tag">BUS 01</span>
+                  <span class="ccl-desc">Transfers AST token tree to mutation generator</span>
+                </div>
               </div>
-              <div class="archify-arrow">›</div>
-              <div class="archify-node node-output">
-                <span class="archify-node-step">03 // VERIFY &amp; PATCH</span>
-                <span class="archify-node-label">ASan Triage &amp; Auto-Patch</span>
-                <span class="archify-node-desc">Capture memory crash signals (<code>SIGSEGV</code>/<code>SIGABRT</code>), deduplicate by RIP hash, and synthesize verified AST diff patches.</span>
+
+              <!-- Phase 2 Circle -->
+              <div class="cpp-stage-node" id="cpp-stage-2" title="Phase 2: Semantic Fuzzing & Docker Execution">
+                <div class="cpp-circle-outer">
+                  <div class="cpp-circle-inner">
+                    <span class="cpp-phase-num">02</span>
+                    <span class="cpp-phase-icon">🧬</span>
+                  </div>
+                </div>
+                <div class="cpp-stage-meta">
+                  <div class="cpp-stage-name">MUTATE &amp; EXECUTE</div>
+                  <div class="cpp-stage-def">Injects high-entropy edge-case payloads into air-gapped Docker sandboxes with AddressSanitizer watching every memory byte.</div>
+                </div>
+              </div>
+
+              <!-- Electrical Conduit 2-3 -->
+              <div class="cpp-conduit-wrap">
+                <div class="cpp-conduit-line">
+                  <div class="cpp-electrical-pulse pulse-2"></div>
+                </div>
+                <div class="cpp-conduit-label">
+                  <span class="ccl-tag">BUS 02</span>
+                  <span class="ccl-desc">Sends crash signals &amp; RIP hashes to triage engine</span>
+                </div>
+              </div>
+
+              <!-- Phase 3 Circle -->
+              <div class="cpp-stage-node" id="cpp-stage-3" title="Phase 3: ASan Triage & Automated Patch Synthesis">
+                <div class="cpp-circle-outer">
+                  <div class="cpp-circle-inner">
+                    <span class="cpp-phase-num">03</span>
+                    <span class="cpp-phase-icon">🛡️</span>
+                  </div>
+                </div>
+                <div class="cpp-stage-meta">
+                  <div class="cpp-stage-name">TRIAGE &amp; AUTO-PATCH</div>
+                  <div class="cpp-stage-def">Pinpoints the exact out-of-bounds line and synthesizes a verified C diff patch that closes the exploit without breaking features.</div>
+                </div>
               </div>
             </div>
           </div>
@@ -587,79 +727,101 @@
             </div>
           </div>
 
-          <!-- Real Exploit & Root Cause Analysis Case Study -->
+          <!-- IDE-Grade Syntax-Highlighted Code Studio -->
           <div class="dossier-panel">
             <div class="dossier-header-bar">
-              <span class="dossier-header-title">[CASE] HEAP BUFFER OVERFLOW (CWE-122) ROOT CAUSE ANALYSIS</span>
-              <span class="dossier-header-status">TARGET: target_cjson.c // VULNERABILITY TRIAGE &amp; AUTO-PATCH</span>
+              <span class="dossier-header-title">[STUDIO] HEAP BUFFER OVERFLOW (CWE-122) ROOT CAUSE &amp; PATCH</span>
+              <span class="dossier-header-status">SYNTAX-HIGHLIGHTED IDE STUDIO</span>
             </div>
-            <div class="dossier-grid-2">
-              <div>
-                <div style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--cyan); margin-bottom: 0.35rem;">VULNERABLE C SOURCE SNIPPET:</div>
-                <div class="dd-console" style="font-size: 0.72rem; line-height: 1.5; color: #fff;">
-<span class="dim">// target_cjson.c: Unescaping JSON strings without bound check</span>
-<span class="cyan">char</span> *cjson_unescape(<span class="cyan">const char</span> *input, <span class="cyan">size_t</span> in_len) {
-    <span class="cyan">char</span> *out = (<span class="cyan">char</span> *)<span class="warn">malloc</span>(in_len); <span class="dim">// Allocation is too small for escaped sequences</span>
-    <span class="cyan">size_t</span> out_idx = 0;
-    <span class="cyan">for</span> (<span class="cyan">size_t</span> i = 0; i &lt; in_len; i++) {
-        <span class="cyan">if</span> (input[i] == <span class="warn">'\\'</span> &amp;&amp; i + 1 &lt; in_len) {
-            <span class="dim">// Mutagen generated overlong hex escape sequence '\x41\x41...'</span>
-            out[out_idx++] = parse_hex_byte(&amp;input[i+1]);
-            i += 3;
-        } <span class="cyan">else</span> {
-            out[out_idx++] = input[i]; <span class="err">// Out-of-bounds write occurs when out_idx &gt;= in_len</span>
-        }
-    }
-    out[out_idx] = <span class="warn">'\0'</span>;
-    <span class="cyan">return</span> out;
-}
+
+            <div class="cyber-ide-studio">
+              <div class="ide-window-bar">
+                <div class="ide-traffic-lights">
+                  <span class="tl-red"></span>
+                  <span class="tl-yellow"></span>
+                  <span class="tl-green"></span>
                 </div>
+                <div class="ide-tab-pill">
+                  <span class="ide-tab-icon">⚡</span>
+                  <span>target_cjson.c — CWE-122 Heap Overflow</span>
+                </div>
+                <div class="ide-status-pill">● CLANG AST ANALYZED</div>
               </div>
-              <div>
-                <div style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--green); margin-bottom: 0.35rem;">VERIFIED AUTO-GENERATED AST DIFF PATCH:</div>
-                <div class="dd-console" style="font-size: 0.72rem; line-height: 1.5;">
-<span class="dim">--- target_cjson.c (Original)</span>
-<span class="dim">+++ target_cjson.c (Mutagen Auto-Patch)</span>
-<span class="cyan">@@ -4,8 +4,11 @@</span>
-<span class="err">-   char *out = (char *)malloc(in_len);</span>
-<span class="green">+   // Dynamic allocation with capacity tracking &amp; growth checks</span>
-<span class="green">+   size_t cap = in_len + 16;</span>
-<span class="green">+   char *out = (char *)malloc(cap);</span>
-<span class="green">+   if (!out) return NULL;</span>
-    size_t out_idx = 0;
-    for (size_t i = 0; i &lt; in_len; i++) {
-<span class="green">+       if (out_idx + 2 &gt;= cap) {</span>
-<span class="green">+           cap *= 2;</span>
-<span class="green">+           out = (char *)realloc(out, cap);</span>
-<span class="green">+       }</span>
+
+              <div class="ide-editor-grid">
+                <!-- Left Pane: Vulnerable Source -->
+                <div class="ide-pane ide-pane-left">
+                  <div class="ide-pane-header pane-vuln-header">⚠ VULNERABLE SOURCE // target_cjson.c</div>
+                  <table class="ide-code-table">
+                    <tr><td class="ide-ln">01</td><td class="ide-code"><span class="syn-com">// Unescaping JSON strings without bound check</span></td></tr>
+                    <tr><td class="ide-ln">02</td><td class="ide-code"><span class="syn-type">char</span> *<span class="syn-fn">cjson_unescape</span>(<span class="syn-kwd">const</span> <span class="syn-type">char</span> *input, <span class="syn-type">size_t</span> in_len) {</td></tr>
+                    <tr class="line-vuln"><td class="ide-ln">03</td><td class="ide-code">    <span class="syn-type">char</span> *out = (<span class="syn-type">char</span> *)<span class="syn-err">malloc</span>(in_len); <span class="syn-com">// SINK: under-allocated!</span></td></tr>
+                    <tr><td class="ide-ln">04</td><td class="ide-code">    <span class="syn-type">size_t</span> out_idx = 0;</td></tr>
+                    <tr><td class="ide-ln">05</td><td class="ide-code">    <span class="syn-kwd">for</span> (<span class="syn-type">size_t</span> i = 0; i &lt; in_len; i++) {</td></tr>
+                    <tr><td class="ide-ln">06</td><td class="ide-code">        <span class="syn-kwd">if</span> (input[i] == <span class="syn-str">'\\'</span> &amp;&amp; i + 1 &lt; in_len) {</td></tr>
+                    <tr><td class="ide-ln">07</td><td class="ide-code">            <span class="syn-com">// Overlong hex escape sequence '\x41\x41...'</span></td></tr>
+                    <tr><td class="ide-ln">08</td><td class="ide-code">            out[out_idx++] = <span class="syn-fn">parse_hex_byte</span>(&amp;input[i+1]);</td></tr>
+                    <tr><td class="ide-ln">09</td><td class="ide-code">            i += 3;</td></tr>
+                    <tr class="line-vuln"><td class="ide-ln">10</td><td class="ide-code">        } <span class="syn-kwd">else</span> { out[out_idx++] = input[i]; } <span class="syn-err">// OUT-OF-BOUNDS WRITE</span></td></tr>
+                    <tr><td class="ide-ln">11</td><td class="ide-code">    }</td></tr>
+                    <tr><td class="ide-ln">12</td><td class="ide-code">    out[out_idx] = <span class="syn-str">'\0'</span>;</td></tr>
+                    <tr><td class="ide-ln">13</td><td class="ide-code">    <span class="syn-kwd">return</span> out;</td></tr>
+                    <tr><td class="ide-ln">14</td><td class="ide-code">}</td></tr>
+                  </table>
+                </div>
+
+                <!-- Right Pane: Verified Auto-Patch -->
+                <div class="ide-pane ide-pane-right">
+                  <div class="ide-pane-header pane-patch-header">✔ MUTAGEN VERIFIED AUTO-PATCH // diff -u</div>
+                  <table class="ide-code-table">
+                    <tr><td class="ide-ln">01</td><td class="ide-code"><span class="syn-com">--- target_cjson.c (Original Vulnerable)</span></td></tr>
+                    <tr><td class="ide-ln">02</td><td class="ide-code"><span class="syn-com">+++ target_cjson.c (Mutagen Synthesized Patch)</span></td></tr>
+                    <tr><td class="ide-ln">03</td><td class="ide-code"><span class="syn-kwd">@@ -3,8 +3,13 @@</span></td></tr>
+                    <tr class="line-patch-del"><td class="ide-ln">04</td><td class="ide-code"><span class="syn-diff-del">-   char *out = (char *)malloc(in_len);</span></td></tr>
+                    <tr class="line-patch-add"><td class="ide-ln">05</td><td class="ide-code"><span class="syn-diff-add">+   size_t cap = in_len + 16; // Capacity tracking</span></td></tr>
+                    <tr class="line-patch-add"><td class="ide-ln">06</td><td class="ide-code"><span class="syn-diff-add">+   char *out = (char *)malloc(cap);</span></td></tr>
+                    <tr class="line-patch-add"><td class="ide-ln">07</td><td class="ide-code"><span class="syn-diff-add">+   if (!out) return NULL; // Null pointer check</span></td></tr>
+                    <tr><td class="ide-ln">08</td><td class="ide-code">    for (size_t i = 0; i &lt; in_len; i++) {</td></tr>
+                    <tr class="line-patch-add"><td class="ide-ln">09</td><td class="ide-code"><span class="syn-diff-add">+       if (out_idx + 2 &gt;= cap) { // Dynamic growth safety</span></td></tr>
+                    <tr class="line-patch-add"><td class="ide-ln">10</td><td class="ide-code"><span class="syn-diff-add">+           cap *= 2;</span></td></tr>
+                    <tr class="line-patch-add"><td class="ide-ln">11</td><td class="ide-code"><span class="syn-diff-add">+           out = (char *)realloc(out, cap);</span></td></tr>
+                    <tr class="line-patch-add"><td class="ide-ln">12</td><td class="ide-code"><span class="syn-diff-add">+       }</span></td></tr>
+                  </table>
                 </div>
               </div>
             </div>
           </div>
 
-          <!-- Interactive AST Mutation Visualizer & Memory Fault Debugger -->
+          <!-- Focused Target Card & Sequential Typewriter Terminal Debugger -->
           <div class="dossier-panel">
             <div class="dossier-header-bar">
-              <span class="dossier-header-title">[DEBUG] LIVE AST TARGET PICKER &amp; ASAN CRASH TRACE DEBUGGER</span>
-              <span class="dossier-header-status">MEMORY FAULT INSPECTION</span>
+              <span class="dossier-header-title">[DEBUG] ASAN MEMORY FAULT SEQUENCER</span>
+              <span class="dossier-header-status">FOCUSED TARGET</span>
             </div>
-            <div class="fuzzer-target-picker" style="display: flex; gap: 0.5rem; margin-bottom: 1rem; flex-wrap: wrap;" id="fuzzerTargetPicker">
-              <button class="target-btn active" data-target="cjson">[TARGET] target_cjson.c (Heap Overflow)</button>
-              <button class="target-btn" data-target="auth">[TARGET] target_auth_verify.c (Use-After-Free)</button>
-              <button class="target-btn" data-target="dns">[TARGET] target_dns_resolver.c (Integer Overflow)</button>
+
+            <!-- Single Focused Target Header (3-button clutter removed per directive) -->
+            <div class="focused-target-card">
+              <div class="ftc-tag"><span class="pulse-dot">●</span> FOCUSED RESEARCH TARGET</div>
+              <div class="ftc-title">target_cjson.c — CWE-122 HEAP BUFFER OVERFLOW</div>
+              <div class="ftc-meta">
+                <span>API SINK: <strong>malloc(in_len)</strong></span>
+                <span>INSTRUMENTATION: <strong>AddressSanitizer (ASan)</strong></span>
+                <span>SANDBOX: <strong>Docker --network=none</strong></span>
+              </div>
             </div>
+
             <div class="fuzzer-action-bar" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.75rem;">
-              <button class="btn-trigger-fuzz" id="btnRunFuzzCycle"><span>▶ RUN AUTONOMOUS FUZZ CYCLE</span></button>
+              <button class="btn-trigger-fuzz" id="btnRunFuzzCycle" onclick="window.runSequentialTypewriterLogs()"><span>▶ RUN AUTONOMOUS FUZZ CYCLE</span></button>
               <div class="fuzzer-sim-status" id="simStatusTag"><span style="color: var(--green);">● SYSTEM IDLE // READY</span></div>
             </div>
             <div class="dd-console" id="fuzzerSimLogs">
-              <div>> [SYS_INIT] Initializing Mutagen AST Mutation Engine &amp; Docker ASan Sandbox...</div>
-              <div class="dim">> [AST_PARSER] Loaded target source: /sandbox/targets/cjson_target.c (12 functions, 4 API sinks)</div>
-              <div class="cyan">> [ASAN_SIGNAL] AddressSanitizer: heap-buffer-overflow on address 0x7fffa1 at pc 0x00000040182b</div>
-              <div style="color: #ff3366;">> [CRASH_LOC] READ of size 128 at 0x7fffa1 thread T0 in cjson_parse() (RIP: 0x40182b)</div>
-              <div style="color: var(--green);">> [AUTO_PATCH] Synthesized bounds check. Recompiling harness... PASSED (0 crashes in 5,000 cycles).</div>
+              <div>&gt; [SYS_INIT] Initializing Mutagen AST Mutation Engine &amp; Docker ASan Sandbox...</div>
+              <div class="dim">&gt; [AST_PARSER] Loaded target source: /sandbox/targets/cjson_target.c (12 functions, 4 API sinks)</div>
+              <div class="cyan">&gt; [ASAN_SIGNAL] AddressSanitizer: heap-buffer-overflow on address 0x7fffa1 at pc 0x00000040182b</div>
+              <div style="color: #ff3366;">&gt; [CRASH_LOC] READ of size 128 at 0x7fffa1 thread T0 in cjson_parse() (RIP: 0x40182b)</div>
+              <div style="color: var(--green);">&gt; [AUTO_PATCH] Synthesized bounds check. Recompiling harness... PASSED (0 crashes in 5,000 cycles).</div>
             </div>
-          </div>
+
 
           <a href="https://github.com/Bunny-sysd/mutagen-fuzzer" target="_blank" rel="noopener noreferrer" class="at-action-btn" style="padding: 0.75rem 1.5rem; font-size: 0.85rem; border-color: var(--green); color: var(--green);">↗ View GitHub Repository: Mutagen</a>
         </div>
@@ -707,29 +869,75 @@
             </div>
           </div>
 
-          <!-- 3-Stage Archify Visual Workflow Diagram -->
-          <div class="archify-diagram-wrap">
-            <div class="archify-diagram-header">
-              <span class="archify-diagram-title">[ARCHIFY] 3-STAGE RECON TO ACTIONABLE THREAT MATRIX</span>
-              <span style="font-family: var(--font-mono); font-size: 0.68rem; color: var(--cyan);">● LIVE FEED CONNECTED</span>
+          <!-- 3-Phase Interactive Visual Reaction Matrix with Traveling Electrical Signals -->
+          <div class="cyber-phase-pipeline">
+            <div class="cpp-header">
+              <span class="cpp-title">[PIPELINE] 3-PHASE THREAT HUNTING MATRIX</span>
+              <span class="cpp-status"><span class="pulse-dot">●</span> RECON TELEMETRY BUS ACTIVE</span>
             </div>
-            <div class="archify-diagram">
-              <div class="archify-node">
-                <span class="archify-node-step">01 // INGEST</span>
-                <span class="archify-node-label">Network Scans &amp; Logs</span>
-                <span class="archify-node-desc">Ingest Nmap XML port scans, service banners, and authentication logs. Parse and normalize versions into CPE 2.3 standard URIs.</span>
+            <div class="cpp-stages-row">
+              <!-- Phase 1 Circle -->
+              <div class="cpp-stage-node" id="cpp-vigil-1" title="Phase 1: Ingest Network & Auth Telemetry">
+                <div class="cpp-circle-outer">
+                  <div class="cpp-circle-inner">
+                    <span class="cpp-phase-num">01</span>
+                    <span class="cpp-phase-icon">📡</span>
+                  </div>
+                </div>
+                <div class="cpp-stage-meta">
+                  <div class="cpp-stage-name">INGEST RECON</div>
+                  <div class="cpp-stage-def">Ingests raw Nmap XML port scans, service banners, and Linux auth logs, mapping software versions to standardized CPE 2.3 identifiers.</div>
+                </div>
               </div>
-              <div class="archify-arrow">›</div>
-              <div class="archify-node node-process">
-                <span class="archify-node-step">02 // CORRELATE</span>
-                <span class="archify-node-label">Live Vulnerability Feeds</span>
-                <span class="archify-node-desc">Query NVD REST API v2.0 &amp; OSV.dev in parallel with rate-limited workers. Match CVEs and crawl verified GitHub PoC exploits.</span>
+
+              <!-- Electrical Conduit 1-2 -->
+              <div class="cpp-conduit-wrap">
+                <div class="cpp-conduit-line">
+                  <div class="cpp-electrical-pulse pulse-1"></div>
+                </div>
+                <div class="cpp-conduit-label">
+                  <span class="ccl-tag">BUS 01</span>
+                  <span class="ccl-desc">Pipes parsed CPE inventory to vulnerability correlation feed</span>
+                </div>
               </div>
-              <div class="archify-arrow">›</div>
-              <div class="archify-node node-output">
-                <span class="archify-node-step">03 // OUTPUT</span>
-                <span class="archify-node-label">Prioritized Remediation</span>
-                <span class="archify-node-desc">Export prioritized CVSS severity matrix, actionable patch steps, and standardized OASIS SARIF v2.1 reports.</span>
+
+              <!-- Phase 2 Circle -->
+              <div class="cpp-stage-node" id="cpp-vigil-2" title="Phase 2: Live CVE Database Query & PoC Scraping">
+                <div class="cpp-circle-outer">
+                  <div class="cpp-circle-inner">
+                    <span class="cpp-phase-num">02</span>
+                    <span class="cpp-phase-icon">🔍</span>
+                  </div>
+                </div>
+                <div class="cpp-stage-meta">
+                  <div class="cpp-stage-name">CORRELATE CVEs</div>
+                  <div class="cpp-stage-def">Queries NVD API v2 and OSV.dev in parallel with asynchronous workers, crawling GitHub for verified proof-of-concept exploits.</div>
+                </div>
+              </div>
+
+              <!-- Electrical Conduit 2-3 -->
+              <div class="cpp-conduit-wrap">
+                <div class="cpp-conduit-line">
+                  <div class="cpp-electrical-pulse pulse-2"></div>
+                </div>
+                <div class="cpp-conduit-label">
+                  <span class="ccl-tag">BUS 02</span>
+                  <span class="ccl-desc">Transfers scored vulnerability matrix to SARIF exporter</span>
+                </div>
+              </div>
+
+              <!-- Phase 3 Circle -->
+              <div class="cpp-stage-node" id="cpp-vigil-3" title="Phase 3: Prioritized Remediation & SARIF Reporting">
+                <div class="cpp-circle-outer">
+                  <div class="cpp-circle-inner">
+                    <span class="cpp-phase-num">03</span>
+                    <span class="cpp-phase-icon">📋</span>
+                  </div>
+                </div>
+                <div class="cpp-stage-meta">
+                  <div class="cpp-stage-name">EXPORT REMEDIATION</div>
+                  <div class="cpp-stage-def">Generates prioritized mitigation steps grouped by CVSS impact, exporting standardized OASIS SARIF v2.1 reports.</div>
+                </div>
               </div>
             </div>
           </div>
@@ -856,29 +1064,75 @@
               <canvas id="marketChartCanvas" width="900" height="220" style="width: 100%; height: 220px; background: #020408; border-radius: 6px;"></canvas>
             </div>
 
-            <!-- 3-Stage Archify Visual Workflow Diagram -->
-            <div class="archify-diagram-wrap">
-              <div class="archify-diagram-header">
-                <span class="archify-diagram-title">[ARCHIFY] 3-STAGE REAL-TIME STREAMING &amp; SENTIMENT PIPELINE</span>
-                <span style="font-family: var(--font-mono); font-size: 0.68rem; color: var(--green);">● STREAM ACTIVE</span>
+            <!-- 3-Phase Interactive Visual Reaction Matrix with Traveling Electrical Signals -->
+            <div class="cyber-phase-pipeline">
+              <div class="cpp-header">
+                <span class="cpp-title">[PIPELINE] 3-PHASE REAL-TIME STREAMING &amp; SENTIMENT PIPELINE</span>
+                <span class="cpp-status"><span class="pulse-dot">●</span> WEBSOCKET DATA STREAM ACTIVE</span>
               </div>
-              <div class="archify-diagram">
-                <div class="archify-node">
-                  <span class="archify-node-step">01 // INGEST</span>
-                  <span class="archify-node-label">Exchange WebSockets</span>
-                  <span class="archify-node-desc">Stream live price ticks and financial news feeds over high-throughput WebSocket sockets and REST feeds.</span>
+              <div class="cpp-stages-row">
+                <!-- Phase 1 Circle -->
+                <div class="cpp-stage-node" id="cpp-sig-1" title="Phase 1: Exchange WebSocket Ingestion">
+                  <div class="cpp-circle-outer">
+                    <div class="cpp-circle-inner">
+                      <span class="cpp-phase-num">01</span>
+                      <span class="cpp-phase-icon">📈</span>
+                    </div>
+                  </div>
+                  <div class="cpp-stage-meta">
+                    <div class="cpp-stage-name">MARKET FEED</div>
+                    <div class="cpp-stage-def">Streams tick-by-tick order books and crypto/equity feeds over persistent high-throughput WebSockets.</div>
+                  </div>
                 </div>
-                <div class="archify-arrow">›</div>
-                <div class="archify-node node-process">
-                  <span class="archify-node-step">02 // PROCESS</span>
-                  <span class="archify-node-label">NLP Sentiment Transformer</span>
-                  <span class="archify-node-desc">Evaluate financial headlines in parallel, computing sentiment momentum vectors and volatility indicators.</span>
+
+                <!-- Electrical Conduit 1-2 -->
+                <div class="cpp-conduit-wrap">
+                  <div class="cpp-conduit-line">
+                    <div class="cpp-electrical-pulse pulse-1"></div>
+                  </div>
+                  <div class="cpp-conduit-label">
+                    <span class="ccl-tag">BUS 01</span>
+                    <span class="ccl-desc">Pipes raw price ticks to NLP transformer</span>
+                  </div>
                 </div>
-                <div class="archify-arrow">›</div>
-                <div class="archify-node node-output">
-                  <span class="archify-node-step">03 // DELIVER</span>
-                  <span class="archify-node-label">Firebase CDN &amp; Dashboard</span>
-                  <span class="archify-node-desc">Render responsive 60 FPS charts on global Firebase edge CDN with zero-downtime deployment.</span>
+
+                <!-- Phase 2 Circle -->
+                <div class="cpp-stage-node" id="cpp-sig-2" title="Phase 2: NLP Sentiment Analysis Engine">
+                  <div class="cpp-circle-outer">
+                    <div class="cpp-circle-inner">
+                      <span class="cpp-phase-num">02</span>
+                      <span class="cpp-phase-icon">🧠</span>
+                    </div>
+                  </div>
+                  <div class="cpp-stage-meta">
+                    <div class="cpp-stage-name">NLP MOMENTUM</div>
+                    <div class="cpp-stage-def">Evaluates breaking financial news headlines in parallel, computing sentiment momentum vectors and volatility signals.</div>
+                  </div>
+                </div>
+
+                <!-- Electrical Conduit 2-3 -->
+                <div class="cpp-conduit-wrap">
+                  <div class="cpp-conduit-line">
+                    <div class="cpp-electrical-pulse pulse-2"></div>
+                  </div>
+                  <div class="cpp-conduit-label">
+                    <span class="ccl-tag">BUS 02</span>
+                    <span class="ccl-desc">Streams processed indicators to edge client</span>
+                  </div>
+                </div>
+
+                <!-- Phase 3 Circle -->
+                <div class="cpp-stage-node" id="cpp-sig-3" title="Phase 3: Edge CDN Delivery & Interactive Dashboard">
+                  <div class="cpp-circle-outer">
+                    <div class="cpp-circle-inner">
+                      <span class="cpp-phase-num">03</span>
+                      <span class="cpp-phase-icon">🌐</span>
+                    </div>
+                  </div>
+                  <div class="cpp-stage-meta">
+                    <div class="cpp-stage-name">EDGE DASHBOARD</div>
+                    <div class="cpp-stage-def">Renders responsive 60 FPS Canvas candlestick charts deployed globally on Firebase Edge CDN.</div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -981,7 +1235,80 @@
             </div>
           </div>
 
-          <!-- Systematic 5-Phase Penetration Testing Methodology -->
+          <!-- 3-Phase Interactive Visual Reaction Matrix with Traveling Electrical Signals -->
+          <div class="cyber-phase-pipeline">
+            <div class="cpp-header">
+              <span class="cpp-title">[PIPELINE] 3-PHASE OFFENSIVE KILL-CHAIN MATRIX</span>
+              <span class="cpp-status"><span class="pulse-dot">●</span> RED TEAM ATTACK BUS ACTIVE</span>
+            </div>
+            <div class="cpp-stages-row">
+              <!-- Phase 1 Circle -->
+              <div class="cpp-stage-node" id="cpp-thm-1" title="Phase 1: Recon & Surface Mapping">
+                <div class="cpp-circle-outer">
+                  <div class="cpp-circle-inner">
+                    <span class="cpp-phase-num">01</span>
+                    <span class="cpp-phase-icon">🎯</span>
+                  </div>
+                </div>
+                <div class="cpp-stage-meta">
+                  <div class="cpp-stage-name">RECON &amp; SCAN</div>
+                  <div class="cpp-stage-def">Full TCP port enumeration with Nmap and web endpoint discovery via FFuf.</div>
+                </div>
+              </div>
+
+              <!-- Electrical Conduit 1-2 -->
+              <div class="cpp-conduit-wrap">
+                <div class="cpp-conduit-line">
+                  <div class="cpp-electrical-pulse pulse-1"></div>
+                </div>
+                <div class="cpp-conduit-label">
+                  <span class="ccl-tag">BUS 01</span>
+                  <span class="ccl-desc">Passes open ports to web exploit engine</span>
+                </div>
+              </div>
+
+              <!-- Phase 2 Circle -->
+              <div class="cpp-stage-node" id="cpp-thm-2" title="Phase 2: Weaponization & Web Exploitation">
+                <div class="cpp-circle-outer">
+                  <div class="cpp-circle-inner">
+                    <span class="cpp-phase-num">02</span>
+                    <span class="cpp-phase-icon">💥</span>
+                  </div>
+                </div>
+                <div class="cpp-stage-meta">
+                  <div class="cpp-stage-name">INITIAL BREACH</div>
+                  <div class="cpp-stage-def">Exploits SQLi, SSRF against metadata, and Kerberoasting to gain foothold shells.</div>
+                </div>
+              </div>
+
+              <!-- Electrical Conduit 2-3 -->
+              <div class="cpp-conduit-wrap">
+                <div class="cpp-conduit-line">
+                  <div class="cpp-electrical-pulse pulse-2"></div>
+                </div>
+                <div class="cpp-conduit-label">
+                  <span class="ccl-tag">BUS 02</span>
+                  <span class="ccl-desc">Transfers low-priv shell to privilege escalation auditor</span>
+                </div>
+              </div>
+
+              <!-- Phase 3 Circle -->
+              <div class="cpp-stage-node" id="cpp-thm-3" title="Phase 3: Root Privilege Escalation">
+                <div class="cpp-circle-outer">
+                  <div class="cpp-circle-inner">
+                    <span class="cpp-phase-num">03</span>
+                    <span class="cpp-phase-icon">👑</span>
+                  </div>
+                </div>
+                <div class="cpp-stage-meta">
+                  <div class="cpp-stage-name">ROOT PRIVILEGE</div>
+                  <div class="cpp-stage-def">Reverse-engineers SUID binaries and abuses BloodHound paths to gain root / Domain Admin.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Formal 4-Stage Offensive Methodology & Writeups -->
           <div class="dossier-panel">
             <div class="dossier-header-bar">
               <span class="dossier-header-title">[FLOW] 5-STAGE OFFENSIVE METHODOLOGY &amp; WRITEUPS</span>
