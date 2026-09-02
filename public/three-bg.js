@@ -98,13 +98,13 @@
   // 2. Theme Palettes
   const themePalettes = {
     green: {
-      primary: new THREE.Color('#00ff66'),
-      secondary: new THREE.Color('#003b14'),
-      accent: new THREE.Color('#00e5ff'),
+      primary: new THREE.Color('#ff0033'),
+      secondary: new THREE.Color('#3b000e'),
+      accent: new THREE.Color('#ff2a55'),
       highlight: new THREE.Color('#ffffff'),
-      fog: new THREE.Color('#030509'),
-      spine1: new THREE.Color('#00ff66'),
-      spine2: new THREE.Color('#00e5ff')
+      fog: new THREE.Color('#080204'),
+      spine1: new THREE.Color('#ff0033'),
+      spine2: new THREE.Color('#ff3b5c')
     },
     amber: {
       primary: new THREE.Color('#ffb000'),
@@ -327,54 +327,59 @@
   let deepDiveScatter = 0; // 0 = normal, 1 = fully scattered
 
   // 4. PHOTOREALISTIC KINETIC DOC OCK ROBOTIC ARM & 4-CLAW HEAD (Reference Photo Design)
+  // 4. PHOTOREALISTIC KINETIC DOC OCK ROBOTIC ARM & 4-CLAW HEAD (Prominent Hero Viewport)
   const docOckArmGroup = new THREE.Group();
   rootGroup.add(docOckArmGroup);
 
-  // High-Grade Materials: Charcoal Cast Iron & Industrial Hazard Gold Joints
+  // High-Grade Metallic Materials: Polished Gunmetal Titanium & Gleaming Hazard Brass
   const castIronMat = new THREE.MeshStandardMaterial({
-    color: 0x141820,
+    color: 0x485568, // High-contrast, polished gunmetal titanium steel
     metalness: 0.95,
-    roughness: 0.28,
-    emissive: 0x040608,
-    emissiveIntensity: 0.25
+    roughness: 0.18,
+    emissive: 0x18060a,
+    emissiveIntensity: 0.35
   });
 
   const industrialBrassMat = new THREE.MeshStandardMaterial({
-    color: 0xd4a017,
-    metalness: 0.88,
-    roughness: 0.32,
-    emissive: 0x332200,
-    emissiveIntensity: 0.30
+    color: 0xeea823, // Gleaming industrial hazard brass
+    metalness: 0.90,
+    roughness: 0.22,
+    emissive: 0x442800,
+    emissiveIntensity: 0.40
   });
 
   const laserEyeCoreMat = new THREE.MeshBasicMaterial({
     color: 0xff0033
   });
 
+  const hotNucleusMat = new THREE.MeshBasicMaterial({
+    color: 0xffffff // White-hot plasma core
+  });
+
   const laserBeamMat = new THREE.MeshBasicMaterial({
     color: 0xff0033,
     transparent: true,
-    opacity: 0.22,
+    opacity: 0.28,
     blending: THREE.AdditiveBlending,
     side: THREE.DoubleSide
   });
 
-  // Segmented Arched Spine (28 Interlocking Vertebrae Plates)
+  // Segmented Arched Spine (Brought lower & forward into clear hero view)
   const armCurve = new THREE.CubicBezierCurve3(
-    new THREE.Vector3(0, 16.5, -12),
-    new THREE.Vector3(0, 12.0, -6.5),
-    new THREE.Vector3(0, 7.8, -2.2),
-    new THREE.Vector3(0, 4.4, 0.6)
+    new THREE.Vector3(0, 11.5, -9.0),
+    new THREE.Vector3(0, 7.2, -4.5),
+    new THREE.Vector3(0, 4.0, -1.2),
+    new THREE.Vector3(0, 1.5, 1.8) // Claw head centered directly in upper hero view!
   );
 
   const armSegCount = 28;
   const armPoints = armCurve.getPoints(armSegCount);
   const armSegments = [];
 
-  const vertebraOuterGeo = new THREE.TorusGeometry(1.45, 0.22, 14, 28, Math.PI * 0.95);
-  const vertebraPinGeo = new THREE.CylinderGeometry(0.12, 0.12, 0.65, 12);
-  const vertebraKnuckleGeo = new THREE.BoxGeometry(0.32, 0.32, 0.35);
-  const conduitGeo = new THREE.CylinderGeometry(0.35, 0.35, 0.8, 16);
+  const vertebraOuterGeo = new THREE.TorusGeometry(1.55, 0.24, 16, 32, Math.PI * 0.95);
+  const vertebraPinGeo = new THREE.CylinderGeometry(0.14, 0.14, 0.75, 12);
+  const vertebraKnuckleGeo = new THREE.BoxGeometry(0.36, 0.36, 0.40);
+  const conduitGeo = new THREE.CylinderGeometry(0.38, 0.38, 0.85, 16);
 
   for (let s = 0; s < armSegCount; s++) {
     const segGroup = new THREE.Group();
@@ -386,25 +391,25 @@
     const dir = new THREE.Vector3().subVectors(nextPt, pt).normalize();
     segGroup.quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, 1), dir);
 
-    // Charcoal iron outer plate shell
+    // Metallic gunmetal titanium outer plate shell
     const plate = new THREE.Mesh(vertebraOuterGeo, castIronMat);
     plate.rotation.x = Math.PI / 2;
     segGroup.add(plate);
 
-    // Industrial brass hinge knuckles on both flanks (Photo 2 yellow joint brackets)
+    // Industrial brass hinge knuckles on both flanks
     const pinL = new THREE.Mesh(vertebraPinGeo, industrialBrassMat);
-    pinL.position.set(-1.42, 0, 0);
+    pinL.position.set(-1.52, 0, 0);
     const pinR = new THREE.Mesh(vertebraPinGeo, industrialBrassMat);
-    pinR.position.set(1.42, 0, 0);
+    pinR.position.set(1.52, 0, 0);
 
     const knuckleL = new THREE.Mesh(vertebraKnuckleGeo, castIronMat);
-    knuckleL.position.set(-1.42, 0, 0);
+    knuckleL.position.set(-1.52, 0, 0);
     const knuckleR = new THREE.Mesh(vertebraKnuckleGeo, castIronMat);
-    knuckleR.position.set(1.42, 0, 0);
+    knuckleR.position.set(1.52, 0, 0);
 
     segGroup.add(pinL, pinR, knuckleL, knuckleR);
 
-    // Internal power core conduit running inside the vertebrae
+    // Internal brass power core conduit running inside vertebrae
     if (s % 2 === 0) {
       const conduit = new THREE.Mesh(conduitGeo, industrialBrassMat);
       conduit.rotation.x = Math.PI / 2;
@@ -424,43 +429,89 @@
   const clawHeadGroup = new THREE.Group();
   clawHeadGroup.position.copy(armPoints[armSegCount]);
   // Pitch down slightly to face viewer/cards squarely
-  clawHeadGroup.rotation.x = 0.42;
+  clawHeadGroup.rotation.x = 0.38;
   docOckArmGroup.add(clawHeadGroup);
 
+  // Dedicated High-Intensity Key Spotlight on the Hand
+  const handKeyLight = new THREE.SpotLight(0xffffff, 4.5, 40, Math.PI / 3, 0.3);
+  handKeyLight.position.set(4, 9, 14);
+  clawHeadGroup.add(handKeyLight);
+
+  const handRedRim = new THREE.PointLight(0xff0033, 4.5, 20);
+  handRedRim.position.set(0, -1, -2);
+  clawHeadGroup.add(handRedRim);
+
   // Heavy Machined Hub Base
-  const hubGeo = new THREE.CylinderGeometry(1.45, 1.25, 0.65, 24);
+  const hubGeo = new THREE.CylinderGeometry(1.65, 1.40, 0.75, 32);
   const hubMesh = new THREE.Mesh(hubGeo, castIronMat);
   hubMesh.rotation.x = Math.PI / 2;
   clawHeadGroup.add(hubMesh);
 
   // Outer Brass Trim Ring
-  const hubRingGeo = new THREE.TorusGeometry(1.48, 0.10, 12, 32);
+  const hubRingGeo = new THREE.TorusGeometry(1.68, 0.12, 14, 36);
   const hubRing = new THREE.Mesh(hubRingGeo, industrialBrassMat);
   clawHeadGroup.add(hubRing);
 
-  // Central Crimson Red Laser Eye Aperture (Photo 1)
-  const laserHousingGeo = new THREE.TorusGeometry(0.55, 0.14, 16, 24);
+  // Central Glowing Crimson Plasma Eye Aperture
+  const laserHousingGeo = new THREE.TorusGeometry(0.68, 0.16, 16, 32);
   const laserHousing = new THREE.Mesh(laserHousingGeo, castIronMat);
   laserHousing.position.z = 0.35;
   clawHeadGroup.add(laserHousing);
 
-  const laserCoreGeo = new THREE.SphereGeometry(0.42, 20, 20);
+  const laserInnerBevel = new THREE.Mesh(new THREE.TorusGeometry(0.55, 0.08, 12, 28), industrialBrassMat);
+  laserInnerBevel.position.z = 0.38;
+  clawHeadGroup.add(laserInnerBevel);
+
+  // Outer Plasma Flare Ring
+  const plasmaFlareGeo = new THREE.RingGeometry(0.65, 1.45, 32);
+  const plasmaFlareMat = new THREE.MeshBasicMaterial({
+    color: 0xff0033,
+    transparent: true,
+    opacity: 0.50,
+    side: THREE.DoubleSide,
+    blending: THREE.AdditiveBlending
+  });
+  const plasmaFlare = new THREE.Mesh(plasmaFlareGeo, plasmaFlareMat);
+  plasmaFlare.position.z = 0.40;
+  clawHeadGroup.add(plasmaFlare);
+
+  // Middle Glowing Plasma Corona Disc
+  const plasmaCoronaGeo = new THREE.RingGeometry(0.18, 1.05, 32);
+  const plasmaCoronaMat = new THREE.MeshBasicMaterial({
+    color: 0xff2244,
+    transparent: true,
+    opacity: 0.85,
+    side: THREE.DoubleSide,
+    blending: THREE.AdditiveBlending
+  });
+  const plasmaCorona = new THREE.Mesh(plasmaCoronaGeo, plasmaCoronaMat);
+  plasmaCorona.position.z = 0.42;
+  clawHeadGroup.add(plasmaCorona);
+
+  // Volumetric Crimson Plasma Orb
+  const laserCoreGeo = new THREE.SphereGeometry(0.50, 24, 24);
   const laserCore = new THREE.Mesh(laserCoreGeo, laserEyeCoreMat);
-  laserCore.position.z = 0.38;
+  laserCore.position.z = 0.42;
   clawHeadGroup.add(laserCore);
 
-  const clawRedLight = new THREE.PointLight(0xff0033, 2.8, 22);
-  clawRedLight.position.set(0, 0, 0.65);
+  // Blazing White-Hot Plasma Center
+  const hotNucleusGeo = new THREE.SphereGeometry(0.24, 16, 16);
+  const hotNucleus = new THREE.Mesh(hotNucleusGeo, hotNucleusMat);
+  hotNucleus.position.z = 0.46;
+  clawHeadGroup.add(hotNucleus);
+
+  const clawRedLight = new THREE.PointLight(0xff0033, 4.5, 30);
+  clawRedLight.position.set(0, 0, 0.75);
   clawHeadGroup.add(clawRedLight);
 
   // Volumetric Conical Red Laser Beam
-  const beamGeo = new THREE.ConeGeometry(0.85, 8.0, 20, 1, true);
+  const beamGeo = new THREE.ConeGeometry(1.2, 10.0, 24, 1, true);
   const laserBeam = new THREE.Mesh(beamGeo, laserBeamMat);
-  laserBeam.position.set(0, -4.0, 0.5);
+  laserBeam.position.set(0, -5.0, 0.6);
   laserBeam.rotation.x = -Math.PI / 2;
   clawHeadGroup.add(laserBeam);
 
-  // 4 Articulated Claw Pincers (Top, Right, Bottom, Left - 90 deg spacing)
+  // 4 Articulated Heavy Mechanical Claw Pincers
   const clawPincers = [];
   const pincerAngles = [0, Math.PI / 2, Math.PI, (3 * Math.PI) / 2];
 
@@ -469,38 +520,38 @@
     clawRoot.rotation.z = angle;
     clawHeadGroup.add(clawRoot);
 
-    // Pivot mount at radius 1.25 from center
+    // Pivot mount at radius 1.45 from center
     const clawPivot = new THREE.Group();
-    clawPivot.position.set(0, 1.25, 0.25);
+    clawPivot.position.set(0, 1.45, 0.25);
     clawRoot.add(clawPivot);
 
     // Industrial brass base hinge bracket
-    const hingeBox = new THREE.Mesh(new THREE.BoxGeometry(0.42, 0.35, 0.45), industrialBrassMat);
+    const hingeBox = new THREE.Mesh(new THREE.BoxGeometry(0.48, 0.40, 0.50), industrialBrassMat);
     clawPivot.add(hingeBox);
 
     // Hydraulic piston cylinder
-    const piston = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.12, 0.75, 12), castIronMat);
-    piston.position.set(0, 0.35, 0.15);
+    const piston = new THREE.Mesh(new THREE.CylinderGeometry(0.15, 0.15, 0.95, 14), castIronMat);
+    piston.position.set(0, 0.40, 0.18);
     clawPivot.add(piston);
 
-    // Heavy Triangular Curved Armored Claw Blade (Photo 1 & 2)
+    // Heavy Triangular Curved Armored Claw Blade
     const bladeGroup = new THREE.Group();
-    bladeGroup.position.set(0, 0.65, 0.25);
+    bladeGroup.position.set(0, 0.75, 0.28);
     clawPivot.add(bladeGroup);
 
     // Primary curved iron armor blade
-    const bladeGeo = new THREE.ConeGeometry(0.38, 2.6, 4);
+    const bladeGeo = new THREE.ConeGeometry(0.48, 3.2, 4);
     const blade = new THREE.Mesh(bladeGeo, castIronMat);
-    blade.position.set(0, 1.25, 0);
-    blade.scale.set(0.65, 1.0, 1.25);
+    blade.position.set(0, 1.55, 0);
+    blade.scale.set(0.72, 1.0, 1.35);
     blade.rotation.z = Math.PI;
-    blade.rotation.x = 0.15;
+    blade.rotation.x = 0.18;
     bladeGroup.add(blade);
 
     // Inner serrated grip ridges (brass accent teeth)
-    for (let t = 0; t < 3; t++) {
-      const tooth = new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.14, 0.18), industrialBrassMat);
-      tooth.position.set(0, 0.6 + t * 0.5, -0.15);
+    for (let t = 0; t < 4; t++) {
+      const tooth = new THREE.Mesh(new THREE.BoxGeometry(0.26, 0.16, 0.20), industrialBrassMat);
+      tooth.position.set(0, 0.6 + t * 0.55, -0.18);
       bladeGroup.add(tooth);
     }
 
@@ -514,7 +565,7 @@
   // Interactive Claw Clamping State
   let clawOpenProgress = 1.0; // 1.0 = wide open (Photo 1), 0.0 = clamped closed (Photo 2)
 
-  // 5. Central Titanium Cyber-Spine
+  // 5. Central Metallic Cyber-Spine & Metallic Rings (Blends with Doc Ock Hand)
   const spineGroup = new THREE.Group();
   spineGroup.position.set(0, 0, -8);
   rootGroup.add(spineGroup);
@@ -523,46 +574,50 @@
   const spineSegmentCount = 48;
   const spineSegments = [];
 
+  // Brushed Gunmetal Titanium Core Shaft
   const titaniumCoreMat = new THREE.MeshStandardMaterial({
-    color: 0x121822,
-    metalness: 0.95,
-    roughness: 0.14,
-    emissive: 0x02050a,
-    emissiveIntensity: 0.2
-  });
-
-  const vertebraChassisMat = new THREE.MeshStandardMaterial({
-    color: 0x1f2b3e,
+    color: 0x333d4b, // Gunmetal titanium metallic steel
     metalness: 0.96,
-    roughness: 0.12,
-    emissive: currentColors.primary.clone(),
-    emissiveIntensity: 0.35
+    roughness: 0.18,
+    emissive: 0x140508,
+    emissiveIntensity: 0.30
   });
 
-  const coreShaftGeo = new THREE.CylinderGeometry(1.2, 1.2, spineHeight, 32);
+  // Metallic Slate/Chrome Steel Rings with Deep Crimson Reaction
+  const metallicChassisMat = new THREE.MeshStandardMaterial({
+    color: 0x485568, // Metallic slate/chrome steel
+    metalness: 0.95,
+    roughness: 0.16,
+    emissive: 0x33060c, // Deep red metallic glow
+    emissiveIntensity: 0.40
+  });
+
+  const coreShaftGeo = new THREE.CylinderGeometry(1.25, 1.25, spineHeight, 32);
   const coreShaft = new THREE.Mesh(coreShaftGeo, titaniumCoreMat);
   coreShaft.position.y = -spineHeight / 2 + 20;
   spineGroup.add(coreShaft);
 
+  // Glowing Crimson Red Plasma Conduit
   const plasmaConduitMat = new THREE.MeshBasicMaterial({
-    color: currentColors.accent.clone(),
+    color: 0xff0033, // Glowing crimson red wireframe
     wireframe: true,
     transparent: true,
-    opacity: 0.85,
+    opacity: 0.88,
     blending: THREE.AdditiveBlending
   });
-  const plasmaConduitGeo = new THREE.CylinderGeometry(0.7, 0.7, spineHeight, 20);
+  const plasmaConduitGeo = new THREE.CylinderGeometry(0.72, 0.72, spineHeight, 20);
   const plasmaConduit = new THREE.Mesh(plasmaConduitGeo, plasmaConduitMat);
   plasmaConduit.position.y = -spineHeight / 2 + 20;
   spineGroup.add(plasmaConduit);
 
-  const vertebraChassisGeo = new THREE.TorusGeometry(2.2, 0.26, 16, 32);
-  const ribStrutGeo = new THREE.BoxGeometry(0.35, 0.2, 2.6);
-  const nodeBeadGeo = new THREE.SphereGeometry(0.24, 12, 12);
+  const vertebraChassisGeo = new THREE.TorusGeometry(2.2, 0.28, 16, 36);
+  const vertebraBrassCollarGeo = new THREE.TorusGeometry(1.95, 0.08, 10, 28);
+  const ribStrutGeo = new THREE.BoxGeometry(0.38, 0.22, 2.6);
+  const nodeBeadGeo = new THREE.SphereGeometry(0.26, 14, 14);
   const nodeBeadMat = new THREE.MeshBasicMaterial({
-    color: currentColors.primary.clone(),
+    color: 0xff1133, // Glowing crimson red nodes
     transparent: true,
-    opacity: 0.9,
+    opacity: 0.95,
     blending: THREE.AdditiveBlending
   });
 
@@ -572,9 +627,15 @@
     const y = 20 - t * spineHeight;
     segGroup.position.set(0, y, 0);
 
-    const chassis = new THREE.Mesh(vertebraChassisGeo, vertebraChassisMat.clone());
+    // Metallic Steel Chassis Ring
+    const chassis = new THREE.Mesh(vertebraChassisGeo, metallicChassisMat.clone());
     chassis.rotation.x = Math.PI / 2;
     segGroup.add(chassis);
+
+    // Inner Brass Collar Matching Hand's Brass Joint Fittings
+    const brassCollar = new THREE.Mesh(vertebraBrassCollarGeo, industrialBrassMat);
+    brassCollar.rotation.x = Math.PI / 2;
+    segGroup.add(brassCollar);
 
     const rib1 = new THREE.Mesh(ribStrutGeo, titaniumCoreMat);
     rib1.position.y = 0.35;
@@ -1262,9 +1323,9 @@
     spinePointLight.color.copy(pal.primary);
     spineAccentLight.color.copy(pal.accent);
     rimLight.color.copy(pal.accent);
-    vertebraChassisMat.emissive.copy(pal.primary);
+    metallicChassisMat.emissive.copy(pal.primary);
     nodeBeadMat.color.copy(pal.primary);
-    plasmaConduitMat.color.copy(pal.accent);
+    plasmaConduitMat.color.copy(pal.primary);
   }
 
   const themeObserver = new MutationObserver(() => {
@@ -1618,10 +1679,18 @@
       pincer.pivot.rotation.x = -currentClawAngle + organicJitter;
     });
 
-    // Central Crimson Red Laser Eye & Volumetric Beam Pulse (Photo 1)
-    const laserPulse = 2.4 + Math.sin(timeVal * 5.0) * 0.8 + (1.0 - clawOpenProgress) * 1.5;
+    // Central Crimson Red Laser Eye & Glowing Plasma Orb Pulsing
+    const plasmaWave = Math.sin(timeVal * 7.5);
+    const plasmaScale = 1.0 + plasmaWave * 0.22;
+    laserCore.scale.set(plasmaScale, plasmaScale, plasmaScale);
+    hotNucleus.scale.set(1.0 + Math.cos(timeVal * 12.0) * 0.25, 1.0 + Math.cos(timeVal * 12.0) * 0.25, 1.0);
+    plasmaCorona.scale.set(plasmaScale * 1.08, plasmaScale * 1.08, 1.0);
+    plasmaCorona.rotation.z += 0.02;
+    plasmaFlare.rotation.z -= 0.015;
+
+    const laserPulse = 3.6 + plasmaWave * 1.6 + (1.0 - clawOpenProgress) * 2.0;
     clawRedLight.intensity = laserPulse;
-    laserBeam.material.opacity = (0.16 + (1.0 - clawOpenProgress) * 0.28) * (0.8 + Math.sin(timeVal * 9.0) * 0.2);
+    laserBeam.material.opacity = (0.24 + (1.0 - clawOpenProgress) * 0.30) * (0.8 + Math.sin(timeVal * 9.0) * 0.2);
 
     // Segmented Arched Spine Organic Wave
     armSegments.forEach((seg) => {
@@ -1630,8 +1699,8 @@
       seg.group.rotation.y = wave * 0.06;
     });
 
-    // Translate Doc Ock Arm with Scroll so it clears card heads
-    docOckArmGroup.position.y = 2.6 + scrollProgress * (verticalStep * 0.35);
+    // Translate Doc Ock Arm with Scroll: sits prominently at hero (y = 0), lifts cleanly on scroll down
+    docOckArmGroup.position.y = scrollProgress * (verticalStep * 0.45);
 
     // ── VOLUMETRIC CYBER GAS PARTICLE BURST PHYSICS ──
     if (gasBurstActive) {
