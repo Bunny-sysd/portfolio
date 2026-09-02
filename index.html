@@ -74,6 +74,12 @@
       transform: translateY(-10px) !important;
     }
 
+    @media (max-width: 768px) {
+      .hero-scroll-prompt {
+        display: none !important;
+      }
+    }
+
     .interactive-modal-overlay {
       display: none !important;
     }
@@ -111,13 +117,19 @@
   <!-- ── ACTIVE THEORY FLOATING HUD: TOP BAR ── -->
   <header class="at-header interactive-ui" id="atHeader">
     <div class="at-header-left">
-      <a href="#orbit" class="at-logo" id="atLogo" onclick="window.rotateCylinderToCard(0); return false;">
+      <a href="#orbit" class="at-logo" id="atLogo" onclick="window.rotateCylinderToCard(0); return false;" title="Return to Cyber Orbit Core">
         <span class="at-logo-icon">0x</span>
         <span class="at-logo-label">AARON ALVA // ACTIVE THEORY ORBIT</span>
       </a>
     </div>
 
-    <div class="at-header-center">
+    <!-- Mobile Center Counter (Visible only on mobile) -->
+    <div class="at-mobile-counter" id="atMobileCounter">
+      <span class="at-pulse-dot"></span>
+      <span class="at-mobile-card-num" id="atMobileCardNum">00 / 06</span>
+    </div>
+
+    <div class="at-header-center desktop-only">
       <div class="at-stage-badge" id="atStageBadge">
         <span class="at-pulse-dot"></span>
         <span id="atActiveCardName">00 // CYBERNETIC NEXUS CORE • SCROLL TO ENGAGE</span>
@@ -130,37 +142,143 @@
     </div>
 
     <div class="at-header-right">
-      <div class="at-nav-pill">
-        <button class="at-nav-link" id="btnNavWork" onclick="window.rotateCylinderToCard(1)">WORK</button>
-        <span class="at-nav-divider">———</span>
-        <button class="at-nav-link" id="btnNavContact" onclick="window.rotateCylinderToCard(8)">CONTACT</button>
+      <!-- Desktop controls (hidden on mobile) -->
+      <div class="desktop-controls">
+        <div class="at-nav-pill">
+          <button class="at-nav-link" id="btnNavWork" onclick="window.rotateCylinderToCard(1)">WORK</button>
+          <span class="at-nav-divider">———</span>
+          <button class="at-nav-link" id="btnNavContact" onclick="window.rotateCylinderToCard(6)">CONTACT</button>
+        </div>
+
+        <button class="at-action-btn" id="audioToggleBtn" title="Toggle Web Audio SFX (M)" aria-label="Toggle Sound Effects">
+          <span class="action-icon" id="audioIcon">[VOL]</span>
+          <span class="action-label">SFX</span>
+          <span class="at-eq-visualizer">
+            <span class="eq-bar"></span>
+            <span class="eq-bar"></span>
+            <span class="eq-bar"></span>
+            <span class="eq-bar"></span>
+            <span class="eq-bar"></span>
+          </span>
+        </button>
+
+        <button class="at-action-btn cmd-trigger-btn" id="cmdTriggerBtn" title="Open Command Palette (Ctrl+K)"
+          aria-label="Open Command Palette">
+          <span class="cmd-badge">⌘K</span>
+        </button>
+
+        <div class="theme-switchers-cluster">
+          <button class="theme-dot-btn active" data-theme-set="green" title="Phosphor Green"></button>
+          <button class="theme-dot-btn" data-theme-set="cyan" title="Cyan Cyber"></button>
+          <button class="theme-dot-btn" data-theme-set="amber" title="Amber Terminal"></button>
+          <button class="theme-dot-btn" data-theme-set="monokai" title="Monokai Neon"></button>
+        </div>
       </div>
 
-      <button class="at-action-btn" id="audioToggleBtn" title="Toggle Web Audio SFX (M)" aria-label="Toggle Sound Effects">
-        <span class="action-icon" id="audioIcon">[SFX]</span>
-        <span class="action-label">SFX</span>
-        <span class="at-eq-visualizer">
-          <span class="eq-bar"></span>
-          <span class="eq-bar"></span>
-          <span class="eq-bar"></span>
-          <span class="eq-bar"></span>
-          <span class="eq-bar"></span>
-        </span>
+      <!-- Single Mobile Menu Tap Target (visible only on mobile) -->
+      <button class="at-mobile-menu-btn" id="btnMobileMenuToggle" aria-label="Toggle Cyber Menu" title="Open Menu">
+        <span class="mobile-menu-icon-bar"></span>
+        <span class="mobile-menu-icon-bar"></span>
+        <span class="mobile-menu-icon-bar"></span>
       </button>
-
-      <button class="at-action-btn cmd-trigger-btn" id="cmdTriggerBtn" title="Open Command Palette (Ctrl+K)"
-        aria-label="Open Command Palette">
-        <span class="cmd-badge">⌘K</span>
-      </button>
-
-      <div class="theme-switchers-cluster">
-        <button class="theme-dot-btn active" data-theme-set="green" title="Phosphor Green"></button>
-        <button class="theme-dot-btn" data-theme-set="cyan" title="Cyan Cyber"></button>
-        <button class="theme-dot-btn" data-theme-set="amber" title="Amber Terminal"></button>
-        <button class="theme-dot-btn" data-theme-set="monokai" title="Monokai Neon"></button>
-      </div>
     </div>
   </header>
+
+  <!-- ── MOBILE HUD MENU MODAL (COLLAPSED BEHIND SINGLE TAP TARGET) ── -->
+  <div id="mobileMenuModal" class="mobile-menu-overlay" aria-hidden="true">
+    <div class="mobile-menu-backdrop" id="mobileMenuBackdrop"></div>
+    <div class="mobile-menu-panel glass-panel">
+      <div class="mobile-menu-header">
+        <div class="mobile-menu-brand">
+          <span class="at-logo-icon">0x</span>
+          <span class="mobile-menu-title">AARON ALVA // HUD</span>
+        </div>
+        <button class="mobile-menu-close-btn" id="btnMobileMenuClose" aria-label="Close Menu">✕</button>
+      </div>
+
+      <div class="mobile-menu-telemetry">
+        <span class="mobile-clock" id="mobileUtcClock">00:00:00 UTC</span>
+        <span class="mobile-status-dot"></span>
+        <span class="mobile-status-text">SYS_OPTIMAL</span>
+      </div>
+
+      <nav class="mobile-nav-section">
+        <div class="mobile-section-label">[ ORBITAL DESTINATIONS ]</div>
+        <div class="mobile-nav-grid">
+          <button class="mobile-nav-item" onclick="window.rotateCylinderToCard(1); window.closeMobileMenu();">
+            <span class="item-idx">01</span>
+            <div class="item-text-wrap">
+              <span class="item-name">AARON ALVA</span>
+              <span class="item-tag">IDENTITY &amp; GFACT</span>
+            </div>
+          </button>
+          <button class="mobile-nav-item" onclick="window.rotateCylinderToCard(2); window.closeMobileMenu();">
+            <span class="item-idx">02</span>
+            <div class="item-text-wrap">
+              <span class="item-name">MUTAGEN</span>
+              <span class="item-tag">AST FUZZER</span>
+            </div>
+          </button>
+          <button class="mobile-nav-item" onclick="window.rotateCylinderToCard(3); window.closeMobileMenu();">
+            <span class="item-idx">03</span>
+            <div class="item-text-wrap">
+              <span class="item-name">VIGIL</span>
+              <span class="item-tag">CVE CORRELATOR</span>
+            </div>
+          </button>
+          <button class="mobile-nav-item" onclick="window.rotateCylinderToCard(4); window.closeMobileMenu();">
+            <span class="item-idx">04</span>
+            <div class="item-text-wrap">
+              <span class="item-name">SIGNALHUB</span>
+              <span class="item-tag">MARKET AI</span>
+            </div>
+          </button>
+          <button class="mobile-nav-item" onclick="window.rotateCylinderToCard(5); window.closeMobileMenu();">
+            <span class="item-idx">05</span>
+            <div class="item-text-wrap">
+              <span class="item-name">PROVING GROUNDS</span>
+              <span class="item-tag">TOP 1% CTF</span>
+            </div>
+          </button>
+          <button class="mobile-nav-item" onclick="window.rotateCylinderToCard(6); window.closeMobileMenu();">
+            <span class="item-idx">06</span>
+            <div class="item-text-wrap">
+              <span class="item-name">TRANSMIT</span>
+              <span class="item-tag">CONTACT PORTAL</span>
+            </div>
+          </button>
+        </div>
+      </nav>
+
+      <div class="mobile-tools-section">
+        <div class="mobile-section-label">[ SYSTEM CONTROLS ]</div>
+        
+        <div class="mobile-tool-row">
+          <button class="mobile-tool-btn" id="mobileAudioToggleBtn">
+            <span id="mobileAudioIcon">[VOL]</span>
+            <span>AUDIO SFX SYNTHESIZER</span>
+          </button>
+        </div>
+
+        <div class="mobile-tool-row">
+          <button class="mobile-tool-btn" id="mobileCmdTriggerBtn">
+            <span>[⌘K]</span>
+            <span>COMMAND PALETTE</span>
+          </button>
+        </div>
+
+        <div class="mobile-theme-row">
+          <span class="mobile-theme-label">PHOSPHOR:</span>
+          <div class="mobile-theme-dots">
+            <button class="theme-dot-btn active" data-theme-set="green" title="Phosphor Green"></button>
+            <button class="theme-dot-btn" data-theme-set="cyan" title="Cyan Cyber"></button>
+            <button class="theme-dot-btn" data-theme-set="amber" title="Amber Terminal"></button>
+            <button class="theme-dot-btn" data-theme-set="monokai" title="Monokai Neon"></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- ── ACTIVE THEORY LEFT SIDEBAR HUD: WHAT ARE YOU LOOKING FOR? ── -->
   <aside class="at-sidebar-hud interactive-ui" id="atSidebarHud">

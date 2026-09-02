@@ -30,9 +30,33 @@
     return;
   }
 
+  // Multi-Signal Hardware Performance Tiering
+  function detectPerformanceTier(glContext) {
+    const mem = navigator.deviceMemory || 4;
+    const cores = navigator.hardwareConcurrency || 4;
+    let rendererStr = '';
+    try {
+      const ext = glContext.getExtension('WEBGL_debug_renderer_info');
+      if (ext) {
+        rendererStr = (glContext.getParameter(ext.UNMASKED_RENDERER_WEBGL) || '').toLowerCase();
+      }
+    } catch (e) {}
+
+    const isBudgetGpu = /mali-(4|g3|g51|g52)|adreno\s*(3|4|5|610|612|615|616)|powervr|sgx|intel\s*hd|swiftshader|llvmpipe/i.test(rendererStr);
+    const isFlagshipGpu = /apple\s*m|geforce\s*(rtx|gtx\s*1[06]|gtx\s*[2-4])|radeon\s*(rx|pro)|adreno\s*(7|680|690)|mali-g7[89]/i.test(rendererStr);
+
+    let tier = 'mid';
+    if (isBudgetGpu || mem <= 2 || cores <= 2) {
+      tier = 'low';
+    } else if (isFlagshipGpu && mem >= 8 && cores >= 8) {
+      tier = 'high';
+    }
+    return { tier, rendererStr, mem, cores };
+  }
+
+  const perfProfile = detectPerformanceTier(gl);
   const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth < 768;
-  const isLowConcurrency = (typeof navigator.hardwareConcurrency === 'number' && navigator.hardwareConcurrency <= 4);
-  const isLowPower = isMobile || isLowConcurrency;
+  const isLowPower = perfProfile.tier === 'low' || (isMobile && perfProfile.tier !== 'high');
   const currentDPR = isLowPower ? 1.0 : Math.min(window.devicePixelRatio || 1, 1.5);
 
   // 1. Scene, Camera & High-Precision Renderer
@@ -58,6 +82,15 @@
 
   renderer.setPixelRatio(currentDPR);
   renderer.setSize(window.innerWidth, window.innerHeight);
+
+  // Dedicated Active Card Dynamic Spotlight & Cyber Rim Light
+  const activeCardSpotlight = new THREE.SpotLight(0x00ff66, 3.5, 45, Math.PI / 4, 0.4, 1.2);
+  activeCardSpotlight.position.set(0, 0, 18);
+  scene.add(activeCardSpotlight);
+
+  const activeCardRimLight = new THREE.PointLight(0x00e5ff, 2.0, 25);
+  activeCardRimLight.position.set(0, 0, 10);
+  scene.add(activeCardRimLight);
 
   const rootGroup = new THREE.Group();
   scene.add(rootGroup);
@@ -150,8 +183,14 @@
   const redAmbientHemi = new THREE.HemisphereLight(0x1a0505, 0x0a0002, 0.45);
   scene.add(redAmbientHemi);
 
-  // 3. Massive Quantum Particle Field (spread across whole scene)
-  const glitterCount = isLowPower ? 2000 : 6000;
+  // 3. Multi-Tier Active Theory Particle Ecosystem
+  let glitterCount = 3500;
+  if (perfProfile.tier === 'low') {
+    glitterCount = 900;
+  } else if (perfProfile.tier === 'mid') {
+    glitterCount = 1800;
+  }
+
   const glitterGeo = new THREE.BufferGeometry();
   const glitterPositions = new Float32Array(glitterCount * 3);
   const glitterColors = new Float32Array(glitterCount * 3);
@@ -267,7 +306,7 @@
   rootGroup.add(glitterSystem);
 
   // 3b. Quantum Entanglement Connection Lines
-  const entangleLineCount = isLowPower ? 300 : 800;
+  const entangleLineCount = perfProfile.tier === 'low' ? 150 : perfProfile.tier === 'mid' ? 350 : 700;
   const entangleGeo = new THREE.BufferGeometry();
   const entanglePositions = new Float32Array(entangleLineCount * 2 * 3);
   const entangleColors = new Float32Array(entangleLineCount * 2 * 3);
@@ -631,10 +670,10 @@
 
   const cardCount = cardData.length;
   const cardMeshes = [];
-  const cardWidth = isMobile ? 6.8 : 8.8;
-  const cardHeight = isMobile ? 9.2 : 11.8;
-  const verticalStep = 15.5;
-  const angleStep = 0.40;
+  const cardWidth = isMobile ? 7.6 : 8.8;
+  const cardHeight = isMobile ? 10.6 : 11.8;
+  const verticalStep = isMobile ? 14.0 : 15.5;
+  const angleStep = isMobile ? 0.32 : 0.40;
 
   // Card Texture Generator (Dense Cybernetic Telemetry Design)
   function generateCardTexture(data) {
@@ -1049,11 +1088,13 @@
   });
 
   window.addEventListener('pointermove', (e) => {
+    updatePointerCoords(e.clientX, e.clientY);
     if (isDragging) {
       const deltaY = dragStartY - e.clientY;
       const deltaX = dragStartX - e.clientX;
       totalDragDistance = Math.hypot(deltaX, deltaY);
-      targetScroll = Math.max(0, Math.min(cardCount - 1, dragStartProgress + deltaY * 0.004));
+      const dragSensitivity = isMobile ? 0.0055 : 0.004;
+      targetScroll = Math.max(0, Math.min(6.0, dragStartProgress + deltaY * dragSensitivity));
     }
   });
 
@@ -1134,12 +1175,21 @@
 
   // Raycaster for Card Hover & Click
   const raycaster = new THREE.Raycaster();
-  const mouse = new THREE.Vector2(-999, -999);
+  const mouse = new THREE.Vector2(0, 0);
+  const raycastCoords = new THREE.Vector2(-999, -999);
+  let hasUserInteractedPointer = false;
   let hoveredCard = null;
 
+  function updatePointerCoords(clientX, clientY) {
+    hasUserInteractedPointer = true;
+    mouse.x = (clientX / window.innerWidth) * 2 - 1;
+    mouse.y = -(clientY / window.innerHeight) * 2 + 1;
+    raycastCoords.x = mouse.x;
+    raycastCoords.y = mouse.y;
+  }
+
   window.addEventListener('mousemove', (e) => {
-    mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
-    mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+    updatePointerCoords(e.clientX, e.clientY);
   });
 
   window.addEventListener('click', (e) => {
@@ -1147,9 +1197,8 @@
     if (totalDragDistance > 8) return;
     if (e.target.closest('.interactive-ui') || e.target.closest('.at-drawer') || e.target.closest('button') || e.target.closest('a')) return;
 
-    mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
-    mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
-    raycaster.setFromCamera(mouse, camera);
+    updatePointerCoords(e.clientX, e.clientY);
+    raycaster.setFromCamera(raycastCoords, camera);
     const intersects = raycaster.intersectObjects(cardMeshes);
 
     if (intersects.length > 0) {
@@ -1195,16 +1244,40 @@
 
   // 9. Window Resize
   window.addEventListener('resize', () => {
+    const isNowMobile = window.innerWidth < 768;
+    camera.fov = isNowMobile ? 65 : 46;
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
   }, { passive: true });
 
-  // 10. Master Animation & Render Loop
+  // 10. Master Animation & Render Loop with Adaptive Watchdog
   let lastTime = performance.now();
+  let frameCount = 0;
+  let fpsWindowStart = performance.now();
+  let adaptiveLodSteppedDown = false;
+  let isTabVisible = true;
+
+  document.addEventListener('visibilitychange', () => {
+    isTabVisible = !document.hidden;
+  });
 
   function render(now) {
     requestAnimationFrame(render);
+    if (!isTabVisible) return;
+
+    // 60-frame adaptive performance monitor
+    frameCount++;
+    if (frameCount % 60 === 0) {
+      const elapsed = now - fpsWindowStart;
+      const rollingFps = (60 * 1000) / Math.max(1, elapsed);
+      fpsWindowStart = now;
+      if (rollingFps < 42 && !adaptiveLodSteppedDown) {
+        adaptiveLodSteppedDown = true;
+        renderer.setPixelRatio(1.0);
+        if (entangleLines) entangleLines.visible = false;
+      }
+    }
 
     const delta = (now - lastTime) * 0.001;
     lastTime = now;
@@ -1228,9 +1301,9 @@
     deepDiveProgress += (targetProg - deepDiveProgress) * 0.10;
     cardEmissiveGlow *= 0.92;
 
-    // Raycast for Hovered 3D Card (only active when cards are visible and not in deep dive)
-    if (scrollProgress >= 0.4 && deepDiveProgress < 0.1) {
-      raycaster.setFromCamera(mouse, camera);
+    // Raycast for Hovered 3D Card (only active when cards are visible and user has interacted with pointer)
+    if (scrollProgress >= 0.4 && deepDiveProgress < 0.1 && hasUserInteractedPointer) {
+      raycaster.setFromCamera(raycastCoords, camera);
       const intersects = raycaster.intersectObjects(cardMeshes);
 
       if (intersects.length > 0) {
@@ -1267,12 +1340,16 @@
       const i = mesh.userData.cardIndex;
       const targetCardScroll = i + 1; // Card 0 activates at scrollProgress = 1.0
       const relPos = targetCardScroll - scrollProgress;
-      const helixY = -relPos * verticalStep;
-      const angle = relPos * angleStep;
-      const helixX = Math.sin(angle) * 14.0;
-      const helixZ = (Math.cos(angle) - 1.0) * 14.0 + (mesh.userData.isHovered ? 2.8 : 0);
-
       const distToCenter = Math.abs(relPos);
+      const angle = relPos * angleStep;
+
+      // Centered rail math: active card converges directly to (0, 0, 0)
+      const xFactor = isMobile ? 2.2 : 6.5;
+      const helixX = Math.sin(angle) * xFactor * Math.min(1.0, distToCenter * 1.5);
+      const helixY = -relPos * verticalStep;
+      const depthFactor = isMobile ? 4.2 : 5.8;
+      const helixZ = -Math.pow(distToCenter, 1.25) * depthFactor + (mesh.userData.isHovered ? 2.5 : 0);
+
       if (scrollProgress >= 0.4 && distToCenter < minDistance) {
         minDistance = distToCenter;
         closestIndex = i;
@@ -1292,8 +1369,7 @@
         mesh.position.set(curX, curY, curZ);
 
         // Rotation: smoothly un-tilt to face camera straight-on
-        const baseRotY = angle * 0.75;
-        const curRotY = THREE.MathUtils.lerp(baseRotY, 0, smoothP);
+        const curRotY = THREE.MathUtils.lerp(0, 0, smoothP);
         const curRotX = THREE.MathUtils.lerp(-mouse.y * 0.12, 0, smoothP);
         mesh.rotation.set(curRotX, curRotY, 0);
 
@@ -1305,20 +1381,24 @@
         mesh.material.opacity = THREE.MathUtils.lerp(0.95, 1.0, smoothP);
         mesh.visible = true;
       } else {
-        // Normal Helical Track positioning with Mouse Spring Parallax Tilt
+        // Normal Centered Track with Active Theory Front-Facing Alignment
         mesh.position.set(helixX, helixY, helixZ);
 
-        // 3D Parallax tilt on active/hovered cards
-        if (distToCenter < 0.8) {
-          mesh.rotation.x = -mouse.y * 0.14;
-          mesh.rotation.y = angle * 0.75 + mouse.x * 0.18;
-          mesh.rotation.z = -mouse.x * 0.03;
-        } else {
-          mesh.rotation.set(0, angle * 0.75, 0);
-        }
+        // Rotation: Align squarely to face the camera as distToCenter approaches 0
+        const alignWeight = Math.max(0.0, 1.0 - Math.pow(distToCenter / 0.85, 1.2));
+        const rawRotY = angle * (isMobile ? 0.25 : 0.45);
+        const rotY = rawRotY * (1.0 - alignWeight);
+
+        // Responsive tactile parallax when facing user (strictly 0 without user interaction)
+        const parallaxX = (hasUserInteractedPointer ? mouse.x : 0) * (isMobile ? 0.08 : 0.16);
+        const parallaxY = (hasUserInteractedPointer ? -mouse.y : 0) * (isMobile ? 0.06 : 0.12);
+
+        mesh.rotation.y = rotY + parallaxX * alignWeight;
+        mesh.rotation.x = parallaxY * alignWeight;
+        mesh.rotation.z = -parallaxX * 0.15 * alignWeight;
 
         const heroFade = Math.max(0.0, Math.min(1.0, (scrollProgress - 0.2) / 0.6));
-        let opacity = Math.max(0.0, 1.0 - Math.pow(distToCenter / 1.8, 1.6)) * heroFade;
+        let opacity = Math.max(0.0, 1.0 - Math.pow(distToCenter / 1.7, 1.5)) * heroFade;
         
         // Fade out non-selected cards during deep dive
         if (deepDiveProgress > 0.001) {
@@ -1403,8 +1483,25 @@
     innerEmblem.rotation.y = -timeVal * 0.6;
     orbitHalo.rotation.z = timeVal * 0.3;
 
-    const emblemY = 8.2 + scrollProgress * 15.0;
-    heroEmblemGroup.position.y = emblemY;
+    // Dynamic Active Card Spotlight & Cyber Rim Light Tracking
+    if (closestIndex !== -1 && cardMeshes[closestIndex]) {
+      const activeMesh = cardMeshes[closestIndex];
+      const colHex = parseInt(activeMesh.userData.cardData.color.replace('#', '0x'), 16) || 0x00ff66;
+      activeCardSpotlight.color.setHex(colHex);
+      activeCardSpotlight.position.set(activeMesh.position.x, activeMesh.position.y + 1.5, activeMesh.position.z + 8);
+      activeCardSpotlight.target = activeMesh;
+      activeCardSpotlight.intensity = Math.max(0.8, 3.5 * (1.0 - Math.min(1.0, minDistance)));
+
+      activeCardRimLight.color.setHex(colHex);
+      activeCardRimLight.position.set(activeMesh.position.x + (isMobile ? 2.5 : 5.0), activeMesh.position.y - 0.8, activeMesh.position.z + 3.5);
+      activeCardRimLight.intensity = Math.max(0.5, 2.5 * (1.0 - Math.min(1.0, minDistance)));
+    } else {
+      activeCardSpotlight.intensity = 0.5;
+      activeCardRimLight.intensity = 0.5;
+    }
+
+    // Hero Opening Emblem position & subtle breathe
+    heroEmblemGroup.position.y = 8.2 + scrollProgress * verticalStep * 0.45;
     heroEmblemGroup.position.z = -4.5;
     const emblemScale = Math.max(0.65, 1.0 - scrollProgress * 0.15);
     heroEmblemGroup.scale.set(emblemScale, emblemScale, emblemScale);

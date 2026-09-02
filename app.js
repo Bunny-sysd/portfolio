@@ -2025,6 +2025,10 @@ const SoundFX = (function initWebAudioSFX() {
         audioIcon.textContent = isSoundEnabled ? '[VOL]' : '[MUTE]';
       }
     }
+    const mobileAudioIcon = document.getElementById('mobileAudioIcon');
+    if (mobileAudioIcon) {
+      mobileAudioIcon.textContent = isSoundEnabled ? '[VOL]' : '[MUTE]';
+    }
     const cmdDesc = document.getElementById('cmdSoundDesc');
     const cmdIcon = document.getElementById('cmdSoundIcon');
     if (cmdDesc) {
@@ -2798,6 +2802,7 @@ console.log(
 
   const activeNameEl = document.getElementById('atActiveCardName');
   const indexEl = document.getElementById('hudCardIndex');
+  const mobileCardNumEl = document.getElementById('atMobileCardNum');
   const sidebarBtns = document.querySelectorAll('.at-hud-btn');
   const prevBtn = document.getElementById('btnDialPrev');
   const nextBtn = document.getElementById('btnDialNext');
@@ -2807,6 +2812,7 @@ console.log(
     if (idx === -1) {
       if (activeNameEl) activeNameEl.textContent = '00 // CYBERNETIC NEXUS CORE • SCROLL TO ENGAGE';
       if (indexEl) indexEl.textContent = '00';
+      if (mobileCardNumEl) mobileCardNumEl.textContent = '00 / 06';
       if (heroPrompt) heroPrompt.classList.remove('hidden');
       sidebarBtns.forEach(btn => btn.classList.remove('active'));
       return;
@@ -2815,6 +2821,7 @@ console.log(
     currentCardIndex = idx;
     if (activeNameEl) activeNameEl.textContent = cardNames[idx] || `0${idx + 1} // ACTIVE STAGE`;
     if (indexEl) indexEl.textContent = String(idx + 1).padStart(2, '0');
+    if (mobileCardNumEl) mobileCardNumEl.textContent = `${String(idx + 1).padStart(2, '0')} / 06`;
     if (heroPrompt) heroPrompt.classList.add('hidden');
 
     sidebarBtns.forEach((btn, i) => {
@@ -2868,11 +2875,72 @@ console.log(
     });
   }
 
-  // Keyboard Navigation: Arrows, 1-8 Hotkeys, Mute M, ESC
+  // Mobile Cyber Menu Handlers
+  const mobileMenuModal = document.getElementById('mobileMenuModal');
+  const btnMobileMenuToggle = document.getElementById('btnMobileMenuToggle');
+  const btnMobileMenuClose = document.getElementById('btnMobileMenuClose');
+  const mobileMenuBackdrop = document.getElementById('mobileMenuBackdrop');
+  const mobileAudioToggleBtn = document.getElementById('mobileAudioToggleBtn');
+  const mobileCmdTriggerBtn = document.getElementById('mobileCmdTriggerBtn');
+
+  window.openMobileMenu = function() {
+    if (mobileMenuModal) {
+      mobileMenuModal.classList.add('active');
+      mobileMenuModal.setAttribute('aria-hidden', 'false');
+      document.body.classList.add('mobile-menu-open');
+      if (typeof window.playCyberSFX === 'function') window.playCyberSFX('click');
+    }
+  };
+
+  window.closeMobileMenu = function() {
+    if (mobileMenuModal) {
+      mobileMenuModal.classList.remove('active');
+      mobileMenuModal.setAttribute('aria-hidden', 'true');
+      document.body.classList.remove('mobile-menu-open');
+    }
+  };
+
+  if (btnMobileMenuToggle) {
+    btnMobileMenuToggle.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (mobileMenuModal?.classList.contains('active')) {
+        window.closeMobileMenu();
+      } else {
+        window.openMobileMenu();
+      }
+    });
+  }
+
+  if (btnMobileMenuClose) {
+    btnMobileMenuClose.addEventListener('click', window.closeMobileMenu);
+  }
+
+  if (mobileMenuBackdrop) {
+    mobileMenuBackdrop.addEventListener('click', window.closeMobileMenu);
+  }
+
+  if (mobileAudioToggleBtn) {
+    mobileAudioToggleBtn.addEventListener('click', () => {
+      const toggleBtn = document.getElementById('audioToggleBtn');
+      if (toggleBtn) toggleBtn.click();
+    });
+  }
+
+  if (mobileCmdTriggerBtn) {
+    mobileCmdTriggerBtn.addEventListener('click', () => {
+      window.closeMobileMenu();
+      setTimeout(() => {
+        const cmdTrigger = document.getElementById('cmdTriggerBtn');
+        if (cmdTrigger) cmdTrigger.click();
+      }, 150);
+    });
+  }
+
+  // Keyboard Navigation: Arrows, 1-6 Hotkeys, Mute M, ESC
   window.addEventListener('keydown', (e) => {
     if (['INPUT', 'TEXTAREA'].includes(document.activeElement?.tagName)) return;
 
-    if (e.key >= '1' && e.key <= '8') {
+    if (e.key >= '1' && e.key <= '6') {
       const idx = parseInt(e.key, 10) - 1;
       updateActiveUI(idx);
       if (typeof window.rotateCylinderToCard === 'function') {
@@ -2899,21 +2967,26 @@ console.log(
         window.rotateCylinderToCard(nextIdx + 1);
       }
       if (typeof window.playCyberSFX === 'function') window.playCyberSFX('dialTick');
-    } else if (e.key === 'Escape' && document.body.classList.contains('in-deep-dive')) {
-      window.closeActiveTheoryDrawer();
+    } else if (e.key === 'Escape') {
+      if (mobileMenuModal?.classList.contains('active')) {
+        window.closeMobileMenu();
+      } else if (document.body.classList.contains('in-deep-dive')) {
+        window.closeActiveTheoryDrawer();
+      }
     }
   });
 
   // Active Theory Live Telemetry Clock Loop
   function updateTelemetryClock() {
     const clockEl = document.getElementById('atUtcClock');
-    if (clockEl) {
-      const now = new Date();
-      const h = String(now.getUTCHours()).padStart(2, '0');
-      const m = String(now.getUTCMinutes()).padStart(2, '0');
-      const s = String(now.getUTCSeconds()).padStart(2, '0');
-      clockEl.textContent = `${h}:${m}:${s} UTC`;
-    }
+    const mobileClockEl = document.getElementById('mobileUtcClock');
+    const now = new Date();
+    const h = String(now.getUTCHours()).padStart(2, '0');
+    const m = String(now.getUTCMinutes()).padStart(2, '0');
+    const s = String(now.getUTCSeconds()).padStart(2, '0');
+    const timeStr = `${h}:${m}:${s} UTC`;
+    if (clockEl) clockEl.textContent = timeStr;
+    if (mobileClockEl) mobileClockEl.textContent = timeStr;
   }
   setInterval(updateTelemetryClock, 1000);
   updateTelemetryClock();
