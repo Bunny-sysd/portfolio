@@ -2022,7 +2022,7 @@ const SoundFX = (function initWebAudioSFX() {
     if (toggleBtn) {
       toggleBtn.classList.toggle('active-sfx', isSoundEnabled);
       if (audioIcon) {
-        audioIcon.textContent = isSoundEnabled ? '🔊' : '🔇';
+        audioIcon.textContent = isSoundEnabled ? '[VOL]' : '[MUTE]';
       }
     }
     const cmdDesc = document.getElementById('cmdSoundDesc');
@@ -2031,7 +2031,7 @@ const SoundFX = (function initWebAudioSFX() {
       cmdDesc.textContent = isSoundEnabled ? 'Sound synthesizer: Active (Enabled)' : 'Sound synthesizer: Muted (Disabled)';
     }
     if (cmdIcon) {
-      cmdIcon.textContent = isSoundEnabled ? '🔊' : '🔇';
+      cmdIcon.textContent = isSoundEnabled ? '[ON]' : '[OFF]';
     }
   }
 
@@ -3141,7 +3141,7 @@ console.log(
   if (btnToggleChartType) {
     btnToggleChartType.onclick = () => {
       chartMode = chartMode === 'line' ? 'candle' : 'line';
-      btnToggleChartType.textContent = chartMode === 'line' ? '📊 CANDLESTICK VIEW' : '📈 WAVEFORM VIEW';
+      btnToggleChartType.textContent = chartMode === 'line' ? '[CANDLESTICK VIEW]' : '[WAVEFORM VIEW]';
       if (typeof window.playCyberSFX === 'function') window.playCyberSFX('click');
     };
   }
@@ -3326,7 +3326,7 @@ console.log(
   const simStatusTag = document.getElementById('simStatusTag');
   if (btnRunFuzzCycle) {
     btnRunFuzzCycle.onclick = () => {
-      if (simStatusTag) simStatusTag.innerHTML = '<span style="color: #00e5ff;">⚙️ [RUNNING] SYNTHESIZING AST MUTATIONS...</span>';
+      if (simStatusTag) simStatusTag.innerHTML = '<span style="color: #00e5ff;">[RUNNING] SYNTHESIZING AST MUTATIONS...</span>';
       if (fuzzerSimLogs) {
         fuzzerSimLogs.innerHTML = '<div>> [FUZZ_START] Spawning ephemeral Docker sandbox (--network=none)...</div><div class="dim">> [MUTATOR] Generating 2,500 AST high-entropy input variations...</div>';
       }
@@ -3336,7 +3336,7 @@ console.log(
         if (fuzzerSimLogs) {
           fuzzerSimLogs.innerHTML += '<div class="cyan">> [ASAN_SIGNAL] AddressSanitizer: heap-buffer-overflow on address 0x7fffa1</div><div style="color: #ff3366;">> [CRASH_DEDUPLICATE] Crash signature hash: RIP_0x40182b_HEAP_OVERFLOW</div><div style="color: var(--green);">> [AUTO_PATCH] Generated patch verified successfully!</div>';
         }
-        if (simStatusTag) simStatusTag.innerHTML = '<span style="color: var(--green);">● PASS: AUTO-PATCH VERIFIED</span>';
+        if (simStatusTag) simStatusTag.innerHTML = '<span style="color: var(--green);">[PASS] AUTO-PATCH VERIFIED</span>';
       }, 900);
     };
   }
@@ -3352,14 +3352,14 @@ console.log(
         btn.style.borderColor = 'var(--green)';
         btn.style.background = 'rgba(0, 255, 102, 0.2)';
         if (sansQuizFeedback) {
-          sansQuizFeedback.innerHTML = '<span style="color: var(--green); font-weight: bold;">✓ CORRECT! In x86_64 ABI, the `ret` instruction pops the stored return address from the stack directly into %rip.</span>';
+          sansQuizFeedback.innerHTML = '<span style="color: var(--green); font-weight: bold;">[CORRECT] In x86_64 ABI, the `ret` instruction pops the stored return address from the stack directly into %rip.</span>';
         }
         if (typeof window.playCyberSFX === 'function') window.playCyberSFX('warpTransition');
       } else {
         btn.style.borderColor = '#ff3366';
         btn.style.background = 'rgba(255, 51, 102, 0.15)';
         if (sansQuizFeedback) {
-          sansQuizFeedback.innerHTML = '<span style="color: #ff3366;">❌ INCORRECT: The Instruction Pointer (%rip) determines the next instruction to execute when popped from stack frame.</span>';
+          sansQuizFeedback.innerHTML = '<span style="color: #ff3366;">[INCORRECT] The Instruction Pointer (%rip) determines the next instruction to execute when popped from stack frame.</span>';
         }
         if (typeof window.playCyberSFX === 'function') window.playCyberSFX('click');
       }
@@ -3425,10 +3425,10 @@ console.log(
       const val = ctfInputFlag.value.trim();
       const targetFlag = 'THM{AARON_ALVA_CYBER_SECURITY_NEXUS_2024}';
       if (val === targetFlag || val.toLowerCase().includes('aaron_alva')) {
-        ctfFlagResult.innerHTML = '<span style="color: var(--green); font-weight: bold;">🎉 [FLAG_CAPTURED] 100 PTS AWARDED! ACCESS KEY VERIFIED!</span>';
+        ctfFlagResult.innerHTML = '<span style="color: var(--green); font-weight: bold;">[FLAG_CAPTURED] 100 PTS AWARDED! ACCESS KEY VERIFIED!</span>';
         if (typeof window.playCyberSFX === 'function') window.playCyberSFX('warpTransition');
       } else {
-        ctfFlagResult.innerHTML = '<span style="color: #ff3366;">❌ [INVALID_FLAG] Try base64 decoding the payload string above!</span>';
+        ctfFlagResult.innerHTML = '<span style="color: #ff3366;">[INVALID_FLAG] Try base64 decoding the payload string above!</span>';
         if (typeof window.playCyberSFX === 'function') window.playCyberSFX('click');
       }
     };
@@ -3447,15 +3447,15 @@ console.log(
 
       if (!msg) {
         if (contactResultLine) {
-          contactResultLine.innerHTML = '<span style="color:#ff3344">⚠️ Error: Transmission message buffer is empty.</span>';
+          contactResultLine.innerHTML = '<span style="color:#ff3344">[ERROR] Transmission message buffer is empty.</span>';
         }
         return;
       }
 
       transmitBtn.disabled = true;
-      transmitBtn.innerHTML = '🔒 ENCRYPTING & TRANSMITTING...';
+      transmitBtn.innerHTML = '[ENCRYPTING & TRANSMITTING...]';
       if (contactResultLine) {
-        contactResultLine.innerHTML = '<span style="color:#00e5ff">📡 Establishing PGP handshaking protocol...</span>';
+        contactResultLine.innerHTML = '<span style="color:#00e5ff">[PROTOCOL] Establishing PGP handshaking protocol...</span>';
       }
 
       setTimeout(() => {
@@ -3464,9 +3464,9 @@ console.log(
         window.location.href = `mailto:aaronalva@yahoo.com?subject=${subject}&body=${body}`;
 
         transmitBtn.disabled = false;
-        transmitBtn.innerHTML = '✓ TRANSMISSION DELIVERED';
+        transmitBtn.innerHTML = '[TRANSMISSION DELIVERED]';
         if (contactResultLine) {
-          contactResultLine.innerHTML = '<span style="color:#00ff66">✓ Packet dispatched successfully to secure inbox.</span>';
+          contactResultLine.innerHTML = '<span style="color:#00ff66">[SUCCESS] Packet dispatched successfully to secure inbox.</span>';
         }
       }, 700);
     });
