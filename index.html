@@ -137,7 +137,7 @@
       </div>
 
       <button class="at-action-btn" id="audioToggleBtn" title="Toggle Web Audio SFX (M)" aria-label="Toggle Sound Effects">
-        <span class="action-icon" id="audioIcon">🔊</span>
+        <span class="action-icon" id="audioIcon">[SFX]</span>
         <span class="action-label">SFX</span>
         <span class="at-eq-visualizer">
           <span class="eq-bar"></span>
@@ -179,16 +179,10 @@
         <span class="at-arrow">-></span> 04_SIGNALHUB_MARKET_AI (APP)
       </button>
       <button class="at-hud-btn" data-card="4" onclick="window.rotateCylinderToCard(5)">
-        <span class="at-arrow">-></span> 05_SECURITY_LAB_SANDBOX
+        <span class="at-arrow">-></span> 05_PROVING_GROUNDS (TOP 1%)
       </button>
       <button class="at-hud-btn" data-card="5" onclick="window.rotateCylinderToCard(6)">
-        <span class="at-arrow">-></span> 06_GIAC_GFACT_CERTIFIED
-      </button>
-      <button class="at-hud-btn" data-card="6" onclick="window.rotateCylinderToCard(7)">
-        <span class="at-arrow">-></span> 07_TRYHACKME_TOP_1%
-      </button>
-      <button class="at-hud-btn" data-card="7" onclick="window.rotateCylinderToCard(8)">
-        <span class="at-arrow">-></span> 08_SECURE_TRANSMISSION
+        <span class="at-arrow">-></span> 06_SECURE_TRANSMISSION
       </button>
     </nav>
     <div class="at-hud-prompt-pill">
@@ -206,7 +200,7 @@
       <div class="at-dial-tracker">
         <span class="at-dial-idx" id="hudCardIndex">00</span>
         <span class="at-dial-sep">/</span>
-        <span class="at-dial-total">08</span>
+        <span class="at-dial-total">06</span>
       </div>
     </div>
 
@@ -238,7 +232,7 @@
           <!-- Tactical HUD Overview -->
           <div class="dossier-panel">
             <div class="dossier-header-bar">
-              <span class="dossier-header-title">⚡ OPERATOR CLASSIFICATION &amp; RESEARCH FOCUS</span>
+              <span class="dossier-header-title">[SYS] OPERATOR CLASSIFICATION &amp; RESEARCH FOCUS</span>
               <span class="dossier-header-status">CLEARANCE: GIAC-GFACT-CERTIFIED // SANS INSTITUTE</span>
             </div>
             <p style="font-size: 1.12rem; line-height: 1.85; color: rgba(255,255,255,0.92); margin: 0 0 1.25rem 0;">
@@ -264,10 +258,34 @@
             </div>
           </div>
 
+          <!-- SANS Institute GIAC GFACT Credential Folded Dossier -->
+          <div class="dossier-panel" style="border-left: 3px solid #ffd700; background: rgba(10, 16, 32, 0.7);">
+            <div class="dossier-header-bar">
+              <span class="dossier-header-title" style="color: #ffd700;">[CERT] SANS INSTITUTE // GIAC GFACT CERTIFICATION</span>
+              <span class="dossier-header-status">ISSUED: 1 SEP 2026 // CYBERSTART CANADA SCHOLAR</span>
+            </div>
+            <p style="font-size: 1.05rem; line-height: 1.8; color: rgba(255,255,255,0.92); margin: 0 0 1rem 0;">
+              Achieved official <strong style="color: #ffd700;">GIAC GFACT</strong> (Foundational Cybersecurity Technologies) certification via full national scholarship from SANS Institute as a CyberStart Canada Top Performer. Validates rigorous academic mastery across computer architecture, binary logic, network protocols, Linux systems security, and automated Python security scripting.
+            </p>
+            <div class="skill-tag-cloud" style="margin-bottom: 1.25rem;">
+              <span class="skill-tag-pill gold">SANS INSTITUTE SCHOLAR</span>
+              <span class="skill-tag-pill gold">GIAC GFACT CERTIFIED</span>
+              <span class="skill-tag-pill">COMPUTER ARCHITECTURE</span>
+              <span class="skill-tag-pill">BINARY LOGIC &amp; X86_64</span>
+              <span class="skill-tag-pill">NETWORK PROTOCOLS &amp; PCAP</span>
+              <span class="skill-tag-pill">LINUX SYSTEMS SECURITY</span>
+              <span class="skill-tag-pill">PYTHON AUTOMATION</span>
+            </div>
+            <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+              <a href="https://www.credly.com/badges/e6b7f224-b57d-4224-9f7a-cabe2b3fb257" target="_blank" rel="noopener noreferrer" class="at-action-btn" style="padding: 0.65rem 1.25rem; font-size: 0.8rem; border-color: #ffd700; color: #ffd700; background: rgba(255, 215, 0, 0.08);">Verify Credly Credential (Issued 1 Sep 2026) ↗</a>
+              <a href="https://www.giac.org/certifications/foundational-cybersecurity-technologies-gfact/" target="_blank" rel="noopener noreferrer" class="at-action-btn" style="padding: 0.65rem 1.25rem; font-size: 0.8rem; border-color: rgba(255,215,0,0.3); color: rgba(255,255,255,0.85);">SANS GFACT Syllabus ↗</a>
+            </div>
+          </div>
+
           <!-- Tactical Core Competencies Grid & Interactive Skill Radar -->
           <div class="dossier-panel">
             <div class="dossier-header-bar">
-              <span class="dossier-header-title">🛡️ TACTICAL CORE COMPETENCIES &amp; SKILL RADAR</span>
+              <span class="dossier-header-title">[SKILLS] TACTICAL CORE COMPETENCIES &amp; SKILL RADAR</span>
               <span class="dossier-header-status">TAXONOMY: OFFENSIVE &amp; DEFENSIVE SYSTEMS</span>
             </div>
             <div class="dossier-grid-2">
@@ -277,19 +295,19 @@
               </div>
               <div style="display: flex; flex-direction: column; gap: 0.75rem;">
                 <div class="dossier-pod">
-                  <div class="dossier-pod-title">🔬 Binary Exploitation &amp; Memory Safety</div>
+                  <div class="dossier-pod-title">[BIN] Binary Exploitation &amp; Memory Safety</div>
                   <p class="dossier-pod-desc">Analyzing stack frame layouts, buffer overflow boundaries, Heap Use-After-Free (UAF), and triaging crash signals with GDB/GEF and AddressSanitizer.</p>
                 </div>
                 <div class="dossier-pod">
-                  <div class="dossier-pod-title">🐧 Linux Kernel &amp; Privilege Escalation</div>
+                  <div class="dossier-pod-title">[SYS] Linux Kernel &amp; Privilege Escalation</div>
                   <p class="dossier-pod-desc">Exploiting SUID/SGID binaries, Linux capability misconfigurations, cron job race conditions, and inspecting system activity with <code>auditd</code> and <code>strace</code>.</p>
                 </div>
                 <div class="dossier-pod">
-                  <div class="dossier-pod-title">🤖 Agentic AI &amp; LLM Security Systems</div>
+                  <div class="dossier-pod-title">[AI] Agentic AI &amp; LLM Security Systems</div>
                   <p class="dossier-pod-desc">Architecting LLM-driven AST input mutators, autonomous vulnerability patch generators, and sandboxing neural pipelines against prompt injection vectors.</p>
                 </div>
                 <div class="dossier-pod">
-                  <div class="dossier-pod-title">📡 Network Protocol Forensics &amp; Threat Intel</div>
+                  <div class="dossier-pod-title">[NET] Network Forensics &amp; Threat Intelligence</div>
                   <p class="dossier-pod-desc">Deep-packet inspection via Wireshark/tcpdump, TCP 3-way handshake analysis, NVD API v2 live correlation, and exporting standardized SARIF v2.1 reports.</p>
                 </div>
               </div>
@@ -299,7 +317,7 @@
           <!-- Formal Vulnerability Research Methodology (4-Phase Lifecycle) -->
           <div class="dossier-panel">
             <div class="dossier-header-bar">
-              <span class="dossier-header-title">📐 STRUCTURED VULNERABILITY RESEARCH METHODOLOGY</span>
+              <span class="dossier-header-title">[FLOW] STRUCTURED VULNERABILITY RESEARCH METHODOLOGY</span>
               <span class="dossier-header-status">STANDARDIZED VR &amp; EXPLOIT LIFECYCLE</span>
             </div>
             <div class="dossier-grid-2">
@@ -322,32 +340,10 @@
             </div>
           </div>
 
-          <!-- Interactive Operator CLI Terminal -->
-          <div class="dossier-panel">
-            <div class="dossier-header-bar">
-              <span class="dossier-header-title">💻 OPERATOR LIVE CLI EXPLORER</span>
-              <span class="dossier-header-status">CLICK COMMAND TAGS TO EXECUTE</span>
-            </div>
-            <div style="display: flex; gap: 0.5rem; margin-bottom: 0.75rem; flex-wrap: wrap;" id="operatorCliTags">
-              <button class="cli-tag-btn" data-cmd="whoami">⚡ whoami</button>
-              <button class="cli-tag-btn" data-cmd="research">🔬 --research</button>
-              <button class="cli-tag-btn" data-cmd="methodology">📐 --methodology</button>
-              <button class="cli-tag-btn" data-cmd="scholarship">🏆 --scholarship</button>
-              <button class="cli-tag-btn" data-cmd="skills">🛡️ --skills</button>
-              <button class="cli-tag-btn" data-cmd="clearance">🔐 --clearance</button>
-              <button class="cli-tag-btn" data-cmd="cveaudit">📡 --cve-audit</button>
-            </div>
-            <div class="dd-console" id="operatorCliOutput" style="min-height: 95px;">
-              <div>> aaronalva@nexus-terminal:~$ <span class="cyan">whoami</span></div>
-              <div style="color: var(--green);">[OPERATOR] Aaron Alva | Grade 11 Cybersecurity Researcher &amp; Systems Developer</div>
-              <div class="dim">> Stack: Python, C/C++, Docker ASan, Linux Kernel Security, LLM Agent Fuzzing, SARIF v2.1</div>
-            </div>
-          </div>
-
           <!-- Research Milestones Timeline -->
           <div class="dossier-panel">
             <div class="dossier-header-bar">
-              <span class="dossier-header-title">🏆 CHRONOLOGICAL RESEARCH MILESTONES</span>
+              <span class="dossier-header-title">[TIMELINE] CHRONOLOGICAL RESEARCH MILESTONES</span>
               <span class="dossier-header-status">VERIFIED ACADEMIC &amp; CTF ACHIEVEMENTS</span>
             </div>
             <div class="dossier-timeline-item">
@@ -368,8 +364,8 @@
           </div>
 
           <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
-            <a href="https://github.com/Bunny-sysd" target="_blank" rel="noopener noreferrer" class="at-action-btn" style="padding: 0.75rem 1.5rem; font-size: 0.85rem;">🐙 GitHub: Bunny-sysd ↗</a>
-            <a href="https://tryhackme.com/p/354221973" target="_blank" rel="noopener noreferrer" class="at-action-btn" style="padding: 0.75rem 1.5rem; font-size: 0.85rem; border-color: var(--cyan); color: var(--cyan);">🎯 TryHackMe Profile ↗</a>
+            <a href="https://github.com/Bunny-sysd" target="_blank" rel="noopener noreferrer" class="at-action-btn" style="padding: 0.75rem 1.5rem; font-size: 0.85rem;">[GIT] GitHub: Bunny-sysd ↗</a>
+            <a href="https://tryhackme.com/p/354221973" target="_blank" rel="noopener noreferrer" class="at-action-btn" style="padding: 0.75rem 1.5rem; font-size: 0.85rem; border-color: var(--cyan); color: var(--cyan);">[CTF] TryHackMe Profile ↗</a>
           </div>
         </div>
       </div>
@@ -390,7 +386,7 @@
           <!-- Overview Dossier -->
           <div class="dossier-panel">
             <div class="dossier-header-bar">
-              <span class="dossier-header-title">🧬 AUTONOMOUS 5-PHASE FUZZER &amp; AUTO-PATCHER</span>
+              <span class="dossier-header-title">[AI] AUTONOMOUS 5-PHASE FUZZER &amp; AUTO-PATCHER</span>
               <span class="dossier-header-status">STACK: PYTHON // LLM AGENTS // DOCKER ASAN // CLANG AST</span>
             </div>
             <p style="font-size: 1.08rem; line-height: 1.8; color: rgba(255,255,255,0.9); margin: 0 0 1.25rem 0;">
@@ -416,36 +412,67 @@
             </div>
           </div>
 
-          <!-- Technical Pipeline Architecture -->
+          <!-- 3-Stage Archify Visual Workflow Diagram -->
+          <div class="archify-diagram-wrap">
+            <div class="archify-diagram-header">
+              <span class="archify-diagram-title">[ARCHIFY] 3-STAGE AUTONOMOUS MUTATION &amp; TRIAGE WORKFLOW</span>
+              <span style="font-family: var(--font-mono); font-size: 0.68rem; color: var(--green);">● SYSTEM READY</span>
+            </div>
+            <div class="archify-diagram">
+              <div class="archify-node">
+                <span class="archify-node-step">01 // INGEST</span>
+                <span class="archify-node-label">Source &amp; Binary AST</span>
+                <span class="archify-node-desc">Parse target C/C++ source code via Clang AST, map memory-sensitive API sinks (<code>strcpy</code>, <code>malloc</code>), and build tainted input entrypoints.</span>
+              </div>
+              <div class="archify-arrow">›</div>
+              <div class="archify-node node-process">
+                <span class="archify-node-step">02 // MUTATE &amp; EXECUTE</span>
+                <span class="archify-node-label">LLM Mutation Engine</span>
+                <span class="archify-node-desc">Synthesize high-entropy seed variations with semantic boundary conditions. Detonate inside isolated non-root Docker sandboxes with <code>--network=none</code>.</span>
+              </div>
+              <div class="archify-arrow">›</div>
+              <div class="archify-node node-output">
+                <span class="archify-node-step">03 // VERIFY &amp; PATCH</span>
+                <span class="archify-node-label">ASan Triage &amp; Auto-Patch</span>
+                <span class="archify-node-desc">Capture memory crash signals (<code>SIGSEGV</code>/<code>SIGABRT</code>), deduplicate by RIP hash, and synthesize verified AST diff patches.</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Plain-Language Usage Steps & Spaced CLI Command Block -->
           <div class="dossier-panel">
             <div class="dossier-header-bar">
-              <span class="dossier-header-title">⚙️ 5-PHASE FUZZER ARCHITECTURE &amp; DATA FLOW</span>
-              <span class="dossier-header-status">END-TO-END VULNERABILITY LIFECYCLE</span>
+              <span class="dossier-header-title">[CLI] USAGE WORKFLOW &amp; TERMINAL COMMANDS</span>
+              <span class="dossier-header-status">QUICK START</span>
             </div>
-            <div class="dossier-grid-2">
-              <div class="dossier-pod">
-                <div class="dossier-pod-title">1. Semantic AST Parsing &amp; API Hooking</div>
-                <p class="dossier-pod-desc">Tokenizes target C source code via <code>pycparser</code> and LibTooling to identify memory-sensitive APIs (<code style="color: var(--green);">strcpy</code>, <code style="color: var(--green);">memcpy</code>, <code style="color: var(--green);">malloc</code>, <code style="color: var(--green);">free</code>, pointer arithmetic offsets), building a map of tainted input entrypoints.</p>
+            <div style="font-size: 0.88rem; line-height: 1.7; color: rgba(255,255,255,0.85); margin-bottom: 0.75rem;">
+              <strong>Plain-Language Execution Steps:</strong>
+              <ol style="margin: 0.5rem 0 0 1.25rem; padding: 0; display: flex; flex-direction: column; gap: 0.35rem;">
+                <li>Point Mutagen at target binary or source repository with AddressSanitizer harness.</li>
+                <li>Launch autonomous fuzzing workers inside air-gapped container sandboxes.</li>
+                <li>Inspect triaged crashes, reproducible proof-of-concept inputs, and standardized SARIF reports.</li>
+              </ol>
+            </div>
+            <div class="command-block">
+              <div class="command-block-header">
+                <span>BASH // MUTAGEN CLI PIPELINE</span>
+                <button class="command-copy-btn" onclick="navigator.clipboard.writeText('mutagen init --target ./src --harness asan\nmutagen run --workers 4 --mode auto-triage\nmutagen report --format sarif --output ./results.sarif')">Copy Commands</button>
               </div>
-              <div class="dossier-pod">
-                <div class="dossier-pod-title">2. LLM-Guided Semantic Mutation Engine</div>
-                <p class="dossier-pod-desc">Synthesizes structured edge-case inputs targeting buffer boundaries, format string sequences (<code>%n%x%s</code>), integer wrap bounds (<code>0xFFFFFFFF</code>), off-by-one fenceposts, and null-byte terminators.</p>
-              </div>
-              <div class="dossier-pod">
-                <div class="dossier-pod-title">3. Hardened Air-Gapped Docker Sandbox</div>
-                <p class="dossier-pod-desc">Executes instrumented payloads in an ephemeral container with <code style="color: var(--green);">--network=none</code>, strict memory limits (<code>ulimit -v 512000</code>), non-root execution, and <code>--cap-drop=ALL</code>.</p>
-              </div>
-              <div class="dossier-pod">
-                <div class="dossier-pod-title">4. Real-Time ASan Crash Triage &amp; Deduplication</div>
-                <p class="dossier-pod-desc">Captures <code>SIGSEGV</code> / <code>SIGABRT</code> signals, parses AddressSanitizer shadow memory reports, deduplicates crashes via instruction pointer (RIP) hashing, and minimizes crashing seeds.</p>
-              </div>
+              <pre class="command-block-code"><span class="cmd-comment"># Step 1: Initialize fuzzer target with ASan harness</span>
+<span class="cmd-prompt">$ </span>mutagen init --target ./src --harness asan
+
+<span class="cmd-comment"># Step 2: Launch autonomous mutation pipeline in isolated sandbox</span>
+<span class="cmd-prompt">$ </span>mutagen run --workers 4 --mode auto-triage
+
+<span class="cmd-comment"># Step 3: Export verified crash reports and SARIF v2.1 logs</span>
+<span class="cmd-prompt">$ </span>mutagen report --format sarif --output ./results.sarif</pre>
             </div>
           </div>
 
           <!-- Real Exploit & Root Cause Analysis Case Study -->
           <div class="dossier-panel">
             <div class="dossier-header-bar">
-              <span class="dossier-header-title">🔍 CASE STUDY: HEAP BUFFER OVERFLOW (CWE-122) ROOT CAUSE ANALYSIS</span>
+              <span class="dossier-header-title">[CASE] HEAP BUFFER OVERFLOW (CWE-122) ROOT CAUSE ANALYSIS</span>
               <span class="dossier-header-status">TARGET: target_cjson.c // VULNERABILITY TRIAGE &amp; AUTO-PATCH</span>
             </div>
             <div class="dossier-grid-2">
@@ -495,13 +522,13 @@
           <!-- Interactive AST Mutation Visualizer & Memory Fault Debugger -->
           <div class="dossier-panel">
             <div class="dossier-header-bar">
-              <span class="dossier-header-title">🔬 LIVE AST TARGET PICKER &amp; ASAN CRASH TRACE DEBUGGER</span>
+              <span class="dossier-header-title">[DEBUG] LIVE AST TARGET PICKER &amp; ASAN CRASH TRACE DEBUGGER</span>
               <span class="dossier-header-status">MEMORY FAULT INSPECTION</span>
             </div>
             <div class="fuzzer-target-picker" style="display: flex; gap: 0.5rem; margin-bottom: 1rem; flex-wrap: wrap;" id="fuzzerTargetPicker">
-              <button class="target-btn active" data-target="cjson">🎯 target_cjson.c (Heap Overflow)</button>
-              <button class="target-btn" data-target="auth">🔐 target_auth_verify.c (Use-After-Free)</button>
-              <button class="target-btn" data-target="dns">🌐 target_dns_resolver.c (Integer Overflow)</button>
+              <button class="target-btn active" data-target="cjson">[TARGET] target_cjson.c (Heap Overflow)</button>
+              <button class="target-btn" data-target="auth">[TARGET] target_auth_verify.c (Use-After-Free)</button>
+              <button class="target-btn" data-target="dns">[TARGET] target_dns_resolver.c (Integer Overflow)</button>
             </div>
             <div class="fuzzer-action-bar" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.75rem;">
               <button class="btn-trigger-fuzz" id="btnRunFuzzCycle"><span>▶ RUN AUTONOMOUS FUZZ CYCLE</span></button>
@@ -533,9 +560,10 @@
       <div class="at-drawer-body">
         <div style="max-width: 1080px; margin: 0 auto;">
           
+          <!-- Overview Dossier -->
           <div class="dossier-panel">
             <div class="dossier-header-bar">
-              <span class="dossier-header-title">📡 AUTOMATED CVE CORRELATION &amp; POC HARVESTER CLI</span>
+              <span class="dossier-header-title">[CLI] AUTOMATED CVE CORRELATION &amp; POC HARVESTER CLI</span>
               <span class="dossier-header-status">STACK: PYTHON // NVD API v2 // OSV.DEV // SARIF v2.1</span>
             </div>
             <p style="font-size: 1.08rem; line-height: 1.8; color: rgba(255,255,255,0.9); margin: 0 0 1.25rem 0;">
@@ -561,36 +589,67 @@
             </div>
           </div>
 
-          <!-- Technical Pipeline Architecture -->
+          <!-- 3-Stage Archify Visual Workflow Diagram -->
+          <div class="archify-diagram-wrap">
+            <div class="archify-diagram-header">
+              <span class="archify-diagram-title">[ARCHIFY] 3-STAGE RECON TO ACTIONABLE THREAT MATRIX</span>
+              <span style="font-family: var(--font-mono); font-size: 0.68rem; color: var(--cyan);">● LIVE FEED CONNECTED</span>
+            </div>
+            <div class="archify-diagram">
+              <div class="archify-node">
+                <span class="archify-node-step">01 // INGEST</span>
+                <span class="archify-node-label">Network Scans &amp; Logs</span>
+                <span class="archify-node-desc">Ingest Nmap XML port scans, service banners, and authentication logs. Parse and normalize versions into CPE 2.3 standard URIs.</span>
+              </div>
+              <div class="archify-arrow">›</div>
+              <div class="archify-node node-process">
+                <span class="archify-node-step">02 // CORRELATE</span>
+                <span class="archify-node-label">Live Vulnerability Feeds</span>
+                <span class="archify-node-desc">Query NVD REST API v2.0 &amp; OSV.dev in parallel with rate-limited workers. Match CVEs and crawl verified GitHub PoC exploits.</span>
+              </div>
+              <div class="archify-arrow">›</div>
+              <div class="archify-node node-output">
+                <span class="archify-node-step">03 // OUTPUT</span>
+                <span class="archify-node-label">Prioritized Remediation</span>
+                <span class="archify-node-desc">Export prioritized CVSS severity matrix, actionable patch steps, and standardized OASIS SARIF v2.1 reports.</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Plain-Language Usage Steps & Spaced CLI Command Block -->
           <div class="dossier-panel">
             <div class="dossier-header-bar">
-              <span class="dossier-header-title">⚙️ THREAT INTELLIGENCE &amp; CORRELATION ARCHITECTURE</span>
-              <span class="dossier-header-status">DATA FLOW: RECON → VULN DB → EXPLOIT VERIFICATION</span>
+              <span class="dossier-header-title">[CLI] USAGE WORKFLOW &amp; TERMINAL COMMANDS</span>
+              <span class="dossier-header-status">QUICK START</span>
             </div>
-            <div class="dossier-grid-2">
-              <div class="dossier-pod">
-                <div class="dossier-pod-title">1. Multi-Format Ingestion &amp; CPE Normalization</div>
-                <p class="dossier-pod-desc">Extracts service banners, software packages, and kernel versions from Nmap XML (<code>-sV -sC -oX</code>) and LinPEAS logs, translating raw strings into standardized CPE 2.3 URIs.</p>
+            <div style="font-size: 0.88rem; line-height: 1.7; color: rgba(255,255,255,0.85); margin-bottom: 0.75rem;">
+              <strong>Plain-Language Execution Steps:</strong>
+              <ol style="margin: 0.5rem 0 0 1.25rem; padding: 0; display: flex; flex-direction: column; gap: 0.35rem;">
+                <li>Feed raw network discovery scans or system authentication logs into the CLI.</li>
+                <li>Correlate detected services against global vulnerability databases in real time.</li>
+                <li>Export an actionable remediation summary sorted by CVSS severity score.</li>
+              </ol>
+            </div>
+            <div class="command-block">
+              <div class="command-block-header">
+                <span>BASH // VIGIL CLI PIPELINE</span>
+                <button class="command-copy-btn" onclick="navigator.clipboard.writeText('vigil scan --input ./recon/nmap_scan.xml\nvigil correlate --min-cvss 7.0 --feed nvd-v2\nvigil export --format sarif --output ./audit.sarif')">Copy Commands</button>
               </div>
-              <div class="dossier-pod">
-                <div class="dossier-pod-title">2. Asynchronous Multi-Source CVE Querying</div>
-                <p class="dossier-pod-desc">Queries NVD REST API v2.0, OSV.dev, and GitHub Advisory Database in parallel with token bucket rate-limiting and exponential backoff retry algorithms.</p>
-              </div>
-              <div class="dossier-pod">
-                <div class="dossier-pod-title">3. Verified Exploit PoC Crawling &amp; Safety Analysis</div>
-                <p class="dossier-pod-desc">Searches open repositories and Exploit-DB for verified Proof-of-Concept exploits matching discovered CVE IDs, analyzing scripts for trojan backdoors before ranking by reliability.</p>
-              </div>
-              <div class="dossier-pod">
-                <div class="dossier-pod-title">4. Standardized DevSecOps SARIF v2.1 Export</div>
-                <p class="dossier-pod-desc">Formats vulnerability findings into OASIS Standard SARIF v2.1 JSON for automated ingestion into GitHub Advanced Security, GitLab CI, and interactive HTML dashboards.</p>
-              </div>
+              <pre class="command-block-code"><span class="cmd-comment"># Step 1: Ingest network scan telemetry</span>
+<span class="cmd-prompt">$ </span>vigil scan --input ./recon/nmap_scan.xml
+
+<span class="cmd-comment"># Step 2: Correlate against live CVE databases (CVSS &gt;= 7.0)</span>
+<span class="cmd-prompt">$ </span>vigil correlate --min-cvss 7.0 --feed nvd-v2
+
+<span class="cmd-comment"># Step 3: Export actionable remediation summary to SARIF</span>
+<span class="cmd-prompt">$ </span>vigil export --format sarif --output ./audit.sarif</pre>
             </div>
           </div>
 
           <!-- Dynamic CVSS v3.1 Risk Calculator -->
           <div class="dossier-panel">
             <div class="dossier-header-bar">
-              <span class="dossier-header-title">🧮 DYNAMIC CVSS v3.1 RISK CALCULATOR &amp; POC FINDER</span>
+              <span class="dossier-header-title">[CVSS] DYNAMIC CVSS v3.1 RISK CALCULATOR &amp; POC FINDER</span>
               <span class="dossier-header-status">LIVE REAL-TIME SCORING MATRIX</span>
             </div>
             <div class="cvss-calc-slider-group">
@@ -618,7 +677,7 @@
 
           <div class="dossier-panel">
             <div class="dossier-header-bar">
-              <span class="dossier-header-title">💻 CLI USAGE &amp; CORRELATION OUTPUT</span>
+              <span class="dossier-header-title">[CLI] CLI USAGE &amp; CORRELATION OUTPUT</span>
               <span class="dossier-header-status">SAMPLE EXECUTION TRACE</span>
             </div>
             <div class="dd-console">
@@ -626,9 +685,9 @@
               <div class="dim">> [INGEST] Parsed 48 services across 12 hosts from nmap_corporate.xml</div>
               <div class="cyan">> [CPE_MAP] OpenSSH 7.4p1 → cpe:2.3:a:openbsd:openssh:7.4:p1:*:*:*:*:*:*</div>
               <div class="cyan">> [CVE_MATCH] CVE-2018-15473 (OpenSSH User Enumeration) | CVSS: 5.3 (Medium)</div>
-              <div class="warn">> [POC_FOUND] github.com/Rhynorater/CVE-2018-15473 (★ 892) [VERIFIED]</div>
+              <div class="warn">> [POC_FOUND] github.com/Rhynorater/CVE-2018-15473 [STARS: 892] [VERIFIED]</div>
               <div class="err">> [CRITICAL] Apache 2.4.49 → CVE-2021-41773 (Path Traversal + RCE) | CVSS: 9.8 (Critical)</div>
-              <div class="warn">> [POC_FOUND] github.com/inbug-team/CVE-2021-41773_PoC (★ 1,420) [VERIFIED]</div>
+              <div class="warn">> [POC_FOUND] github.com/inbug-team/CVE-2021-41773_PoC [STARS: 1420] [VERIFIED]</div>
               <div>> [EXPORT] Generated: report.sarif (SARIF v2.1) + report.html (Interactive Dashboard)</div>
             </div>
           </div>
@@ -649,9 +708,11 @@
       </div>
       <div class="at-drawer-body">
         <div style="max-width: 1080px; margin: 0 auto;">
+          
+          <!-- Overview Dossier -->
           <div class="dossier-panel">
             <div class="dossier-header-bar">
-              <span class="dossier-header-title">📈 REAL-TIME DATA PIPELINE &amp; WEB APPLICATION</span>
+              <span class="dossier-header-title">[APP] REAL-TIME DATA PIPELINE &amp; WEB APPLICATION</span>
               <span class="dossier-header-status">HOSTED: FIREBASE CDN // SIGNALHUB-E79BA.WEB.APP</span>
             </div>
             <p style="font-size: 1.08rem; line-height: 1.8; color: rgba(255,255,255,0.9); margin: 0 0 1.25rem 0;">
@@ -668,7 +729,7 @@
                   <button class="target-btn" data-ticker="ETH">ETH ($3,450)</button>
                 </div>
                 <div style="display: flex; gap: 0.5rem; align-items: center;">
-                  <button class="target-btn" id="btnToggleChartType" style="font-size: 0.7rem;">📊 CANDLESTICK VIEW</button>
+                  <button class="target-btn" id="btnToggleChartType" style="font-size: 0.7rem;">CANDLESTICK VIEW</button>
                   <div style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--green);" id="marketLivePulse">
                     ● LIVE 60 FPS
                   </div>
@@ -677,242 +738,73 @@
               <canvas id="marketChartCanvas" width="900" height="220" style="width: 100%; height: 220px; background: #020408; border-radius: 6px;"></canvas>
             </div>
 
-            <div class="dossier-grid-3">
-              <div class="dossier-pod">
-                <div class="dossier-pod-title">🔥 Firebase CDN &amp; Edge Delivery</div>
-                <p class="dossier-pod-desc">Deployed with global CDN edge caching, sub-second TTFB, SSL/TLS termination, and zero-downtime CI/CD workflows.</p>
+            <!-- 3-Stage Archify Visual Workflow Diagram -->
+            <div class="archify-diagram-wrap">
+              <div class="archify-diagram-header">
+                <span class="archify-diagram-title">[ARCHIFY] 3-STAGE REAL-TIME STREAMING &amp; SENTIMENT PIPELINE</span>
+                <span style="font-family: var(--font-mono); font-size: 0.68rem; color: var(--green);">● STREAM ACTIVE</span>
               </div>
-              <div class="dossier-pod">
-                <div class="dossier-pod-title">📊 Asynchronous WebSocket Feeds</div>
-                <p class="dossier-pod-desc">High-throughput asynchronous Python and JavaScript event loops streaming live tick-by-tick order book data.</p>
+              <div class="archify-diagram">
+                <div class="archify-node">
+                  <span class="archify-node-step">01 // INGEST</span>
+                  <span class="archify-node-label">Exchange WebSockets</span>
+                  <span class="archify-node-desc">Stream live price ticks and financial news feeds over high-throughput WebSocket sockets and REST feeds.</span>
+                </div>
+                <div class="archify-arrow">›</div>
+                <div class="archify-node node-process">
+                  <span class="archify-node-step">02 // PROCESS</span>
+                  <span class="archify-node-label">NLP Sentiment Transformer</span>
+                  <span class="archify-node-desc">Evaluate financial headlines in parallel, computing sentiment momentum vectors and volatility indicators.</span>
+                </div>
+                <div class="archify-arrow">›</div>
+                <div class="archify-node node-output">
+                  <span class="archify-node-step">03 // DELIVER</span>
+                  <span class="archify-node-label">Firebase CDN &amp; Dashboard</span>
+                  <span class="archify-node-desc">Render responsive 60 FPS charts on global Firebase edge CDN with zero-downtime deployment.</span>
+                </div>
               </div>
-              <div class="dossier-pod">
-                <div class="dossier-pod-title">🤖 Transformer NLP Sentiment Engine</div>
-                <p class="dossier-pod-desc">Classifies market-moving macroeconomic headlines and disclosures into calibrated bullish/bearish momentum indicators.</p>
+            </div>
+
+            <!-- Plain-Language Usage Steps & Spaced Command Block -->
+            <div class="dossier-panel">
+              <div class="dossier-header-bar">
+                <span class="dossier-header-title">[CLI] LAUNCH COMMANDS &amp; LOCAL DEV</span>
+                <span class="dossier-header-status">QUICK START</span>
+              </div>
+              <div style="font-size: 0.88rem; line-height: 1.7; color: rgba(255,255,255,0.85); margin-bottom: 0.75rem;">
+                <strong>Plain-Language Execution Steps:</strong>
+                <ol style="margin: 0.5rem 0 0 1.25rem; padding: 0; display: flex; flex-direction: column; gap: 0.35rem;">
+                  <li>Connect to real-time ticker stream over WebSocket pipeline.</li>
+                  <li>Evaluate news momentum and NLP sentiment indicators in parallel.</li>
+                  <li>Inspect real-time technical candlestick charts on the live Firebase web dashboard.</li>
+                </ol>
+              </div>
+              <div class="command-block">
+                <div class="command-block-header">
+                  <span>BASH // SIGNALHUB WORKFLOW</span>
+                  <button class="command-copy-btn" onclick="navigator.clipboard.writeText('npm run dev\nsignalhub stream --ticker NVDA,BTC --interval 1s\nopen https://signalhub-e79ba.web.app')">Copy Commands</button>
+                </div>
+                <pre class="command-block-code"><span class="cmd-comment"># Step 1: Launch local streaming market pipeline</span>
+<span class="cmd-prompt">$ </span>npm run dev
+
+<span class="cmd-comment"># Step 2: Connect to real-time ticker stream</span>
+<span class="cmd-prompt">$ </span>signalhub stream --ticker NVDA,BTC --interval 1s
+
+<span class="cmd-comment"># Step 3: Open live deployed web application</span>
+<span class="cmd-prompt">$ </span>open https://signalhub-e79ba.web.app</pre>
               </div>
             </div>
           </div>
-          <a href="https://signalhub-e79ba.web.app" target="_blank" rel="noopener noreferrer" class="at-action-btn" style="padding: 0.75rem 1.5rem; font-size: 0.85rem; border-color: var(--green); color: var(--green);">🚀 Launch Live SignalHub Web App ↗</a>
+          <a href="https://signalhub-e79ba.web.app" target="_blank" rel="noopener noreferrer" class="at-action-btn" style="padding: 0.75rem 1.5rem; font-size: 0.85rem; border-color: var(--green); color: var(--green);">[APP] Launch Live SignalHub Web App ↗</a>
         </div>
       </div>
     </div>
 
-    <!-- 05: ISOLATED SECURITY LAB & RPI 4 -->
-    <div class="at-drawer" id="drawer-sandbox">
-      <div class="at-drawer-header">
-        <div class="at-drawer-title-group">
-          <span class="at-drawer-badge">[ 05 // AIR-GAPPED LAB &amp; HARDWARE REVERSE ENGINEERING ]</span>
-          <h2>SECURITY LAB SANDBOX &amp; RASPBERRY PI 4</h2>
-        </div>
-        <button class="at-drawer-close-btn" onclick="window.closeActiveTheoryDrawer()">✕ RETURN TO ORBIT [ESC]</button>
-      </div>
-      <div class="at-drawer-body">
-        <div style="max-width: 1080px; margin: 0 auto;">
-          <div class="dossier-panel">
-            <div class="dossier-header-bar">
-              <span class="dossier-header-title">🔬 VIRTUALBOX MALWARE TRIAGE &amp; HARDWARE SECURITY LAB</span>
-              <span class="dossier-header-status">ENVIRONMENT: AIR-GAPPED VIRTUALIZATION &amp; ARMv8 BARE-METAL</span>
-            </div>
-            <p style="font-size: 1.08rem; line-height: 1.8; color: rgba(255,255,255,0.9); margin: 0 0 1.25rem 0;">
-              An air-gapped security testbed combining an isolated VirtualBox Host-Only subnet (<code>192.168.56.0/24</code>) with physical Raspberry Pi 4 Model B hardware. Designed for detonating untrusted binaries, analyzing C2 network beaconing via Wireshark PCAPs, and auditing physical ARMv8 hardware buses (UART, I2C, SPI) against side-channel and firmware attack vectors.
-            </p>
-            <div class="dossier-grid-4">
-              <div class="dossier-stat-box">
-                <div class="dossier-stat-val">100%</div>
-                <div class="dossier-stat-lbl">Air-Gapped Isolation</div>
-              </div>
-              <div class="dossier-stat-box">
-                <div class="dossier-stat-val">PCAP</div>
-                <div class="dossier-stat-lbl">Deep Packet Triage</div>
-              </div>
-              <div class="dossier-stat-box">
-                <div class="dossier-stat-val">ARMv8</div>
-                <div class="dossier-stat-lbl">BCM2711 64-bit SoC</div>
-              </div>
-              <div class="dossier-stat-box">
-                <div class="dossier-stat-val">40-PIN</div>
-                <div class="dossier-stat-lbl">GPIO Bus Probing</div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Technical Sandbox Topology & Hardware Security -->
-          <div class="dossier-panel">
-            <div class="dossier-header-bar">
-              <span class="dossier-header-title">🛡️ LAB TOPOLOGY &amp; HARDWARE ATTACK SURFACE</span>
-              <span class="dossier-header-status">OFFENSIVE TRIAGE MATRIX</span>
-            </div>
-            <div class="dossier-grid-2">
-              <div class="dossier-pod">
-                <div class="dossier-pod-title">1. Air-Gapped Virtualization Subnet</div>
-                <p class="dossier-pod-desc">Dual VM topology: Attacker node (Kali Linux) vs Instrumented Victim (Ubuntu Server 22.04 LTS) connected via Host-Only virtual network with zero WAN routing to prevent outbound data leakage.</p>
-              </div>
-              <div class="dossier-pod">
-                <div class="dossier-pod-title">2. Kernel &amp; Dynamic Process Tracing</div>
-                <p class="dossier-pod-desc">Attaches <code>strace</code>, <code>ltrace</code>, and Linux <code>auditd</code> rules to instrument target processes, logging system calls (<code>execve</code>, <code>ptrace</code>, <code>socket</code>) and identifying persistence mechanisms.</p>
-              </div>
-              <div class="dossier-pod">
-                <div class="dossier-pod-title">3. Broadcom BCM2711 Hardware Analysis</div>
-                <p class="dossier-pod-desc">Bare-metal testing on Quad-core Cortex-A72 (ARMv8 64-bit SoC), analyzing CPU cache side channels, memory buses, and hardware watchdog timers.</p>
-              </div>
-              <div class="dossier-pod">
-                <div class="dossier-pod-title">4. 40-Pin GPIO Serial &amp; Bus Sniffing</div>
-                <p class="dossier-pod-desc">Probing physical UART debug interfaces (GPIO 14/15 TX/RX), auditing I2C/SPI sensor buses, and acquiring forensic bitstream dumps from raw flash storage.</p>
-              </div>
-            </div>
-          </div>
-            
-          <!-- LIVE WIRESHARK PCAP STREAM & SYNCHRONIZED HEX DUMP -->
-          <div style="background: rgba(4,8,16,0.75); border: 1px solid rgba(0,229,255,0.25); border-radius: 8px; padding: 1.25rem; margin-bottom: 1.5rem;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
-              <span style="font-family: var(--font-mono); font-size: 0.78rem; font-weight: 700; color: var(--cyan);">🦈 LIVE WIRESHARK PCAP PACKET INSPECTOR (CLICK ROW TO VIEW HEX)</span>
-              <span style="font-family: var(--font-mono); font-size: 0.7rem; color: rgba(255,255,255,0.5);">ETH0 // PROMISCUOUS CAPTURE</span>
-            </div>
-            <div class="dd-console" id="pcapPacketList" style="font-size: 0.75rem; line-height: 1.7; max-height: 140px; overflow-y: auto; margin-bottom: 0.75rem;">
-              <div class="pcap-row" data-hex="45 00 00 3c 1a 2b 40 00 40 06 b6 7a c0 a8 38 65 c0 a8 38 0a ad 22 00 50 00 00 00 00 a0 02 fa f0" style="color: var(--cyan); cursor: pointer;">[#001] 192.168.56.101:44322 → 192.168.56.10:80 TCP [SYN] Seq=0 Win=64240 Len=0 MSS=1460</div>
-              <div class="pcap-row" data-hex="45 00 00 3c 00 00 40 00 40 06 d0 a5 c0 a8 38 0a c0 a8 38 65 00 50 ad 22 00 00 00 01 00 00 00 01" style="color: var(--green); cursor: pointer;">[#002] 192.168.56.10:80 → 192.168.56.101:44322 TCP [SYN, ACK] Seq=0 Ack=1 Win=65160 Len=0</div>
-              <div class="pcap-row" data-hex="47 45 54 20 2f 61 64 6d 69 6e 2f 61 75 74 68 2e 70 68 70 3f 70 61 79 6c 6f 61 64 3d 30 78 39 30" style="color: #ffb000; cursor: pointer;">[#003] 192.168.56.101:44322 → 192.168.56.10:80 HTTP GET /admin/auth.php?payload=0x909090 (NOP Sled)</div>
-              <div class="pcap-row" data-hex="48 54 54 50 2f 31 2e 31 20 35 30 30 20 49 6e 74 65 72 6e 61 6c 20 53 65 72 76 65 72 20 45 72 72" style="color: #ff3366; cursor: pointer;">[#004] 192.168.56.10:80 → 192.168.56.101:44322 HTTP/1.1 500 Internal Error (SIGSEGV Core Dump)</div>
-            </div>
-            <div style="font-family: var(--font-mono); font-size: 0.72rem; color: rgba(255,255,255,0.7); margin-bottom: 0.3rem;">HEX PAYLOAD INSPECTOR:</div>
-            <div class="dd-console" id="pcapHexInspector" style="font-size: 0.7rem; color: var(--cyan); background: #010204;">
-              0000  45 00 00 3c 1a 2b 40 00 40 06 b6 7a c0 a8 38 65  E..&lt;.+@.@..z..8e
-              0010  c0 a8 38 0a ad 22 00 50 00 00 00 00 a0 02 fa f0  ..8..".P........
-            </div>
-          </div>
-
-          <a href="rpi-teardown.html" target="_blank" rel="noopener noreferrer" class="at-action-btn" style="padding: 0.75rem 1.5rem; font-size: 0.85rem; border-color: var(--cyan); color: var(--cyan);">🔬 Launch 3D Raspberry Pi Hardware Lab ↗</a>
-        </div>
-      </div>
-    </div>
-
-    <!-- 06: GIAC GFACT CERTIFIED -->
-    <div class="at-drawer" id="drawer-scholarship">
-      <div class="at-drawer-header">
-        <div class="at-drawer-title-group">
-          <span class="at-drawer-badge">[ 06 // HONORS &amp; GIAC CERTIFICATIONS ]</span>
-          <h2>GIAC GFACT CERTIFIED</h2>
-        </div>
-        <button class="at-drawer-close-btn" onclick="window.closeActiveTheoryDrawer()">✕ RETURN TO ORBIT [ESC]</button>
-      </div>
-      <div class="at-drawer-body">
-        <div style="max-width: 1080px; margin: 0 auto;">
-          <div class="dossier-panel">
-            <div class="dossier-header-bar">
-              <span class="dossier-header-title">🏛️ SANS INSTITUTE // GIAC GFACT CERTIFICATION</span>
-              <span class="dossier-header-status">RECIPIENT: AARON ALVA // CYBERSTART CANADA TOP PERFORMER (ISSUED: 1 SEP 2026)</span>
-            </div>
-            <p style="font-size: 1.12rem; line-height: 1.85; color: rgba(255,255,255,0.92); margin: 0 0 1.25rem 0;">
-              Achieved official <strong style="color: #ffd700;">GIAC GFACT</strong> (Foundational Cybersecurity Technologies) certification from SANS Institute (Issued 1 September 2026), having earned a full national scholarship as a <strong style="color: #ffd700;">Top Performer in CyberStart Canada</strong>. Coursework and examination validate rigorous academic mastery across computer architecture, binary logic, networking protocols, Linux systems security, and automated Python scripting.
-            </p>
-            
-            <!-- SANS DOMAIN MASTERY SVG CIRCULAR RINGS -->
-            <div class="mastery-rings-grid">
-              <div class="mastery-ring-card">
-                <svg class="mastery-ring-svg" viewBox="0 0 100 100">
-                  <circle class="mastery-ring-bg" cx="50" cy="50" r="40"></circle>
-                  <circle class="mastery-ring-prog" cx="50" cy="50" r="40" stroke="#ffd700" stroke-dashoffset="5.0"></circle>
-                  <text x="50" y="56" text-anchor="middle" font-family="'Outfit', sans-serif" font-weight="900" font-size="20" fill="#fff">98%</text>
-                </svg>
-                <div class="mastery-ring-label">Systems Logic</div>
-              </div>
-              <div class="mastery-ring-card">
-                <svg class="mastery-ring-svg" viewBox="0 0 100 100">
-                  <circle class="mastery-ring-bg" cx="50" cy="50" r="40"></circle>
-                  <circle class="mastery-ring-prog" cx="50" cy="50" r="40" stroke="#00e5ff" stroke-dashoffset="10.0"></circle>
-                  <text x="50" y="56" text-anchor="middle" font-family="'Outfit', sans-serif" font-weight="900" font-size="20" fill="#fff">96%</text>
-                </svg>
-                <div class="mastery-ring-label">Networking</div>
-              </div>
-              <div class="mastery-ring-card">
-                <svg class="mastery-ring-svg" viewBox="0 0 100 100">
-                  <circle class="mastery-ring-bg" cx="50" cy="50" r="40"></circle>
-                  <circle class="mastery-ring-prog" cx="50" cy="50" r="40" stroke="#00ff66" stroke-dashoffset="2.5"></circle>
-                  <text x="50" y="56" text-anchor="middle" font-family="'Outfit', sans-serif" font-weight="900" font-size="20" fill="#fff">99%</text>
-                </svg>
-                <div class="mastery-ring-label">Linux Security</div>
-              </div>
-              <div class="mastery-ring-card">
-                <svg class="mastery-ring-svg" viewBox="0 0 100 100">
-                  <circle class="mastery-ring-bg" cx="50" cy="50" r="40"></circle>
-                  <circle class="mastery-ring-prog" cx="50" cy="50" r="40" stroke="#ff3b00" stroke-dashoffset="0.0"></circle>
-                  <text x="50" y="56" text-anchor="middle" font-family="'Outfit', sans-serif" font-weight="900" font-size="20" fill="#fff">100%</text>
-                </svg>
-                <div class="mastery-ring-label">Python Scripting</div>
-              </div>
-            </div>
-
-            <!-- Technical Syllabus Breakdown -->
-            <div class="dossier-grid-2" style="margin-top: 1.5rem;">
-              <div class="dossier-pod">
-                <div class="dossier-pod-title">1. Computer Architecture &amp; Binary Logic</div>
-                <p class="dossier-pod-desc">Von Neumann architecture, CPU general-purpose registers (RAX, RBX, RIP), IEEE 754 floating-point standards, Two's complement integer arithmetic, and Little-Endian vs Big-Endian byte ordering.</p>
-              </div>
-              <div class="dossier-pod">
-                <div class="dossier-pod-title">2. Network Protocols &amp; Packet Analysis</div>
-                <p class="dossier-pod-desc">OSI 7-Layer and TCP/IP stack, TCP 3-way handshake (SYN, SYN-ACK, ACK), CIDR IPv4/IPv6 subnetting, DNS recursive resolution trees, ARP spoofing mitigations, and TLS 1.3 cryptographic suites.</p>
-              </div>
-              <div class="dossier-pod">
-                <div class="dossier-pod-title">3. Linux Access Control &amp; Systems Security</div>
-                <p class="dossier-pod-desc">Ext4 inode structures, POSIX permissions, SUID/SGID privilege escalation pathways, /etc/shadow SHA-512 crypt hashes, and kernel namespace isolation.</p>
-              </div>
-              <div class="dossier-pod">
-                <div class="dossier-pod-title">4. Automated Python Security Development</div>
-                <p class="dossier-pod-desc">Raw socket programming, Scapy packet injection, parsing JSON/SARIF telemetry, multithreaded port scanners, and automated vulnerability exploit scripting.</p>
-              </div>
-            </div>
-
-            <!-- INTERACTIVE GFACT TECHNICAL KNOWLEDGE QUIZ -->
-            <div style="margin-top: 1.5rem; background: rgba(4,8,16,0.7); border: 1px solid rgba(255,215,0,0.3); border-radius: 8px; padding: 1.25rem;">
-              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
-                <span style="font-family: var(--font-mono); font-size: 0.78rem; font-weight: 700; color: #ffd700;">📝 INTERACTIVE SANS GFACT TECHNICAL KNOWLEDGE TESTER</span>
-                <span style="font-family: var(--font-mono); font-size: 0.7rem; color: rgba(255,255,255,0.5);">EXAM SIMULATOR</span>
-              </div>
-              <div style="font-family: var(--font-mono); font-size: 0.85rem; color: #fff; margin-bottom: 0.75rem;" id="sansQuizQuestion">
-                Q1: Which x86_64 register holds the return address and controls execution flow during a function epilogue (ret)?
-              </div>
-              <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;" id="sansQuizAnswers">
-                <button class="cli-tag-btn" data-correct="false">A) %rax (Accumulator)</button>
-                <button class="cli-tag-btn" data-correct="true">B) %rip (Instruction Pointer via stack pop)</button>
-                <button class="cli-tag-btn" data-correct="false">C) %rcx (Counter Register)</button>
-                <button class="cli-tag-btn" data-correct="false">D) %rbp (Base Frame Pointer)</button>
-              </div>
-              <div id="sansQuizFeedback" style="margin-top: 0.75rem; font-family: var(--font-mono); font-size: 0.78rem; min-height: 20px;"></div>
-            </div>
-
-            <!-- INTERACTIVE CREDENTIAL HASH VALIDATOR -->
-            <div style="margin-top: 1.5rem; background: rgba(4,8,16,0.7); border: 1px solid rgba(255,215,0,0.3); border-radius: 8px; padding: 1.25rem;">
-              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
-                <span style="font-family: var(--font-mono); font-size: 0.78rem; font-weight: 700; color: #ffd700;">🔐 SHA-256 SANS CREDENTIAL HASH VERIFIER</span>
-                <span style="font-family: var(--font-mono); font-size: 0.7rem; color: rgba(255,255,255,0.5);">ON-CHAIN LEDGER</span>
-              </div>
-              <div class="dd-console" style="font-size: 0.78rem;">
-                <div style="color: rgba(255,255,255,0.7);">ISSUER: SANS Institute / GIAC Certification Body</div>
-                <div style="color: #ffd700;">FINGERPRINT: a8f49e0132b9c7821df2410a88ec591b65e90c8a32d1847fe88019ab712e09ff</div>
-                <div style="color: var(--green); margin-top: 0.25rem;">STATUS: ● OFFICIALLY CERTIFIED (ISSUED: 01-SEP-2026) // ACTIVE</div>
-                <div style="color: rgba(255,255,255,0.7); margin-top: 0.25rem;">CREDLY ID: e6b7f224-b57d-4224-9f7a-cabe2b3fb257</div>
-              </div>
-            </div>
-
-            <!-- CREDLY VERIFICATION & SYLLABUS ACTIONS -->
-            <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 1.5rem;">
-              <a href="https://www.credly.com/badges/e6b7f224-b57d-4224-9f7a-cabe2b3fb257" target="_blank" rel="noopener noreferrer" class="at-action-btn" style="padding: 0.75rem 1.5rem; font-size: 0.85rem; border-color: #ffd700; color: #ffd700; background: rgba(255, 215, 0, 0.08);">🏆 Verify Credly Certification (Issued 1 Sep 2026) ↗</a>
-              <a href="https://www.giac.org/certifications/foundational-cybersecurity-technologies-gfact/" target="_blank" rel="noopener noreferrer" class="at-action-btn" style="padding: 0.75rem 1.5rem; font-size: 0.85rem; border-color: rgba(255,215,0,0.3); color: rgba(255,255,255,0.85);">📜 SANS GIAC GFACT Syllabus ↗</a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 07: TRYHACKME & HTB -->
+    <!-- 05: TRYHACKME & HTB -->
     <div class="at-drawer" id="drawer-tryhackme">
       <div class="at-drawer-header">
         <div class="at-drawer-title-group">
-          <span class="at-drawer-badge">[ 07 // OFFENSIVE SECURITY PROVING GROUNDS ]</span>
+          <span class="at-drawer-badge">[ 05 // OFFENSIVE SECURITY PROVING GROUNDS ]</span>
           <h2>TRYHACKME &amp; HACK THE BOX (TOP 1%)</h2>
         </div>
         <button class="at-drawer-close-btn" onclick="window.closeActiveTheoryDrawer()">✕ RETURN TO ORBIT [ESC]</button>
@@ -921,7 +813,7 @@
         <div style="max-width: 1080px; margin: 0 auto;">
           <div class="dossier-panel">
             <div class="dossier-header-bar">
-              <span class="dossier-header-title">🎯 OFFENSIVE SECURITY PROVING GROUNDS</span>
+              <span class="dossier-header-title">[PROVING] OFFENSIVE SECURITY PROVING GROUNDS</span>
               <span class="dossier-header-status">GLOBAL STANDING: TOP 1% WORLDWIDE // 91+ ROOMS</span>
             </div>
             <p style="font-size: 1.1rem; line-height: 1.8; color: rgba(255,255,255,0.9); margin: 0 0 1.25rem 0;">
@@ -947,10 +839,34 @@
             </div>
           </div>
 
+          <!-- Hack The Box & TryHackMe Dossier -->
+          <div class="dossier-panel" style="border-left: 3px solid var(--cyan); background: rgba(8, 16, 32, 0.7);">
+            <div class="dossier-header-bar">
+              <span class="dossier-header-title" style="color: var(--cyan);">[HTB] HACK THE BOX // OFFENSIVE PROFILE DOSSIER</span>
+              <span class="dossier-header-status">STATUS: APPRENTICE TIER // LEVEL 25</span>
+            </div>
+            <p style="font-size: 1.05rem; line-height: 1.8; color: rgba(255,255,255,0.92); margin: 0 0 1rem 0;">
+              Active practitioner on Hack The Box labs (<strong style="color: var(--cyan);">maxthemadman</strong>, Level 25, Apprentice Tier). Hands-on experience with real-world active attack chains including Kerberoasting, AS-REP Roasting, BloodHound domain mapping, SUID binary exploitation, and kernel privilege escalation.
+            </p>
+            <div class="skill-tag-cloud" style="margin-bottom: 1.25rem;">
+              <span class="skill-tag-pill cyan">HANDLE: maxthemadman</span>
+              <span class="skill-tag-pill cyan">TIER: APPRENTICE</span>
+              <span class="skill-tag-pill cyan">LEVEL: 25</span>
+              <span class="skill-tag-pill">ACTIVE DIRECTORY</span>
+              <span class="skill-tag-pill">KERBEROASTING</span>
+              <span class="skill-tag-pill">BLOODHOUND</span>
+              <span class="skill-tag-pill">LINUX PRIVESC</span>
+            </div>
+            <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+              <a href="https://app.hackthebox.com/users/3735054" target="_blank" rel="noopener noreferrer" class="at-action-btn" style="padding: 0.65rem 1.25rem; font-size: 0.8rem; border-color: var(--cyan); color: var(--cyan); background: rgba(0, 229, 255, 0.08);">[HTB] View Hack The Box Profile (maxthemadman) ↗</a>
+              <a href="https://tryhackme.com/p/354221973" target="_blank" rel="noopener noreferrer" class="at-action-btn" style="padding: 0.65rem 1.25rem; font-size: 0.8rem; border-color: var(--green); color: var(--green);">[THM] View TryHackMe Profile (Top 1%) ↗</a>
+            </div>
+          </div>
+
           <!-- Systematic 5-Phase Penetration Testing Methodology -->
           <div class="dossier-panel">
             <div class="dossier-header-bar">
-              <span class="dossier-header-title">⚔️ 5-STAGE OFFENSIVE METHODOLOGY &amp; WRITEUPS</span>
+              <span class="dossier-header-title">[FLOW] 5-STAGE OFFENSIVE METHODOLOGY &amp; WRITEUPS</span>
               <span class="dossier-header-status">TACTICAL WORKFLOW</span>
             </div>
             <div class="dossier-grid-2">
@@ -976,13 +892,13 @@
           <!-- Interactive CTF Machine Case Study Selector -->
           <div class="dossier-panel">
             <div class="dossier-header-bar">
-              <span class="dossier-header-title">📑 PENETRATION TESTING MACHINE WRITEUP BREAKDOWNS</span>
+              <span class="dossier-header-title">[CASE] PENETRATION TESTING MACHINE WRITEUP BREAKDOWNS</span>
               <span class="dossier-header-status">OFFENSIVE CASE STUDIES</span>
             </div>
             <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem; flex-wrap: wrap;" id="ctfMachineTabs">
-              <button class="target-btn active" data-machine="ad">🎯 VulnNet: Active (Active Directory &amp; Kerberoasting)</button>
-              <button class="target-btn" data-machine="linux">🐧 CyberPulse (Linux SUID &amp; Cap PrivEsc)</button>
-              <button class="target-btn" data-machine="web">🌐 RetroAuth (Blind SQLi &amp; Cloud SSRF to RCE)</button>
+              <button class="target-btn active" data-machine="ad">[AD] VulnNet: Active (Active Directory &amp; Kerberoasting)</button>
+              <button class="target-btn" data-machine="linux">[LINUX] CyberPulse (Linux SUID &amp; Cap PrivEsc)</button>
+              <button class="target-btn" data-machine="web">[WEB] RetroAuth (Blind SQLi &amp; Cloud SSRF to RCE)</button>
             </div>
             <div class="dd-console" id="ctfMachineContent" style="font-size: 0.78rem; line-height: 1.7;">
               <div style="color: var(--cyan); font-weight: bold;">[CASE STUDY: VULNNET ACTIVE // ACTIVE DIRECTORY COMPROMISE]</div>
@@ -998,7 +914,7 @@
           <!-- IN-BROWSER CTF CIPHER PUZZLE -->
           <div style="background: rgba(4,8,16,0.7); border: 1px solid rgba(0,229,255,0.3); border-radius: 8px; padding: 1.25rem; margin-bottom: 1.5rem;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
-              <span style="font-family: var(--font-mono); font-size: 0.78rem; font-weight: 700; color: var(--cyan);">🚩 LIVE IN-BROWSER CTF CHALLENGE: DECRYPT CIPHER</span>
+              <span style="font-family: var(--font-mono); font-size: 0.78rem; font-weight: 700; color: var(--cyan);">[CTF] LIVE IN-BROWSER CTF CHALLENGE: DECRYPT CIPHER</span>
               <span style="font-family: var(--font-mono); font-size: 0.7rem; color: rgba(255,255,255,0.5);">DIFFICULTY: MEDIUM</span>
             </div>
             <div class="dd-console" style="margin-bottom: 0.75rem; font-size: 0.78rem;">
@@ -1007,23 +923,19 @@
             </div>
             <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
               <input type="text" id="ctfInputFlag" placeholder="Enter decrypted flag..." style="flex: 1; min-width: 240px; background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 0.5rem 0.75rem; border-radius: 4px; font-family: var(--font-mono); font-size: 0.8rem;" />
-              <button class="target-btn active" id="btnSolveFlag">VERIFY FLAG 🎯</button>
+              <button class="target-btn active" id="btnSolveFlag">VERIFY FLAG [CRACK]</button>
             </div>
             <div id="ctfFlagResult" style="margin-top: 0.5rem; font-family: var(--font-mono); font-size: 0.78rem;"></div>
-          </div>
-
-          <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
-            <a href="https://tryhackme.com/p/354221973" target="_blank" rel="noopener noreferrer" class="at-action-btn" style="padding: 0.75rem 1.5rem; font-size: 0.85rem; border-color: var(--cyan); color: var(--cyan);">🎯 Open Verified TryHackMe Profile ↗</a>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- 08: TRANSMISSION / CONTACT -->
+    <!-- 06: TRANSMISSION / CONTACT -->
     <div class="at-drawer" id="drawer-transmission">
       <div class="at-drawer-header">
         <div class="at-drawer-title-group">
-          <span class="at-drawer-badge">[ 08 // ENCRYPTED DISPATCH &amp; CRYPTOGRAPHIC HANDSHAKE ]</span>
+          <span class="at-drawer-badge">[ 06 // ENCRYPTED DISPATCH &amp; CRYPTOGRAPHIC HANDSHAKE ]</span>
           <h2>TRANSMIT SIGNAL // DIRECT CONTACT</h2>
         </div>
         <button class="at-drawer-close-btn" onclick="window.closeActiveTheoryDrawer()">✕ RETURN TO ORBIT [ESC]</button>
@@ -1032,7 +944,7 @@
         <div style="max-width: 760px; margin: 0 auto;">
           <div class="dossier-panel">
             <div class="dossier-header-bar">
-              <span class="dossier-header-title">⚡ DIRECT RESEARCH &amp; INTERNSHIP INQUIRIES</span>
+              <span class="dossier-header-title">[DIRECT] RESEARCH &amp; INTERNSHIP INQUIRIES</span>
               <span class="dossier-header-status">CHANNEL: 4096-BIT ENCRYPTED HTTPS</span>
             </div>
             <p style="color: rgba(255,255,255,0.85); font-size: 0.98rem; line-height: 1.75; margin-bottom: 1.25rem;">
@@ -1080,7 +992,7 @@
         <div class="cmd-group">
           <div class="cmd-group-title">NAVIGATION</div>
           <div class="cmd-item active" data-action="card" data-card="0">
-            <span class="cmd-item-icon">👤</span>
+            <span class="cmd-item-icon">[01]</span>
             <div class="cmd-item-text">
               <span class="cmd-item-title">01 // Aaron Alva (Identity)</span>
               <span class="cmd-item-desc">Grade 11 Cybersecurity Researcher</span>
@@ -1088,7 +1000,7 @@
             <span class="cmd-item-key">1</span>
           </div>
           <div class="cmd-item" data-action="card" data-card="1">
-            <span class="cmd-item-icon">⚡</span>
+            <span class="cmd-item-icon">[02]</span>
             <div class="cmd-item-text">
               <span class="cmd-item-title">02 // Mutagen Zero-Day Fuzzer</span>
               <span class="cmd-item-desc">Autonomous AST fuzzer sandbox</span>
@@ -1096,7 +1008,7 @@
             <span class="cmd-item-key">2</span>
           </div>
           <div class="cmd-item" data-action="card" data-card="2">
-            <span class="cmd-item-icon">🔍</span>
+            <span class="cmd-item-icon">[03]</span>
             <div class="cmd-item-text">
               <span class="cmd-item-title">03 // Vigil Threat Hunter</span>
               <span class="cmd-item-desc">CLI automated CVE correlation</span>
@@ -1104,7 +1016,7 @@
             <span class="cmd-item-key">3</span>
           </div>
           <div class="cmd-item" data-action="card" data-card="3">
-            <span class="cmd-item-icon">📈</span>
+            <span class="cmd-item-icon">[04]</span>
             <div class="cmd-item-text">
               <span class="cmd-item-title">04 // SignalHub Market AI</span>
               <span class="cmd-item-desc">Live Firebase web app</span>
@@ -1112,36 +1024,20 @@
             <span class="cmd-item-key">4</span>
           </div>
           <div class="cmd-item" data-action="card" data-card="4">
-            <span class="cmd-item-icon">🔬</span>
+            <span class="cmd-item-icon">[05]</span>
             <div class="cmd-item-text">
-              <span class="cmd-item-title">05 // Security Lab Sandbox</span>
-              <span class="cmd-item-desc">VirtualBox &amp; RPi 4 Hardware Lab</span>
+              <span class="cmd-item-title">05 // Proving Grounds (CTF)</span>
+              <span class="cmd-item-desc">TryHackMe Top 1% &amp; Hack The Box</span>
             </div>
             <span class="cmd-item-key">5</span>
           </div>
           <div class="cmd-item" data-action="card" data-card="5">
-            <span class="cmd-item-icon">🎓</span>
+            <span class="cmd-item-icon">[06]</span>
             <div class="cmd-item-text">
-              <span class="cmd-item-title">06 // GIAC GFACT Certified</span>
-              <span class="cmd-item-desc">GIAC Certification (Issued 1 Sep 2026)</span>
-            </div>
-            <span class="cmd-item-key">6</span>
-          </div>
-          <div class="cmd-item" data-action="card" data-card="6">
-            <span class="cmd-item-icon">🏆</span>
-            <div class="cmd-item-text">
-              <span class="cmd-item-title">07 // TryHackMe &amp; HTB</span>
-              <span class="cmd-item-desc">Top 1% Global CTF Ranking</span>
-            </div>
-            <span class="cmd-item-key">7</span>
-          </div>
-          <div class="cmd-item" data-action="card" data-card="7">
-            <span class="cmd-item-icon">📡</span>
-            <div class="cmd-item-text">
-              <span class="cmd-item-title">08 // Transmit Signal</span>
+              <span class="cmd-item-title">06 // Transmit Signal</span>
               <span class="cmd-item-desc">Direct contact &amp; inquiry portal</span>
             </div>
-            <span class="cmd-item-key">8</span>
+            <span class="cmd-item-key">6</span>
           </div>
         </div>
 
@@ -1184,7 +1080,7 @@
         <div class="cmd-group">
           <div class="cmd-group-title">QUICK ACTIONS</div>
           <div class="cmd-item" data-action="copy-email">
-            <span class="cmd-item-icon">📋</span>
+            <span class="cmd-item-icon">[MAIL]</span>
             <div class="cmd-item-text">
               <span class="cmd-item-title">Copy Email Address</span>
               <span class="cmd-item-desc">aaronalva@yahoo.com</span>
@@ -1192,7 +1088,7 @@
             <span class="cmd-item-badge" id="cmdCopyBadge">COPY</span>
           </div>
           <div class="cmd-item" data-action="open-github">
-            <span class="cmd-item-icon">🐙</span>
+            <span class="cmd-item-icon">[GIT]</span>
             <div class="cmd-item-text">
               <span class="cmd-item-title">Open GitHub</span>
               <span class="cmd-item-desc">github.com/Bunny-sysd</span>
@@ -1200,7 +1096,7 @@
             <span class="cmd-item-key">↗</span>
           </div>
           <div class="cmd-item" data-action="open-thm">
-            <span class="cmd-item-icon">🎯</span>
+            <span class="cmd-item-icon">[CTF]</span>
             <div class="cmd-item-text">
               <span class="cmd-item-title">Open TryHackMe Profile</span>
               <span class="cmd-item-desc">tryhackme.com/p/354221973</span>
@@ -1208,7 +1104,7 @@
             <span class="cmd-item-key">↗</span>
           </div>
           <div class="cmd-item" data-action="toggle-sound">
-            <span class="cmd-item-icon" id="cmdSoundIcon">🔊</span>
+            <span class="cmd-item-icon" id="cmdSoundIcon">[SFX]</span>
             <div class="cmd-item-text">
               <span class="cmd-item-title">Toggle Web Audio SFX</span>
               <span class="cmd-item-desc" id="cmdSoundDesc">Sound synthesizer is currently active</span>

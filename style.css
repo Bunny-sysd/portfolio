@@ -4285,6 +4285,194 @@ body.in-deep-dive .cmd-trigger-btn {
   }
 }
 
+/* ══════════════════════════════════════════════════════
+   ARCHIFY 3-STAGE WORKFLOW DIAGRAMS & COMMAND BLOCKS
+   ══════════════════════════════════════════════════════ */
+.archify-diagram-wrap {
+  margin: 1.25rem 0 1.5rem 0;
+  background: rgba(3, 7, 18, 0.7);
+  border: 1px solid rgba(0, 229, 255, 0.2);
+  border-radius: 8px;
+  padding: 1.25rem;
+}
+
+.archify-diagram-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.archify-diagram-title {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--cyan);
+  letter-spacing: 0.08em;
+}
+
+.archify-diagram {
+  display: flex;
+  align-items: stretch;
+  gap: 0.75rem;
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
+}
+
+.archify-node {
+  flex: 1;
+  min-width: 180px;
+  background: rgba(4, 12, 28, 0.85);
+  border: 1px solid rgba(0, 255, 102, 0.25);
+  border-left: 3px solid var(--green);
+  border-radius: 6px;
+  padding: 0.85rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.archify-node.node-process {
+  border-color: rgba(0, 229, 255, 0.3);
+  border-left: 3px solid var(--cyan);
+}
+
+.archify-node.node-output {
+  border-color: rgba(255, 176, 0, 0.3);
+  border-left: 3px solid #ffb000;
+}
+
+.archify-node-step {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: var(--text-dim);
+  letter-spacing: 0.1em;
+}
+
+.archify-node-label {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.archify-node-desc {
+  font-size: 0.74rem;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.archify-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 1.1rem;
+  color: var(--cyan);
+  padding: 0 0.25rem;
+  user-select: none;
+}
+
+/* Spaced Command Blocks with 1-Tap Copy */
+.command-block {
+  background: #010204;
+  border: 1px solid rgba(0, 255, 102, 0.25);
+  border-radius: 6px;
+  margin: 0.85rem 0;
+  overflow: hidden;
+  font-family: var(--font-mono);
+}
+
+.command-block-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.4rem 0.75rem;
+  background: rgba(0, 255, 102, 0.06);
+  border-bottom: 1px solid rgba(0, 255, 102, 0.15);
+  font-size: 0.68rem;
+  color: var(--text-dim);
+}
+
+.command-block-code {
+  padding: 0.85rem 1rem;
+  font-size: 0.78rem;
+  line-height: 1.7;
+  color: #fff;
+  overflow-x: auto;
+  margin: 0;
+  white-space: pre;
+}
+
+.command-block-code .cmd-comment {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.command-block-code .cmd-prompt {
+  color: var(--green);
+  user-select: none;
+}
+
+.command-copy-btn {
+  background: transparent;
+  border: 1px solid rgba(0, 255, 102, 0.3);
+  color: var(--green);
+  border-radius: 4px;
+  padding: 0.2rem 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.command-copy-btn:hover {
+  background: var(--green);
+  color: #000;
+}
+
+/* Skill Tag Cloud */
+.skill-tag-cloud {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin-top: 0.5rem;
+}
+
+.skill-tag-pill {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  padding: 0.25rem 0.6rem;
+  background: rgba(0, 255, 102, 0.06);
+  border: 1px solid rgba(0, 255, 102, 0.25);
+  border-radius: 4px;
+  color: #fff;
+  letter-spacing: 0.04em;
+}
+
+.skill-tag-pill.cyan {
+  background: rgba(0, 229, 255, 0.06);
+  border-color: rgba(0, 229, 255, 0.25);
+  color: var(--cyan);
+}
+
+.skill-tag-pill.gold {
+  background: rgba(255, 176, 0, 0.06);
+  border-color: rgba(255, 176, 0, 0.25);
+  color: #ffd700;
+}
+
+@media (max-width: 768px) {
+  .archify-diagram {
+    flex-direction: column;
+  }
+  .archify-arrow {
+    transform: rotate(90deg);
+    padding: 0.25rem 0;
+  }
+}
+
+
 
 
 
