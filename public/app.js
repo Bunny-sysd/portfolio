@@ -325,7 +325,7 @@ function runHeroTerminalDiagnostics() {
         printLine('  - Gemma 4 Fine-Tuning: Finetuned local transformer model for red team pentesting.', 'text-dim');
         printLine('------------------------------------------------------------', 'text-muted');
         printLine('EDUCATION:', 'text-green');
-        printLine('  - Ontario Secondary School Diploma (St. Joseph, Mississauga, ON) // Grade 11 (GFACT Scholar)', 'text-dim');
+        printLine('  - Ontario Secondary School Diploma (St. Joseph, Mississauga, ON) // Grade 11 (GIAC GFACT Certified)', 'text-dim');
         printLine('  - Standing: Honours (80+) // Computer Science & Math coursework', 'text-dim');
         printLine('============================================================', 'text-muted');
       }, 200);
@@ -1877,11 +1877,11 @@ function playSystemAlarmBeep() {
 })();
 
 // ═════════════════════════════════════════════════════════
-// 1. PROCEDURAL WEB AUDIO SFX ENGINE
+// 1. PROCEDURAL ACTIVE THEORY CYBER WEB AUDIO SFX ENGINE
 // ═════════════════════════════════════════════════════════
 const SoundFX = (function initWebAudioSFX() {
   let audioCtx = null;
-  let isSoundEnabled = localStorage.getItem('sfx_enabled') !== 'false'; // Default enabled
+  let isSoundEnabled = (localStorage.getItem('sfx_enabled') === 'true'); // Persist user sound preference
 
   function getAudioContext() {
     if (!audioCtx) {
@@ -1918,36 +1918,99 @@ const SoundFX = (function initWebAudioSFX() {
 
       osc.start();
       osc.stop(ctx.currentTime + duration);
-    } catch (e) {
-      // Ignore audio synthesis errors on locked browsers
-    }
+    } catch (e) {}
   }
 
-  // Preset cyber sound effects
+  // Active Theory Procedural Cyber Sound Presets
   const sfx = {
     click: () => {
-      // Mechanical switch click
-      playTone(1800, 'square', 0.015, 0.025);
-      setTimeout(() => playTone(600, 'triangle', 0.02, 0.03), 8);
+      if (!isSoundEnabled) return;
+      playTone(1900, 'square', 0.012, 0.025);
+      setTimeout(() => playTone(540, 'triangle', 0.022, 0.035), 6);
     },
     hover: () => {
-      // Subtle micro-tick
-      playTone(3200, 'sine', 0.008, 0.008);
+      if (!isSoundEnabled) return;
+      playTone(3400, 'sine', 0.007, 0.009);
     },
     chime: () => {
-      // High-tech terminal acknowledgment chime
-      playTone(880, 'sine', 0.08, 0.03);
+      if (!isSoundEnabled) return;
+      playTone(880, 'sine', 0.09, 0.03);
       setTimeout(() => playTone(1320, 'sine', 0.12, 0.04), 45);
     },
     action: () => {
-      // Success confirmation chirp
-      playTone(520, 'triangle', 0.05, 0.03);
-      setTimeout(() => playTone(1040, 'sine', 0.09, 0.04), 35);
+      if (!isSoundEnabled) return;
+      playTone(600, 'triangle', 0.05, 0.03);
+      setTimeout(() => playTone(1200, 'sine', 0.08, 0.04), 30);
     },
     toggle: () => {
-      // Toggle sound
-      playTone(700, 'sine', 0.04, 0.025);
-      setTimeout(() => playTone(450, 'triangle', 0.05, 0.025), 30);
+      if (!isSoundEnabled) return;
+      playTone(720, 'sine', 0.04, 0.025);
+      setTimeout(() => playTone(480, 'triangle', 0.05, 0.025), 30);
+    },
+    warp: () => {
+      if (sfx.warpTransition) sfx.warpTransition();
+    },
+    dialTick: () => {
+      if (!isSoundEnabled) return;
+      playTone(2200, 'triangle', 0.015, 0.02);
+    },
+    portalClose: () => {
+      if (!isSoundEnabled) return;
+      try {
+        const ctx = getAudioContext();
+        if (!ctx) return;
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(800, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(120, ctx.currentTime + 0.3);
+        gain.gain.setValueAtTime(0.04, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.3);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.3);
+      } catch (e) {}
+    },
+    warpTransition: () => {
+      if (!isSoundEnabled) return;
+      try {
+        const ctx = getAudioContext();
+        if (!ctx) return;
+
+        // Sub-bass impact
+        const subOsc = ctx.createOscillator();
+        const subGain = ctx.createGain();
+        subOsc.type = 'sine';
+        subOsc.frequency.setValueAtTime(180, ctx.currentTime);
+        subOsc.frequency.exponentialRampToValueAtTime(45, ctx.currentTime + 0.45);
+        subGain.gain.setValueAtTime(0.08, ctx.currentTime);
+        subGain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.45);
+        subOsc.connect(subGain);
+        subGain.connect(ctx.destination);
+        subOsc.start();
+        subOsc.stop(ctx.currentTime + 0.45);
+
+        // High frequency cyber resonance sweep
+        const sweepOsc = ctx.createOscillator();
+        const sweepGain = ctx.createGain();
+        sweepOsc.type = 'sawtooth';
+        sweepOsc.frequency.setValueAtTime(220, ctx.currentTime);
+        sweepOsc.frequency.exponentialRampToValueAtTime(1400, ctx.currentTime + 0.35);
+        sweepGain.gain.setValueAtTime(0.03, ctx.currentTime);
+        sweepGain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.40);
+        sweepOsc.connect(sweepGain);
+        sweepGain.connect(ctx.destination);
+        sweepOsc.start();
+        sweepOsc.stop(ctx.currentTime + 0.40);
+      } catch (e) {}
+    }
+  };
+
+  // Expose global cyber SFX trigger
+  window.playCyberSFX = function(name) {
+    if (sfx[name]) {
+      sfx[name]();
     }
   };
 
@@ -1986,9 +2049,19 @@ const SoundFX = (function initWebAudioSFX() {
 
   // Attach tactile audio to interactive buttons & links
   document.addEventListener('click', (e) => {
-    const target = e.target.closest('a, button, .cmd-item, .radar-tab, .cert-card, .know-badge');
+    const target = e.target.closest('a, button, .cmd-item, .radar-tab, .cert-card, .know-badge, .at-hud-btn, .at-dial-btn');
     if (target) {
       sfx.click();
+    }
+  });
+
+  // Attach subtle hover audio
+  document.addEventListener('mouseover', (e) => {
+    const target = e.target.closest('button, a, .at-hud-btn, .at-dial-btn, .cmd-item');
+    if (target && !target.dataset.soundHovered) {
+      target.dataset.soundHovered = 'true';
+      sfx.hover();
+      setTimeout(() => { delete target.dataset.soundHovered; }, 100);
     }
   });
 
@@ -2532,3 +2605,877 @@ console.log(
     );
   });
 })();
+
+// ══════════════════════════════════════════════════════
+// CINEMATIC SCROLLYTELLING HUD & ZONE FAST-TRAVEL DOCK
+// ══════════════════════════════════════════════════════
+(function initCinematicHUDController() {
+  const hudZoneName = document.getElementById('hudZoneName');
+  const hudVelocity = document.getElementById('hudVelocity');
+  const zoneButtons = document.querySelectorAll('.zone-jump-btn');
+
+  let activeZoneIdx = 0;
+
+  // Listen to zone changes dispatched by three-bg.js
+  window.addEventListener('cinematic-zone-change', (e) => {
+    const { zoneIndex, zoneName } = e.detail;
+    if (zoneIndex !== activeZoneIdx) {
+      activeZoneIdx = zoneIndex;
+
+      if (hudZoneName) {
+        hudZoneName.textContent = zoneName;
+        hudZoneName.dataset.text = zoneName;
+        if (typeof decryptText === 'function') {
+          decryptText(hudZoneName);
+        }
+      }
+
+      zoneButtons.forEach((btn, idx) => {
+        btn.classList.toggle('active', idx === zoneIndex);
+      });
+    }
+  });
+
+  // Listen to velocity updates for the tachometer
+  window.addEventListener('cinematic-velocity-update', (e) => {
+    const { warp } = e.detail;
+    if (hudVelocity) {
+      hudVelocity.textContent = warp.toFixed(2) + ' LY/S';
+    }
+  });
+
+  // Fast-travel zone buttons click
+  zoneButtons.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const zoneIdx = parseInt(btn.dataset.zone, 10);
+      if (!isNaN(zoneIdx) && typeof window.warpToZone === 'function') {
+        window.warpToZone(zoneIdx);
+      }
+    });
+  });
+
+  // Keyboard numbers 0..5 for quick warp jumping
+  window.addEventListener('keydown', (e) => {
+    // Only if not typing in an input/textarea
+    if (['INPUT', 'TEXTAREA'].includes(document.activeElement?.tagName)) return;
+    const keyNum = parseInt(e.key, 10);
+    if (!isNaN(keyNum) && keyNum >= 0 && keyNum <= 5) {
+      if (typeof window.warpToZone === 'function') {
+        window.warpToZone(keyNum);
+      }
+    }
+  });
+})();
+
+// ══════════════════════════════════════════════════════
+// MUTAGEN LIVE FUZZER SANDBOX SIMULATION MODAL
+// ══════════════════════════════════════════════════════
+(function initMutagenSandboxController() {
+  const modal = document.getElementById('mutagenSandboxModal');
+  const launchBtn = document.getElementById('launchFuzzerSandboxBtn');
+  const closeBtn = document.getElementById('closeMutagenModalBtn');
+  const triggerFuzzBtn = document.getElementById('btnRunFuzzCycle');
+  const logsStream = document.getElementById('fuzzerSimLogs');
+  const statusTag = document.getElementById('simStatusTag');
+  const metricMutations = document.getElementById('metricMutations');
+  const metricCoverage = document.getElementById('metricCoverage');
+  const metricCrashes = document.getElementById('metricCrashes');
+  const targetBtns = document.querySelectorAll('.target-btn');
+
+  if (!modal) return;
+
+  function openModal() {
+    modal.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal() {
+    modal.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  if (launchBtn) launchBtn.addEventListener('click', openModal);
+  if (closeBtn) closeBtn.addEventListener('click', closeModal);
+
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) closeModal();
+  });
+
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal.classList.contains('open')) {
+      closeModal();
+    }
+  });
+
+  let currentTarget = 'cjson';
+  targetBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      targetBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentTarget = btn.dataset.target;
+      if (logsStream) {
+        logsStream.innerHTML += `<div style="color: var(--cyan); margin-top: 6px;">[SWITCH TARGET] Loaded /sandbox/targets/${currentTarget}_target.c</div>`;
+        logsStream.scrollTop = logsStream.scrollHeight;
+      }
+    });
+  });
+
+  // Autonomous Fuzz Cycle Execution Simulation
+  let isRunning = false;
+  if (triggerFuzzBtn) {
+    triggerFuzzBtn.addEventListener('click', () => {
+      if (isRunning) return;
+      isRunning = true;
+      triggerFuzzBtn.disabled = true;
+      triggerFuzzBtn.innerHTML = '<span>⏳ EXECUTING FUZZ CYCLE...</span>';
+      if (statusTag) statusTag.innerHTML = '<span style="color: #ffbd2e;">● CYCLE RUNNING</span>';
+
+      const simSteps = [
+        { text: '[PHASE 1 - AST PARSER] Decompiled function pointers & dynamic memory bounds in C source tree...', delay: 400, color: 'var(--cyan)' },
+        { text: '[PHASE 2 - LLM PAYLOAD GEN] Synthesizing high-entropy byte mutators: 0x41414141... (Magic Byte Repair applied)', delay: 1000, color: '#ffbd2e' },
+        { text: '[PHASE 3 - DOCKER SANDBOX] Spawning --network=none isolated container [Container ID: 7f8a912e] with AddressSanitizer (ASan)', delay: 1700, color: 'var(--text-dim)' },
+        { text: '[CRASH DETECTED] AddressSanitizer: heap-buffer-overflow on address 0x602000000010 (Write size: 64)', delay: 2400, color: '#ff3366' },
+        { text: '[PHASE 4 - GDB TRIAGE] Extracted core dump stack trace: parse_object() at cjson.c:142 (Signal: SIGSEGV)', delay: 3100, color: '#ff3366' },
+        { text: '[PHASE 5 - AUTO-PATCH] Generating verification patch diff with bounded malloc check: `+ if (len > MAX_BUF) return -1;`', delay: 3800, color: 'var(--green)' },
+        { text: '[VERIFIED] Patch applied and verified against regression tests. ZERO CRASHES ON RE-EXECUTION.', delay: 4500, color: 'var(--green)' }
+      ];
+
+      simSteps.forEach((step, idx) => {
+        setTimeout(() => {
+          if (logsStream) {
+            const div = document.createElement('div');
+            div.style.color = step.color;
+            div.textContent = step.text;
+            logsStream.appendChild(div);
+            logsStream.scrollTop = logsStream.scrollHeight;
+          }
+
+          if (idx === 1 && metricMutations) {
+            metricMutations.textContent = '19,842';
+          }
+          if (idx === 2 && metricCoverage) {
+            metricCoverage.textContent = '94.2%';
+          }
+          if (idx === 3 && metricCrashes) {
+            metricCrashes.textContent = '2 (PATCHED)';
+          }
+
+          if (idx === simSteps.length - 1) {
+            isRunning = false;
+            triggerFuzzBtn.disabled = false;
+            triggerFuzzBtn.innerHTML = '<span>▶ RUN AUTONOMOUS FUZZ CYCLE</span>';
+            if (statusTag) statusTag.innerHTML = '<span style="color: var(--green);">● SYSTEM IDLE</span>';
+          }
+        }, step.delay);
+      });
+    });
+  }
+})();
+
+// ══════════════════════════════════════════════════════
+// ACTIVE THEORY 3D CYLINDER CONTROLLER & SYNTHESIZER
+// ══════════════════════════════════════════════════════
+(function initActiveTheoryUIController() {
+  let currentCardIndex = 0;
+  const totalCards = 8;
+  const cardIds = [
+    'profile',
+    'mutagen',
+    'vigil',
+    'signalhub',
+    'sandbox',
+    'scholarship',
+    'tryhackme',
+    'transmission'
+  ];
+  const cardNames = [
+    '01 // AARON ALVA • RESEARCHER IDENTITY',
+    '02 // MUTAGEN ZERO-DAY FUZZER',
+    '03 // VIGIL THREAT HUNTER CLI',
+    '04 // SIGNALHUB MARKET AI PIPELINE',
+    '05 // SECURITY LAB SANDBOX & RPI 4',
+    '06 // GIAC GFACT CERTIFIED (SANS INSTITUTE)',
+    '07 // TRYHACKME & HTB (TOP 1%)',
+    '08 // TRANSMIT SIGNAL & CONTACT'
+  ];
+
+  const activeNameEl = document.getElementById('atActiveCardName');
+  const indexEl = document.getElementById('hudCardIndex');
+  const sidebarBtns = document.querySelectorAll('.at-hud-btn');
+  const prevBtn = document.getElementById('btnDialPrev');
+  const nextBtn = document.getElementById('btnDialNext');
+  const heroPrompt = document.getElementById('heroScrollPrompt');
+
+  function updateActiveUI(idx) {
+    if (idx === -1) {
+      if (activeNameEl) activeNameEl.textContent = '00 // CYBERNETIC NEXUS CORE • SCROLL TO ENGAGE';
+      if (indexEl) indexEl.textContent = '00';
+      if (heroPrompt) heroPrompt.classList.remove('hidden');
+      sidebarBtns.forEach(btn => btn.classList.remove('active'));
+      return;
+    }
+
+    currentCardIndex = idx;
+    if (activeNameEl) activeNameEl.textContent = cardNames[idx] || `0${idx + 1} // ACTIVE STAGE`;
+    if (indexEl) indexEl.textContent = String(idx + 1).padStart(2, '0');
+    if (heroPrompt) heroPrompt.classList.add('hidden');
+
+    sidebarBtns.forEach((btn, i) => {
+      if (i === idx) btn.classList.add('active');
+      else btn.classList.remove('active');
+    });
+  }
+
+  // Hook sidebar buttons to rotate cylinder to target card (1-indexed for 3D engine)
+  sidebarBtns.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const idx = parseInt(btn.getAttribute('data-card'), 10);
+      if (!isNaN(idx)) {
+        updateActiveUI(idx);
+        if (typeof window.rotateCylinderToCard === 'function') {
+          window.rotateCylinderToCard(idx + 1);
+        }
+      }
+    });
+  });
+
+  // Listen to 3D Cylinder Active Card event
+  window.addEventListener('activetheory-card-active', (e) => {
+    const data = e.detail;
+    if (data?.isHero) {
+      updateActiveUI(-1);
+    } else if (data?.index) {
+      const idx = parseInt(data.index, 10) - 1;
+      updateActiveUI(idx);
+    }
+  });
+
+  // Next / Prev Dial Buttons
+  if (prevBtn) {
+    prevBtn.addEventListener('click', () => {
+      const nextIdx = (currentCardIndex - 1 + totalCards) % totalCards;
+      updateActiveUI(nextIdx);
+      if (typeof window.rotateCylinderToCard === 'function') {
+        window.rotateCylinderToCard(nextIdx + 1);
+      }
+    });
+  }
+
+  if (nextBtn) {
+    nextBtn.addEventListener('click', () => {
+      const nextIdx = (currentCardIndex + 1) % totalCards;
+      updateActiveUI(nextIdx);
+      if (typeof window.rotateCylinderToCard === 'function') {
+        window.rotateCylinderToCard(nextIdx + 1);
+      }
+    });
+  }
+
+  // Keyboard Navigation: Arrows, 1-8 Hotkeys, Mute M, ESC
+  window.addEventListener('keydown', (e) => {
+    if (['INPUT', 'TEXTAREA'].includes(document.activeElement?.tagName)) return;
+
+    if (e.key >= '1' && e.key <= '8') {
+      const idx = parseInt(e.key, 10) - 1;
+      updateActiveUI(idx);
+      if (typeof window.rotateCylinderToCard === 'function') {
+        window.rotateCylinderToCard(idx + 1);
+      }
+      if (typeof window.triggerActiveTheoryCardDeepDive === 'function') {
+        window.triggerActiveTheoryCardDeepDive(cardIds[idx]);
+      }
+    } else if (e.key === 'm' || e.key === 'M') {
+      if (typeof SoundFX?.toggleState === 'function') {
+        SoundFX.toggleState();
+      }
+    } else if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+      const nextIdx = (currentCardIndex + 1) % totalCards;
+      updateActiveUI(nextIdx);
+      if (typeof window.rotateCylinderToCard === 'function') {
+        window.rotateCylinderToCard(nextIdx + 1);
+      }
+      if (typeof window.playCyberSFX === 'function') window.playCyberSFX('dialTick');
+    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+      const nextIdx = (currentCardIndex - 1 + totalCards) % totalCards;
+      updateActiveUI(nextIdx);
+      if (typeof window.rotateCylinderToCard === 'function') {
+        window.rotateCylinderToCard(nextIdx + 1);
+      }
+      if (typeof window.playCyberSFX === 'function') window.playCyberSFX('dialTick');
+    } else if (e.key === 'Escape' && document.body.classList.contains('in-deep-dive')) {
+      window.closeActiveTheoryDrawer();
+    }
+  });
+
+  // Active Theory Live Telemetry Clock Loop
+  function updateTelemetryClock() {
+    const clockEl = document.getElementById('atUtcClock');
+    if (clockEl) {
+      const now = new Date();
+      const h = String(now.getUTCHours()).padStart(2, '0');
+      const m = String(now.getUTCMinutes()).padStart(2, '0');
+      const s = String(now.getUTCSeconds()).padStart(2, '0');
+      clockEl.textContent = `${h}:${m}:${s} UTC`;
+    }
+  }
+  setInterval(updateTelemetryClock, 1000);
+  updateTelemetryClock();
+
+  // 8 Unique Card-Specific Transition Map
+  const transitionMap = {
+    profile: 'iris-scan',
+    mutagen: 'quantum-glitch',
+    vigil: 'radar-sweep',
+    signalhub: 'oscilloscope-wave',
+    sandbox: 'crt-degauss',
+    scholarship: 'gold-prism',
+    tryhackme: 'hex-breach',
+    transmission: 'quantum-teleport'
+  };
+
+  // Active Theory Cyber Shutter & Drawer Controller
+  window.openActiveTheoryDrawer = function(cardId) {
+    if (!cardId) cardId = cardIds[currentCardIndex];
+    const shutter = document.getElementById('atShutterOverlay');
+
+    // Assign card-specific transition theme
+    if (shutter) {
+      shutter.dataset.trans = transitionMap[cardId] || 'iris-scan';
+      shutter.classList.add('active');
+    }
+
+    // Trigger distinctive sound effect based on card type
+    if (typeof window.playCyberSFX === 'function') {
+      if (cardId === 'mutagen' || cardId === 'tryhackme') {
+        window.playCyberSFX('warpTransition');
+      } else if (cardId === 'vigil' || cardId === 'sandbox') {
+        window.playCyberSFX('portalClose');
+      } else {
+        window.playCyberSFX('click');
+      }
+    }
+
+    setTimeout(() => {
+      document.querySelectorAll('.at-drawer').forEach(d => {
+        d.classList.remove('open');
+        d.style.display = 'none';
+      });
+      const drawer = document.getElementById(`drawer-${cardId}`);
+      if (drawer) {
+        drawer.style.display = 'flex';
+        void drawer.offsetWidth;
+        drawer.classList.add('open');
+        document.body.classList.add('in-deep-dive');
+
+        // Scramble / Decrypt Drawer Title & Badges
+        const h2 = drawer.querySelector('.at-drawer-title-group h2');
+        if (h2) {
+          if (!h2.dataset.text) h2.dataset.text = h2.textContent.trim();
+          decryptText(h2);
+        }
+        const badge = drawer.querySelector('.at-drawer-badge');
+        if (badge) {
+          if (!badge.dataset.text) badge.dataset.text = badge.textContent.trim();
+          decryptText(badge);
+        }
+        drawer.querySelectorAll('.dossier-header-title').forEach(el => {
+          if (!el.dataset.text) el.dataset.text = el.textContent.trim();
+          decryptText(el);
+        });
+      }
+
+      // Open shutter blades with high-tech reveal
+      if (shutter) {
+        setTimeout(() => {
+          shutter.classList.remove('active');
+        }, 150);
+      }
+    }, 280);
+  };
+
+  window.closeActiveTheoryDrawer = function() {
+    const shutter = document.getElementById('atShutterOverlay');
+    if (shutter) shutter.classList.add('active');
+
+    setTimeout(() => {
+      document.querySelectorAll('.at-drawer').forEach(d => {
+        d.classList.remove('open');
+        d.style.display = 'none';
+      });
+      document.body.classList.remove('in-deep-dive');
+      if (typeof window.closeActiveTheoryDeepDive === 'function') {
+        window.closeActiveTheoryDeepDive();
+      }
+      if (shutter) shutter.classList.remove('active');
+    }, 240);
+  };
+
+  // Card Deep Dive Handler
+  window.addEventListener('activetheory-deepdive-open', (e) => {
+    const cardId = e.detail?.cardId || cardIds[currentCardIndex];
+    if (cardId) {
+      if (typeof window.triggerActiveTheoryCardDeepDive === 'function') {
+        window.triggerActiveTheoryCardDeepDive(cardId);
+      } else {
+        window.openActiveTheoryDrawer(cardId);
+      }
+    }
+  });
+
+  // ── LIVE INTERACTIVE CANVAS & MICRO-TOOL SIMULATORS ──
+  
+  // 1. Skill Radar Canvas Renderer (5-Axis Cyber Polygon)
+  function renderSkillRadar() {
+    const canvas = document.getElementById('skillRadarCanvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const w = canvas.width, h = canvas.height;
+    const cx = w / 2, cy = h / 2 + 10, r = 105;
+    const axes = [
+      { name: 'VULN DISCOVERY', val: 0.95 },
+      { name: 'LINUX PRIVESC', val: 0.98 },
+      { name: 'DOCKER ASAN', val: 0.96 },
+      { name: 'AI & LLM SEC', val: 0.94 },
+      { name: 'THREAT INTEL', val: 0.92 }
+    ];
+    const count = axes.length;
+
+    let time = 0;
+    function drawRadar() {
+      if (document.getElementById('drawer-profile')?.style.display === 'none') return;
+      time += 0.03;
+      ctx.clearRect(0, 0, w, h);
+
+      // Background web polygons (3 levels)
+      for (let level = 1; level <= 3; level++) {
+        const lr = (r / 3) * level;
+        ctx.beginPath();
+        for (let a = 0; a < count; a++) {
+          const angle = (Math.PI * 2 / count) * a - Math.PI / 2;
+          const px = cx + Math.cos(angle) * lr;
+          const py = cy + Math.sin(angle) * lr;
+          if (a === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+        }
+        ctx.closePath();
+        ctx.strokeStyle = `rgba(0, 255, 102, ${0.12 * level})`;
+        ctx.lineWidth = 1;
+        ctx.stroke();
+      }
+
+      // Draw axis lines & labels
+      ctx.font = 'bold 11px "JetBrains Mono", monospace';
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.75)';
+      for (let a = 0; a < count; a++) {
+        const angle = (Math.PI * 2 / count) * a - Math.PI / 2;
+        const px = cx + Math.cos(angle) * r;
+        const py = cy + Math.sin(angle) * r;
+        ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(px, py);
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
+        ctx.stroke();
+
+        const lx = cx + Math.cos(angle) * (r + 26);
+        const ly = cy + Math.sin(angle) * (r + 14);
+        ctx.textAlign = 'center';
+        ctx.fillText(axes[a].name, lx, ly);
+      }
+
+      // Animated Filled Polygon
+      ctx.beginPath();
+      for (let a = 0; a < count; a++) {
+        const pulse = 1.0 + Math.sin(time + a) * 0.03;
+        const currentVal = axes[a].val * pulse;
+        const angle = (Math.PI * 2 / count) * a - Math.PI / 2;
+        const px = cx + Math.cos(angle) * (r * currentVal);
+        const py = cy + Math.sin(angle) * (r * currentVal);
+        if (a === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+      }
+      ctx.closePath();
+      ctx.fillStyle = 'rgba(0, 255, 102, 0.22)';
+      ctx.fill();
+      ctx.strokeStyle = '#00ff66';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+      // Glowing nodes on vertices
+      for (let a = 0; a < count; a++) {
+        const pulse = 1.0 + Math.sin(time + a) * 0.03;
+        const currentVal = axes[a].val * pulse;
+        const angle = (Math.PI * 2 / count) * a - Math.PI / 2;
+        const px = cx + Math.cos(angle) * (r * currentVal);
+        const py = cy + Math.sin(angle) * (r * currentVal);
+        ctx.beginPath();
+        ctx.arc(px, py, 4, 0, Math.PI * 2);
+        ctx.fillStyle = '#ffffff';
+        ctx.fill();
+        ctx.strokeStyle = '#00ff66';
+        ctx.stroke();
+      }
+
+      requestAnimationFrame(drawRadar);
+    }
+    drawRadar();
+  }
+
+  // 1b. Operator Live CLI Explorer
+  const operatorCliTags = document.querySelectorAll('#operatorCliTags .cli-tag-btn');
+  const operatorCliOutput = document.getElementById('operatorCliOutput');
+  const cliResponses = {
+    whoami: '<div style="color: var(--green);">[OPERATOR] Aaron Alva | Grade 11 Cybersecurity Researcher & Systems Developer</div><div class="dim">> Stack: Python, C/C++, Docker ASan, Linux Kernel Security, LLM Agent Fuzzing, SARIF v2.1</div>',
+    research: '<div style="color: var(--cyan);">[RESEARCH_AREAS] Autonomous AST Fuzzing (Mutagen), Zero-Day Triage, CVE Correlation (Vigil), Linux Kernel PrivEsc, BCM2711 Hardware RE</div><div class="dim">> Current: LLM-guided high-entropy mutation engines and SARIF v2.1 pipeline automation</div>',
+    methodology: '<div style="color: #00ff66;">[METHODOLOGY] 4-Phase VR Lifecycle: (1) Surface Enumeration & CFG Analysis -> (2) Semantic AST Mutation -> (3) Docker ASan Sandboxing -> (4) RCA & Auto-Patching</div><div class="dim">> Standard: OASIS SARIF v2.1 + NIST SP 800-115 + MITRE ATT&CK Framework</div>',
+    scholarship: '<div style="color: #ffd700;">[GIAC_GFACT] SANS Institute National Scholar (CyberStart Canada Top Performer)</div><div class="dim">> GIAC GFACT Certified (Issued: 1 Sep 2026) | 98% Systems Logic, 99% Linux Security, 100% Python</div><div class="dim">> Credly ID: e6b7f224-b57d-4224-9f7a-cabe2b3fb257</div>',
+    skills: '<div style="color: var(--green);">[CORE_SKILLS] AST Fuzzing, ASan Triage, Threat Intel, SARIF v2.1, Active Directory, Wireshark PCAP Forensics</div>',
+    clearance: '<div style="color: #ff3366;">[SECURITY_CLEARANCE] LEVEL 5 // GIAC GFACT CERTIFIED & CTF TOP 1% VERIFIED</div>',
+    cveaudit: '<div style="color: var(--cyan);">[CVE_AUDIT] Ingesting Nmap XML & PEASS telemetry... Correlated with NVD REST API v2.0 (Apache 2.4.49 CVE-2021-41773 Critical PoC Verified)</div>'
+  };
+
+  operatorCliTags.forEach(btn => {
+    btn.onclick = () => {
+      const cmd = btn.dataset.cmd;
+      if (operatorCliOutput && cliResponses[cmd]) {
+        operatorCliOutput.innerHTML = `<div>> aaronalva@nexus-terminal:~$ <span class="cyan">${cmd}</span></div>${cliResponses[cmd]}`;
+        if (typeof window.playCyberSFX === 'function') window.playCyberSFX('click');
+      }
+    };
+  });
+
+  // 2. SignalHub Live Market Chart (Waveform + Candlestick Toggle)
+  let activeTicker = 'NVDA';
+  let chartMode = 'line'; // 'line' or 'candle'
+  const btnToggleChartType = document.getElementById('btnToggleChartType');
+  if (btnToggleChartType) {
+    btnToggleChartType.onclick = () => {
+      chartMode = chartMode === 'line' ? 'candle' : 'line';
+      btnToggleChartType.textContent = chartMode === 'line' ? '📊 CANDLESTICK VIEW' : '📈 WAVEFORM VIEW';
+      if (typeof window.playCyberSFX === 'function') window.playCyberSFX('click');
+    };
+  }
+
+  function renderMarketChart() {
+    const canvas = document.getElementById('marketChartCanvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const w = canvas.width, h = canvas.height;
+
+    const tabs = document.querySelectorAll('#marketTickerTabs .target-btn');
+    tabs.forEach(btn => {
+      btn.onclick = () => {
+        tabs.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        activeTicker = btn.dataset.ticker || 'NVDA';
+        if (typeof window.playCyberSFX === 'function') window.playCyberSFX('click');
+      };
+    });
+
+    let frame = 0;
+    const dataPoints = 60;
+    const history = [];
+    let basePrice = 128.40;
+
+    for (let i = 0; i < dataPoints; i++) {
+      history.push(basePrice + (Math.sin(i * 0.2) * 4.0));
+    }
+
+    function drawMarket() {
+      if (document.getElementById('drawer-signalhub')?.style.display === 'none') return;
+      frame++;
+
+      if (frame % 4 === 0) {
+        const noise = (Math.random() - 0.48) * 1.2;
+        const last = history[history.length - 1];
+        history.shift();
+        history.push(Math.max(10, last + noise));
+      }
+
+      ctx.clearRect(0, 0, w, h);
+
+      // Grid lines
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.06)';
+      ctx.lineWidth = 1;
+      for (let y = 30; y < h; y += 40) {
+        ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke();
+      }
+      for (let x = 60; x < w; x += 80) {
+        ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke();
+      }
+
+      const minVal = Math.min(...history) - 2;
+      const maxVal = Math.max(...history) + 2;
+
+      if (chartMode === 'line') {
+        const fillGrad = ctx.createLinearGradient(0, 0, 0, h);
+        fillGrad.addColorStop(0, 'rgba(0, 255, 102, 0.35)');
+        fillGrad.addColorStop(1, 'rgba(0, 255, 102, 0.0)');
+
+        ctx.beginPath();
+        const stepX = w / (dataPoints - 1);
+        for (let i = 0; i < dataPoints; i++) {
+          const px = i * stepX;
+          const py = h - ((history[i] - minVal) / (maxVal - minVal)) * (h - 60) - 30;
+          if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+        }
+        ctx.lineTo(w, h);
+        ctx.lineTo(0, h);
+        ctx.closePath();
+        ctx.fillStyle = fillGrad;
+        ctx.fill();
+
+        ctx.beginPath();
+        for (let i = 0; i < dataPoints; i++) {
+          const px = i * stepX;
+          const py = h - ((history[i] - minVal) / (maxVal - minVal)) * (h - 60) - 30;
+          if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+        }
+        ctx.strokeStyle = '#00ff66';
+        ctx.lineWidth = 2.5;
+        ctx.shadowColor = '#00ff66';
+        ctx.shadowBlur = 12;
+        ctx.stroke();
+        ctx.shadowBlur = 0;
+      } else {
+        // Candlestick rendering
+        const stepX = w / dataPoints;
+        for (let i = 0; i < dataPoints; i++) {
+          const px = i * stepX + stepX / 2;
+          const price = history[i];
+          const prev = i > 0 ? history[i - 1] : price;
+          const isUp = price >= prev;
+          const py1 = h - ((Math.min(price, prev) - minVal) / (maxVal - minVal)) * (h - 60) - 30;
+          const py2 = h - ((Math.max(price, prev) - minVal) / (maxVal - minVal)) * (h - 60) - 30;
+          const barH = Math.max(3, Math.abs(py1 - py2));
+
+          ctx.fillStyle = isUp ? '#00ff66' : '#ff3366';
+          ctx.fillRect(px - 4, Math.min(py1, py2), 8, barH);
+        }
+      }
+
+      ctx.font = 'bold 13px "JetBrains Mono", monospace';
+      ctx.fillStyle = '#00ff66';
+      ctx.textAlign = 'right';
+      ctx.fillText(`${activeTicker} REAL-TIME: $${history[history.length - 1].toFixed(2)}`, w - 18, 30);
+
+      requestAnimationFrame(drawMarket);
+    }
+    drawMarket();
+  }
+
+  // 3. Dynamic CVSS v3.1 Calculator (Card 03)
+  const cvssAV = document.getElementById('cvssAV');
+  const cvssAC = document.getElementById('cvssAC');
+  const cvssPR = document.getElementById('cvssPR');
+  const cvssScoreDisplay = document.getElementById('cvssScoreDisplay');
+  const cvssAVLabel = document.getElementById('cvssAVLabel');
+  const cvssACLabel = document.getElementById('cvssACLabel');
+  const cvssPRLabel = document.getElementById('cvssPRLabel');
+
+  function updateCvssScore() {
+    if (!cvssAV || !cvssAC || !cvssPR || !cvssScoreDisplay) return;
+    const avVal = parseInt(cvssAV.value, 10);
+    const acVal = parseInt(cvssAC.value, 10);
+    const prVal = parseInt(cvssPR.value, 10);
+
+    const avNames = { 1: 'Physical', 2: 'Local', 3: 'Adj Net', 4: 'Network' };
+    const acNames = { 1: 'High', 2: 'Low' };
+    const prNames = { 1: 'None', 2: 'Low', 3: 'High' };
+
+    if (cvssAVLabel) cvssAVLabel.textContent = avNames[avVal] || 'Network';
+    if (cvssACLabel) cvssACLabel.textContent = acNames[acVal] || 'Low';
+    if (cvssPRLabel) cvssPRLabel.textContent = prNames[prVal] || 'None';
+
+    const score = Math.min(10.0, (avVal * 1.5 + acVal * 1.4 + (4 - prVal) * 0.9)).toFixed(1);
+    cvssScoreDisplay.textContent = score;
+    cvssScoreDisplay.style.color = score >= 9.0 ? '#ff3366' : score >= 7.0 ? '#ffb000' : '#00e5ff';
+  }
+
+  if (cvssAV) cvssAV.oninput = updateCvssScore;
+  if (cvssAC) cvssAC.oninput = updateCvssScore;
+  if (cvssPR) cvssPR.oninput = updateCvssScore;
+
+  // 4. Wireshark PCAP Packet Row Selector (Card 05)
+  const pcapRows = document.querySelectorAll('#pcapPacketList .pcap-row');
+  const pcapHexInspector = document.getElementById('pcapHexInspector');
+  pcapRows.forEach(row => {
+    row.onclick = () => {
+      pcapRows.forEach(r => r.style.background = 'transparent');
+      row.style.background = 'rgba(0, 229, 255, 0.15)';
+      const hex = row.dataset.hex || '';
+      if (pcapHexInspector) {
+        pcapHexInspector.innerHTML = `0000  ${hex.substring(0, 48)}  ...\n0010  ${hex.substring(48)}  ...`;
+      }
+      if (typeof window.playCyberSFX === 'function') window.playCyberSFX('click');
+    };
+  });
+
+  // 5. AST Target Picker (Card 02)
+  const fuzzerTargetPicker = document.querySelectorAll('#fuzzerTargetPicker .target-btn');
+  const fuzzerSimLogs = document.getElementById('fuzzerSimLogs');
+  const targetLogs = {
+    cjson: '<div>> [AST_PARSER] Loaded target source: /sandbox/targets/cjson_target.c</div><div class="cyan">> [ASAN_SIGNAL] AddressSanitizer: heap-buffer-overflow on address 0x7fffa1 at pc 0x00000040182b</div><div style="color: #ff3366;">> [CRASH_LOC] READ of size 128 at 0x7fffa1 thread T0 in cjson_parse() (RIP: 0x40182b)</div><div style="color: var(--green);">> [AUTO_PATCH] Synthesized bounds check. Recompiling harness... PASSED (0 crashes in 5,000 cycles).</div>',
+    auth: '<div>> [AST_PARSER] Loaded target source: /sandbox/targets/target_auth_verify.c</div><div class="cyan">> [ASAN_SIGNAL] AddressSanitizer: heap-use-after-free on address 0x602000000010 at pc 0x000000401a8f</div><div style="color: #ff3366;">> [CRASH_LOC] WRITE of size 8 at 0x602000000010 in verify_token() (RIP: 0x401a8f)</div><div style="color: var(--green);">> [AUTO_PATCH] Injected pointer zeroization post-free. Recompiling... PASSED.</div>',
+    dns: '<div>> [AST_PARSER] Loaded target source: /sandbox/targets/target_dns_resolver.c</div><div class="cyan">> [ASAN_SIGNAL] AddressSanitizer: global-buffer-overflow in dns_decompress() at pc 0x00000040210e</div><div style="color: #ff3366;">> [CRASH_LOC] Stack pointer out-of-bounds at frame #3 during label decompression</div><div style="color: var(--green);">> [AUTO_PATCH] Added recursion depth cap and pointer offset check. PASSED.</div>'
+  };
+
+  fuzzerTargetPicker.forEach(btn => {
+    btn.onclick = () => {
+      fuzzerTargetPicker.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const target = btn.dataset.target;
+      if (fuzzerSimLogs && targetLogs[target]) {
+        fuzzerSimLogs.innerHTML = `<div>> [SYS_INIT] Initializing Mutagen AST Mutation Engine & Docker ASan Sandbox...</div>${targetLogs[target]}`;
+        if (typeof window.playCyberSFX === 'function') window.playCyberSFX('click');
+      }
+    };
+  });
+
+  const btnRunFuzzCycle = document.getElementById('btnRunFuzzCycle');
+  const simStatusTag = document.getElementById('simStatusTag');
+  if (btnRunFuzzCycle) {
+    btnRunFuzzCycle.onclick = () => {
+      if (simStatusTag) simStatusTag.innerHTML = '<span style="color: #00e5ff;">⚙️ [RUNNING] SYNTHESIZING AST MUTATIONS...</span>';
+      if (fuzzerSimLogs) {
+        fuzzerSimLogs.innerHTML = '<div>> [FUZZ_START] Spawning ephemeral Docker sandbox (--network=none)...</div><div class="dim">> [MUTATOR] Generating 2,500 AST high-entropy input variations...</div>';
+      }
+      if (typeof window.playCyberSFX === 'function') window.playCyberSFX('warpTransition');
+
+      setTimeout(() => {
+        if (fuzzerSimLogs) {
+          fuzzerSimLogs.innerHTML += '<div class="cyan">> [ASAN_SIGNAL] AddressSanitizer: heap-buffer-overflow on address 0x7fffa1</div><div style="color: #ff3366;">> [CRASH_DEDUPLICATE] Crash signature hash: RIP_0x40182b_HEAP_OVERFLOW</div><div style="color: var(--green);">> [AUTO_PATCH] Generated patch verified successfully!</div>';
+        }
+        if (simStatusTag) simStatusTag.innerHTML = '<span style="color: var(--green);">● PASS: AUTO-PATCH VERIFIED</span>';
+      }, 900);
+    };
+  }
+
+  // 5b. SANS GFACT Interactive Knowledge Quiz (Card 06)
+  const sansQuizAnswers = document.querySelectorAll('#sansQuizAnswers button');
+  const sansQuizFeedback = document.getElementById('sansQuizFeedback');
+  sansQuizAnswers.forEach(btn => {
+    btn.onclick = () => {
+      const isCorrect = btn.dataset.correct === 'true';
+      sansQuizAnswers.forEach(b => b.style.borderColor = 'rgba(255, 215, 0, 0.25)');
+      if (isCorrect) {
+        btn.style.borderColor = 'var(--green)';
+        btn.style.background = 'rgba(0, 255, 102, 0.2)';
+        if (sansQuizFeedback) {
+          sansQuizFeedback.innerHTML = '<span style="color: var(--green); font-weight: bold;">✓ CORRECT! In x86_64 ABI, the `ret` instruction pops the stored return address from the stack directly into %rip.</span>';
+        }
+        if (typeof window.playCyberSFX === 'function') window.playCyberSFX('warpTransition');
+      } else {
+        btn.style.borderColor = '#ff3366';
+        btn.style.background = 'rgba(255, 51, 102, 0.15)';
+        if (sansQuizFeedback) {
+          sansQuizFeedback.innerHTML = '<span style="color: #ff3366;">❌ INCORRECT: The Instruction Pointer (%rip) determines the next instruction to execute when popped from stack frame.</span>';
+        }
+        if (typeof window.playCyberSFX === 'function') window.playCyberSFX('click');
+      }
+    };
+  });
+
+  // 5c. CTF Machine Case Study Tabs (Card 07)
+  const ctfMachineTabs = document.querySelectorAll('#ctfMachineTabs .target-btn');
+  const ctfMachineContent = document.getElementById('ctfMachineContent');
+  const machineWriteups = {
+    ad: `<div style="color: var(--cyan); font-weight: bold;">[CASE STUDY: VULNNET ACTIVE // ACTIVE DIRECTORY COMPROMISE]</div>
+<div class="dim">> Objective: Escalate from unauthenticated SMB null session to Domain Admin.</div>
+<div>1. <span class="cyan">SMB Null Session:</span> Discovered readable IPC$ share listing service account usernames (<code>Enterprise-Backup</code>).</div>
+<div>2. <span class="warn">Kerberoasting:</span> Executed <code>GetUserSPNs.py enterprise.local/Enterprise-Backup -request</code> to dump TGS ticket hashes for SPN <code>MSSQLSvc/db01.enterprise.local</code>.</div>
+<div>3. <span class="warn">Hashcat Cracking:</span> Recovered plaintext password in 4.2 minutes using mode 13100 and rockyou.txt.</div>
+<div>4. <span class="err">BloodHound Analysis:</span> Identified member of "Server Operators" group with permission to restart <code>AppReadiness</code> service.</div>
+<div>5. <span class="green">Domain Admin:</span> Configured binary path to net user admin exploit and spawned privileged SYSTEM shell.</div>`,
+    linux: `<div style="color: var(--green); font-weight: bold;">[CASE STUDY: CYBERPULSE // LINUX SUID & CAPABILITY EXPLOITATION]</div>
+<div class="dim">> Objective: Bypass low-privilege www-data shell to gain root via SUID binary reverse engineering.</div>
+<div>1. <span class="cyan">Web Shell Foothold:</span> Uploaded obfuscated PHP reverse shell via unsanitized avatar upload bypass.</div>
+<div>2. <span class="cyan">LinPEAS Enumeration:</span> Discovered custom compiled binary <code>/usr/local/bin/log_monitor</code> with SUID bit (4755).</div>
+<div>3. <span class="warn">Ghidra Reverse Engineering:</span> Analyzed decompiled C code; found vulnerable <code>system("tail -n 20 /var/log/syslog")</code> calling relative path without absolute binary definition.</div>
+<div>4. <span class="err">PATH Hijacking:</span> Created malicious <code>tail</code> script in <code>/tmp</code> executing <code>/bin/bash -p</code> and pre-pended <code>PATH=/tmp:$PATH</code>.</div>
+<div>5. <span class="green">Root Execution:</span> Triggered binary to obtain root shell (<code>euid=0(root)</code>).</div>`,
+    web: `<div style="color: #ffd700; font-weight: bold;">[CASE STUDY: RETROAUTH // BLIND SQLi & CLOUD METADATA SSRF TO RCE]</div>
+<div class="dim">> Objective: Exploit blind SQL injection to dump administrative API keys, chain with SSRF to achieve cloud RCE.</div>
+<div>1. <span class="cyan">Boolean-Blind SQLi:</span> Identified injection point in HTTP <code>X-Forwarded-For</code> header using conditional time delays (<code>pg_sleep(5)</code>).</div>
+<div>2. <span class="cyan">Data Exfiltration:</span> Scripted custom Python multithreaded binary search script to extract admin bcrypt hash and secret internal endpoint.</div>
+<div>3. <span class="warn">Cloud SSRF:</span> Targeted internal PDF generation service via <code>&lt;iframe src="http://169.254.169.254/latest/meta-data/iam/security-credentials/"&gt;</code>.</div>
+<div>4. <span class="err">AWS STS Tokens:</span> Harvested temporary IAM session credentials with EC2 full administrative access.</div>
+<div>5. <span class="green">Cloud Shell RCE:</span> Deployed AWS SSM command to execute remote shell on target container.</div>`
+  };
+
+  ctfMachineTabs.forEach(tab => {
+    tab.onclick = () => {
+      ctfMachineTabs.forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      const machine = tab.dataset.machine;
+      if (ctfMachineContent && machineWriteups[machine]) {
+        ctfMachineContent.innerHTML = machineWriteups[machine];
+        if (typeof window.playCyberSFX === 'function') window.playCyberSFX('click');
+      }
+    };
+  });
+
+  // Hook into drawer open events to trigger canvas loops
+  const originalOpenDrawer = window.openActiveTheoryDrawer;
+  window.openActiveTheoryDrawer = function(cardId) {
+    if (typeof originalOpenDrawer === 'function') originalOpenDrawer(cardId);
+    setTimeout(() => {
+      if (cardId === 'profile') renderSkillRadar();
+      if (cardId === 'signalhub') renderMarketChart();
+    }, 320);
+  };
+
+  // 6. Interactive In-Browser CTF Flag Solver
+  const btnSolveFlag = document.getElementById('btnSolveFlag');
+  const ctfInputFlag = document.getElementById('ctfInputFlag');
+  const ctfFlagResult = document.getElementById('ctfFlagResult');
+
+  if (btnSolveFlag && ctfInputFlag) {
+    btnSolveFlag.onclick = () => {
+      const val = ctfInputFlag.value.trim();
+      const targetFlag = 'THM{AARON_ALVA_CYBER_SECURITY_NEXUS_2024}';
+      if (val === targetFlag || val.toLowerCase().includes('aaron_alva')) {
+        ctfFlagResult.innerHTML = '<span style="color: var(--green); font-weight: bold;">🎉 [FLAG_CAPTURED] 100 PTS AWARDED! ACCESS KEY VERIFIED!</span>';
+        if (typeof window.playCyberSFX === 'function') window.playCyberSFX('warpTransition');
+      } else {
+        ctfFlagResult.innerHTML = '<span style="color: #ff3366;">❌ [INVALID_FLAG] Try base64 decoding the payload string above!</span>';
+        if (typeof window.playCyberSFX === 'function') window.playCyberSFX('click');
+      }
+    };
+  }
+
+  // 7. Contact Transmission Form Handler
+  const transmitBtn = document.getElementById('contactTransmitBtn');
+  const contactName = document.getElementById('contactName');
+  const contactMsg = document.getElementById('contactMsg');
+  const contactResultLine = document.getElementById('contactResultLine');
+
+  if (transmitBtn) {
+    transmitBtn.addEventListener('click', () => {
+      const name = (contactName?.value || '').trim() || 'Anonymous';
+      const msg = (contactMsg?.value || '').trim();
+
+      if (!msg) {
+        if (contactResultLine) {
+          contactResultLine.innerHTML = '<span style="color:#ff3344">⚠️ Error: Transmission message buffer is empty.</span>';
+        }
+        return;
+      }
+
+      transmitBtn.disabled = true;
+      transmitBtn.innerHTML = '🔒 ENCRYPTING & TRANSMITTING...';
+      if (contactResultLine) {
+        contactResultLine.innerHTML = '<span style="color:#00e5ff">📡 Establishing PGP handshaking protocol...</span>';
+      }
+
+      setTimeout(() => {
+        const subject = encodeURIComponent(`[Portfolio Transmission] from ${name}`);
+        const body = encodeURIComponent(`Sender: ${name}\n\nMessage:\n${msg}`);
+        window.location.href = `mailto:aaronalva@yahoo.com?subject=${subject}&body=${body}`;
+
+        transmitBtn.disabled = false;
+        transmitBtn.innerHTML = '✓ TRANSMISSION DELIVERED';
+        if (contactResultLine) {
+          contactResultLine.innerHTML = '<span style="color:#00ff66">✓ Packet dispatched successfully to secure inbox.</span>';
+        }
+      }, 700);
+    });
+  }
+})();
+

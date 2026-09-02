@@ -9,133 +9,102 @@ export const triggerParticleBurst = () => {
   window.dispatchEvent(new Event('particle-burst'));
 };
 
-// 1. 3D Wireframe Dome Mesh Component (Grand Glowing Geometry)
-function WireframeDome({ position, geometryType, color, scale = 1, rotationSpeed = 0.5 }) {
-  const meshRef = useRef();
-  const innerMeshRef = useRef();
-  const ringRef1 = useRef();
-  const ringRef2 = useRef();
+// 1. Quantum Mutagen Magnetic Confinement Reactor Core
+function MutagenReactorCore({ isMobile }) {
+  const coreRef = useRef();
+  const ring1Ref = useRef();
+  const ring2Ref = useRef();
+  const ring3Ref = useRef();
 
   useFrame((state, delta) => {
-    if (meshRef.current) {
-      meshRef.current.rotation.y += delta * rotationSpeed * 0.5;
-      meshRef.current.rotation.x += delta * rotationSpeed * 0.25;
+    if (coreRef.current) {
+      coreRef.current.rotation.y += delta * 0.8;
+      coreRef.current.rotation.x += delta * 0.4;
     }
-    if (innerMeshRef.current) {
-      innerMeshRef.current.rotation.y -= delta * rotationSpeed * 0.8;
-      innerMeshRef.current.rotation.z += delta * rotationSpeed * 0.4;
-    }
-    if (ringRef1.current) {
-      ringRef1.current.rotation.z += delta * rotationSpeed * 0.7;
-    }
-    if (ringRef2.current) {
-      ringRef2.current.rotation.x -= delta * rotationSpeed * 0.6;
-    }
+    if (ring1Ref.current) ring1Ref.current.rotation.z += delta * 1.1;
+    if (ring2Ref.current) ring2Ref.current.rotation.x -= delta * 0.9;
+    if (ring3Ref.current) ring3Ref.current.rotation.y += delta * 1.0;
   });
 
-  const renderGeometry = () => {
-    switch (geometryType) {
-      case 'icosahedron':
-        return <icosahedronGeometry args={[3.2, 2]} />;
-      case 'octahedron':
-        return <octahedronGeometry args={[3.5, 1]} />;
-      case 'torusKnot':
-        return <torusKnotGeometry args={[2.5, 0.7, 64, 16]} />;
-      case 'dodecahedron':
-        return <dodecahedronGeometry args={[3.4, 0]} />;
-      case 'tetrahedron':
-        return <tetrahedronGeometry args={[3.8, 1]} />;
-      default:
-        return <icosahedronGeometry args={[3.2, 2]} />;
-    }
-  };
+  const scale = isMobile ? 1.4 : 2.2;
 
   return (
-    <group position={position} scale={scale}>
-      {/* Outer 3D Wireframe Dome */}
-      <mesh ref={meshRef}>
-        {renderGeometry()}
+    <group position={[0, -18, -52]}>
+      {/* Central Pulsating Plasma Singularity */}
+      <mesh ref={coreRef}>
+        <icosahedronGeometry args={[scale * 0.9, 2]} />
         <meshStandardMaterial
-          color={color}
+          color="#00ff66"
+          emissive="#00ff66"
+          emissiveIntensity={3.5}
           wireframe
-          emissive={color}
-          emissiveIntensity={2.8}
           transparent
-          opacity={0.65}
+          opacity={0.85}
         />
       </mesh>
 
-      {/* Inner Glowing Core Mesh */}
-      <mesh ref={innerMeshRef} scale={0.55}>
-        {renderGeometry()}
-        <meshStandardMaterial
-          color={color === '#00ff41' ? '#00d4ff' : '#00ff41'}
-          wireframe
-          emissive={color === '#00ff41' ? '#00d4ff' : '#00ff41'}
-          emissiveIntensity={3.2}
-          transparent
-          opacity={0.7}
-        />
+      {/* Counter-Rotating Magnetic Confinement Torus Rings */}
+      <mesh ref={ring1Ref} rotation={[Math.PI / 3, 0, 0]}>
+        <torusGeometry args={[scale * 1.8, 0.06, 12, 48]} />
+        <meshStandardMaterial color="#00ff66" emissive="#00ff66" emissiveIntensity={2.8} wireframe />
       </mesh>
 
-      {/* Orbiting Ring 1 */}
-      <mesh ref={ringRef1} rotation={[Math.PI / 4, 0, 0]}>
-        <ringGeometry args={[4.5, 4.65, 64]} />
-        <meshStandardMaterial
-          color={color}
-          emissive={color}
-          emissiveIntensity={3.0}
-          transparent
-          opacity={0.6}
-          side={THREE.DoubleSide}
-        />
+      <mesh ref={ring2Ref} rotation={[0, Math.PI / 4, 0]}>
+        <torusGeometry args={[scale * 2.2, 0.05, 12, 48]} />
+        <meshStandardMaterial color="#00d4ff" emissive="#00d4ff" emissiveIntensity={3.0} wireframe />
       </mesh>
 
-      {/* Orbiting Ring 2 */}
-      <mesh ref={ringRef2} rotation={[-Math.PI / 3, Math.PI / 6, 0]}>
-        <ringGeometry args={[5.4, 5.55, 64]} />
-        <meshStandardMaterial
-          color={color === '#00ff41' ? '#00d4ff' : '#00ff41'}
-          emissive={color === '#00ff41' ? '#00d4ff' : '#00ff41'}
-          emissiveIntensity={2.5}
-          transparent
-          opacity={0.5}
-          side={THREE.DoubleSide}
-        />
+      <mesh ref={ring3Ref} rotation={[0, 0, Math.PI / 6]}>
+        <torusGeometry args={[scale * 2.6, 0.04, 12, 48]} />
+        <meshStandardMaterial color="#ffffff" emissive="#ffffff" emissiveIntensity={2.5} wireframe />
       </mesh>
     </group>
   );
 }
 
-// 2. 5 Grand 3D Domes Placed Along Z-Axis Flight Path
-function DomesScenery({ isMobile }) {
-  const domes = useMemo(() => [
-    { z: 0, type: 'icosahedron', color: '#00ff41', scale: isMobile ? 1.0 : 1.75 },
-    { z: -18, type: 'octahedron', color: '#00d4ff', scale: isMobile ? 0.95 : 1.65 },
-    { z: -36, type: 'torusKnot', color: '#00ff41', scale: isMobile ? 0.9 : 1.55 },
-    { z: -54, type: 'dodecahedron', color: '#00d4ff', scale: isMobile ? 1.0 : 1.7 },
-    { z: -72, type: 'tetrahedron', color: '#00ff41', scale: isMobile ? 1.05 : 1.8 },
-  ], [isMobile]);
+// 2. Flanking Cyber Monoliths & Laser Highway Rails
+function CyberCityMonoliths({ isMobile }) {
+  const towers = useMemo(() => [
+    { x: -7.5, y: -4, z: -8,   w: 2.2, h: 14, d: 2.2 },
+    { x:  7.5, y: -3, z: -10,  w: 2.4, h: 16, d: 2.4 },
+    { x: -8.0, y: -10, z: -24, w: 2.8, h: 18, d: 2.8 },
+    { x:  8.2, y: -11, z: -26, w: 3.0, h: 20, d: 3.0 },
+    { x: -7.8, y: -22, z: -62, w: 2.6, h: 19, d: 2.6 },
+    { x:  8.0, y: -23, z: -64, w: 2.8, h: 21, d: 2.8 },
+  ], []);
 
-  const xPos = isMobile ? 0 : 1.2;
+  const railX = isMobile ? 6.5 : 11.5;
 
   return (
-    <group position={[xPos, 0, 0]}>
-      {domes.map((dome, idx) => (
-        <WireframeDome
-          key={idx}
-          position={[0, 0, dome.z]}
-          geometryType={dome.type}
-          color={dome.color}
-          scale={dome.scale}
-          rotationSpeed={0.5 + idx * 0.12}
-        />
+    <group>
+      {/* Server Monoliths */}
+      {towers.map((t, idx) => (
+        <group key={idx} position={[t.x, t.y, t.z]}>
+          <mesh>
+            <boxGeometry args={[t.w, t.h, t.d]} />
+            <meshStandardMaterial color="#030712" roughness={0.9} />
+          </mesh>
+          <lineSegments>
+            <edgesGeometry args={[new THREE.BoxGeometry(t.w, t.h, t.d)]} />
+            <lineBasicMaterial color="#00ff66" transparent opacity={0.35} />
+          </lineSegments>
+        </group>
       ))}
+
+      {/* Volumetric Dual Laser Highway Rails */}
+      <mesh position={[-railX, -18, -45]} rotation={[Math.PI / 2, 0, 0]}>
+        <cylinderGeometry args={[0.06, 0.06, 220, 8, 1, true]} />
+        <meshBasicMaterial color="#00ff66" transparent opacity={0.8} />
+      </mesh>
+      <mesh position={[railX, -18, -45]} rotation={[Math.PI / 2, 0, 0]}>
+        <cylinderGeometry args={[0.06, 0.06, 220, 8, 1, true]} />
+        <meshBasicMaterial color="#00ff66" transparent opacity={0.8} />
+      </mesh>
     </group>
   );
 }
 
-// 3. Scroll Camera Flight Rig
+// 3. 6-DOF Smooth Camera Flight
 function ScrollCameraRig() {
   const { camera } = useThree();
 
@@ -144,18 +113,21 @@ function ScrollCameraRig() {
     const maxScroll = Math.max(1, document.body.scrollHeight - window.innerHeight);
     const scrollProgress = Math.min(Math.max(scrollY / maxScroll, 0), 1);
 
-    // Fly camera from Z = 12 down to Z = -75 along the 3D Domes path
-    const targetZ = 12 - scrollProgress * 87;
-    const targetY = Math.sin(scrollProgress * Math.PI * 4) * 1.5;
+    const targetZ = 2.0 - scrollProgress * 92.0;
+    const targetY = 2.0 - scrollProgress * 32.0;
+    const targetX = Math.sin(scrollProgress * Math.PI * 3) * 2.2;
 
-    camera.position.z += (targetZ - camera.position.z) * 0.08;
+    camera.position.x += (targetX - camera.position.x) * 0.08;
     camera.position.y += (targetY - camera.position.y) * 0.08;
+    camera.position.z += (targetZ - camera.position.z) * 0.08;
+
+    camera.lookAt(0, targetY - 2.0, targetZ - 14.0);
   });
 
   return null;
 }
 
-// 4. Post Processing Pipeline (High-Glow Bloom)
+// 4. Post-Processing Pipeline
 function CinematicEffects() {
   return (
     <EffectComposer disableNormalPass>
@@ -179,22 +151,21 @@ export default function InteractiveBackground() {
   return (
     <div style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', zIndex: 0, pointerEvents: 'none' }}>
       <Canvas
-        camera={{ position: [0, 0, 12], fov: isMobile ? 75 : 60 }}
-        dpr={isMobile ? 1 : Math.min(window.devicePixelRatio, 2)}
+        camera={{ position: [2.2, 2.0, 2.0], fov: isMobile ? 75 : 60 }}
+        dpr={isMobile ? 1 : Math.min(window.devicePixelRatio, 1.35)}
         gl={{ antialias: false, alpha: true, powerPreference: 'high-performance' }}
-        eventSource={document.body}
-        eventPrefix="client"
       >
-        <color attach="background" args={['#04060b']} />
-        <fog attach="fog" args={['#04060b', 15, 60]} />
+        <color attach="background" args={['#02040a']} />
+        <fog attach="fog" args={['#02040a', 15, 85]} />
 
-        <ambientLight intensity={0.5} />
-        <directionalLight position={[10, 10, 5]} intensity={3.0} color="#00ff41" />
+        <ambientLight intensity={0.6} />
+        <directionalLight position={[10, 10, 5]} intensity={3.5} color="#00ff66" />
         <pointLight position={[-10, -10, -10]} intensity={2.0} color="#00d4ff" />
 
         <ScrollCameraRig />
-        <DomesScenery isMobile={isMobile} />
-        <Stars radius={70} depth={60} count={5000} factor={5} saturation={1} fade speed={2.0} />
+        <CyberCityMonoliths isMobile={isMobile} />
+        <MutagenReactorCore isMobile={isMobile} />
+        <Stars radius={90} depth={80} count={6000} factor={6} saturation={1} fade speed={2.5} />
 
         <Suspense fallback={null}>
           <CinematicEffects />

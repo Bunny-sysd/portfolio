@@ -7,8 +7,8 @@ export default function ActiveObjectives() {
 
   const objectives = [
     {
-      title: 'SANS Institute Scholar',
-      text: 'Rigorous training for the GFACT certification, mastering foundational cybersecurity architecture, Linux, and applied cryptography.',
+      title: 'GIAC GFACT Certification',
+      text: 'Official GIAC GFACT certification (Issued 1 Sep 2026), validating rigorous foundations in computer architecture, binary logic, network protocols, and Linux security.',
       icon: BookOpen,
       color: 'text-green',
       glow: 'rgba(0, 255, 102, 0.05)'

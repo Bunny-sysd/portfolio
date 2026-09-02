@@ -20,8 +20,8 @@ export default function OperationalSpecs() {
     },
     {
       icon: Award,
-      label: 'Scholarship / Award',
-      value: 'CyberStart Canada Top Performer (GFACT Candidate)',
+      label: 'Certification / Scholarship',
+      value: 'GIAC GFACT Certified (CyberStart Canada National Scholar)',
     },
   ];
 
