@@ -409,7 +409,7 @@ const SoundFX = (function initWebAudioSFX() {
         SoundFX.action();
       }
     } else if (action === 'copy-email') {
-      const email = 'aaronalva@yahoo.com';
+      const email = 'aaron.lawrence.alva@gmail.com';
       navigator.clipboard.writeText(email).then(() => {
         const badge = document.getElementById('cmdCopyBadge');
         if (badge) {
@@ -1054,7 +1054,7 @@ console.log(
       setTimeout(() => {
         const subject = encodeURIComponent(`[Portfolio Transmission] from ${name}`);
         const body = encodeURIComponent(`Sender: ${name}\n\nMessage:\n${msg}`);
-        window.location.href = `mailto:aaronalva@yahoo.com?subject=${subject}&body=${body}`;
+        window.location.href = `mailto:aaron.lawrence.alva@gmail.com?subject=${subject}&body=${body}`;
 
         transmitBtn.disabled = false;
         transmitBtn.innerHTML = '[TRANSMISSION DELIVERED]';

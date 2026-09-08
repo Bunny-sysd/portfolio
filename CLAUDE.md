@@ -32,7 +32,7 @@ Single-page portfolio (`bunny-sysd.github.io/portfolio`) built around a scroll-d
 
 ## `public/app.js`
 
-- The duplicate contact-handler bug (two blocks binding `contactTransmitBtn` to two different `mailto:` addresses) is **fixed** — the dead handler (referenced a `contactCipherBlock` element that doesn't exist in current markup) was removed; the surviving one mails `aaronalva@yahoo.com`, matching what's shown elsewhere on the site.
+- The duplicate contact-handler bug (two blocks binding `contactTransmitBtn` to two different `mailto:` addresses) is **fixed** — the dead handler (referenced a `contactCipherBlock` element that doesn't exist in current markup) was removed; the surviving one mails `aaron.lawrence.alva@gmail.com`, the real account, matching what's shown elsewhere on the site.
 - A dead `initGSAP()` block (targeting `.section-title`/`.bento-project-card`/`.bento-skill-box` with `ScrollTrigger` + the default window scroller) has been removed — those classes don't exist anywhere in `index.html` (leftover from an earlier bento-grid design later replaced by the 6-card cylinder). A wider family of `.bento-*`-scoped dead code still exists elsewhere in `app.js` — noted, not yet cleaned up.
 
 ## Content/copy
