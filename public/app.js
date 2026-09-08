@@ -40,7 +40,7 @@
   animateRing();
 
   // Hover effect on interactive elements
-  const hoverTargets = 'a, button, .bento-project-card, .sidebar-item, .cert-card, .skill-badge, .know-badge';
+  const hoverTargets = 'a, button';
   document.querySelectorAll(hoverTargets).forEach(el => {
     el.addEventListener('mouseenter', () => ring && ring.classList.add('hovered'));
     el.addEventListener('mouseleave', () => ring && ring.classList.remove('hovered'));
@@ -113,183 +113,6 @@ document.querySelectorAll('.decrypt-trigger').forEach(el => {
 
   document.body.classList.add('front-door-active');
 })();
-
-// ── FLOATING PILL NAV ACTIVE TAB HIGHLIGHT ────────
-(function initActiveNav() {
-  const sections = document.querySelectorAll('section[id]');
-  const navLinks = document.querySelectorAll('.nav-link[data-section]');
-  const hudLinks = document.querySelectorAll('.hud-tab-btn');
-
-  function updateActive() {
-    const scrollPos = window.scrollY + window.innerHeight * 0.35;
-    let activeId = '';
-
-    sections.forEach(section => {
-      const top = section.offsetTop;
-      const height = section.offsetHeight;
-      if (scrollPos >= top && scrollPos < top + height) {
-        activeId = section.getAttribute('id');
-      }
-    });
-
-    if ((window.innerHeight + window.scrollY) >= document.documentElement.scrollHeight - 60) {
-      activeId = 'contact';
-    }
-
-    navLinks.forEach(link => {
-      if (link.dataset.section === activeId) {
-        link.classList.add('active-nav-tab');
-        link.style.color = 'var(--green)';
-      } else {
-        link.classList.remove('active-nav-tab');
-        link.style.color = '';
-      }
-    });
-
-    hudLinks.forEach(link => {
-      if (link.dataset.section === activeId) {
-        link.classList.add('active-hud-tab');
-        link.style.color = 'var(--green)';
-      } else {
-        link.classList.remove('active-hud-tab');
-        link.style.color = '';
-      }
-    });
-  }
-
-  window.addEventListener('scroll', updateActive, { passive: true });
-  window.addEventListener('resize', updateActive, { passive: true });
-  setTimeout(updateActive, 100);
-})();
-
-// ── MOBILE MENU TOGGLES ──
-(function initMobileMenu() {
-  const hamburger   = document.getElementById('hamburger');
-  const mobileMenu  = document.getElementById('mobileMenu');
-  const mobileClose = document.getElementById('mobileClose');
-
-  if (!hamburger || !mobileMenu) return;
-
-  function open() {
-    mobileMenu.classList.add('open');
-    hamburger.classList.add('active');
-    document.body.style.overflow = 'hidden';
-  }
-  function close() {
-    mobileMenu.classList.remove('open');
-    hamburger.classList.remove('active');
-    document.body.style.overflow = '';
-  }
-
-  hamburger.addEventListener('click', open);
-  if (mobileClose) mobileClose.addEventListener('click', close);
-
-  document.querySelectorAll('[data-close]').forEach(el => {
-    el.addEventListener('click', close);
-  });
-})();
-
-// ── SMOOTH NAV SCROLLING ──
-(function initSmoothScroll() {
-  document.querySelectorAll('a[href^="#"]').forEach(a => {
-    a.addEventListener('click', e => {
-      const target = document.querySelector(a.getAttribute('href'));
-      if (!target) return;
-      e.preventDefault();
-      
-      // Trigger R3F Particle Burst Effect
-      window.dispatchEvent(new Event('particle-burst'));
-
-      // Close mobile menu if open
-      const mobileMenu = document.getElementById('mobileMenu');
-      if (mobileMenu) mobileMenu.classList.remove('open');
-      document.body.style.overflow = '';
-
-      const offset = 90;
-      const top = target.getBoundingClientRect().top + window.scrollY - offset;
-      window.scrollTo({ top, behavior: 'smooth' });
-    });
-  });
-})();
-
-// ── SCROLL REVEALS ──
-(function initReveal() {
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('visible');
-        
-        // If the header has a decrypt title, decrypt it automatically when revealed
-        const title = entry.target.querySelector('.section-title.decrypt-trigger');
-        if (title) {
-          setTimeout(() => decryptText(title), 200);
-        }
-      }
-    });
-  }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
-
-  document.querySelectorAll('.reveal-up').forEach(el => observer.observe(el));
-})();
-
-// ── COUNTER STATISTICS ANIMATION ──
-(function initCounters() {
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (!entry.isIntersecting) return;
-      entry.target.querySelectorAll('.stat-num[data-target]').forEach(el => {
-        const target = parseInt(el.dataset.target, 10);
-        const duration = 1200;
-        const start = performance.now();
-        
-        function update(now) {
-          const progress = Math.min((now - start) / duration, 1);
-          const eased = 1 - Math.pow(1 - progress, 3);
-          el.textContent = Math.floor(eased * target);
-          if (progress < 1) requestAnimationFrame(update);
-          else el.textContent = target;
-        }
-        requestAnimationFrame(update);
-      });
-      observer.unobserve(entry.target);
-    });
-  }, { threshold: 0.4 });
-
-  const heroStats = document.querySelector('.hero-grid-stats');
-  if (heroStats) observer.observe(heroStats);
-})();
-
-// ── CARD MOUSE ROTATION (TILT) EFFECT ──
-(function initTilt() {
-  document.querySelectorAll('.bento-project-card, .cert-card').forEach(card => {
-    card.addEventListener('mouseenter', () => {
-      card.style.transition = 'none';
-    });
-    card.addEventListener('mousemove', e => {
-      const rect = card.getBoundingClientRect();
-      const nx = ((e.clientX - rect.left) / rect.width  - 0.5) * 2;
-      const ny = ((e.clientY - rect.top)  / rect.height - 0.5) * 2;
-      
-      const edgeThreshold = 0.75;
-      if (Math.abs(nx) > edgeThreshold || Math.abs(ny) > edgeThreshold) return;
-      
-      const rx = ny * 3.5; // subtle rotate strength
-      const ry = nx * -3.5;
-      card.style.transform = `perspective(800px) rotateX(${rx}deg) rotateY(${ry}deg) translateY(-2px)`;
-    });
-    card.addEventListener('mouseleave', () => {
-      card.style.transition = 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)';
-      card.style.transform = '';
-    });
-  });
-})();
-
-
-
-
-
-
-
-
 
 // ── DEVICE ORIENTATION GYROSCOPE PARALLAX ──
 (function initDeviceOrientationParallax() {
@@ -487,7 +310,7 @@ const SoundFX = (function initWebAudioSFX() {
 
   // Attach tactile audio to interactive buttons & links
   document.addEventListener('click', (e) => {
-    const target = e.target.closest('a, button, .cmd-item, .radar-tab, .cert-card, .know-badge, .at-hud-btn, .at-dial-btn');
+    const target = e.target.closest('a, button, .cmd-item, .at-hud-btn, .at-dial-btn');
     if (target) {
       sfx.click();
     }
@@ -726,68 +549,6 @@ console.log(
   '%c 0xPORTFOLIO ACTIVE // AUTHORIZED SESSION ',
   'color:#00ff41;background:#0A0A0C;font-family:monospace;font-size:16px;padding:6px 12px;border:1px solid #00ff41;'
 );
-
-// ══════════════════════════════════════════════════════
-// CINEMATIC SCROLLYTELLING HUD & ZONE FAST-TRAVEL DOCK
-// ══════════════════════════════════════════════════════
-(function initCinematicHUDController() {
-  const hudZoneName = document.getElementById('hudZoneName');
-  const hudVelocity = document.getElementById('hudVelocity');
-  const zoneButtons = document.querySelectorAll('.zone-jump-btn');
-
-  let activeZoneIdx = 0;
-
-  // Listen to zone changes dispatched by three-bg.js
-  window.addEventListener('cinematic-zone-change', (e) => {
-    const { zoneIndex, zoneName } = e.detail;
-    if (zoneIndex !== activeZoneIdx) {
-      activeZoneIdx = zoneIndex;
-
-      if (hudZoneName) {
-        hudZoneName.textContent = zoneName;
-        hudZoneName.dataset.text = zoneName;
-        if (typeof decryptText === 'function') {
-          decryptText(hudZoneName);
-        }
-      }
-
-      zoneButtons.forEach((btn, idx) => {
-        btn.classList.toggle('active', idx === zoneIndex);
-      });
-    }
-  });
-
-  // Listen to velocity updates for the tachometer
-  window.addEventListener('cinematic-velocity-update', (e) => {
-    const { warp } = e.detail;
-    if (hudVelocity) {
-      hudVelocity.textContent = warp.toFixed(2) + ' LY/S';
-    }
-  });
-
-  // Fast-travel zone buttons click
-  zoneButtons.forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const zoneIdx = parseInt(btn.dataset.zone, 10);
-      if (!isNaN(zoneIdx) && typeof window.warpToZone === 'function') {
-        window.warpToZone(zoneIdx);
-      }
-    });
-  });
-
-  // Keyboard numbers 0..5 for quick warp jumping
-  window.addEventListener('keydown', (e) => {
-    // Only if not typing in an input/textarea
-    if (['INPUT', 'TEXTAREA'].includes(document.activeElement?.tagName)) return;
-    const keyNum = parseInt(e.key, 10);
-    if (!isNaN(keyNum) && keyNum >= 0 && keyNum <= 5) {
-      if (typeof window.warpToZone === 'function') {
-        window.warpToZone(keyNum);
-      }
-    }
-  });
-})();
 
 
 // ══════════════════════════════════════════════════════

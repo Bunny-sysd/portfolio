@@ -50,12 +50,11 @@ common cliché in security portfolios — reads "enthusiast," not
 | 2 | Front door (credentials-first landing, shows every visit) | ✅ Done, committed |
 | 3 | Cut all simulated/mocked widgets + dead-code sweep | ✅ Done, committed |
 | 4 | Real tool-run artifacts (SARIF, asciinema, real patch diff, writeup) | ⛔ Blocked on Aaron |
-| 5 | Optional further cleanup (see below) | Not started, low priority |
+| 5 | Deep dead-code sweep (old pre-cylinder design generation) | ✅ Mostly done, committed |
 
-Latest commit as of writing: `6a50724` — "remove all simulated/mocked
-interactive widgets and dead code". **All commits so far are local only —
-nothing has been pushed to the `bunny-sysd/portfolio` remote.** Do not push
-without explicit go-ahead each time.
+**All commits so far are local only — nothing has been pushed to the
+`bunny-sysd/portfolio` remote.** Do not push without explicit go-ahead each
+time.
 
 ---
 
@@ -186,12 +185,72 @@ output rather than building new display components.
 
 ---
 
-## Part 5 — Optional further cleanup (not started, low priority)
+## Part 5 — Deep dead-code sweep
 
-Noted during Part 3 inventory but out of scope unless asked:
-- CSS-only orphans: `.fault-active-overlay`, `.hardware-fault-screen`,
-  `.interactive-modal-overlay`
-- `body.mobile-menu-open` — referenced with no matching CSS anywhere
+Part 3 only removed code tied to the simulated widgets it set out to cut.
+While inventorying it, a much larger pattern turned up: a whole earlier
+"design generation" — pre-cylinder, pre-synthetic-scroll, from before the
+current orbital-camera/drawer system existed — was still sitting in `app.js`
+and `style.css`, fully superseded but never deleted. This part removed it.
+
+**Method:** for every CSS class in `style.css`, checked whether it has any
+matching element in the live `index.html` (checking `app.js`/`three-bg.js`
+too, for classes only ever added dynamically via `classList`). Zero matches
+anywhere = provably dead — no visitor's browser can ever apply that rule.
+Cross-checked section by section rather than trusting the automated scan
+blindly: a few classes looked "dead" only because they were referenced
+inside an otherwise-live combined CSS selector or JS selector-list string
+(e.g. `.cmd-prompt`, `.cmd-trigger-btn`, `.cmd-badge` each had one real
+consumer buried inside a section that otherwise was entirely dead) — those
+specific rules were preserved while their dead neighbors were cut.
+
+**Removed from `app.js`** (six IIFEs, each confirmed to target zero live
+DOM elements, and confirmed unreachable — e.g. `initActiveNav` listened for
+native `scroll` events that can never fire since the page has
+`overflow: hidden !important`):
+`initActiveNav`, `initMobileMenu` (superseded by the current
+`mobileMenuModal` system), `initSmoothScroll`, `initReveal`, `initCounters`,
+`initTilt`, and `initCinematicHUDController` (targeted a `hudZoneName`/
+`hudVelocity`/`.zone-jump-btn` HUD that doesn't exist in the current markup,
+and called a `window.warpToZone` that's never defined anywhere). Also
+trimmed two harmless-but-fully-dead class fragments out of otherwise-live
+selector-list strings in `initCursor` and the global click-SFX listener
+(`.bento-project-card`, `.cert-card`, `.radar-tab`, etc. — remnants of the
+same old design, matching zero elements, but sitting inside code that is
+itself live and stays).
+
+**Removed from `style.css`** (~1,974 lines, verified section-by-section
+against `index.html`/`app.js`): the entire old pre-cylinder page design —
+hero terminal/boot console, dynamic terminal command chips, the old floating
+pill nav (superseded by the current `.at-header`/`.at-nav-link` system), the
+old About/Certs bento layout and badge-matrix/knowledge-badges sections
+(superseded by the front door's credential cards), the "active targeting
+node matrix" and old Archify pipeline-flow diagram (superseded by the
+current phase-flow node/pulse diagram), a floating terminal tooltip, a
+project-detail DOM modal system, the fullscreen "hardware fault" RAM-repair
+minigame (matches the deleted `initGemmaFaultGame`), a VM sandbox packet
+animation, a tensor-weights grid, the Vigil eye-scanner and SignalHub radar
+widgets (match Part 3's JS removals), the interactive branching modal
+sandbox system, and the cinematic HUD/fast-travel dock (matches the removed
+`initCinematicHUDController`). `.target-btn`, `.cmd-trigger-btn`,
+`.cmd-badge`, and `.dd-console` were individually preserved throughout since
+each still has a real consumer.
+
+Verified via Playwright after every change: `node --check` on both JS files,
+brace-balance check on `style.css`, then a full-site sweep — front door,
+main orbit view, command palette, all 6 drawers, mobile menu, mobile
+viewport — with zero console/page errors and no visual regressions.
+
+**Deliberately left alone** (too large/risky to verify safely in one pass,
+needs a dedicated future session):
+- `style.css` lines ~1162–1500, "ELEVATED GLASSMORPHIC CARDS" — a large
+  block that mixes real classes (`.glass-panel`, used by the front door)
+  into the same multi-class CSS selectors as clearly-dead ones
+  (`.bento-project-card`, `.cert-card`). Needs careful selector-splitting,
+  not blind deletion.
+- A handful of other MIXED-signal sections (`.nav-link`/`.hamburger`-scoped
+  leftovers already partly cleaned; `.mobile-menu-open` body-class toggle
+  that's live-but-inert, harmless, not worth touching)
 - The unmounted React tree in `src/` (~1,250 lines: `HeroSection.jsx`,
   `ActiveObjectives.jsx`, `SysArmament.jsx`, `MutagenCard.jsx`,
   `InteractiveBackground.jsx`, `OperationalSpecs.jsx` — none render, none
