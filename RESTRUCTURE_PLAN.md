@@ -116,7 +116,7 @@ time.
 - New `#frontDoor` overlay inserted right after `<body>`: name, one-line
   positioning, location (Canada — not more specific, matching what's already
   public elsewhere), 3 real credential cards (GFACT/THM/HTB, real links),
-  Mutagen + Vigil repo links, an explicit "Enter the Experience" button
+  Mutagen + Vigil repo links, an explicit "Explore My 3D Portfolio" button
   (**no auto-resolve, no timer** — visitor must click, or press ESC to skip),
   contact email.
 - Shows on **every** visit — no localStorage/persistence by design.
