@@ -30,6 +30,17 @@
     return;
   }
 
+  // ── Cinematic easing (GSAP timeline authoring only — no ScrollTrigger scroll
+  // detection is used; this page has no real DOM scroll to attach to. Timelines
+  // built below are scrubbed manually via .progress(), fed from the existing
+  // scrollProgress variable, or played as one-shot tweens on click. ──
+  if (typeof gsap !== 'undefined' && typeof CustomEase !== 'undefined') {
+    gsap.registerPlugin(CustomEase);
+    CustomEase.create('cinematicSilk', '0.45, 0.05, 0.55, 0.95');
+    CustomEase.create('cinematicFlow', '0.33, 0, 0.2, 1');
+    CustomEase.create('cinematicArrive', '0.16, 1, 0.3, 1');
+  }
+
   // Multi-Signal Hardware Performance Tiering
   function detectPerformanceTier(glContext) {
     const mem = navigator.deviceMemory || 4;
@@ -84,11 +95,11 @@
   renderer.setSize(window.innerWidth, window.innerHeight);
 
   // Dedicated Active Card Dynamic Spotlight & Cyber Rim Light
-  const activeCardSpotlight = new THREE.SpotLight(0x00ff66, 3.5, 45, Math.PI / 4, 0.4, 1.2);
+  const activeCardSpotlight = new THREE.SpotLight(0x7DD3FC, 3.5, 45, Math.PI / 4, 0.4, 1.2);
   activeCardSpotlight.position.set(0, 0, 18);
   scene.add(activeCardSpotlight);
 
-  const activeCardRimLight = new THREE.PointLight(0x00e5ff, 2.0, 25);
+  const activeCardRimLight = new THREE.PointLight(0xCBD5E1, 2.0, 25);
   activeCardRimLight.position.set(0, 0, 10);
   scene.add(activeCardRimLight);
 
@@ -96,58 +107,19 @@
   scene.add(rootGroup);
 
   // 2. Theme Palettes
-  const themePalettes = {
-    green: {
-      primary: new THREE.Color('#00ff66'),
-      secondary: new THREE.Color('#003b14'),
-      accent: new THREE.Color('#00e5ff'),
-      highlight: new THREE.Color('#ffffff'),
-      fog: new THREE.Color('#030509'),
-      spine1: new THREE.Color('#00ff66'),
-      spine2: new THREE.Color('#00e5ff')
-    },
-    amber: {
-      primary: new THREE.Color('#ffb000'),
-      secondary: new THREE.Color('#3d2400'),
-      accent: new THREE.Color('#ff3b00'),
-      highlight: new THREE.Color('#fff6d6'),
-      fog: new THREE.Color('#0a0602'),
-      spine1: new THREE.Color('#ffb000'),
-      spine2: new THREE.Color('#ff3b00')
-    },
-    cyan: {
-      primary: new THREE.Color('#00e5ff'),
-      secondary: new THREE.Color('#002b3d'),
-      accent: new THREE.Color('#7000ff'),
-      highlight: new THREE.Color('#e0ffff'),
-      fog: new THREE.Color('#02060d'),
-      spine1: new THREE.Color('#00e5ff'),
-      spine2: new THREE.Color('#7000ff')
-    },
-    monokai: {
-      primary: new THREE.Color('#f92672'),
-      secondary: new THREE.Color('#3d0014'),
-      accent: new THREE.Color('#66d9ef'),
-      highlight: new THREE.Color('#ffe4ec'),
-      fog: new THREE.Color('#0d0206'),
-      spine1: new THREE.Color('#f92672'),
-      spine2: new THREE.Color('#66d9ef')
-    }
-  };
-
-  function getCurrentThemeKey() {
-    return document.documentElement.dataset.theme || 'green';
-  }
-
-  let activeThemeKey = getCurrentThemeKey();
-  let currentColors = {
-    primary: (themePalettes[activeThemeKey] || themePalettes.green).primary.clone(),
-    secondary: (themePalettes[activeThemeKey] || themePalettes.green).secondary.clone(),
-    accent: (themePalettes[activeThemeKey] || themePalettes.green).accent.clone(),
-    highlight: (themePalettes[activeThemeKey] || themePalettes.green).highlight.clone(),
-    fog: (themePalettes[activeThemeKey] || themePalettes.green).fog.clone(),
-    spine1: (themePalettes[activeThemeKey] || themePalettes.green).spine1.clone(),
-    spine2: (themePalettes[activeThemeKey] || themePalettes.green).spine2.clone()
+  // Single fixed palette (theme switcher removed — matches the CSS retheme:
+  // --green/--cyan in style.css are now #7DD3FC/#CBD5E1, same values here so
+  // the WebGL scene and the DOM UI agree). currentColors keeps its shape so
+  // the ~19 places below that read currentColors.primary/.accent/etc. are
+  // unchanged.
+  const currentColors = {
+    primary: new THREE.Color('#7DD3FC'),
+    secondary: new THREE.Color('#0a2a3d'),
+    accent: new THREE.Color('#CBD5E1'),
+    highlight: new THREE.Color('#ffffff'),
+    fog: new THREE.Color('#030509'),
+    spine1: new THREE.Color('#7DD3FC'),
+    spine2: new THREE.Color('#CBD5E1')
   };
 
   // 1.5 Cinematic Scene Lights
@@ -377,8 +349,8 @@
   });
 
   const laserEyeCoreMat = new THREE.MeshStandardMaterial({
-    color: 0x00ff66,
-    emissive: new THREE.Color(0x00ff66),
+    color: 0x7DD3FC,
+    emissive: new THREE.Color(0x7DD3FC),
     emissiveIntensity: 3.6,
     roughness: 0.15,
     metalness: 0.10
@@ -391,7 +363,7 @@
     metalness: 0.0
   });
   const laserBeamMat = new THREE.MeshBasicMaterial({
-    color: 0x00ff66,
+    color: 0x7DD3FC,
     transparent: true,
     opacity: 0.28,
     blending: THREE.AdditiveBlending,
@@ -698,8 +670,8 @@
 
     // Primary Glowing Neon Energy Ring
     const neonRing = new THREE.Mesh(segNeonRingGeo, new THREE.MeshStandardMaterial({
-      color: 0x00e5ff,
-      emissive: new THREE.Color(0x00e5ff),
+      color: 0xCBD5E1,
+      emissive: new THREE.Color(0xCBD5E1),
       emissiveIntensity: 2.8,
       roughness: 0.15,
       metalness: 0.85
@@ -710,7 +682,7 @@
 
     // Concentric Additive Bloom Halo (True Glowing Halation without External Libraries)
     const bloomHalo = new THREE.Mesh(segBloomHaloGeo, new THREE.MeshBasicMaterial({
-      color: 0x00e5ff,
+      color: 0xCBD5E1,
       transparent: true,
       opacity: 0.75,
       blending: THREE.AdditiveBlending,
@@ -746,9 +718,9 @@
 
   const dataPalette = [
     new THREE.Color('#ffffff'), // White-hot packet header
-    new THREE.Color('#00e5ff'), // Electric cyan telemetry
+    new THREE.Color('#CBD5E1'), // Electric cyan telemetry
     new THREE.Color('#ff0055'), // High-voltage crimson
-    new THREE.Color('#00ff66'), // Optimal green bus
+    new THREE.Color('#7DD3FC'), // Optimal green bus
     new THREE.Color('#ffaa00')  // Amber diagnostic
   ];
 
@@ -800,7 +772,7 @@
     const arcPositions = new Float32Array(arcVertsPerLine * 3);
     arcGeo.setAttribute('position', new THREE.BufferAttribute(arcPositions, 3));
     const arcMat = new THREE.LineBasicMaterial({
-      color: 0x00e5ff,
+      color: 0xCBD5E1,
       transparent: true,
       opacity: 0.0,
       blending: THREE.AdditiveBlending,
@@ -898,7 +870,7 @@
   }
 
   const binary0Tex = createBinaryTexture('0', '#00e5ff'); // Electric Cyan '0'
-  const binary1Tex = createBinaryTexture('1', '#00ff66'); // Matrix Green '1'
+  const binary1Tex = createBinaryTexture('1', '#7DD3FC'); // Matrix Green '1'
 
   const binaryCount = 180;
   const binaryGeo0 = new THREE.BufferGeometry();
@@ -966,8 +938,8 @@
       depthWrite: false
     });
   }
-  const surgeRingMat1 = makeCurrentMat(0x00e5ff, 0.92);
-  const surgeRingMat2 = makeCurrentMat(0x00ffcc, 0.88);
+  const surgeRingMat1 = makeCurrentMat(0xCBD5E1, 0.92);
+  const surgeRingMat2 = makeCurrentMat(0xCBD5E1, 0.88);
   const surgeRingMat3 = makeCurrentMat(0xff3366, 0.70);
   const electricSurgeRing1 = new THREE.Mesh(currentBolusGeo, surgeRingMat1);
   const electricSurgeRing2 = new THREE.Mesh(currentBolusGeo, surgeRingMat2);
@@ -978,7 +950,7 @@
   let spineGrooveMesh = null;
   if (!isMobile) {
     const armBolusGeo = new THREE.TorusGeometry(armTubeRadius * 1.03, 0.70, 12, 32);
-    armCurrentBolus = new THREE.Mesh(armBolusGeo, makeCurrentMat(0x00e5ff, 0.82));
+    armCurrentBolus = new THREE.Mesh(armBolusGeo, makeCurrentMat(0xCBD5E1, 0.82));
     tubeRigGroup.add(armCurrentBolus);
 
     const groovePts = [];
@@ -1002,7 +974,7 @@
     }
     const grooveCurve = new THREE.CatmullRomCurve3(groovePts);
     const grooveGeo = new THREE.TubeGeometry(grooveCurve, 96, 0.18, 6, false);
-    spineGrooveMesh = new THREE.Mesh(grooveGeo, makeCurrentMat(0x00e5ff, 0.38));
+    spineGrooveMesh = new THREE.Mesh(grooveGeo, makeCurrentMat(0xCBD5E1, 0.38));
     tubeRigGroup.add(spineGrooveMesh);
   }
 
@@ -1038,7 +1010,7 @@
 
   // Optical Concentric Additive Bloom Halos (Pure Cinematic Glow Halo)
   const coreInnerBloom = new THREE.Mesh(new THREE.SphereGeometry(1.35, 24, 24), new THREE.MeshBasicMaterial({
-    color: 0x00ff66,
+    color: 0x7DD3FC,
     transparent: true,
     opacity: 0.65,
     blending: THREE.AdditiveBlending,
@@ -1048,7 +1020,7 @@
   clawHeadGroup.add(coreInnerBloom);
 
   const coreOuterCorona = new THREE.Mesh(new THREE.SphereGeometry(2.35, 24, 24), new THREE.MeshBasicMaterial({
-    color: 0x00cc66,
+    color: 0x5BB8E8,
     transparent: true,
     opacity: 0.32,
     blending: THREE.AdditiveBlending,
@@ -1062,7 +1034,7 @@
   clawHeadGroup.add(flareMesh);
 
   // High-Intensity Dynamic Core Light (8.5 intensity, 55-unit specular radius)
-  const clawRedLight = new THREE.PointLight(0x00ff66, 8.5, 55);
+  const clawRedLight = new THREE.PointLight(0x7DD3FC, 8.5, 55);
   clawRedLight.position.set(0, 0, 1.25);
   clawHeadGroup.add(clawRedLight);
 
@@ -1248,7 +1220,7 @@
     });
 
     // Glowing Cyber Status LED on Clamp
-    const clampLedMat = new THREE.MeshBasicMaterial({ color: 0x00ff66 });
+    const clampLedMat = new THREE.MeshBasicMaterial({ color: 0x7DD3FC });
     const clampLed = new THREE.Mesh(new THREE.BoxGeometry(0.40, 0.12, 0.16), clampLedMat);
     clampLed.position.set(0, 0.22, 0.22);
     clampGroup.add(clampLed);
@@ -1275,7 +1247,7 @@
       subtitle: 'Grade 11 Cybersecurity Researcher',
       desc: 'Grade 11 student and cybersecurity researcher building security automation tools, AST mutation engines, AddressSanitizer harnesses, and vulnerability discovery workflows.',
       badge: 'CYBER RESEARCHER',
-      color: '#00ff66',
+      color: '#7DD3FC',
       stats: [
         { k: 'CTF RANK', v: 'TOP 1%' },
         { k: 'ROOMS', v: '91+' },
@@ -1292,7 +1264,7 @@
       subtitle: 'Autonomous AST Fuzzer & Auto-Patcher',
       desc: 'Autonomous 5-phase fuzzer built in Python. Uses LLMs to synthesize semantic edge-case seeds, executes in isolated Docker sandboxes, and verifies ASan crashes.',
       badge: 'ACTIVE PROJECT',
-      color: '#ff2a55',
+      color: '#FB7185',
       stats: [
         { k: 'CYCLES', v: '14.2K' },
         { k: 'BRANCH COV', v: '88.4%' },
@@ -1309,7 +1281,7 @@
       subtitle: 'Automated CVE Correlation CLI',
       desc: 'CLI threat intelligence tool built in Python. Ingests Nmap scans and auth logs, normalizes to CPE 2.3, correlates live NVD v2/OSV CVEs, and exports SARIF v2.1 reports.',
       badge: 'CLI TOOL',
-      color: '#00e5ff',
+      color: '#67E8F9',
       stats: [
         { k: 'PARSERS', v: '3-WAY' },
         { k: 'NVD FEED', v: 'REST v2' },
@@ -1326,7 +1298,7 @@
       subtitle: 'Real-Time Data Pipeline & Web App',
       desc: 'Deployed market intelligence platform hosted on Firebase CDN. Streams live exchange WebSocket quotes, normalizes financial news, and evaluates NLP sentiment.',
       badge: 'LIVE WEB APP',
-      color: '#b042ff',
+      color: '#C4B5FD',
       stats: [
         { k: 'HOST', v: 'FIREBASE' },
         { k: 'STREAM', v: 'WS LIVE' },
@@ -1343,7 +1315,7 @@
       subtitle: 'Top 1% Worldwide CTF Ranking',
       desc: 'Ranked in the Top 1% Worldwide out of 3,000,000+ users on TryHackMe across 91+ completed machines, practicing Linux privilege escalation and Active Directory attacks.',
       badge: 'TOP 1% GLOBAL',
-      color: '#ffaa00',
+      color: '#FCD34D',
       stats: [
         { k: 'RANK', v: 'TOP 1%' },
         { k: 'ROOMS', v: '91+' },
@@ -1360,7 +1332,7 @@
       subtitle: 'Direct Contact & Inquiries',
       desc: 'Connect with Aaron Alva for cybersecurity research collaborations, vulnerability disclosures, internship opportunities, or general technical inquiries.',
       badge: 'CONTACT',
-      color: '#00f5d4',
+      color: '#5EEAD4',
       stats: [
         { k: 'ENCRYPT', v: '4096-BIT' },
         { k: 'PGP', v: 'VERIFIED' },
@@ -1385,7 +1357,7 @@
     const c = document.createElement('canvas');
     c.width = w; c.height = h;
     const ctx = c.getContext('2d');
-    const col = data.color || '#00ff66';
+    const col = data.color || '#7DD3FC';
 
     // 1. High-Density Frosted Obsidian Glass Base (Blocks background metal bleed-through)
     const bgGrad = ctx.createLinearGradient(0, 0, w, h);
@@ -1750,12 +1722,12 @@
 
   let gasBurstActive = false;
   let gasBurstTime = 0;
-  let gasBurstColor = new THREE.Color(0x00ff66);
+  let gasBurstColor = new THREE.Color(0x7DD3FC);
 
   function triggerGasBurst(cardColorHex, originPos) {
     gasBurstActive = true;
     gasBurstTime = 0;
-    gasBurstColor.set(cardColorHex || '#00ff66');
+    gasBurstColor.set(cardColorHex || '#7DD3FC');
     gasCloud.visible = true;
     gasCloud.position.copy(originPos || new THREE.Vector3(0, 0, 0));
 
@@ -1836,6 +1808,14 @@
   let deepDiveProgress = 0; // 0 normal orbit, 1 fully expanded to fullscreen
   let cardEmissiveGlow = 0; // extra flash on transition
 
+  // deepDiveProgress is driven by a GSAP tween (see the two trigger functions
+  // below) rather than a fixed-rate per-frame lerp, so opening/closing get an
+  // authored, directed feel instead of a constant-speed settle. deepDiveDriver
+  // is the plain object GSAP actually tweens; onUpdate writes back into
+  // deepDiveProgress so every downstream consumer in render() is unchanged.
+  const deepDiveDriver = { p: 0 };
+  let deepDiveTween = null;
+
   // ── ACTIVE THEORY TRUE ORBITAL CAMERA STATE (ISSUE 2) ──
   let currentOrbitAzimuth = 0.0;
   let currentOrbitElevation = 0.0;
@@ -1849,6 +1829,34 @@
   const camLookTarget = new THREE.Vector3(0, 0, 0);
   const _cardLookQuat = new THREE.Quaternion();
   const _cardStationQuat = new THREE.Quaternion();
+
+  // ── Cinematic per-card "shot" layer ──
+  // Small authored offsets that blend on top of the procedural orbit as each
+  // card arrives at center, so an arrival feels like a composed shot rather
+  // than a continuous drift. Purely additive: shotOffset defaults to all
+  // zeros, so if GSAP fails to load (or this timeline is ever removed) the
+  // base orbit renders completely unchanged — nothing here is load-bearing.
+  //
+  // No native ScrollTrigger scroll detection is used or needed: this page has
+  // no real DOM scroll for it to attach to (html/body are overflow:hidden).
+  // The timeline is authored with each shot's time position equal to its
+  // card's scroll station (card i centers at scrollProgress = i+1), then
+  // scrubbed every frame with cinematicTimeline.time(scrollProgress) — a
+  // direct, unnormalized mapping, not .progress(), since positions were
+  // authored in raw scroll units rather than a 0-1 fraction.
+  const shotOffset = { x: 0, y: 0, z: 0, lookX: 0, lookY: 0, lookZ: 0 };
+  let cinematicTimeline = null;
+  if (typeof gsap !== 'undefined') {
+    cinematicTimeline = gsap.timeline({ paused: true });
+    const SHOT_WINDOW = 0.4; // scroll-units either side of a station the shot occupies
+    const SHOT_PEAK = { x: 0, y: 0.12, z: -0.9, lookX: 0, lookY: 0.18, lookZ: 0 };
+    for (let i = 0; i < cardCount; i++) {
+      const station = i + 1;
+      cinematicTimeline
+        .to(shotOffset, { ...SHOT_PEAK, duration: SHOT_WINDOW, ease: 'cinematicFlow' }, station - SHOT_WINDOW)
+        .to(shotOffset, { x: 0, y: 0, z: 0, lookX: 0, lookY: 0, lookZ: 0, duration: SHOT_WINDOW, ease: 'cinematicSilk' }, station);
+    }
+  }
 
   window.triggerActiveTheoryCardDeepDive = function(cardId) {
     if (isDeepDiveActive) return;
@@ -1865,8 +1873,18 @@
     targetCameraZ = 18.0;
     cardEmissiveGlow = 1.0;
 
+    if (typeof gsap !== 'undefined') {
+      if (deepDiveTween) deepDiveTween.kill();
+      deepDiveTween = gsap.to(deepDiveDriver, {
+        p: 1,
+        duration: 0.85,
+        ease: 'cinematicArrive',
+        onUpdate: () => { deepDiveProgress = deepDiveDriver.p; }
+      });
+    }
+
     // Trigger Atmospheric Volumetric Cyber Gas Particle Burst
-    const activeColor = (cardData[targetIdx] && cardData[targetIdx].color) ? cardData[targetIdx].color : '#00ff66';
+    const activeColor = (cardData[targetIdx] && cardData[targetIdx].color) ? cardData[targetIdx].color : '#7DD3FC';
     const cardObj = cardMeshes[targetIdx];
     const cardPos = cardObj ? cardObj.position.clone() : new THREE.Vector3(0, 0, 0);
     triggerGasBurst(activeColor, cardPos);
@@ -1888,6 +1906,16 @@
     targetCameraZ = 24;
     // CRITICAL FIX: DO NOT reset targetCameraY to 0, which desynchronized camera during card browsing!
     cardEmissiveGlow = 0.5;
+
+    if (typeof gsap !== 'undefined') {
+      if (deepDiveTween) deepDiveTween.kill();
+      deepDiveTween = gsap.to(deepDiveDriver, {
+        p: 0,
+        duration: 0.65,
+        ease: 'cinematicSilk',
+        onUpdate: () => { deepDiveProgress = deepDiveDriver.p; }
+      });
+    }
 
     // Trigger Cyber Audio SFX
     if (typeof window.playCyberSFX === 'function') {
@@ -1968,33 +1996,6 @@
     }
   });
 
-  // 8. Real-Time Theme Palette Updates
-  function updateTheme(newThemeKey) {
-    const pal = themePalettes[newThemeKey] || themePalettes.green;
-    activeThemeKey = newThemeKey;
-
-    currentColors.primary.copy(pal.primary);
-    currentColors.secondary.copy(pal.secondary);
-    currentColors.accent.copy(pal.accent);
-    currentColors.highlight.copy(pal.highlight);
-    currentColors.fog.copy(pal.fog);
-    currentColors.spine1.copy(pal.spine1);
-    currentColors.spine2.copy(pal.spine2);
-
-    scene.fog.color.copy(pal.fog);
-    scene.fog.near = 20;
-    scene.fog.far = 95;
-    spinePointLight.color.copy(pal.primary);
-    spineAccentLight.color.copy(pal.accent);
-    rimLight.color.copy(pal.accent);
-  }
-
-  const themeObserver = new MutationObserver(() => {
-    const currentTheme = getCurrentThemeKey();
-    if (currentTheme !== activeThemeKey) updateTheme(currentTheme);
-  });
-  themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
-
   // 9. Window Resize
   window.addEventListener('resize', () => {
     const isNowMobile = window.innerWidth < 768;
@@ -2062,6 +2063,7 @@
     }
     targetScroll = Math.max(0, Math.min(6.0, targetScroll));
     scrollProgress += (targetScroll - scrollProgress) * 0.12;
+    if (cinematicTimeline) cinematicTimeline.time(scrollProgress);
 
     // ── FIRST-PERSON DESCENT CAMERA ──
     // The machine stays world-anchored. Scroll moves the viewer: orbit the claw, then
@@ -2093,24 +2095,29 @@
 
     heroAnchor.set(0, 1.6 + pathY, 1.2 + pathZ);
     camera.position.set(
-      heroAnchor.x + orbitR * sinAzim * cosElev,
-      heroAnchor.y + orbitR * sinElev,
-      heroAnchor.z + orbitR * cosAzim * cosElev
+      heroAnchor.x + orbitR * sinAzim * cosElev + shotOffset.x,
+      heroAnchor.y + orbitR * sinElev + shotOffset.y,
+      heroAnchor.z + orbitR * cosAzim * cosElev + shotOffset.z
     );
 
     // Look along the machine: claw at rest, then a point slightly ahead down the spine
     const lookAhead = Math.min(1.0, scrollProgress * 0.85);
     camLookTarget.set(
-      Math.sin(currentOrbitAzimuth) * 1.15,
-      1.6 + pathY - lookAhead * stepY * 0.28,
-      1.2 + pathZ - lookAhead * stepZ * 0.12
+      Math.sin(currentOrbitAzimuth) * 1.15 + shotOffset.lookX,
+      1.6 + pathY - lookAhead * stepY * 0.28 + shotOffset.lookY,
+      1.2 + pathZ - lookAhead * stepZ * 0.12 + shotOffset.lookZ
     );
     camera.lookAt(camLookTarget);
     camera.rotation.z += idleRoll * Math.max(0.0, 1.0 - scrollProgress * 0.18);
 
-    // Deep-dive progress interpolation (smooth ease-in-out morph)
-    const targetProg = isDeepDiveActive ? 1.0 : 0.0;
-    deepDiveProgress += (targetProg - deepDiveProgress) * 0.10;
+    // Deep-dive progress is normally driven by the GSAP tweens in
+    // triggerActiveTheoryCardDeepDive / closeActiveTheoryDeepDive (their
+    // onUpdate writes into deepDiveProgress). This is only a fallback for the
+    // rare case the GSAP CDN failed to load, so opening/closing still work.
+    if (typeof gsap === 'undefined') {
+      const targetProg = isDeepDiveActive ? 1.0 : 0.0;
+      deepDiveProgress += (targetProg - deepDiveProgress) * 0.10;
+    }
     cardEmissiveGlow *= 0.92;
 
     // Raycast for Hovered 3D Card (only active when cards are visible and user has interacted with pointer)
@@ -2328,7 +2335,7 @@
     // Dynamic Active Card Spotlight & Cyber Rim Light Tracking
     if (closestIndex !== -1 && cardMeshes[closestIndex]) {
       const activeMesh = cardMeshes[closestIndex];
-      const colHex = parseInt(activeMesh.userData.cardData.color.replace('#', '0x'), 16) || 0x00ff66;
+      const colHex = parseInt(activeMesh.userData.cardData.color.replace('#', '0x'), 16) || 0x7DD3FC;
       activeCardSpotlight.intensity = 0.0; // Zero direct spotlight glare onto text surface
 
       activeCardRimLight.color.setHex(colHex);
@@ -2594,7 +2601,7 @@
           // Color: cyan, crimson, or white-hot
           const pickCol = Math.random();
           if (pickCol < 0.55) {
-            arc.mat.color.setHex(0x00e5ff); // Cyan
+            arc.mat.color.setHex(0xCBD5E1); // Cyan
           } else if (pickCol < 0.85) {
             arc.mat.color.setHex(0xff0055); // Crimson
           } else {

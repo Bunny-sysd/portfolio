@@ -28,7 +28,7 @@
   <link
     href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
     rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=2.1" />
+  <link rel="stylesheet" href="style.css?v=2.3" />
   <style>
     html,
     body {
@@ -54,8 +54,8 @@
       font-weight: 700;
       color: var(--green);
       letter-spacing: 0.15em;
-      background: rgba(0, 255, 102, 0.06);
-      border: 1px solid rgba(0, 255, 102, 0.25);
+      background: rgba(125, 211, 252, 0.06);
+      border: 1px solid rgba(125, 211, 252, 0.25);
       padding: 0.5rem 1rem;
       border-radius: 9999px;
       z-index: 100;
@@ -167,12 +167,6 @@
           <span class="cmd-badge">⌘K</span>
         </button>
 
-        <div class="theme-switchers-cluster">
-          <button class="theme-dot-btn active" data-theme-set="green" title="Phosphor Green"></button>
-          <button class="theme-dot-btn" data-theme-set="cyan" title="Cyan Cyber"></button>
-          <button class="theme-dot-btn" data-theme-set="amber" title="Amber Terminal"></button>
-          <button class="theme-dot-btn" data-theme-set="monokai" title="Monokai Neon"></button>
-        </div>
       </div>
 
       <!-- Single Mobile Menu Tap Target (visible only on mobile) -->
@@ -203,7 +197,7 @@
       </div>
 
       <nav class="mobile-nav-section">
-        <div class="mobile-section-label">[ ORBITAL DESTINATIONS ]</div>
+        <div class="mobile-section-label">ORBITAL DESTINATIONS</div>
         <div class="mobile-nav-grid">
           <button class="mobile-nav-item" onclick="window.rotateCylinderToCard(1); window.closeMobileMenu();">
             <span class="item-idx">01</span>
@@ -251,7 +245,7 @@
       </nav>
 
       <div class="mobile-tools-section">
-        <div class="mobile-section-label">[ SYSTEM CONTROLS ]</div>
+        <div class="mobile-section-label">SYSTEM CONTROLS</div>
         
         <div class="mobile-tool-row">
           <button class="mobile-tool-btn" id="mobileAudioToggleBtn">
@@ -267,40 +261,31 @@
           </button>
         </div>
 
-        <div class="mobile-theme-row">
-          <span class="mobile-theme-label">PHOSPHOR:</span>
-          <div class="mobile-theme-dots">
-            <button class="theme-dot-btn active" data-theme-set="green" title="Phosphor Green"></button>
-            <button class="theme-dot-btn" data-theme-set="cyan" title="Cyan Cyber"></button>
-            <button class="theme-dot-btn" data-theme-set="amber" title="Amber Terminal"></button>
-            <button class="theme-dot-btn" data-theme-set="monokai" title="Monokai Neon"></button>
-          </div>
-        </div>
       </div>
     </div>
   </div>
 
   <!-- ── ACTIVE THEORY LEFT SIDEBAR HUD: WHAT ARE YOU LOOKING FOR? ── -->
   <aside class="at-sidebar-hud interactive-ui" id="atSidebarHud">
-    <div class="at-hud-eyebrow">[ WHAT ARE YOU LOOKING FOR? ]</div>
+    <div class="at-hud-eyebrow">WHAT ARE YOU LOOKING FOR?</div>
     <nav class="at-hud-links">
       <button class="at-hud-btn" data-card="0" onclick="window.rotateCylinderToCard(1)">
-        <span class="at-arrow">-></span> 01_AARON_ALVA (IDENTITY)
+        <span class="at-arrow">→</span> 01 · Aaron Alva
       </button>
       <button class="at-hud-btn" data-card="1" onclick="window.rotateCylinderToCard(2)">
-        <span class="at-arrow">-></span> 02_ZERO-DAY_FUZZER (MUTAGEN)
+        <span class="at-arrow">→</span> 02 · Mutagen
       </button>
       <button class="at-hud-btn" data-card="2" onclick="window.rotateCylinderToCard(3)">
-        <span class="at-arrow">-></span> 03_VIGIL_THREAT_HUNTER (CLI)
+        <span class="at-arrow">→</span> 03 · Vigil
       </button>
       <button class="at-hud-btn" data-card="3" onclick="window.rotateCylinderToCard(4)">
-        <span class="at-arrow">-></span> 04_SIGNALHUB_MARKET_AI (APP)
+        <span class="at-arrow">→</span> 04 · SignalHub
       </button>
       <button class="at-hud-btn" data-card="4" onclick="window.rotateCylinderToCard(5)">
-        <span class="at-arrow">-></span> 05_PROVING_GROUNDS (TOP 1%)
+        <span class="at-arrow">→</span> 05 · Proving Grounds
       </button>
       <button class="at-hud-btn" data-card="5" onclick="window.rotateCylinderToCard(6)">
-        <span class="at-arrow">-></span> 06_SECURE_TRANSMISSION
+        <span class="at-arrow">→</span> 06 · Contact
       </button>
     </nav>
     <div class="at-hud-prompt-pill">
@@ -339,7 +324,7 @@
     <div class="at-drawer" id="drawer-profile">
       <div class="at-drawer-header">
         <div class="at-drawer-title-group">
-          <span class="at-drawer-badge">[ 01 // OPERATOR CLASSIFICATION &amp; SYSTEMS RESEARCH ]</span>
+          <span class="at-drawer-badge">01 — OPERATOR CLASSIFICATION &amp; SYSTEMS RESEARCH</span>
           <h2>AARON ALVA // RESEARCHER PROFILE</h2>
         </div>
         <button class="at-drawer-close-btn" onclick="window.closeActiveTheoryDrawer()">✕ RETURN TO ORBIT [ESC]</button>
@@ -350,7 +335,7 @@
           <!-- Tactical HUD Overview -->
           <div class="dossier-panel">
             <div class="dossier-header-bar">
-              <span class="dossier-header-title">[SYS] OPERATOR CLASSIFICATION &amp; RESEARCH FOCUS</span>
+              <span class="dossier-header-title">OPERATOR CLASSIFICATION &amp; RESEARCH FOCUS</span>
               <span class="dossier-header-status">CLEARANCE: GIAC-GFACT-CERTIFIED // SANS INSTITUTE</span>
             </div>
             <p style="font-size: 1.12rem; line-height: 1.85; color: rgba(255,255,255,0.92); margin: 0 0 1.25rem 0;">
@@ -379,7 +364,7 @@
           <!-- SANS Institute GIAC GFACT Credential Folded Dossier -->
           <div class="dossier-panel" style="border-left: 3px solid #ffd700; background: rgba(10, 16, 32, 0.7);">
             <div class="dossier-header-bar">
-              <span class="dossier-header-title" style="color: #ffd700;">[CERT] SANS INSTITUTE // GIAC GFACT CERTIFICATION</span>
+              <span class="dossier-header-title" style="color: #ffd700;">SANS INSTITUTE — GIAC GFACT CERTIFICATION</span>
               <span class="dossier-header-status">ISSUED: 1 SEP 2026 // CYBERSTART CANADA SCHOLAR</span>
             </div>
             <p style="font-size: 1.05rem; line-height: 1.8; color: rgba(255,255,255,0.92); margin: 0 0 1rem 0;">
@@ -403,7 +388,7 @@
           <!-- Tactical Core Competencies -->
           <div class="dossier-panel">
             <div class="dossier-header-bar">
-              <span class="dossier-header-title">[SKILLS] TACTICAL CORE COMPETENCIES</span>
+              <span class="dossier-header-title">TACTICAL CORE COMPETENCIES</span>
               <span class="dossier-header-status">TAXONOMY: OFFENSIVE &amp; DEFENSIVE SYSTEMS</span>
             </div>
             <div class="skill-tag-cloud" style="margin-bottom: 1.25rem;">
@@ -415,19 +400,19 @@
             </div>
             <div style="display: flex; flex-direction: column; gap: 0.75rem;">
               <div class="dossier-pod">
-                <div class="dossier-pod-title">[BIN] Binary Exploitation &amp; Memory Safety</div>
+                <div class="dossier-pod-title">Binary Exploitation &amp; Memory Safety</div>
                 <p class="dossier-pod-desc">Analyzing stack frame layouts, buffer overflow boundaries, Heap Use-After-Free (UAF), and triaging crash signals with GDB/GEF and AddressSanitizer.</p>
               </div>
               <div class="dossier-pod">
-                <div class="dossier-pod-title">[SYS] Linux Kernel &amp; Privilege Escalation</div>
+                <div class="dossier-pod-title">Linux Kernel &amp; Privilege Escalation</div>
                 <p class="dossier-pod-desc">Exploiting SUID/SGID binaries, Linux capability misconfigurations, cron job race conditions, and inspecting system activity with <code>auditd</code> and <code>strace</code>.</p>
               </div>
               <div class="dossier-pod">
-                <div class="dossier-pod-title">[AI] Agentic AI &amp; LLM Security Systems</div>
+                <div class="dossier-pod-title">Agentic AI &amp; LLM Security Systems</div>
                 <p class="dossier-pod-desc">Architecting LLM-driven AST input mutators, autonomous vulnerability patch generators, and sandboxing neural pipelines against prompt injection vectors.</p>
               </div>
               <div class="dossier-pod">
-                <div class="dossier-pod-title">[NET] Network Forensics &amp; Threat Intelligence</div>
+                <div class="dossier-pod-title">Network Forensics &amp; Threat Intelligence</div>
                 <p class="dossier-pod-desc">Deep-packet inspection via Wireshark/tcpdump, TCP 3-way handshake analysis, NVD API v2 live correlation, and exporting standardized SARIF v2.1 reports.</p>
               </div>
             </div>
@@ -436,7 +421,7 @@
           <!-- Formal Vulnerability Research Methodology (4-Phase Lifecycle) -->
           <div class="dossier-panel">
             <div class="dossier-header-bar">
-              <span class="dossier-header-title">[FLOW] STRUCTURED VULNERABILITY RESEARCH METHODOLOGY</span>
+              <span class="dossier-header-title">STRUCTURED VULNERABILITY RESEARCH METHODOLOGY</span>
               <span class="dossier-header-status">STANDARDIZED VR &amp; EXPLOIT LIFECYCLE</span>
             </div>
             <div class="dossier-grid-2">
@@ -462,7 +447,7 @@
           <!-- Research Milestones Timeline -->
           <div class="dossier-panel">
             <div class="dossier-header-bar">
-              <span class="dossier-header-title">[TIMELINE] CHRONOLOGICAL RESEARCH MILESTONES</span>
+              <span class="dossier-header-title">CHRONOLOGICAL RESEARCH MILESTONES</span>
               <span class="dossier-header-status">VERIFIED ACADEMIC &amp; CTF ACHIEVEMENTS</span>
             </div>
             <div class="dossier-timeline-item">
@@ -483,7 +468,7 @@
           </div>
 
           <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
-            <a href="https://github.com/Bunny-sysd" target="_blank" rel="noopener noreferrer" class="at-action-btn" style="padding: 0.75rem 1.5rem; font-size: 0.85rem;">[GIT] GitHub: Bunny-sysd ↗</a>
+            <a href="https://github.com/Bunny-sysd" target="_blank" rel="noopener noreferrer" class="at-action-btn" style="padding: 0.75rem 1.5rem; font-size: 0.85rem;">GitHub — Bunny-sysd ↗</a>
             <a href="https://tryhackme.com/p/354221973" target="_blank" rel="noopener noreferrer" class="at-action-btn" style="padding: 0.75rem 1.5rem; font-size: 0.85rem; border-color: var(--cyan); color: var(--cyan);">[CTF] TryHackMe Profile ↗</a>
           </div>
         </div>
@@ -494,7 +479,7 @@
     <div class="at-drawer" id="drawer-mutagen">
       <div class="at-drawer-header">
         <div class="at-drawer-title-group">
-          <span class="at-drawer-badge">[ 02 // AGENTIC AI &amp; ZERO-DAY FUZZING ]</span>
+          <span class="at-drawer-badge">02 — AGENTIC AI &amp; ZERO-DAY FUZZING</span>
           <h2>MUTAGEN ZERO-DAY FUZZER</h2>
         </div>
         <button class="at-drawer-close-btn" onclick="window.closeActiveTheoryDrawer()">✕ RETURN TO ORBIT [ESC]</button>
@@ -505,7 +490,7 @@
           <!-- Overview Dossier -->
           <div class="dossier-panel">
             <div class="dossier-header-bar">
-              <span class="dossier-header-title">[AI] AUTONOMOUS 5-PHASE FUZZER &amp; AUTO-PATCHER</span>
+              <span class="dossier-header-title">AUTONOMOUS 5-PHASE FUZZER &amp; AUTO-PATCHER</span>
               <span class="dossier-header-status">STACK: PYTHON // GEMINI &middot; CLAUDE &middot; GPT &middot; OLLAMA // GHIDRA</span>
             </div>
             <p style="font-size: 1.08rem; line-height: 1.8; color: rgba(255,255,255,0.9); margin: 0 0 1.25rem 0;">
@@ -590,7 +575,7 @@
           <!-- Plain-Language Usage Steps & Spaced CLI Command Block -->
           <div class="dossier-panel">
             <div class="dossier-header-bar">
-              <span class="dossier-header-title">[CLI] USAGE WORKFLOW &amp; TERMINAL COMMANDS</span>
+              <span class="dossier-header-title">USAGE WORKFLOW &amp; TERMINAL COMMANDS</span>
               <span class="dossier-header-status">QUICK START</span>
             </div>
             <div style="font-size: 0.88rem; line-height: 1.7; color: rgba(255,255,255,0.85); margin-bottom: 0.75rem;">
@@ -623,7 +608,7 @@
           <!-- Real Exploit & Root Cause Analysis Case Study -->
           <div class="dossier-panel">
             <div class="dossier-header-bar">
-              <span class="dossier-header-title">[CASE] BUFFER OVERFLOW (CWE-120) ROOT CAUSE ANALYSIS</span>
+              <span class="dossier-header-title">BUFFER OVERFLOW (CWE-120) ROOT CAUSE ANALYSIS</span>
               <span class="dossier-header-status">ILLUSTRATIVE EXAMPLE // VULNERABILITY TRIAGE &amp; AUTO-PATCH</span>
             </div>
             <div class="dossier-grid-2">
@@ -705,7 +690,7 @@
     <div class="at-drawer" id="drawer-vigil">
       <div class="at-drawer-header">
         <div class="at-drawer-title-group">
-          <span class="at-drawer-badge">[ 03 // THREAT INTELLIGENCE &amp; CLI AUTOMATION ]</span>
+          <span class="at-drawer-badge">03 — THREAT INTELLIGENCE &amp; CLI AUTOMATION</span>
           <h2>VIGIL THREAT HUNTER</h2>
         </div>
         <button class="at-drawer-close-btn" onclick="window.closeActiveTheoryDrawer()">✕ RETURN TO ORBIT [ESC]</button>
@@ -716,7 +701,7 @@
           <!-- Overview Dossier -->
           <div class="dossier-panel">
             <div class="dossier-header-bar">
-              <span class="dossier-header-title">[CLI] AI-POWERED THREAT HUNTING &amp; TACTICAL COMPASS ENGINE</span>
+              <span class="dossier-header-title">AI-POWERED THREAT HUNTING &amp; TACTICAL COMPASS ENGINE</span>
               <span class="dossier-header-status">STACK: PYTHON // NVD API v2 // OSV.DEV // SARIF v2.1</span>
             </div>
             <p style="font-size: 1.08rem; line-height: 1.8; color: rgba(255,255,255,0.9); margin: 0 0 1.25rem 0;">
@@ -783,7 +768,7 @@
           <!-- Plain-Language Usage Steps & Spaced CLI Command Block -->
           <div class="dossier-panel">
             <div class="dossier-header-bar">
-              <span class="dossier-header-title">[CLI] USAGE WORKFLOW &amp; TERMINAL COMMANDS</span>
+              <span class="dossier-header-title">USAGE WORKFLOW &amp; TERMINAL COMMANDS</span>
               <span class="dossier-header-status">QUICK START</span>
             </div>
             <div style="font-size: 0.88rem; line-height: 1.7; color: rgba(255,255,255,0.85); margin-bottom: 0.75rem;">
@@ -841,7 +826,7 @@
 
           <div class="dossier-panel">
             <div class="dossier-header-bar">
-              <span class="dossier-header-title">[CLI] CLI USAGE &amp; CORRELATION OUTPUT</span>
+              <span class="dossier-header-title">CLI USAGE &amp; CORRELATION OUTPUT</span>
               <span class="dossier-header-status">SAMPLE EXECUTION TRACE</span>
             </div>
             <div class="dd-console">
@@ -865,7 +850,7 @@
     <div class="at-drawer" id="drawer-signalhub">
       <div class="at-drawer-header">
         <div class="at-drawer-title-group">
-          <span class="at-drawer-badge">[ 04 // LIVE DATA PIPELINE &amp; NLP INTELLIGENCE ]</span>
+          <span class="at-drawer-badge">04 — LIVE DATA PIPELINE &amp; NLP INTELLIGENCE</span>
           <h2>SIGNALHUB MARKET AI PIPELINE</h2>
         </div>
         <button class="at-drawer-close-btn" onclick="window.closeActiveTheoryDrawer()">✕ RETURN TO ORBIT [ESC]</button>
@@ -876,7 +861,7 @@
           <!-- Overview Dossier -->
           <div class="dossier-panel">
             <div class="dossier-header-bar">
-              <span class="dossier-header-title">[APP] REAL-TIME DATA PIPELINE &amp; WEB APPLICATION</span>
+              <span class="dossier-header-title">REAL-TIME DATA PIPELINE &amp; WEB APPLICATION</span>
               <span class="dossier-header-status">HOSTED: FIREBASE CDN // SIGNALHUB-E79BA.WEB.APP</span>
             </div>
             <p style="font-size: 1.08rem; line-height: 1.8; color: rgba(255,255,255,0.9); margin: 0 0 1.25rem 0;">
@@ -884,7 +869,7 @@
             </p>
             
             <!-- LIVE INTERACTIVE MARKET CANVAS & CANDLESTICK TOGGLE -->
-            <div style="background: rgba(4,8,16,0.7); border: 1px solid rgba(0,255,102,0.25); border-radius: 8px; padding: 1.25rem; margin-bottom: 1.5rem;">
+            <div style="background: rgba(4,8,16,0.7); border: 1px solid rgba(125,211,252,0.25); border-radius: 8px; padding: 1.25rem; margin-bottom: 1.5rem;">
               <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; flex-wrap: wrap; gap: 0.5rem;">
                 <div style="display: flex; gap: 0.4rem;" id="marketTickerTabs">
                   <button class="target-btn active" data-ticker="NVDA">NVDA ($128.40)</button>
@@ -943,7 +928,7 @@
             <!-- Plain-Language Usage Steps & Spaced Command Block -->
             <div class="dossier-panel">
               <div class="dossier-header-bar">
-                <span class="dossier-header-title">[CLI] LAUNCH COMMANDS &amp; LOCAL DEV</span>
+                <span class="dossier-header-title">LAUNCH COMMANDS &amp; LOCAL DEV</span>
                 <span class="dossier-header-status">QUICK START</span>
               </div>
               <div style="font-size: 0.88rem; line-height: 1.7; color: rgba(255,255,255,0.85); margin-bottom: 0.75rem;">
@@ -970,7 +955,7 @@
               </div>
             </div>
           </div>
-          <a href="https://signalhub-e79ba.web.app" target="_blank" rel="noopener noreferrer" class="at-action-btn" style="padding: 0.75rem 1.5rem; font-size: 0.85rem; border-color: var(--green); color: var(--green);">[APP] Launch Live SignalHub Web App ↗</a>
+          <a href="https://signalhub-e79ba.web.app" target="_blank" rel="noopener noreferrer" class="at-action-btn" style="padding: 0.75rem 1.5rem; font-size: 0.85rem; border-color: var(--green); color: var(--green);">Launch Live SignalHub Web App ↗</a>
         </div>
       </div>
     </div>
@@ -979,7 +964,7 @@
     <div class="at-drawer" id="drawer-tryhackme">
       <div class="at-drawer-header">
         <div class="at-drawer-title-group">
-          <span class="at-drawer-badge">[ 05 // OFFENSIVE SECURITY PROVING GROUNDS ]</span>
+          <span class="at-drawer-badge">05 — OFFENSIVE SECURITY PROVING GROUNDS</span>
           <h2>TRYHACKME &amp; HACK THE BOX (TOP 1%)</h2>
         </div>
         <button class="at-drawer-close-btn" onclick="window.closeActiveTheoryDrawer()">✕ RETURN TO ORBIT [ESC]</button>
@@ -988,7 +973,7 @@
         <div style="max-width: 1080px; margin: 0 auto;">
           <div class="dossier-panel">
             <div class="dossier-header-bar">
-              <span class="dossier-header-title">[PROVING] OFFENSIVE SECURITY PROVING GROUNDS</span>
+              <span class="dossier-header-title">OFFENSIVE SECURITY PROVING GROUNDS</span>
               <span class="dossier-header-status">GLOBAL STANDING: TOP 1% WORLDWIDE // 91+ ROOMS</span>
             </div>
             <p style="font-size: 1.1rem; line-height: 1.8; color: rgba(255,255,255,0.9); margin: 0 0 1.25rem 0;">
@@ -1017,7 +1002,7 @@
           <!-- Hack The Box & TryHackMe Dossier -->
           <div class="dossier-panel" style="border-left: 3px solid var(--cyan); background: rgba(8, 16, 32, 0.7);">
             <div class="dossier-header-bar">
-              <span class="dossier-header-title" style="color: var(--cyan);">[HTB] HACK THE BOX // OFFENSIVE PROFILE DOSSIER</span>
+              <span class="dossier-header-title" style="color: var(--cyan);">HACK THE BOX — OFFENSIVE PROFILE DOSSIER</span>
               <span class="dossier-header-status">STATUS: APPRENTICE TIER // LEVEL 25</span>
             </div>
             <p style="font-size: 1.05rem; line-height: 1.8; color: rgba(255,255,255,0.92); margin: 0 0 1rem 0;">
@@ -1033,15 +1018,15 @@
               <span class="skill-tag-pill">LINUX PRIVESC</span>
             </div>
             <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
-              <a href="https://app.hackthebox.com/users/3735054" target="_blank" rel="noopener noreferrer" class="at-action-btn" style="padding: 0.65rem 1.25rem; font-size: 0.8rem; border-color: var(--cyan); color: var(--cyan); background: rgba(0, 229, 255, 0.08);">[HTB] View Hack The Box Profile (maxthemadman) ↗</a>
-              <a href="https://tryhackme.com/p/354221973" target="_blank" rel="noopener noreferrer" class="at-action-btn" style="padding: 0.65rem 1.25rem; font-size: 0.8rem; border-color: var(--green); color: var(--green);">[THM] View TryHackMe Profile (Top 1%) ↗</a>
+              <a href="https://app.hackthebox.com/users/3735054" target="_blank" rel="noopener noreferrer" class="at-action-btn" style="padding: 0.65rem 1.25rem; font-size: 0.8rem; border-color: var(--cyan); color: var(--cyan); background: rgba(0, 229, 255, 0.08);">View Hack The Box Profile (maxthemadman) ↗</a>
+              <a href="https://tryhackme.com/p/354221973" target="_blank" rel="noopener noreferrer" class="at-action-btn" style="padding: 0.65rem 1.25rem; font-size: 0.8rem; border-color: var(--green); color: var(--green);">View TryHackMe Profile (Top 1%) ↗</a>
             </div>
           </div>
 
           <!-- Systematic 5-Phase Penetration Testing Methodology -->
           <div class="dossier-panel">
             <div class="dossier-header-bar">
-              <span class="dossier-header-title">[FLOW] 5-STAGE OFFENSIVE METHODOLOGY &amp; WRITEUPS</span>
+              <span class="dossier-header-title">5-STAGE OFFENSIVE METHODOLOGY &amp; WRITEUPS</span>
               <span class="dossier-header-status">TACTICAL WORKFLOW</span>
             </div>
             <div class="dossier-grid-2">
@@ -1067,7 +1052,7 @@
           <!-- Interactive CTF Machine Case Study Selector -->
           <div class="dossier-panel">
             <div class="dossier-header-bar">
-              <span class="dossier-header-title">[CASE] PENETRATION TESTING MACHINE WRITEUP BREAKDOWNS</span>
+              <span class="dossier-header-title">PENETRATION TESTING MACHINE WRITEUP BREAKDOWNS</span>
               <span class="dossier-header-status">OFFENSIVE CASE STUDIES</span>
             </div>
             <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem; flex-wrap: wrap;" id="ctfMachineTabs">
@@ -1110,7 +1095,7 @@
     <div class="at-drawer" id="drawer-transmission">
       <div class="at-drawer-header">
         <div class="at-drawer-title-group">
-          <span class="at-drawer-badge">[ 06 // ENCRYPTED DISPATCH &amp; CRYPTOGRAPHIC HANDSHAKE ]</span>
+          <span class="at-drawer-badge">06 — ENCRYPTED DISPATCH &amp; CRYPTOGRAPHIC HANDSHAKE</span>
           <h2>TRANSMIT SIGNAL // DIRECT CONTACT</h2>
         </div>
         <button class="at-drawer-close-btn" onclick="window.closeActiveTheoryDrawer()">✕ RETURN TO ORBIT [ESC]</button>
@@ -1119,7 +1104,7 @@
         <div style="max-width: 760px; margin: 0 auto;">
           <div class="dossier-panel">
             <div class="dossier-header-bar">
-              <span class="dossier-header-title">[DIRECT] RESEARCH &amp; INTERNSHIP INQUIRIES</span>
+              <span class="dossier-header-title">RESEARCH &amp; INTERNSHIP INQUIRIES</span>
               <span class="dossier-header-status">CHANNEL: 4096-BIT ENCRYPTED HTTPS</span>
             </div>
             <p style="color: rgba(255,255,255,0.85); font-size: 0.98rem; line-height: 1.75; margin-bottom: 1.25rem;">
@@ -1217,42 +1202,6 @@
         </div>
 
         <div class="cmd-group">
-          <div class="cmd-group-title">CRT PHOSPHOR THEMES</div>
-          <div class="cmd-item" data-action="theme" data-theme="green">
-            <span class="cmd-theme-swatch" style="background: #00ff66; box-shadow: 0 0 8px #00ff66;"></span>
-            <div class="cmd-item-text">
-              <span class="cmd-item-title">Matrix Green (Default)</span>
-              <span class="cmd-item-desc">Phosphor 0x00FF41</span>
-            </div>
-            <span class="cmd-item-key">T 1</span>
-          </div>
-          <div class="cmd-item" data-action="theme" data-theme="amber">
-            <span class="cmd-theme-swatch" style="background: #ffb000; box-shadow: 0 0 8px #ffb000;"></span>
-            <div class="cmd-item-text">
-              <span class="cmd-item-title">Cyber Amber</span>
-              <span class="cmd-item-desc">VT220 Phosphor Terminal</span>
-            </div>
-            <span class="cmd-item-key">T 2</span>
-          </div>
-          <div class="cmd-item" data-action="theme" data-theme="cyan">
-            <span class="cmd-theme-swatch" style="background: #00e5ff; box-shadow: 0 0 8px #00e5ff;"></span>
-            <div class="cmd-item-text">
-              <span class="cmd-item-title">Ice Cyan</span>
-              <span class="cmd-item-desc">Teal Terminal</span>
-            </div>
-            <span class="cmd-item-key">T 3</span>
-          </div>
-          <div class="cmd-item" data-action="theme" data-theme="monokai">
-            <span class="cmd-theme-swatch" style="background: #f92672; box-shadow: 0 0 8px #f92672;"></span>
-            <div class="cmd-item-text">
-              <span class="cmd-item-title">Stealth Monokai</span>
-              <span class="cmd-item-desc">Crimson Terminal</span>
-            </div>
-            <span class="cmd-item-key">T 4</span>
-          </div>
-        </div>
-
-        <div class="cmd-group">
           <div class="cmd-group-title">QUICK ACTIONS</div>
           <div class="cmd-item" data-action="copy-email">
             <span class="cmd-item-icon">[MAIL]</span>
@@ -1300,9 +1249,10 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/CustomEase.min.js"></script>
   <script type="module" src="src/main.jsx"></script>
-  <script src="three-bg.js?v=9.9"></script>
-  <script src="app.js?v=9.9"></script>
+  <script src="three-bg.js?v=10.1"></script>
+  <script src="app.js?v=10.1"></script>
 </body>
 
 </html>

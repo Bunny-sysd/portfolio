@@ -703,7 +703,7 @@ function runHeroTerminalDiagnostics() {
       draw() {
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-        ctx.fillStyle = 'rgba(0, 255, 102, 0.6)';
+        ctx.fillStyle = 'rgba(125, 211, 252, 0.6)';
         ctx.fill();
       }
     }
@@ -742,7 +742,7 @@ function runHeroTerminalDiagnostics() {
             ctx.beginPath();
             ctx.moveTo(particles[i].x, particles[i].y);
             ctx.lineTo(particles[j].x, particles[j].y);
-            ctx.strokeStyle = `rgba(0, 255, 102, ${0.18 * (1 - dist / 60)})`;
+            ctx.strokeStyle = `rgba(125, 211, 252, ${0.18 * (1 - dist / 60)})`;
             ctx.lineWidth = 0.55;
             ctx.stroke();
           }
@@ -1062,7 +1062,7 @@ function runHeroTerminalDiagnostics() {
     draw() {
       ctx.beginPath();
       ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-      ctx.fillStyle = 'rgba(0, 255, 102, 0.85)';
+      ctx.fillStyle = 'rgba(125, 211, 252, 0.85)';
       ctx.fill();
     }
   }
@@ -1411,7 +1411,7 @@ function playSystemAlarmBeep() {
         // Elegant S-curve / cubic bezier connection path
         const d = `M ${startX} ${startY} C ${startX} ${(startY + endY) / 2}, ${endX} ${(startY + endY) / 2}, ${endX} ${endY}`;
         path.setAttribute('d', d);
-        path.setAttribute('stroke', 'rgba(0, 255, 102, 0.15)');
+        path.setAttribute('stroke', 'rgba(125, 211, 252, 0.15)');
         path.setAttribute('stroke-width', '1');
         path.setAttribute('fill', 'none');
         svg.appendChild(path);
@@ -1581,7 +1581,7 @@ function playSystemAlarmBeep() {
         // Temporary active highlighting glow
         target.style.transition = 'border-color 0.5s, box-shadow 0.5s';
         target.style.borderColor = 'var(--green)';
-        target.style.boxShadow = '0 0 25px rgba(0, 255, 102, 0.4)';
+        target.style.boxShadow = '0 0 25px rgba(125, 211, 252, 0.4)';
         setTimeout(() => {
           target.style.borderColor = '';
           target.style.boxShadow = '';
@@ -2224,39 +2224,6 @@ const SoundFX = (function initWebAudioSFX() {
 })();
 
 // ═════════════════════════════════════════════════════════
-// 3. CRT THEME ENGINE & PERSISTENCE
-// ═════════════════════════════════════════════════════════
-const ThemeEngine = (function initThemeEngine() {
-  const THEME_KEY = 'portfolio_crt_theme';
-  const validThemes = ['green', 'amber', 'cyan', 'monokai'];
-
-  function applyTheme(themeName, playSound = false) {
-    if (!validThemes.includes(themeName)) themeName = 'green';
-
-    if (themeName === 'green') {
-      delete document.documentElement.dataset.theme;
-    } else {
-      document.documentElement.dataset.theme = themeName;
-    }
-
-    localStorage.setItem(THEME_KEY, themeName);
-
-    if (playSound) {
-      SoundFX.action();
-    }
-  }
-
-  // Load saved theme on boot
-  const savedTheme = localStorage.getItem(THEME_KEY) || 'green';
-  applyTheme(savedTheme, false);
-
-  return {
-    setTheme: applyTheme,
-    getTheme: () => localStorage.getItem(THEME_KEY) || 'green'
-  };
-})();
-
-// ═════════════════════════════════════════════════════════
 // 4. CYBER COMMAND PALETTE (CTRL+K / CMD+K) CONTROLLER
 // ═════════════════════════════════════════════════════════
 (function initCommandPalette() {
@@ -2324,10 +2291,6 @@ const ThemeEngine = (function initThemeEngine() {
         sec.scrollIntoView({ behavior: 'smooth' });
         SoundFX.action();
       }
-    } else if (action === 'theme') {
-      const theme = item.dataset.theme;
-      ThemeEngine.setTheme(theme, true);
-      closePalette();
     } else if (action === 'copy-email') {
       const email = 'aaronalva@yahoo.com';
       navigator.clipboard.writeText(email).then(() => {
@@ -2469,68 +2432,6 @@ console.log(
   '%c 0xPORTFOLIO ACTIVE // AUTHORIZED SESSION ',
   'color:#00ff41;background:#0A0A0C;font-family:monospace;font-size:16px;padding:6px 12px;border:1px solid #00ff41;'
 );
-
-// ── GSAP SCROLLTRIGGER ANIMATIONS ────────────────
-(function initGSAP() {
-  if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') return;
-  
-  gsap.registerPlugin(ScrollTrigger);
-
-  // Parallax fade-in for section titles
-  gsap.utils.toArray('.section-title').forEach(title => {
-    gsap.fromTo(title, 
-      { opacity: 0, y: 50 },
-      {
-        opacity: 1, 
-        y: 0,
-        duration: 1,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: title,
-          start: "top 85%",
-          toggleActions: "play none none reverse"
-        }
-      }
-    );
-  });
-
-  // Staggered fade up for Bento Cards
-  gsap.utils.toArray('.bento-project-card').forEach((card, i) => {
-    gsap.fromTo(card, 
-      { opacity: 0, y: 100, scale: 0.95 },
-      {
-        opacity: 1, 
-        y: 0, 
-        scale: 1,
-        duration: 0.8,
-        ease: "back.out(1.2)",
-        scrollTrigger: {
-          trigger: card,
-          start: "top 90%",
-          toggleActions: "play none none reverse"
-        }
-      }
-    );
-  });
-
-  // Fade-in and slide for the skills sections
-  gsap.utils.toArray('.bento-skill-box').forEach(box => {
-    gsap.fromTo(box,
-      { opacity: 0, x: -50 },
-      {
-        opacity: 1,
-        x: 0,
-        duration: 1,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: box,
-          start: "top 80%",
-          toggleActions: "play none none reverse"
-        }
-      }
-    );
-  });
-})();
 
 // ══════════════════════════════════════════════════════
 // CINEMATIC SCROLLYTELLING HUD & ZONE FAST-TRAVEL DOCK
@@ -3020,7 +2921,7 @@ console.log(
   const cliResponses = {
     whoami: '<div style="color: var(--green);">[OPERATOR] Aaron Alva | Grade 11 Cybersecurity Researcher & Systems Developer</div><div class="dim">> Stack: Python, C/C++, Docker ASan, Linux Kernel Security, LLM Agent Fuzzing, SARIF v2.1</div>',
     research: '<div style="color: var(--cyan);">[RESEARCH_AREAS] Autonomous AST Fuzzing (Mutagen), Zero-Day Triage, CVE Correlation (Vigil), Linux Kernel PrivEsc, BCM2711 Hardware RE</div><div class="dim">> Current: LLM-guided high-entropy mutation engines and SARIF v2.1 pipeline automation</div>',
-    methodology: '<div style="color: #00ff66;">[METHODOLOGY] 4-Phase VR Lifecycle: (1) Surface Enumeration & CFG Analysis -> (2) Semantic AST Mutation -> (3) Docker ASan Sandboxing -> (4) RCA & Auto-Patching</div><div class="dim">> Standard: OASIS SARIF v2.1 + NIST SP 800-115 + MITRE ATT&CK Framework</div>',
+    methodology: '<div style="color: #7DD3FC;">[METHODOLOGY] 4-Phase VR Lifecycle: (1) Surface Enumeration & CFG Analysis -> (2) Semantic AST Mutation -> (3) Docker ASan Sandboxing -> (4) RCA & Auto-Patching</div><div class="dim">> Standard: OASIS SARIF v2.1 + NIST SP 800-115 + MITRE ATT&CK Framework</div>',
     scholarship: '<div style="color: #ffd700;">[GIAC_GFACT] SANS Institute National Scholar (CyberStart Canada Top Performer)</div><div class="dim">> GIAC GFACT Certified (Issued: 1 Sep 2026) | Systems Logic, Linux Security, Python Automation</div><div class="dim">> Credly ID: e6b7f224-b57d-4224-9f7a-cabe2b3fb257</div>',
     skills: '<div style="color: var(--green);">[CORE_SKILLS] AST Fuzzing, ASan Triage, Threat Intel, SARIF v2.1, Active Directory, Wireshark PCAP Forensics</div>',
     clearance: '<div style="color: #ff3366;">[SECURITY_CLEARANCE] LEVEL 5 // GIAC GFACT CERTIFIED & CTF TOP 1% VERIFIED</div>',
@@ -3102,8 +3003,8 @@ console.log(
 
       if (chartMode === 'line') {
         const fillGrad = ctx.createLinearGradient(0, 0, 0, h);
-        fillGrad.addColorStop(0, 'rgba(0, 255, 102, 0.35)');
-        fillGrad.addColorStop(1, 'rgba(0, 255, 102, 0.0)');
+        fillGrad.addColorStop(0, 'rgba(125, 211, 252, 0.35)');
+        fillGrad.addColorStop(1, 'rgba(125, 211, 252, 0.0)');
 
         ctx.beginPath();
         const stepX = w / (dataPoints - 1);
@@ -3124,9 +3025,9 @@ console.log(
           const py = h - ((history[i] - minVal) / (maxVal - minVal)) * (h - 60) - 30;
           if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
         }
-        ctx.strokeStyle = '#00ff66';
+        ctx.strokeStyle = '#7DD3FC';
         ctx.lineWidth = 2.5;
-        ctx.shadowColor = '#00ff66';
+        ctx.shadowColor = '#7DD3FC';
         ctx.shadowBlur = 12;
         ctx.stroke();
         ctx.shadowBlur = 0;
@@ -3142,13 +3043,13 @@ console.log(
           const py2 = h - ((Math.max(price, prev) - minVal) / (maxVal - minVal)) * (h - 60) - 30;
           const barH = Math.max(3, Math.abs(py1 - py2));
 
-          ctx.fillStyle = isUp ? '#00ff66' : '#ff3366';
+          ctx.fillStyle = isUp ? '#7DD3FC' : '#ff3366';
           ctx.fillRect(px - 4, Math.min(py1, py2), 8, barH);
         }
       }
 
       ctx.font = 'bold 13px "JetBrains Mono", monospace';
-      ctx.fillStyle = '#00ff66';
+      ctx.fillStyle = '#7DD3FC';
       ctx.textAlign = 'right';
       ctx.fillText(`${activeTicker} REAL-TIME: $${history[history.length - 1].toFixed(2)}`, w - 18, 30);
 
@@ -3253,7 +3154,7 @@ console.log(
       sansQuizAnswers.forEach(b => b.style.borderColor = 'rgba(255, 215, 0, 0.25)');
       if (isCorrect) {
         btn.style.borderColor = 'var(--green)';
-        btn.style.background = 'rgba(0, 255, 102, 0.2)';
+        btn.style.background = 'rgba(125, 211, 252, 0.2)';
         if (sansQuizFeedback) {
           sansQuizFeedback.innerHTML = '<span style="color: var(--green); font-weight: bold;">[CORRECT] In x86_64 ABI, the `ret` instruction pops the stored return address from the stack directly into %rip.</span>';
         }
