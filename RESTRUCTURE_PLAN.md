@@ -22,7 +22,7 @@ The site was originally built like a creative-studio portfolio
 
 1. **The strongest assets were gated** behind learning to operate a
    scroll-driven 3D cylinder: GIAC GFACT certified (94, Grade 11, national
-   scholarship), TryHackMe Top 1% (91 rooms), HTB `maxthemadman`
+   scholarship), TryHackMe Top 1% (100+ rooms), HTB `maxthemadman`
    Apprentice/L25, and two real working tools (`bunny-sysd/mutagen`,
    `bunny-sysd/vigil-hunter`).
 2. **Simulated artifacts undercut real ones** — a fuzz-cycle simulator with

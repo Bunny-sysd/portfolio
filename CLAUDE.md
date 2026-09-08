@@ -42,7 +42,7 @@ Mutagen and Vigil project copy has been corrected to match their real repos (`bu
 ## Verified facts to use verbatim in copy (don't paraphrase/estimate)
 
 - GIAC GFACT certified, issued 1 September 2026, scored 94. Credly: `https://www.credly.com/badges/e6b7f224-b57d-4224-9f7a-cabe2b3fb257`
-- TryHackMe: Top 1%, 91 rooms completed
+- TryHackMe: Top 1%, 100+ rooms completed
 - Hack The Box: handle `maxthemadman`, Apprentice tier, Level 25
 
 ## Commands
