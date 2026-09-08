@@ -3266,22 +3266,6 @@ a.front-door-cred:hover {
   flex: 1;
 }
 
-/* Fuzzer Live Sandbox UI inside Modal */
-.fuzzer-sandbox-console {
-  background: #020307;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: var(--radius);
-  padding: 1rem;
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-}
-
-.fuzzer-target-picker {
-  display: flex;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
-  flex-wrap: wrap;
-}
 
 .target-btn {
   font-family: var(--font-mono);
@@ -3305,76 +3289,6 @@ a.front-door-cred:hover {
   border-color: var(--green);
   color: var(--green);
   box-shadow: 0 0 10px rgba(var(--green-rgb), 0.25);
-}
-
-.fuzzer-metrics-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(105px, 1fr));
-  gap: 0.6rem;
-  margin-bottom: 1rem;
-}
-
-.fuzzer-metric-card {
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 4px;
-  padding: 0.5rem 0.65rem;
-  text-align: center;
-}
-
-.fmc-label {
-  font-size: 0.58rem;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  margin-bottom: 0.2rem;
-}
-
-.fmc-val {
-  font-size: 0.95rem;
-  font-weight: 700;
-  color: var(--green);
-}
-
-.fuzzer-log-stream {
-  height: 180px;
-  overflow-y: auto;
-  background: #010204;
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  border-radius: 4px;
-  padding: 0.75rem;
-  font-size: 0.66rem;
-  line-height: 1.6;
-  color: var(--text-dim);
-  -webkit-overflow-scrolling: touch;
-}
-
-.fuzzer-action-bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-top: 1rem;
-}
-
-.btn-trigger-fuzz {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  background: var(--green);
-  color: #000000;
-  font-family: var(--font-mono);
-  font-weight: 700;
-  font-size: 0.75rem;
-  padding: 0.55rem 1.1rem;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: all 0.2s;
-  min-height: 42px;
-}
-
-.btn-trigger-fuzz:hover {
-  box-shadow: 0 0 16px var(--green);
-  transform: translateY(-1px);
 }
 
 /* ══════════════════════════════════════════════════════
@@ -3406,23 +3320,9 @@ a.front-door-cred:hover {
   .modal-scroll-body {
     padding: 0.75rem;
   }
-  .fuzzer-sandbox-console {
-    padding: 0.75rem;
-  }
-  .fuzzer-target-picker {
-    flex-direction: column;
-  }
   .target-btn {
     width: 100%;
     text-align: left;
-  }
-  .fuzzer-action-bar {
-    flex-direction: column;
-    gap: 0.6rem;
-    align-items: stretch;
-  }
-  .btn-trigger-fuzz {
-    width: 100%;
   }
 }
 
@@ -4833,39 +4733,6 @@ body.in-deep-dive .cmd-trigger-btn {
   box-shadow: 0 0 12px var(--green);
 }
 
-/* Dynamic CVSS Calculator in Drawer 03 */
-.cvss-calc-slider-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-  background: rgba(4, 8, 16, 0.6);
-  padding: 1.25rem;
-  border-radius: 8px;
-  border: 1px solid rgba(0, 229, 255, 0.2);
-}
-.cvss-slider-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-}
-.cvss-slider-row label {
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.8);
-  min-width: 140px;
-}
-.cvss-slider-row input[type="range"] {
-  flex: 1;
-  accent-color: var(--cyan);
-}
-.cvss-score-badge {
-  font-family: 'Outfit', sans-serif;
-  font-size: 2rem;
-  font-weight: 900;
-  color: #ff3366;
-  text-shadow: 0 0 15px rgba(255, 51, 102, 0.6);
-}
 
 /* SANS Domain Mastery SVG Rings in Drawer 06 */
 .mastery-rings-grid {

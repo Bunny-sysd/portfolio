@@ -28,7 +28,7 @@
   <link
     href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
     rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=2.4" />
+  <link rel="stylesheet" href="style.css?v=2.5" />
   <style>
     html,
     body {
@@ -703,30 +703,6 @@
             </div>
           </div>
 
-          <!-- Interactive AST Mutation Visualizer & Memory Fault Debugger -->
-          <div class="dossier-panel">
-            <div class="dossier-header-bar">
-              <span class="dossier-header-title">[DEBUG] LIVE AST TARGET PICKER &amp; ASAN CRASH TRACE DEBUGGER</span>
-              <span class="dossier-header-status">MEMORY FAULT INSPECTION</span>
-            </div>
-            <div class="fuzzer-target-picker" style="display: flex; gap: 0.5rem; margin-bottom: 1rem; flex-wrap: wrap;" id="fuzzerTargetPicker">
-              <button class="target-btn active" data-target="cjson">[TARGET] target_cjson.c (Heap Overflow)</button>
-              <button class="target-btn" data-target="auth">[TARGET] target_auth_verify.c (Use-After-Free)</button>
-              <button class="target-btn" data-target="dns">[TARGET] target_dns_resolver.c (Integer Overflow)</button>
-            </div>
-            <div class="fuzzer-action-bar" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.75rem;">
-              <button class="btn-trigger-fuzz" id="btnRunFuzzCycle"><span>▶ RUN AUTONOMOUS FUZZ CYCLE</span></button>
-              <div class="fuzzer-sim-status" id="simStatusTag"><span style="color: var(--green);">● SYSTEM IDLE // READY</span></div>
-            </div>
-            <div class="dd-console" id="fuzzerSimLogs">
-              <div>> [SYS_INIT] Initializing Mutagen AST Mutation Engine &amp; Docker ASan Sandbox...</div>
-              <div class="dim">> [AST_PARSER] Loaded target source: /sandbox/targets/cjson_target.c (12 functions, 4 API sinks)</div>
-              <div class="cyan">> [ASAN_SIGNAL] AddressSanitizer: heap-buffer-overflow on address 0x7fffa1 at pc 0x00000040182b</div>
-              <div style="color: #ff3366;">> [CRASH_LOC] READ of size 128 at 0x7fffa1 thread T0 in cjson_parse() (RIP: 0x40182b)</div>
-              <div style="color: var(--green);">> [AUTO_PATCH] Synthesized bounds check. Recompiling harness... PASSED (0 crashes in 5,000 cycles).</div>
-            </div>
-          </div>
-
           <a href="https://github.com/bunny-sysd/mutagen" target="_blank" rel="noopener noreferrer" class="at-action-btn" style="padding: 0.75rem 1.5rem; font-size: 0.85rem; border-color: var(--green); color: var(--green);">↗ View GitHub Repository: Mutagen</a>
         </div>
       </div>
@@ -841,35 +817,6 @@
             </div>
           </div>
 
-          <!-- Dynamic CVSS v3.1 Risk Calculator -->
-          <div class="dossier-panel">
-            <div class="dossier-header-bar">
-              <span class="dossier-header-title">[CVSS] DYNAMIC CVSS v3.1 RISK CALCULATOR &amp; POC FINDER</span>
-              <span class="dossier-header-status">LIVE REAL-TIME SCORING MATRIX</span>
-            </div>
-            <div class="cvss-calc-slider-group">
-              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
-                <span style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--cyan);">INTERACTIVE THREAT VECTOR SCORING:</span>
-                <div class="cvss-score-badge" id="cvssScoreDisplay">9.8</div>
-              </div>
-              <div class="cvss-slider-row">
-                <label>Attack Vector (AV):</label>
-                <input type="range" id="cvssAV" min="1" max="4" value="4" />
-                <span style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--green); min-width: 80px;" id="cvssAVLabel">Network</span>
-              </div>
-              <div class="cvss-slider-row">
-                <label>Attack Complexity (AC):</label>
-                <input type="range" id="cvssAC" min="1" max="2" value="2" />
-                <span style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--green); min-width: 80px;" id="cvssACLabel">Low</span>
-              </div>
-              <div class="cvss-slider-row">
-                <label>Privileges Required (PR):</label>
-                <input type="range" id="cvssPR" min="1" max="3" value="1" />
-                <span style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--green); min-width: 80px;" id="cvssPRLabel">None</span>
-              </div>
-            </div>
-          </div>
-
           <div class="dossier-panel">
             <div class="dossier-header-bar">
               <span class="dossier-header-title">CLI USAGE &amp; CORRELATION OUTPUT</span>
@@ -913,25 +860,6 @@
             <p style="font-size: 1.08rem; line-height: 1.8; color: rgba(255,255,255,0.9); margin: 0 0 1.25rem 0;">
               SignalHub is a deployed financial market intelligence platform. It streams live equities and cryptocurrency price quotes via WebSocket and REST pipelines, normalizes financial news streams in JSON format, and evaluates macroeconomic sentiment and threat disclosures using natural language processing (NLP) pipelines.
             </p>
-            
-            <!-- LIVE INTERACTIVE MARKET CANVAS & CANDLESTICK TOGGLE -->
-            <div style="background: rgba(4,8,16,0.7); border: 1px solid rgba(125,211,252,0.25); border-radius: 8px; padding: 1.25rem; margin-bottom: 1.5rem;">
-              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; flex-wrap: wrap; gap: 0.5rem;">
-                <div style="display: flex; gap: 0.4rem;" id="marketTickerTabs">
-                  <button class="target-btn active" data-ticker="NVDA">NVDA ($128.40)</button>
-                  <button class="target-btn" data-ticker="TSLA">TSLA ($214.10)</button>
-                  <button class="target-btn" data-ticker="BTC">BTC ($64,200)</button>
-                  <button class="target-btn" data-ticker="ETH">ETH ($3,450)</button>
-                </div>
-                <div style="display: flex; gap: 0.5rem; align-items: center;">
-                  <button class="target-btn" id="btnToggleChartType" style="font-size: 0.7rem;">CANDLESTICK VIEW</button>
-                  <div style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--green);" id="marketLivePulse">
-                    ● LIVE 60 FPS
-                  </div>
-                </div>
-              </div>
-              <canvas id="marketChartCanvas" width="900" height="220" style="width: 100%; height: 220px; background: #020408; border-radius: 6px;"></canvas>
-            </div>
 
             <!-- 3-Stage Phase Flow Diagram -->
             <div class="phase-flow-wrap">
@@ -1116,23 +1044,6 @@
               <div>5. <span class="green">Domain Admin:</span> Configured binary path to net user admin exploit and spawned privileged SYSTEM shell.</div>
             </div>
           </div>
-
-          <!-- IN-BROWSER CTF CIPHER PUZZLE -->
-          <div style="background: rgba(4,8,16,0.7); border: 1px solid rgba(0,229,255,0.3); border-radius: 8px; padding: 1.25rem; margin-bottom: 1.5rem;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
-              <span style="font-family: var(--font-mono); font-size: 0.78rem; font-weight: 700; color: var(--cyan);">[CTF] LIVE IN-BROWSER CTF CHALLENGE: DECRYPT CIPHER</span>
-              <span style="font-family: var(--font-mono); font-size: 0.7rem; color: rgba(255,255,255,0.5);">DIFFICULTY: MEDIUM</span>
-            </div>
-            <div class="dd-console" style="margin-bottom: 0.75rem; font-size: 0.78rem;">
-              <div class="dim">> [ENCRYPTED PAYLOAD] VEdNe0FBT05fQUxWQV9DWUJFUl9TRUNVUklUWV9ORVhVU18yMDI0fQ==</div>
-              <div style="color: var(--cyan);">> [HINT] Base64 encoding standard. Decode to retrieve operator access flag.</div>
-            </div>
-            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-              <input type="text" id="ctfInputFlag" placeholder="Enter decrypted flag..." style="flex: 1; min-width: 240px; background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 0.5rem 0.75rem; border-radius: 4px; font-family: var(--font-mono); font-size: 0.8rem;" />
-              <button class="target-btn active" id="btnSolveFlag">VERIFY FLAG [CRACK]</button>
-            </div>
-            <div id="ctfFlagResult" style="margin-top: 0.5rem; font-family: var(--font-mono); font-size: 0.78rem;"></div>
-          </div>
         </div>
       </div>
     </div>
@@ -1298,7 +1209,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/CustomEase.min.js"></script>
   <script type="module" src="src/main.jsx"></script>
   <script src="three-bg.js?v=10.2"></script>
-  <script src="app.js?v=10.2"></script>
+  <script src="app.js?v=10.3"></script>
 </body>
 
 </html>
