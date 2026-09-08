@@ -54,4 +54,4 @@ Mutagen and Vigil project copy has been corrected to match their real repos (`bu
 ## Working notes
 
 - `prefers-reduced-motion: reduce` has masked real bugs twice this session (an animation-cycle sync bug, a typewriter reveal) because the code disabled the whole feature under that setting instead of just the decorative motion. Always test both settings, not just default.
-- Active plans: `C:\Users\Azure12\.claude\plans\keen-chasing-blum.md` (front door / real-artifacts / minimalist-retheme restructure) and `C:\Users\Azure12\.claude\plans\pure-orbiting-sun.md` (cinematic scroll choreography — completed).
+- **Read `RESTRUCTURE_PLAN.md` (repo root) first in any new session.** It's the checked-in, portable status/roadmap tracker for this restructure — the original plan files it was built from live outside the repo in a user-local folder and aren't visible to other sessions or collaborators. Keep it updated as work lands.
