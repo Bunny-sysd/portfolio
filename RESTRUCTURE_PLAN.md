@@ -50,7 +50,7 @@ common cliché in security portfolios — reads "enthusiast," not
 | 2 | Front door (credentials-first landing, shows every visit) | ✅ Done, committed |
 | 3 | Cut all simulated/mocked widgets + dead-code sweep | ✅ Done, committed |
 | 4 | Real tool-run artifacts (SARIF, asciinema, real patch diff, writeup) | ⛔ Blocked on Aaron |
-| 5 | Deep dead-code sweep (old pre-cylinder design generation) | ✅ Mostly done, committed |
+| 5 | Deep dead-code sweep (old pre-cylinder design + unmounted React tree) | ✅ Done, committed |
 
 **All commits so far are local only — nothing has been pushed to the
 `bunny-sysd/portfolio` remote.** Do not push without explicit go-ahead each
@@ -241,20 +241,55 @@ brace-balance check on `style.css`, then a full-site sweep — front door,
 main orbit view, command palette, all 6 drawers, mobile menu, mobile
 viewport — with zero console/page errors and no visual regressions.
 
-**Deliberately left alone** (too large/risky to verify safely in one pass,
-needs a dedicated future session):
-- `style.css` lines ~1162–1500, "ELEVATED GLASSMORPHIC CARDS" — a large
-  block that mixes real classes (`.glass-panel`, used by the front door)
-  into the same multi-class CSS selectors as clearly-dead ones
-  (`.bento-project-card`, `.cert-card`). Needs careful selector-splitting,
-  not blind deletion.
-- A handful of other MIXED-signal sections (`.nav-link`/`.hamburger`-scoped
-  leftovers already partly cleaned; `.mobile-menu-open` body-class toggle
-  that's live-but-inert, harmless, not worth touching)
-- The unmounted React tree in `src/` (~1,250 lines: `HeroSection.jsx`,
-  `ActiveObjectives.jsx`, `SysArmament.jsx`, `MutagenCard.jsx`,
-  `InteractiveBackground.jsx`, `OperationalSpecs.jsx` — none render, none
-  are even imported by `main.jsx` for the last two)
+### Follow-up pass — the rest of it
+
+Two items from the first pass got finished in a second round the same day:
+
+- **The "ELEVATED GLASSMORPHIC CARDS" mixed block.** `.glass-panel` was
+  declared twice — once as a plain base rule, once inside a later,
+  `!important`-flagged compound selector shared with four dead classes
+  (`.about-main`, `.cert-card`, `.parent-node`, `.bento-project-card`). The
+  `!important` declaration is the one that actually wins the cascade for
+  every real `.glass-panel` element (the front door's credential cards), so
+  it had to be preserved, not deleted with its dead neighbors — split the
+  selector, kept `.glass-panel`/`.glass-panel:hover`, cut the rest (the old
+  bento project-card visual system: mutagen/stock/vm/pentestai preview
+  panels, an old plain-email contact section, `.footer`/`.footer-inner`
+  which turned out to be dead too — the page currently has no footer
+  element at all).
+- **A second, finer sweep** (extract every class in `style.css`, check
+  each against `index.html`/`app.js`/`three-bg.js`) found ~28 more isolated
+  dead rules the first pass missed — mostly leftover theme-switcher remnants
+  (`.mobile-theme-row/-label/-dots`, `.cmd-theme-swatch`, matching Part 1's
+  switcher removal), an old duplicate contact-form terminal-chrome mockup
+  (`.contact-term-header/-dot/-title/-body/-line`, `.contact-cipher-block`),
+  an old floating pill nav and its mobile-menu variant, and old generic
+  `.section-*` wrapper classes. One real (if inert) bug turned up along the
+  way: a mobile media query targeted `.at-theory-drawer`, a class that
+  hasn't existed since the component was renamed to `.at-drawer` — harmless
+  only because `.at-drawer`'s base rule already sets `width/height:
+  100vw/100vh` unconditionally, so the missing mobile override was a no-op,
+  not an active bug.
+- **The unmounted React tree in `src/` — fully removed, not just left
+  documented.** This wasn't just dead code sitting in a folder: `index.html`
+  had `<script type="module" src="src/main.jsx">`, so every visitor's
+  browser was actually downloading and executing React, ReactDOM,
+  framer-motion, and lucide-react for zero visual output (none of
+  `main.jsx`'s 4 mount targets exist in the page). Confirmed
+  `InteractiveBackground.jsx`/`OperationalSpecs.jsx` were additionally
+  never imported by anything, `gsap`/`tailwind-merge`/`clsx`/
+  `@emotion/is-prop-valid` were unused by any src file, and `@react-three/*`
+  + npm `three` were used only by the now-deleted `InteractiveBackground.jsx`
+  (the real Three.js on the page is the CDN-loaded r128 build in
+  `three-bg.js`, unrelated). Removed: `src/`, `tailwind.config.js`,
+  `postcss.config.js`, the `react()` plugin from `vite.config.js`, and 13
+  packages from `package.json` (`npm install` afterward removed 212
+  packages from `node_modules`). Verified both `npm run build` and
+  `npm run dev` still work cleanly, then a full Playwright sweep — zero
+  console errors, nothing visually changed (correctly, since nothing ever
+  rendered from that tree).
+
+Nothing identified as worth doing is left outstanding from Part 5.
 
 ---
 
