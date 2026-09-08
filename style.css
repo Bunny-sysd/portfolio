@@ -3975,7 +3975,7 @@ body::before {
     grid-template-columns: 1fr !important;
   }
 
-  .archify-diagram-wrap {
+  .phase-flow-wrap {
     overflow-x: auto !important;
     -webkit-overflow-scrolling: touch !important;
     padding-bottom: 0.5rem !important;
@@ -4856,9 +4856,9 @@ body.in-deep-dive .cmd-trigger-btn {
 }
 
 /* ══════════════════════════════════════════════════════
-   ARCHIFY 3-STAGE WORKFLOW DIAGRAMS & COMMAND BLOCKS
+   PHASE-FLOW 3-STAGE WORKFLOW DIAGRAMS & COMMAND BLOCKS
    ══════════════════════════════════════════════════════ */
-.archify-diagram-wrap {
+.phase-flow-wrap {
   margin: 1.25rem 0 1.5rem 0;
   background: rgba(3, 7, 18, 0.7);
   border: 1px solid rgba(0, 229, 255, 0.2);
@@ -4866,14 +4866,16 @@ body.in-deep-dive .cmd-trigger-btn {
   padding: 1.25rem;
 }
 
-.archify-diagram-header {
+.phase-flow-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1rem;
+  margin-bottom: 1.25rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
 }
 
-.archify-diagram-title {
+.phase-flow-title {
   font-family: var(--font-mono);
   font-size: 0.75rem;
   font-weight: 700;
@@ -4881,67 +4883,172 @@ body.in-deep-dive .cmd-trigger-btn {
   letter-spacing: 0.08em;
 }
 
-.archify-diagram {
-  display: flex;
-  align-items: stretch;
-  gap: 0.75rem;
-  overflow-x: auto;
-  padding-bottom: 0.5rem;
+.phase-flow-readout {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--green);
+  letter-spacing: 0.05em;
 }
 
-.archify-node {
-  flex: 1;
-  min-width: 180px;
-  background: rgba(4, 12, 28, 0.85);
-  border: 1px solid rgba(0, 255, 102, 0.25);
-  border-left: 3px solid var(--green);
-  border-radius: 6px;
-  padding: 0.85rem;
+.phase-flow-diagram {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1.25rem;
+}
+
+.phase-node {
+  flex: 0 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 0.4rem;
+  align-items: center;
+  gap: 0.5rem;
+  width: 108px;
+  text-align: center;
 }
 
-.archify-node.node-process {
-  border-color: rgba(0, 229, 255, 0.3);
-  border-left: 3px solid var(--cyan);
+.phase-node-shape {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: 2px solid var(--green);
+  background: rgba(4, 12, 28, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--green);
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
 }
 
-.archify-node.node-output {
-  border-color: rgba(255, 176, 0, 0.3);
-  border-left: 3px solid #ffb000;
+.phase-node:nth-child(3) .phase-node-shape {
+  border-color: var(--cyan);
+  color: var(--cyan);
 }
 
-.archify-node-step {
+.phase-node:nth-child(5) .phase-node-shape {
+  border-color: #ffb000;
+  color: #ffb000;
+}
+
+.phase-node:nth-child(7) .phase-node-shape {
+  border-color: #7000ff;
+  color: #7000ff;
+}
+
+.phase-node:nth-child(9) .phase-node-shape {
+  border-color: var(--green);
+  color: var(--green);
+}
+
+.phase-node.is-active .phase-node-shape {
+  transform: scale(1.2);
+  box-shadow: 0 0 22px 4px currentColor;
+}
+
+.phase-node-num {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.phase-node-label {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.8);
+  letter-spacing: 0.02em;
+}
+
+.phase-connector {
+  position: relative;
+  flex: 1 1 auto;
+  min-width: 24px;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.15);
+  margin: 0 0.35rem 1.6rem 0.35rem;
+}
+
+.phase-pulse {
+  position: absolute;
+  top: 50%;
+  left: 0%;
+  width: 8px;
+  height: 8px;
+  margin-top: -4px;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 10px 3px rgba(0, 255, 102, 0.8);
+  opacity: 0;
+  transition: left 0.9s linear;
+}
+
+.phase-pulse.is-traveling {
+  opacity: 1;
+}
+
+.phase-connector:nth-child(4) .phase-pulse {
+  background: var(--cyan);
+  box-shadow: 0 0 10px 3px rgba(0, 229, 255, 0.8);
+}
+
+.phase-connector:nth-child(6) .phase-pulse {
+  background: #ffb000;
+  box-shadow: 0 0 10px 3px rgba(255, 176, 0, 0.8);
+}
+
+.phase-connector:nth-child(8) .phase-pulse {
+  background: #7000ff;
+  box-shadow: 0 0 10px 3px rgba(112, 0, 255, 0.8);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .phase-node-shape {
+    transition: none !important;
+  }
+  .phase-pulse {
+    display: none !important;
+  }
+}
+
+.phase-descriptions {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.85rem;
+}
+
+.phase-desc-item {
+  background: rgba(4, 12, 28, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  padding: 0.75rem;
+}
+
+.phase-desc-tag {
+  display: block;
   font-family: var(--font-mono);
   font-size: 0.65rem;
   font-weight: 700;
   color: var(--text-dim);
-  letter-spacing: 0.1em;
+  letter-spacing: 0.08em;
+  margin-bottom: 0.35rem;
 }
 
-.archify-node-label {
-  font-family: var(--font-mono);
-  font-size: 0.82rem;
-  font-weight: 700;
-  color: #fff;
-}
-
-.archify-node-desc {
+.phase-desc-item p {
   font-size: 0.74rem;
   line-height: 1.5;
   color: rgba(255, 255, 255, 0.7);
+  margin: 0;
 }
 
-.archify-arrow {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--font-mono);
-  font-size: 1.1rem;
-  color: var(--cyan);
-  padding: 0 0.25rem;
-  user-select: none;
+.phase-descriptions-5col {
+  grid-template-columns: repeat(5, 1fr);
+}
+
+@media (max-width: 767px) {
+  .phase-descriptions,
+  .phase-descriptions-5col {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* Spaced Command Blocks with 1-Tap Copy */
@@ -4966,9 +5073,9 @@ body.in-deep-dive .cmd-trigger-btn {
 }
 
 .command-block-code {
-  padding: 0.85rem 1rem;
+  padding: 1.1rem 1.25rem;
   font-size: 0.78rem;
-  line-height: 1.7;
+  line-height: 2.05;
   color: #fff;
   overflow-x: auto;
   margin: 0;
@@ -4982,6 +5089,119 @@ body.in-deep-dive .cmd-trigger-btn {
 .command-block-code .cmd-prompt {
   color: var(--green);
   user-select: none;
+}
+
+.command-line-reveal {
+  display: block;
+  animation: commandLineIn 0.22s ease-out;
+}
+
+@keyframes commandLineIn {
+  from { opacity: 0; transform: translateX(-6px); }
+  to { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .command-line-reveal {
+    animation: none !important;
+  }
+}
+
+/* dd-console had no dedicated rule at all — code content collapsed into a
+   run-on paragraph despite the markup's own line breaks. */
+.dd-console {
+  font-family: var(--font-mono);
+  white-space: pre;
+  overflow-x: auto;
+}
+
+/* ── IDE-style code panel: line-numbered source + diff views ── */
+.ide-panel {
+  background: #010204;
+  border: 1px solid rgba(0, 255, 102, 0.2);
+  border-radius: 6px;
+  overflow: hidden;
+  font-family: var(--font-mono);
+}
+
+.ide-panel-tabs {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 0.75rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.ide-panel-tabs::before {
+  content: '';
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #ff5f56;
+  box-shadow: 16px 0 0 #ffbd2e, 32px 0 0 #27c93f;
+  margin-right: 0.85rem;
+  flex: 0 0 auto;
+}
+
+.ide-tab {
+  font-size: 0.68rem;
+  color: rgba(255, 255, 255, 0.55);
+  border-bottom: 2px solid transparent;
+  padding: 0.15rem 0;
+}
+
+.ide-tab.active {
+  color: var(--green);
+  border-bottom-color: var(--green);
+}
+
+.ide-code {
+  overflow-x: auto;
+  font-size: 0.72rem;
+  line-height: 1.75;
+}
+
+.ide-line {
+  display: flex;
+}
+
+.ide-lineno {
+  flex: 0 0 auto;
+  width: 2.4rem;
+  text-align: right;
+  padding-right: 0.85rem;
+  color: rgba(255, 255, 255, 0.25);
+  user-select: none;
+}
+
+.ide-gutter {
+  flex: 0 0 auto;
+  width: 1rem;
+  text-align: center;
+  user-select: none;
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.ide-code-text {
+  white-space: pre;
+  padding-right: 1rem;
+}
+
+.ide-diff .diff-add {
+  background: rgba(0, 255, 102, 0.08);
+}
+
+.ide-diff .diff-add .ide-gutter {
+  color: var(--green);
+}
+
+.ide-diff .diff-remove {
+  background: rgba(255, 51, 102, 0.08);
+}
+
+.ide-diff .diff-remove .ide-gutter {
+  color: #ff3366;
 }
 
 .command-copy-btn {
@@ -5033,12 +5253,20 @@ body.in-deep-dive .cmd-trigger-btn {
 }
 
 @media (max-width: 768px) {
-  .archify-diagram {
+  .phase-flow-diagram {
     flex-direction: column;
   }
-  .archify-arrow {
-    transform: rotate(90deg);
-    padding: 0.25rem 0;
+  .phase-node {
+    width: auto;
+  }
+  .phase-connector {
+    width: 2px;
+    height: 28px;
+    min-width: 0;
+    margin: 0.25rem 0;
+  }
+  .phase-pulse {
+    display: none;
   }
 }
 

@@ -28,7 +28,7 @@
   <link
     href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
     rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=2.0" />
+  <link rel="stylesheet" href="style.css?v=2.1" />
   <style>
     html,
     body {
@@ -400,34 +400,35 @@
             </div>
           </div>
 
-          <!-- Tactical Core Competencies Grid & Interactive Skill Radar -->
+          <!-- Tactical Core Competencies -->
           <div class="dossier-panel">
             <div class="dossier-header-bar">
-              <span class="dossier-header-title">[SKILLS] TACTICAL CORE COMPETENCIES &amp; SKILL RADAR</span>
+              <span class="dossier-header-title">[SKILLS] TACTICAL CORE COMPETENCIES</span>
               <span class="dossier-header-status">TAXONOMY: OFFENSIVE &amp; DEFENSIVE SYSTEMS</span>
             </div>
-            <div class="dossier-grid-2">
-              <div>
-                <canvas id="skillRadarCanvas" width="440" height="300" style="width: 100%; height: auto; background: rgba(4,8,16,0.6); border: 1px solid rgba(0,255,102,0.2); border-radius: 8px;"></canvas>
-                <div style="text-align: center; margin-top: 0.5rem; font-family: var(--font-mono); font-size: 0.7rem; color: var(--green);">● LIVE 5-AXIS DOMAIN PROFICIENCY RADAR</div>
+            <div class="skill-tag-cloud" style="margin-bottom: 1.25rem;">
+              <span class="skill-tag-pill">VULNERABILITY DISCOVERY</span>
+              <span class="skill-tag-pill">LINUX PRIVILEGE ESCALATION</span>
+              <span class="skill-tag-pill">DOCKER / ASAN SANDBOXING</span>
+              <span class="skill-tag-pill">AI &amp; LLM SECURITY</span>
+              <span class="skill-tag-pill">THREAT INTELLIGENCE</span>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+              <div class="dossier-pod">
+                <div class="dossier-pod-title">[BIN] Binary Exploitation &amp; Memory Safety</div>
+                <p class="dossier-pod-desc">Analyzing stack frame layouts, buffer overflow boundaries, Heap Use-After-Free (UAF), and triaging crash signals with GDB/GEF and AddressSanitizer.</p>
               </div>
-              <div style="display: flex; flex-direction: column; gap: 0.75rem;">
-                <div class="dossier-pod">
-                  <div class="dossier-pod-title">[BIN] Binary Exploitation &amp; Memory Safety</div>
-                  <p class="dossier-pod-desc">Analyzing stack frame layouts, buffer overflow boundaries, Heap Use-After-Free (UAF), and triaging crash signals with GDB/GEF and AddressSanitizer.</p>
-                </div>
-                <div class="dossier-pod">
-                  <div class="dossier-pod-title">[SYS] Linux Kernel &amp; Privilege Escalation</div>
-                  <p class="dossier-pod-desc">Exploiting SUID/SGID binaries, Linux capability misconfigurations, cron job race conditions, and inspecting system activity with <code>auditd</code> and <code>strace</code>.</p>
-                </div>
-                <div class="dossier-pod">
-                  <div class="dossier-pod-title">[AI] Agentic AI &amp; LLM Security Systems</div>
-                  <p class="dossier-pod-desc">Architecting LLM-driven AST input mutators, autonomous vulnerability patch generators, and sandboxing neural pipelines against prompt injection vectors.</p>
-                </div>
-                <div class="dossier-pod">
-                  <div class="dossier-pod-title">[NET] Network Forensics &amp; Threat Intelligence</div>
-                  <p class="dossier-pod-desc">Deep-packet inspection via Wireshark/tcpdump, TCP 3-way handshake analysis, NVD API v2 live correlation, and exporting standardized SARIF v2.1 reports.</p>
-                </div>
+              <div class="dossier-pod">
+                <div class="dossier-pod-title">[SYS] Linux Kernel &amp; Privilege Escalation</div>
+                <p class="dossier-pod-desc">Exploiting SUID/SGID binaries, Linux capability misconfigurations, cron job race conditions, and inspecting system activity with <code>auditd</code> and <code>strace</code>.</p>
+              </div>
+              <div class="dossier-pod">
+                <div class="dossier-pod-title">[AI] Agentic AI &amp; LLM Security Systems</div>
+                <p class="dossier-pod-desc">Architecting LLM-driven AST input mutators, autonomous vulnerability patch generators, and sandboxing neural pipelines against prompt injection vectors.</p>
+              </div>
+              <div class="dossier-pod">
+                <div class="dossier-pod-title">[NET] Network Forensics &amp; Threat Intelligence</div>
+                <p class="dossier-pod-desc">Deep-packet inspection via Wireshark/tcpdump, TCP 3-way handshake analysis, NVD API v2 live correlation, and exporting standardized SARIF v2.1 reports.</p>
               </div>
             </div>
           </div>
@@ -505,54 +506,83 @@
           <div class="dossier-panel">
             <div class="dossier-header-bar">
               <span class="dossier-header-title">[AI] AUTONOMOUS 5-PHASE FUZZER &amp; AUTO-PATCHER</span>
-              <span class="dossier-header-status">STACK: PYTHON // LLM AGENTS // DOCKER ASAN // CLANG AST</span>
+              <span class="dossier-header-status">STACK: PYTHON // GEMINI &middot; CLAUDE &middot; GPT &middot; OLLAMA // GHIDRA</span>
             </div>
             <p style="font-size: 1.08rem; line-height: 1.8; color: rgba(255,255,255,0.9); margin: 0 0 1.25rem 0;">
-              Mutagen is an autonomous security research fuzzer built in Python. While traditional blind fuzzers waste millions of CPU cycles generating malformed syntax that gets rejected immediately, Mutagen tokenizes C source code into an Abstract Syntax Tree (AST), identifies memory-sensitive API sinks, prompts LLMs with semantic structural constraints to synthesize high-entropy edge-case payloads, executes them in isolated <strong style="color: var(--green);">--network=none Docker sandboxes</strong> instrumented with AddressSanitizer (ASan), and automatically drafts verified source-code patches.
+              Mutagen is an agentic AI fuzzer built in Python that reads source code (or a compiled binary via Ghidra decompilation), finds vulnerabilities, generates exploits, patches the bugs, and proves the fix works &mdash; fully autonomously. Rather than the random mutation traditional fuzzers rely on, Mutagen uses an LLM (Gemini, Claude, GPT, or a local Ollama model) to reason about the code, target high-entropy edge cases, and learn from each failed attempt before retrying.
             </p>
             <div class="dossier-grid-4">
               <div class="dossier-stat-box">
-                <div class="dossier-stat-val">14.2K</div>
-                <div class="dossier-stat-lbl">Mutation Cycles</div>
+                <div class="dossier-stat-val">5-PHASE</div>
+                <div class="dossier-stat-lbl">Analyze &rarr; Verify Pipeline</div>
               </div>
               <div class="dossier-stat-box">
-                <div class="dossier-stat-val">88.4%</div>
-                <div class="dossier-stat-lbl">Branch Coverage</div>
+                <div class="dossier-stat-val">8 CWE</div>
+                <div class="dossier-stat-lbl">Vulnerability Classes</div>
               </div>
               <div class="dossier-stat-box">
-                <div class="dossier-stat-val">0-NET</div>
-                <div class="dossier-stat-lbl">Docker Isolation</div>
+                <div class="dossier-stat-val">3 MODES</div>
+                <div class="dossier-stat-lbl">Audit &middot; Supply-Chain &middot; Malware</div>
               </div>
               <div class="dossier-stat-box">
-                <div class="dossier-stat-val">ASan</div>
-                <div class="dossier-stat-lbl">Signal Triage</div>
+                <div class="dossier-stat-val">130+</div>
+                <div class="dossier-stat-lbl">Unit Tests</div>
               </div>
             </div>
           </div>
 
-          <!-- 3-Stage Archify Visual Workflow Diagram -->
-          <div class="archify-diagram-wrap">
-            <div class="archify-diagram-header">
-              <span class="archify-diagram-title">[ARCHIFY] 3-STAGE AUTONOMOUS MUTATION &amp; TRIAGE WORKFLOW</span>
-              <span style="font-family: var(--font-mono); font-size: 0.68rem; color: var(--green);">● SYSTEM READY</span>
+          <!-- 5-Stage Phase Flow Diagram -->
+          <div class="phase-flow-wrap">
+            <div class="phase-flow-header">
+              <span class="phase-flow-title">[FLOW] 5-PHASE AGENTIC FUZZ &amp; AUTO-PATCH PIPELINE</span>
+              <span class="phase-flow-readout" data-phase-readout>PHASE 1/5 &middot; ANALYZE</span>
             </div>
-            <div class="archify-diagram">
-              <div class="archify-node">
-                <span class="archify-node-step">01 // INGEST</span>
-                <span class="archify-node-label">Source &amp; Binary AST</span>
-                <span class="archify-node-desc">Parse target C/C++ source code via Clang AST, map memory-sensitive API sinks (<code>strcpy</code>, <code>malloc</code>), and build tainted input entrypoints.</span>
+            <div class="phase-flow-diagram">
+              <div class="phase-node">
+                <div class="phase-node-shape"><span class="phase-node-num">01</span></div>
+                <div class="phase-node-label">Analyze</div>
               </div>
-              <div class="archify-arrow">›</div>
-              <div class="archify-node node-process">
-                <span class="archify-node-step">02 // MUTATE &amp; EXECUTE</span>
-                <span class="archify-node-label">LLM Mutation Engine</span>
-                <span class="archify-node-desc">Synthesize high-entropy seed variations with semantic boundary conditions. Detonate inside isolated non-root Docker sandboxes with <code>--network=none</code>.</span>
+              <div class="phase-connector"><span class="phase-pulse"></span></div>
+              <div class="phase-node">
+                <div class="phase-node-shape"><span class="phase-node-num">02</span></div>
+                <div class="phase-node-label">Compile</div>
               </div>
-              <div class="archify-arrow">›</div>
-              <div class="archify-node node-output">
-                <span class="archify-node-step">03 // VERIFY &amp; PATCH</span>
-                <span class="archify-node-label">ASan Triage &amp; Auto-Patch</span>
-                <span class="archify-node-desc">Capture memory crash signals (<code>SIGSEGV</code>/<code>SIGABRT</code>), deduplicate by RIP hash, and synthesize verified AST diff patches.</span>
+              <div class="phase-connector"><span class="phase-pulse"></span></div>
+              <div class="phase-node">
+                <div class="phase-node-shape"><span class="phase-node-num">03</span></div>
+                <div class="phase-node-label">Fuzz</div>
+              </div>
+              <div class="phase-connector"><span class="phase-pulse"></span></div>
+              <div class="phase-node">
+                <div class="phase-node-shape"><span class="phase-node-num">04</span></div>
+                <div class="phase-node-label">Patch &amp; Exploit</div>
+              </div>
+              <div class="phase-connector"><span class="phase-pulse"></span></div>
+              <div class="phase-node">
+                <div class="phase-node-shape"><span class="phase-node-num">05</span></div>
+                <div class="phase-node-label">Verify</div>
+              </div>
+            </div>
+            <div class="phase-descriptions phase-descriptions-5col">
+              <div class="phase-desc-item">
+                <span class="phase-desc-tag">01 // ANALYZE</span>
+                <p>The LLM reads the target source (or decompiles a binary via Ghidra) and identifies candidate vulnerabilities and edge cases.</p>
+              </div>
+              <div class="phase-desc-item">
+                <span class="phase-desc-tag">02 // COMPILE</span>
+                <p>Compiles the target with a crash handler injected so failures can be captured and attributed precisely.</p>
+              </div>
+              <div class="phase-desc-item">
+                <span class="phase-desc-tag">03 // FUZZ</span>
+                <p>Executes AI-generated payloads against the target; the agent learns from failed attempts and retries with adjusted inputs.</p>
+              </div>
+              <div class="phase-desc-item">
+                <span class="phase-desc-tag">04 // PATCH &amp; EXPLOIT</span>
+                <p>Once a crash is confirmed, Mutagen drafts a secure C patch and a Python proof-of-concept exploit.</p>
+              </div>
+              <div class="phase-desc-item">
+                <span class="phase-desc-tag">05 // VERIFY</span>
+                <p>Re-runs the fuzzing campaign against the patched target to confirm the vulnerability is actually eliminated.</p>
               </div>
             </div>
           </div>
@@ -566,72 +596,77 @@
             <div style="font-size: 0.88rem; line-height: 1.7; color: rgba(255,255,255,0.85); margin-bottom: 0.75rem;">
               <strong>Plain-Language Execution Steps:</strong>
               <ol style="margin: 0.5rem 0 0 1.25rem; padding: 0; display: flex; flex-direction: column; gap: 0.35rem;">
-                <li>Point Mutagen at target binary or source repository with AddressSanitizer harness.</li>
-                <li>Launch autonomous fuzzing workers inside air-gapped container sandboxes.</li>
-                <li>Inspect triaged crashes, reproducible proof-of-concept inputs, and standardized SARIF reports.</li>
+                <li>Point Mutagen at a source file or a compiled binary.</li>
+                <li>Optionally run in multi-agent swarm mode for harder targets.</li>
+                <li>Or fuzz every bundled target in one automated batch run.</li>
               </ol>
             </div>
             <div class="command-block">
               <div class="command-block-header">
-                <span>BASH // MUTAGEN CLI PIPELINE</span>
-                <button class="command-copy-btn" onclick="navigator.clipboard.writeText('mutagen init --target ./src --harness asan\nmutagen run --workers 4 --mode auto-triage\nmutagen report --format sarif --output ./results.sarif')">Copy Commands</button>
+                <span>BASH // MUTAGEN CLI</span>
+                <button class="command-copy-btn" onclick="navigator.clipboard.writeText('mutagen --target targets/01_buffer_overflow.c\nmutagen --target path/to/binary.exe --binary\nmutagen --target targets/22_asyn_signal_uaf.c --mode agents\npython run_all.py --max-payloads 3')">Copy Commands</button>
               </div>
-              <pre class="command-block-code"><span class="cmd-comment"># Step 1: Initialize fuzzer target with ASan harness</span>
-<span class="cmd-prompt">$ </span>mutagen init --target ./src --harness asan
+              <pre class="command-block-code"><span class="cmd-comment"># Fuzz a single source-code target</span>
+<span class="cmd-prompt">$ </span>mutagen --target targets/01_buffer_overflow.c
 
-<span class="cmd-comment"># Step 2: Launch autonomous mutation pipeline in isolated sandbox</span>
-<span class="cmd-prompt">$ </span>mutagen run --workers 4 --mode auto-triage
+<span class="cmd-comment"># Fuzz a compiled binary (decompiled via Ghidra)</span>
+<span class="cmd-prompt">$ </span>mutagen --target path/to/binary.exe --binary
 
-<span class="cmd-comment"># Step 3: Export verified crash reports and SARIF v2.1 logs</span>
-<span class="cmd-prompt">$ </span>mutagen report --format sarif --output ./results.sarif</pre>
+<span class="cmd-comment"># Run in multi-agent swarm mode on a harder target</span>
+<span class="cmd-prompt">$ </span>mutagen --target targets/22_asyn_signal_uaf.c --mode agents
+
+<span class="cmd-comment"># Fuzz every bundled target automatically</span>
+<span class="cmd-prompt">$ </span>python run_all.py --max-payloads 3</pre>
             </div>
           </div>
 
           <!-- Real Exploit & Root Cause Analysis Case Study -->
           <div class="dossier-panel">
             <div class="dossier-header-bar">
-              <span class="dossier-header-title">[CASE] HEAP BUFFER OVERFLOW (CWE-122) ROOT CAUSE ANALYSIS</span>
-              <span class="dossier-header-status">TARGET: target_cjson.c // VULNERABILITY TRIAGE &amp; AUTO-PATCH</span>
+              <span class="dossier-header-title">[CASE] BUFFER OVERFLOW (CWE-120) ROOT CAUSE ANALYSIS</span>
+              <span class="dossier-header-status">ILLUSTRATIVE EXAMPLE // VULNERABILITY TRIAGE &amp; AUTO-PATCH</span>
             </div>
             <div class="dossier-grid-2">
               <div>
                 <div style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--cyan); margin-bottom: 0.35rem;">VULNERABLE C SOURCE SNIPPET:</div>
-                <div class="dd-console" style="font-size: 0.72rem; line-height: 1.5; color: #fff;">
-<span class="dim">// target_cjson.c: Unescaping JSON strings without bound check</span>
-<span class="cyan">char</span> *cjson_unescape(<span class="cyan">const char</span> *input, <span class="cyan">size_t</span> in_len) {
-    <span class="cyan">char</span> *out = (<span class="cyan">char</span> *)<span class="warn">malloc</span>(in_len); <span class="dim">// Allocation is too small for escaped sequences</span>
-    <span class="cyan">size_t</span> out_idx = 0;
-    <span class="cyan">for</span> (<span class="cyan">size_t</span> i = 0; i &lt; in_len; i++) {
-        <span class="cyan">if</span> (input[i] == <span class="warn">'\\'</span> &amp;&amp; i + 1 &lt; in_len) {
-            <span class="dim">// Mutagen generated overlong hex escape sequence '\x41\x41...'</span>
-            out[out_idx++] = parse_hex_byte(&amp;input[i+1]);
-            i += 3;
-        } <span class="cyan">else</span> {
-            out[out_idx++] = input[i]; <span class="err">// Out-of-bounds write occurs when out_idx &gt;= in_len</span>
-        }
-    }
-    out[out_idx] = <span class="warn">'\0'</span>;
-    <span class="cyan">return</span> out;
-}
+                <div class="ide-panel">
+                  <div class="ide-panel-tabs"><span class="ide-tab active">example_target.c</span></div>
+                  <div class="ide-code">
+                    <div class="ide-line"><span class="ide-lineno">1</span><span class="ide-code-text dim">// Unescaping a string without validating the destination buffer size</span></div>
+                    <div class="ide-line"><span class="ide-lineno">2</span><span class="ide-code-text"><span class="cyan">char</span> *unescape(<span class="cyan">const char</span> *input, <span class="cyan">size_t</span> in_len) {</span></div>
+                    <div class="ide-line"><span class="ide-lineno">3</span><span class="ide-code-text">    <span class="cyan">char</span> *out = (<span class="cyan">char</span> *)<span class="warn">malloc</span>(in_len);</span></div>
+                    <div class="ide-line"><span class="ide-lineno">4</span><span class="ide-code-text">    <span class="cyan">size_t</span> out_idx = 0;</span></div>
+                    <div class="ide-line"><span class="ide-lineno">5</span><span class="ide-code-text">    <span class="cyan">for</span> (<span class="cyan">size_t</span> i = 0; i &lt; in_len; i++) {</span></div>
+                    <div class="ide-line"><span class="ide-lineno">6</span><span class="ide-code-text">        <span class="cyan">if</span> (input[i] == <span class="warn">'\\'</span> &amp;&amp; i + 1 &lt; in_len) {</span></div>
+                    <div class="ide-line"><span class="ide-lineno">7</span><span class="ide-code-text">            out[out_idx++] = parse_hex_byte(&amp;input[i + 1]);</span></div>
+                    <div class="ide-line"><span class="ide-lineno">8</span><span class="ide-code-text">            i += 3;</span></div>
+                    <div class="ide-line"><span class="ide-lineno">9</span><span class="ide-code-text">        } <span class="cyan">else</span> {</span></div>
+                    <div class="ide-line"><span class="ide-lineno">10</span><span class="ide-code-text">            out[out_idx++] = input[i]; <span class="err">// unbounded once out_idx &gt;= in_len</span></span></div>
+                    <div class="ide-line"><span class="ide-lineno">11</span><span class="ide-code-text">        }</span></div>
+                    <div class="ide-line"><span class="ide-lineno">12</span><span class="ide-code-text">    }</span></div>
+                    <div class="ide-line"><span class="ide-lineno">13</span><span class="ide-code-text">    out[out_idx] = <span class="warn">'\0'</span>;</span></div>
+                    <div class="ide-line"><span class="ide-lineno">14</span><span class="ide-code-text">    <span class="cyan">return</span> out;</span></div>
+                    <div class="ide-line"><span class="ide-lineno">15</span><span class="ide-code-text">}</span></div>
+                  </div>
                 </div>
               </div>
               <div>
-                <div style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--green); margin-bottom: 0.35rem;">VERIFIED AUTO-GENERATED AST DIFF PATCH:</div>
-                <div class="dd-console" style="font-size: 0.72rem; line-height: 1.5;">
-<span class="dim">--- target_cjson.c (Original)</span>
-<span class="dim">+++ target_cjson.c (Mutagen Auto-Patch)</span>
-<span class="cyan">@@ -4,8 +4,11 @@</span>
-<span class="err">-   char *out = (char *)malloc(in_len);</span>
-<span class="green">+   // Dynamic allocation with capacity tracking &amp; growth checks</span>
-<span class="green">+   size_t cap = in_len + 16;</span>
-<span class="green">+   char *out = (char *)malloc(cap);</span>
-<span class="green">+   if (!out) return NULL;</span>
-    size_t out_idx = 0;
-    for (size_t i = 0; i &lt; in_len; i++) {
-<span class="green">+       if (out_idx + 2 &gt;= cap) {</span>
-<span class="green">+           cap *= 2;</span>
-<span class="green">+           out = (char *)realloc(out, cap);</span>
-<span class="green">+       }</span>
+                <div style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--green); margin-bottom: 0.35rem;">AUTO-GENERATED PATCH:</div>
+                <div class="ide-panel">
+                  <div class="ide-panel-tabs"><span class="ide-tab active">example_target.c &middot; patch</span></div>
+                  <div class="ide-code ide-diff">
+                    <div class="ide-line diff-context"><span class="ide-lineno">2</span><span class="ide-gutter">&nbsp;</span><span class="ide-code-text">char *unescape(const char *input, size_t in_len) {</span></div>
+                    <div class="ide-line diff-remove"><span class="ide-lineno">3</span><span class="ide-gutter">-</span><span class="ide-code-text">    char *out = (char *)malloc(in_len);</span></div>
+                    <div class="ide-line diff-add"><span class="ide-lineno">3</span><span class="ide-gutter">+</span><span class="ide-code-text">    size_t cap = in_len + 16;</span></div>
+                    <div class="ide-line diff-add"><span class="ide-lineno">4</span><span class="ide-gutter">+</span><span class="ide-code-text">    char *out = (char *)malloc(cap);</span></div>
+                    <div class="ide-line diff-add"><span class="ide-lineno">5</span><span class="ide-gutter">+</span><span class="ide-code-text">    if (!out) return NULL;</span></div>
+                    <div class="ide-line diff-context"><span class="ide-lineno">6</span><span class="ide-gutter">&nbsp;</span><span class="ide-code-text">    size_t out_idx = 0;</span></div>
+                    <div class="ide-line diff-context"><span class="ide-lineno">7</span><span class="ide-gutter">&nbsp;</span><span class="ide-code-text">    for (size_t i = 0; i &lt; in_len; i++) {</span></div>
+                    <div class="ide-line diff-add"><span class="ide-lineno">8</span><span class="ide-gutter">+</span><span class="ide-code-text">        if (out_idx + 2 &gt;= cap) {</span></div>
+                    <div class="ide-line diff-add"><span class="ide-lineno">9</span><span class="ide-gutter">+</span><span class="ide-code-text">            cap *= 2;</span></div>
+                    <div class="ide-line diff-add"><span class="ide-lineno">10</span><span class="ide-gutter">+</span><span class="ide-code-text">            out = (char *)realloc(out, cap);</span></div>
+                    <div class="ide-line diff-add"><span class="ide-lineno">11</span><span class="ide-gutter">+</span><span class="ide-code-text">        }</span></div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -661,7 +696,7 @@
             </div>
           </div>
 
-          <a href="https://github.com/Bunny-sysd/mutagen-fuzzer" target="_blank" rel="noopener noreferrer" class="at-action-btn" style="padding: 0.75rem 1.5rem; font-size: 0.85rem; border-color: var(--green); color: var(--green);">↗ View GitHub Repository: Mutagen</a>
+          <a href="https://github.com/bunny-sysd/mutagen" target="_blank" rel="noopener noreferrer" class="at-action-btn" style="padding: 0.75rem 1.5rem; font-size: 0.85rem; border-color: var(--green); color: var(--green);">↗ View GitHub Repository: Mutagen</a>
         </div>
       </div>
     </div>
@@ -681,16 +716,16 @@
           <!-- Overview Dossier -->
           <div class="dossier-panel">
             <div class="dossier-header-bar">
-              <span class="dossier-header-title">[CLI] AUTOMATED CVE CORRELATION &amp; POC HARVESTER CLI</span>
+              <span class="dossier-header-title">[CLI] AI-POWERED THREAT HUNTING &amp; TACTICAL COMPASS ENGINE</span>
               <span class="dossier-header-status">STACK: PYTHON // NVD API v2 // OSV.DEV // SARIF v2.1</span>
             </div>
             <p style="font-size: 1.08rem; line-height: 1.8; color: rgba(255,255,255,0.9); margin: 0 0 1.25rem 0;">
-              Vigil is a command-line threat intelligence and vulnerability correlation pipeline built in Python. It bridges raw reconnaissance telemetry and verified exploit verification by ingesting Nmap XML scans, Linux authentication logs (<code>/var/log/auth.log</code>), and PEASS privilege escalation outputs, normalizing software versions into standardized Common Platform Enumeration (CPE 2.3) identifiers, querying live vulnerability databases (<strong style="color: var(--cyan);">NVD API v2, OSV.dev</strong>), crawling GitHub for verified Proof-of-Concept exploits, and exporting OASIS Standard SARIF v2.1 reports.
+              Vigil is a human-in-the-loop threat hunting CLI built in Python &mdash; <strong style="color: var(--cyan);">the human decides, Vigil informs.</strong> It auto-detects and parses 8 recon/log formats (Nmap, auth logs, web server logs, PEASS output, source code, and more), correlates findings live against NVD and OSV.dev, and its Red Team Compass Engine turns that into ranked tactical next-steps with concrete CLI command templates for whichever engagement phase you're in, rather than acting on its own.
             </p>
             <div class="dossier-grid-4">
               <div class="dossier-stat-box">
-                <div class="dossier-stat-val">3-WAY</div>
-                <div class="dossier-stat-lbl">Ingestion Parsers</div>
+                <div class="dossier-stat-val">8 FORMATS</div>
+                <div class="dossier-stat-lbl">Auto-Detected Inputs</div>
               </div>
               <div class="dossier-stat-box">
                 <div class="dossier-stat-val">REST v2</div>
@@ -707,29 +742,40 @@
             </div>
           </div>
 
-          <!-- 3-Stage Archify Visual Workflow Diagram -->
-          <div class="archify-diagram-wrap">
-            <div class="archify-diagram-header">
-              <span class="archify-diagram-title">[ARCHIFY] 3-STAGE RECON TO ACTIONABLE THREAT MATRIX</span>
-              <span style="font-family: var(--font-mono); font-size: 0.68rem; color: var(--cyan);">● LIVE FEED CONNECTED</span>
+          <!-- 3-Stage Phase Flow Diagram -->
+          <div class="phase-flow-wrap">
+            <div class="phase-flow-header">
+              <span class="phase-flow-title">[FLOW] ANALYZE &rarr; COMPASS &rarr; REPORT WORKFLOW</span>
+              <span class="phase-flow-readout" data-phase-readout>PHASE 1/3 &middot; ANALYZE</span>
             </div>
-            <div class="archify-diagram">
-              <div class="archify-node">
-                <span class="archify-node-step">01 // INGEST</span>
-                <span class="archify-node-label">Network Scans &amp; Logs</span>
-                <span class="archify-node-desc">Ingest Nmap XML port scans, service banners, and authentication logs. Parse and normalize versions into CPE 2.3 standard URIs.</span>
+            <div class="phase-flow-diagram">
+              <div class="phase-node">
+                <div class="phase-node-shape"><span class="phase-node-num">01</span></div>
+                <div class="phase-node-label">Analyze</div>
               </div>
-              <div class="archify-arrow">›</div>
-              <div class="archify-node node-process">
-                <span class="archify-node-step">02 // CORRELATE</span>
-                <span class="archify-node-label">Live Vulnerability Feeds</span>
-                <span class="archify-node-desc">Query NVD REST API v2.0 &amp; OSV.dev in parallel with rate-limited workers. Match CVEs and crawl verified GitHub PoC exploits.</span>
+              <div class="phase-connector"><span class="phase-pulse"></span></div>
+              <div class="phase-node">
+                <div class="phase-node-shape"><span class="phase-node-num">02</span></div>
+                <div class="phase-node-label">Compass</div>
               </div>
-              <div class="archify-arrow">›</div>
-              <div class="archify-node node-output">
-                <span class="archify-node-step">03 // OUTPUT</span>
-                <span class="archify-node-label">Prioritized Remediation</span>
-                <span class="archify-node-desc">Export prioritized CVSS severity matrix, actionable patch steps, and standardized OASIS SARIF v2.1 reports.</span>
+              <div class="phase-connector"><span class="phase-pulse"></span></div>
+              <div class="phase-node">
+                <div class="phase-node-shape"><span class="phase-node-num">03</span></div>
+                <div class="phase-node-label">Report</div>
+              </div>
+            </div>
+            <div class="phase-descriptions">
+              <div class="phase-desc-item">
+                <span class="phase-desc-tag">01 // ANALYZE</span>
+                <p><code>vigil analyze</code> ingests the scan, normalizes services into CPE 2.3 identifiers, and correlates them live against NVD and OSV.dev.</p>
+              </div>
+              <div class="phase-desc-item">
+                <span class="phase-desc-tag">02 // COMPASS</span>
+                <p><code>vigil compass</code> turns findings into ranked tactical next-steps for the current engagement phase &mdash; recon, initial access, or privilege escalation. You choose what to run.</p>
+              </div>
+              <div class="phase-desc-item">
+                <span class="phase-desc-tag">03 // REPORT</span>
+                <p>Export SARIF v2.1 / HTML / Markdown, then use <code>vigil diff</code> and <code>vigil session</code> to track how the engagement changes over time.</p>
               </div>
             </div>
           </div>
@@ -743,24 +789,24 @@
             <div style="font-size: 0.88rem; line-height: 1.7; color: rgba(255,255,255,0.85); margin-bottom: 0.75rem;">
               <strong>Plain-Language Execution Steps:</strong>
               <ol style="margin: 0.5rem 0 0 1.25rem; padding: 0; display: flex; flex-direction: column; gap: 0.35rem;">
-                <li>Feed raw network discovery scans or system authentication logs into the CLI.</li>
-                <li>Correlate detected services against global vulnerability databases in real time.</li>
-                <li>Export an actionable remediation summary sorted by CVSS severity score.</li>
+                <li>Analyze a recon scan or log file and correlate it against live CVE feeds.</li>
+                <li>Ask the Compass engine for ranked next-steps at your current engagement phase.</li>
+                <li>Diff scans over time to see what changed as the engagement progresses.</li>
               </ol>
             </div>
             <div class="command-block">
               <div class="command-block-header">
-                <span>BASH // VIGIL CLI PIPELINE</span>
-                <button class="command-copy-btn" onclick="navigator.clipboard.writeText('vigil scan --input ./recon/nmap_scan.xml\nvigil correlate --min-cvss 7.0 --feed nvd-v2\nvigil export --format sarif --output ./audit.sarif')">Copy Commands</button>
+                <span>BASH // VIGIL CLI</span>
+                <button class="command-copy-btn" onclick="navigator.clipboard.writeText('vigil analyze target_scan.txt --format sarif --output results.sarif\nvigil compass target_scan.txt --phase initial_access\nvigil diff scan_before.txt scan_after.txt')">Copy Commands</button>
               </div>
-              <pre class="command-block-code"><span class="cmd-comment"># Step 1: Ingest network scan telemetry</span>
-<span class="cmd-prompt">$ </span>vigil scan --input ./recon/nmap_scan.xml
+              <pre class="command-block-code"><span class="cmd-comment"># Analyze a scan and correlate against live CVE feeds</span>
+<span class="cmd-prompt">$ </span>vigil analyze target_scan.txt --format sarif --output results.sarif
 
-<span class="cmd-comment"># Step 2: Correlate against live CVE databases (CVSS &gt;= 7.0)</span>
-<span class="cmd-prompt">$ </span>vigil correlate --min-cvss 7.0 --feed nvd-v2
+<span class="cmd-comment"># Get ranked tactical next-steps for this engagement phase</span>
+<span class="cmd-prompt">$ </span>vigil compass target_scan.txt --phase initial_access
 
-<span class="cmd-comment"># Step 3: Export actionable remediation summary to SARIF</span>
-<span class="cmd-prompt">$ </span>vigil export --format sarif --output ./audit.sarif</pre>
+<span class="cmd-comment"># Track what changed between two scans</span>
+<span class="cmd-prompt">$ </span>vigil diff scan_before.txt scan_after.txt</pre>
             </div>
           </div>
 
@@ -799,7 +845,7 @@
               <span class="dossier-header-status">SAMPLE EXECUTION TRACE</span>
             </div>
             <div class="dd-console">
-              <div>> vigil scan --input nmap_corporate.xml --enrich --output report.sarif</div>
+              <div>> vigil analyze nmap_corporate.txt --format sarif --output report.sarif</div>
               <div class="dim">> [INGEST] Parsed 48 services across 12 hosts from nmap_corporate.xml</div>
               <div class="cyan">> [CPE_MAP] OpenSSH 7.4p1 → cpe:2.3:a:openbsd:openssh:7.4:p1:*:*:*:*:*:*</div>
               <div class="cyan">> [CVE_MATCH] CVE-2018-15473 (OpenSSH User Enumeration) | CVSS: 5.3 (Medium)</div>
@@ -856,29 +902,40 @@
               <canvas id="marketChartCanvas" width="900" height="220" style="width: 100%; height: 220px; background: #020408; border-radius: 6px;"></canvas>
             </div>
 
-            <!-- 3-Stage Archify Visual Workflow Diagram -->
-            <div class="archify-diagram-wrap">
-              <div class="archify-diagram-header">
-                <span class="archify-diagram-title">[ARCHIFY] 3-STAGE REAL-TIME STREAMING &amp; SENTIMENT PIPELINE</span>
-                <span style="font-family: var(--font-mono); font-size: 0.68rem; color: var(--green);">● STREAM ACTIVE</span>
+            <!-- 3-Stage Phase Flow Diagram -->
+            <div class="phase-flow-wrap">
+              <div class="phase-flow-header">
+                <span class="phase-flow-title">[FLOW] 3-STAGE REAL-TIME STREAMING &amp; SENTIMENT PIPELINE</span>
+                <span class="phase-flow-readout" data-phase-readout>PHASE 1/3 &middot; INGEST</span>
               </div>
-              <div class="archify-diagram">
-                <div class="archify-node">
-                  <span class="archify-node-step">01 // INGEST</span>
-                  <span class="archify-node-label">Exchange WebSockets</span>
-                  <span class="archify-node-desc">Stream live price ticks and financial news feeds over high-throughput WebSocket sockets and REST feeds.</span>
+              <div class="phase-flow-diagram">
+                <div class="phase-node">
+                  <div class="phase-node-shape"><span class="phase-node-num">01</span></div>
+                  <div class="phase-node-label">Ingest</div>
                 </div>
-                <div class="archify-arrow">›</div>
-                <div class="archify-node node-process">
-                  <span class="archify-node-step">02 // PROCESS</span>
-                  <span class="archify-node-label">NLP Sentiment Transformer</span>
-                  <span class="archify-node-desc">Evaluate financial headlines in parallel, computing sentiment momentum vectors and volatility indicators.</span>
+                <div class="phase-connector"><span class="phase-pulse"></span></div>
+                <div class="phase-node">
+                  <div class="phase-node-shape"><span class="phase-node-num">02</span></div>
+                  <div class="phase-node-label">Process</div>
                 </div>
-                <div class="archify-arrow">›</div>
-                <div class="archify-node node-output">
-                  <span class="archify-node-step">03 // DELIVER</span>
-                  <span class="archify-node-label">Firebase CDN &amp; Dashboard</span>
-                  <span class="archify-node-desc">Render responsive 60 FPS charts on global Firebase edge CDN with zero-downtime deployment.</span>
+                <div class="phase-connector"><span class="phase-pulse"></span></div>
+                <div class="phase-node">
+                  <div class="phase-node-shape"><span class="phase-node-num">03</span></div>
+                  <div class="phase-node-label">Deliver</div>
+                </div>
+              </div>
+              <div class="phase-descriptions">
+                <div class="phase-desc-item">
+                  <span class="phase-desc-tag">01 // INGEST</span>
+                  <p>Stream live price ticks and financial news feeds over high-throughput WebSocket sockets and REST feeds.</p>
+                </div>
+                <div class="phase-desc-item">
+                  <span class="phase-desc-tag">02 // PROCESS</span>
+                  <p>Evaluate financial headlines in parallel, computing sentiment momentum vectors and volatility indicators.</p>
+                </div>
+                <div class="phase-desc-item">
+                  <span class="phase-desc-tag">03 // DELIVER</span>
+                  <p>Render responsive 60 FPS charts on global Firebase edge CDN with zero-downtime deployment.</p>
                 </div>
               </div>
             </div>
@@ -1244,8 +1301,8 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
   <script type="module" src="src/main.jsx"></script>
-  <script src="three-bg.js?v=9.8"></script>
-  <script src="app.js?v=9.8"></script>
+  <script src="three-bg.js?v=9.9"></script>
+  <script src="app.js?v=9.9"></script>
 </body>
 
 </html>

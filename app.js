@@ -1757,84 +1757,6 @@ function playSystemAlarmBeep() {
   }
 })();
 
-// ── CONTACT CLI TERMINAL FORM HANDLER ──
-(function initContactTerminal() {
-  const transmitBtn = document.getElementById('contactTransmitBtn');
-  const nameInput   = document.getElementById('contactName');
-  const msgInput    = document.getElementById('contactMsg');
-  const cipherBlock = document.getElementById('contactCipherBlock');
-  const resultLine  = document.getElementById('contactResultLine');
-
-  if (!transmitBtn || !nameInput || !msgInput) return;
-
-  function generateCiphertext(length) {
-    const hexChars = '0123456789ABCDEF';
-    let output = '';
-    for (let i = 0; i < length; i++) {
-      if (i > 0 && i % 2 === 0) output += ' ';
-      if (i > 0 && i % 32 === 0) output += '\n';
-      output += '0x' + hexChars[Math.floor(Math.random() * 16)] + hexChars[Math.floor(Math.random() * 16)];
-    }
-    return output;
-  }
-
-  transmitBtn.addEventListener('click', () => {
-    const name = nameInput.value.trim();
-    const msg  = msgInput.value.trim();
-
-    if (!name || !msg) {
-      resultLine.style.color = '#ff0055';
-      resultLine.textContent = 'Payload incomplete. All fields required.';
-      setTimeout(() => {
-        resultLine.textContent = '';
-        resultLine.style.color = '';
-      }, 2000);
-      return;
-    }
-
-    // Haptic feedback on mobile
-    if (navigator.vibrate) navigator.vibrate(10);
-
-    transmitBtn.disabled = true;
-    transmitBtn.textContent = 'Encrypting...';
-    resultLine.textContent = '';
-
-    // Phase 1: Show rapid ciphertext scramble for 0.5s
-    cipherBlock.classList.add('active');
-    let scrambleInterval = setInterval(() => {
-      cipherBlock.textContent = generateCiphertext(48);
-    }, 50);
-
-    setTimeout(() => {
-      clearInterval(scrambleInterval);
-      cipherBlock.classList.remove('active');
-      cipherBlock.textContent = '';
-
-      // Construct dynamic URI-encoded mailto link
-      const mailtoLink = 'mailto:aaron.lawrence.alva@gmail.com?subject=' + 
-        encodeURIComponent('Encrypted Payload from ' + name) + 
-        '&body=' + encodeURIComponent(msg);
-
-      // Force open local native mail client
-      window.location.href = mailtoLink;
-
-      // Phase 2: Show success resolution
-      resultLine.style.color = 'var(--green)';
-      resultLine.textContent = 'Payload packaged. Handoff to secure local mail client complete.';
-      transmitBtn.textContent = 'Transmitted';
-
-      // Reset form controls after delay
-      setTimeout(() => {
-        nameInput.value = '';
-        msgInput.value = '';
-        transmitBtn.disabled = false;
-        transmitBtn.textContent = 'Transmit Payload';
-        resultLine.textContent = '';
-      }, 4000);
-    }, 500); // 0.5 seconds exactly
-  });
-})();
-
 // ── BENTO CARD SPOTLIGHT TRACKER ──
 (function initBentoSpotlightTracker() {
   const cards = document.querySelectorAll('.bento-project-card');
@@ -3091,107 +3013,15 @@ console.log(
   });
 
   // ── LIVE INTERACTIVE CANVAS & MICRO-TOOL SIMULATORS ──
-  
-  // 1. Skill Radar Canvas Renderer (5-Axis Cyber Polygon)
-  function renderSkillRadar() {
-    const canvas = document.getElementById('skillRadarCanvas');
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    const w = canvas.width, h = canvas.height;
-    const cx = w / 2, cy = h / 2 + 10, r = 105;
-    const axes = [
-      { name: 'VULN DISCOVERY', val: 0.95 },
-      { name: 'LINUX PRIVESC', val: 0.98 },
-      { name: 'DOCKER ASAN', val: 0.96 },
-      { name: 'AI & LLM SEC', val: 0.94 },
-      { name: 'THREAT INTEL', val: 0.92 }
-    ];
-    const count = axes.length;
 
-    let time = 0;
-    function drawRadar() {
-      if (document.getElementById('drawer-profile')?.style.display === 'none') return;
-      time += 0.03;
-      ctx.clearRect(0, 0, w, h);
-
-      // Background web polygons (3 levels)
-      for (let level = 1; level <= 3; level++) {
-        const lr = (r / 3) * level;
-        ctx.beginPath();
-        for (let a = 0; a < count; a++) {
-          const angle = (Math.PI * 2 / count) * a - Math.PI / 2;
-          const px = cx + Math.cos(angle) * lr;
-          const py = cy + Math.sin(angle) * lr;
-          if (a === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
-        }
-        ctx.closePath();
-        ctx.strokeStyle = `rgba(0, 255, 102, ${0.12 * level})`;
-        ctx.lineWidth = 1;
-        ctx.stroke();
-      }
-
-      // Draw axis lines & labels
-      ctx.font = 'bold 11px "JetBrains Mono", monospace';
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.75)';
-      for (let a = 0; a < count; a++) {
-        const angle = (Math.PI * 2 / count) * a - Math.PI / 2;
-        const px = cx + Math.cos(angle) * r;
-        const py = cy + Math.sin(angle) * r;
-        ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(px, py);
-        ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
-        ctx.stroke();
-
-        const lx = cx + Math.cos(angle) * (r + 26);
-        const ly = cy + Math.sin(angle) * (r + 14);
-        ctx.textAlign = 'center';
-        ctx.fillText(axes[a].name, lx, ly);
-      }
-
-      // Animated Filled Polygon
-      ctx.beginPath();
-      for (let a = 0; a < count; a++) {
-        const pulse = 1.0 + Math.sin(time + a) * 0.03;
-        const currentVal = axes[a].val * pulse;
-        const angle = (Math.PI * 2 / count) * a - Math.PI / 2;
-        const px = cx + Math.cos(angle) * (r * currentVal);
-        const py = cy + Math.sin(angle) * (r * currentVal);
-        if (a === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
-      }
-      ctx.closePath();
-      ctx.fillStyle = 'rgba(0, 255, 102, 0.22)';
-      ctx.fill();
-      ctx.strokeStyle = '#00ff66';
-      ctx.lineWidth = 2;
-      ctx.stroke();
-
-      // Glowing nodes on vertices
-      for (let a = 0; a < count; a++) {
-        const pulse = 1.0 + Math.sin(time + a) * 0.03;
-        const currentVal = axes[a].val * pulse;
-        const angle = (Math.PI * 2 / count) * a - Math.PI / 2;
-        const px = cx + Math.cos(angle) * (r * currentVal);
-        const py = cy + Math.sin(angle) * (r * currentVal);
-        ctx.beginPath();
-        ctx.arc(px, py, 4, 0, Math.PI * 2);
-        ctx.fillStyle = '#ffffff';
-        ctx.fill();
-        ctx.strokeStyle = '#00ff66';
-        ctx.stroke();
-      }
-
-      requestAnimationFrame(drawRadar);
-    }
-    drawRadar();
-  }
-
-  // 1b. Operator Live CLI Explorer
+  // 1. Operator Live CLI Explorer
   const operatorCliTags = document.querySelectorAll('#operatorCliTags .cli-tag-btn');
   const operatorCliOutput = document.getElementById('operatorCliOutput');
   const cliResponses = {
     whoami: '<div style="color: var(--green);">[OPERATOR] Aaron Alva | Grade 11 Cybersecurity Researcher & Systems Developer</div><div class="dim">> Stack: Python, C/C++, Docker ASan, Linux Kernel Security, LLM Agent Fuzzing, SARIF v2.1</div>',
     research: '<div style="color: var(--cyan);">[RESEARCH_AREAS] Autonomous AST Fuzzing (Mutagen), Zero-Day Triage, CVE Correlation (Vigil), Linux Kernel PrivEsc, BCM2711 Hardware RE</div><div class="dim">> Current: LLM-guided high-entropy mutation engines and SARIF v2.1 pipeline automation</div>',
     methodology: '<div style="color: #00ff66;">[METHODOLOGY] 4-Phase VR Lifecycle: (1) Surface Enumeration & CFG Analysis -> (2) Semantic AST Mutation -> (3) Docker ASan Sandboxing -> (4) RCA & Auto-Patching</div><div class="dim">> Standard: OASIS SARIF v2.1 + NIST SP 800-115 + MITRE ATT&CK Framework</div>',
-    scholarship: '<div style="color: #ffd700;">[GIAC_GFACT] SANS Institute National Scholar (CyberStart Canada Top Performer)</div><div class="dim">> GIAC GFACT Certified (Issued: 1 Sep 2026) | 98% Systems Logic, 99% Linux Security, 100% Python</div><div class="dim">> Credly ID: e6b7f224-b57d-4224-9f7a-cabe2b3fb257</div>',
+    scholarship: '<div style="color: #ffd700;">[GIAC_GFACT] SANS Institute National Scholar (CyberStart Canada Top Performer)</div><div class="dim">> GIAC GFACT Certified (Issued: 1 Sep 2026) | Systems Logic, Linux Security, Python Automation</div><div class="dim">> Credly ID: e6b7f224-b57d-4224-9f7a-cabe2b3fb257</div>',
     skills: '<div style="color: var(--green);">[CORE_SKILLS] AST Fuzzing, ASan Triage, Threat Intel, SARIF v2.1, Active Directory, Wireshark PCAP Forensics</div>',
     clearance: '<div style="color: #ff3366;">[SECURITY_CLEARANCE] LEVEL 5 // GIAC GFACT CERTIFIED & CTF TOP 1% VERIFIED</div>',
     cveaudit: '<div style="color: var(--cyan);">[CVE_AUDIT] Ingesting Nmap XML & PEASS telemetry... Correlated with NVD REST API v2.0 (Apache 2.4.49 CVE-2021-41773 Critical PoC Verified)</div>'
@@ -3478,14 +3308,128 @@ console.log(
     };
   });
 
-  // Hook into drawer open events to trigger canvas loops
+  // ── Command block typewriter reveal: comment lines pop in, the actual
+  // `$ command` text types out character-by-character, then a pause before
+  // the next command — makes each command read as its own sequential step
+  // rather than everything arriving in one 90ms-staggered burst. ──
+  const PROMPT_LINE_RE = /^(<span class="cmd-prompt">.*?<\/span>)(.*)$/;
+  function revealCommandBlocks(scopeEl) {
+    if (!scopeEl) return;
+    scopeEl.querySelectorAll('.command-block-code').forEach((block) => {
+      if (!block.dataset.rawHtml) block.dataset.rawHtml = block.innerHTML;
+      const lines = block.dataset.rawHtml.split('\n');
+      block.innerHTML = '';
+      let delay = 0;
+      lines.forEach((lineHtml) => {
+        // Each line's wrapper is created now but only appended to the DOM
+        // (triggering its entrance animation) at the moment its first
+        // character actually appears — appending it empty ahead of time
+        // would fire the fade/slide-in against a blank box.
+        const lineWrap = document.createElement('span');
+        lineWrap.className = 'command-line-reveal';
+        const promptMatch = lineHtml.match(PROMPT_LINE_RE);
+        if (promptMatch) {
+          const [, promptHtml, commandText] = promptMatch;
+          setTimeout(() => { lineWrap.innerHTML = promptHtml; block.appendChild(lineWrap); }, delay);
+          for (let ci = 1; ci <= commandText.length; ci++) {
+            setTimeout(() => { lineWrap.innerHTML = promptHtml + commandText.slice(0, ci); }, delay + 60 + ci * 18);
+          }
+          delay += 60 + commandText.length * 18 + 450; // pause after this command "finishes running"
+        } else {
+          setTimeout(() => { lineWrap.innerHTML = lineHtml; block.appendChild(lineWrap); }, delay);
+          delay += lineHtml.trim() ? 150 : 80;
+        }
+      });
+    });
+  }
+
+  // ── Phase-flow diagram: one timer per drawer drives the node glow,
+  // the connector pulse travel, and the "PHASE X/N · LABEL" text together,
+  // so all three can never drift out of sync with each other. ──
+  const activePhaseFlowCleanups = [];
+  function stopPhaseFlowCycles() {
+    activePhaseFlowCleanups.forEach((fn) => fn());
+    activePhaseFlowCleanups.length = 0;
+  }
+  function runPhaseFlow(wrap) {
+    const nodeEls = Array.from(wrap.querySelectorAll('.phase-node'));
+    const connectorEls = Array.from(wrap.querySelectorAll('.phase-connector'));
+    const pulseEls = connectorEls.map((c) => c.querySelector('.phase-pulse'));
+    const readout = wrap.querySelector('[data-phase-readout]');
+    const labels = nodeEls.map((n) => n.querySelector('.phase-node-label')?.textContent.trim() || '');
+    const count = nodeEls.length;
+    if (!readout || count < 1) return () => {};
+
+    const setActive = (i) => {
+      nodeEls.forEach((n, idx) => n.classList.toggle('is-active', idx === i));
+      readout.textContent = `PHASE ${i + 1}/${count} · ${labels[i].toUpperCase()}`;
+    };
+    setActive(0);
+    if (count < 2) return () => {};
+
+    // Reduced motion still needs to see every phase — it's informational
+    // content, not just decoration — so only the sliding-dot sub-animation
+    // (the one continuous motion element) is skipped, not the whole cycle.
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    const DWELL_MS = 2100;
+    const TRAVEL_MS = 900;
+    const timeouts = [];
+    let current = 0;
+
+    const travelPulse = (connectorIdx) => {
+      if (reduceMotion) return;
+      const pulse = pulseEls[connectorIdx];
+      if (!pulse) return;
+      pulse.style.transitionDuration = '0s';
+      pulse.style.left = '0%';
+      pulse.classList.add('is-traveling');
+      void pulse.offsetWidth; // force reflow so the 0% start actually applies before animating
+      pulse.style.transitionDuration = '';
+      requestAnimationFrame(() => { pulse.style.left = '100%'; });
+    };
+
+    const step = () => {
+      timeouts.push(setTimeout(() => {
+        if (current < count - 1) travelPulse(current);
+        timeouts.push(setTimeout(() => {
+          current = (current + 1) % count;
+          setActive(current);
+          pulseEls.forEach((p) => { if (p) { p.classList.remove('is-traveling'); p.style.left = '0%'; } });
+          step();
+        }, TRAVEL_MS));
+      }, DWELL_MS));
+    };
+    step();
+
+    return () => timeouts.forEach(clearTimeout);
+  }
+  function startPhaseFlowCycles(scopeEl) {
+    stopPhaseFlowCycles();
+    if (!scopeEl) return;
+    scopeEl.querySelectorAll('.phase-flow-wrap').forEach((wrap) => {
+      activePhaseFlowCleanups.push(runPhaseFlow(wrap));
+    });
+  }
+
+  // Hook into drawer open/close events to trigger canvas loops + new widgets
   const originalOpenDrawer = window.openActiveTheoryDrawer;
   window.openActiveTheoryDrawer = function(cardId) {
     if (typeof originalOpenDrawer === 'function') originalOpenDrawer(cardId);
     setTimeout(() => {
-      if (cardId === 'profile') renderSkillRadar();
       if (cardId === 'signalhub') renderMarketChart();
+      const drawerEl = document.getElementById(`drawer-${cardId}`);
+      if (drawerEl) {
+        revealCommandBlocks(drawerEl);
+        startPhaseFlowCycles(drawerEl);
+      }
     }, 320);
+  };
+
+  const originalCloseDrawer = window.closeActiveTheoryDrawer;
+  window.closeActiveTheoryDrawer = function() {
+    stopPhaseFlowCycles();
+    if (typeof originalCloseDrawer === 'function') originalCloseDrawer();
   };
 
   // 6. Interactive In-Browser CTF Flag Solver
