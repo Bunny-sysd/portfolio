@@ -166,91 +166,197 @@ body::before {
   body { cursor: auto !important; }
 }
 
-/* ── SPLASH LOAD SEQUENCE ── */
-.splash {
+/* ── FRONT DOOR: instant, static, credentials-first landing layer.
+   Shown on every load, above everything (including the command palette),
+   so a time-pressed visitor never has to learn the 3D scene first.
+   Dismissed only by an explicit click/Escape — never a timer. ── */
+.front-door {
   position: fixed;
   inset: 0;
-  z-index: 99995;
-  background: #02040a;
+  z-index: 200000;
+  background: var(--bg, #030509);
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: opacity 0.8s cubic-bezier(0.25, 1, 0.5, 1), visibility 0.8s cubic-bezier(0.25, 1, 0.5, 1);
-  pointer-events: auto;
+  padding: 2rem;
+  transition: opacity 0.6s var(--transition, cubic-bezier(0.16, 1, 0.3, 1)),
+              visibility 0.6s var(--transition, cubic-bezier(0.16, 1, 0.3, 1));
 }
-.splash.hidden {
+.front-door.hidden {
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
 }
-.splash-skip {
+
+.front-door-inner {
+  max-width: 560px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 1.75rem;
+}
+
+.front-door-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.front-door-name {
+  font-family: var(--font-display, var(--font-sans));
+  font-size: clamp(2.4rem, 6vw, 3.6rem);
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.05;
+  margin: 0;
+}
+
+.front-door-location {
+  font-size: 0.9rem;
+  color: var(--text-dim);
+  margin: -1rem 0 0 0;
+}
+
+.front-door-creds {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+  width: 100%;
+}
+
+.front-door-cred {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding: 0.75rem 1.1rem;
+  border: 1px solid var(--border, rgba(255,255,255,0.08));
+  border-radius: var(--radius-sm, 8px);
+  background: rgba(255, 255, 255, 0.02);
+  text-decoration: none;
+  transition: border-color 0.25s ease, background 0.25s ease;
+  min-width: 150px;
+}
+a.front-door-cred:hover {
+  border-color: var(--green);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.front-door-cred-label {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--green);
+}
+
+.front-door-cred-value {
+  font-size: 0.85rem;
+  color: var(--text);
+  font-weight: 500;
+}
+
+.front-door-projects {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+  width: 100%;
+}
+
+.front-door-project {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  padding: 0.75rem 1.25rem;
+  border: 1px solid var(--border, rgba(255,255,255,0.08));
+  border-radius: var(--radius-sm, 8px);
+  text-decoration: none;
+  transition: border-color 0.25s ease, transform 0.25s ease;
+  flex: 1 1 200px;
+}
+.front-door-project:hover {
+  border-color: var(--cyan);
+  transform: translateY(-2px);
+}
+
+.front-door-project-name {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.front-door-project-desc {
+  font-size: 0.78rem;
+  color: var(--text-dim);
+}
+
+.front-door-enter {
+  margin-top: 0.5rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.85rem 1.75rem;
+  border: 1px solid var(--green);
+  border-radius: 9999px;
+  background: transparent;
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+}
+.front-door-enter:hover {
+  background: rgba(125, 211, 252, 0.08);
+  box-shadow: 0 0 24px rgba(125, 211, 252, 0.25);
+  transform: translateY(-1px);
+}
+.front-door-enter-arrow {
+  transition: transform 0.25s ease;
+}
+.front-door-enter:hover .front-door-enter-arrow {
+  transform: translateX(3px);
+}
+
+.front-door-contact {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+}
+.front-door-contact a {
+  color: var(--text-dim);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+.front-door-contact a:hover {
+  color: var(--green);
+}
+
+.front-door-skip {
   position: absolute;
-  bottom: 2rem;
-  right: 2rem;
+  bottom: 1.5rem;
+  right: 1.75rem;
   background: none;
   border: none;
   font-family: var(--font-mono);
-  font-size: 0.72rem;
-  color: var(--green);
-  opacity: 0.35;
+  font-size: 0.68rem;
+  color: var(--text-dim);
+  opacity: 0.5;
   cursor: pointer;
   letter-spacing: 0.05em;
-  transition: opacity 0.2s ease, text-shadow 0.2s ease;
-  z-index: 99999;
+  transition: opacity 0.2s ease;
 }
-.splash-skip:hover {
-  opacity: 0.85;
-  text-shadow: 0 0 8px var(--green);
-}
-.splash-inner {
-  max-width: 480px;
-  width: 90%;
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-.splash-logo {
-  font-family: var(--font-mono);
-  font-size: 2.2rem;
-  font-weight: 700;
-  color: var(--green);
-  text-align: center;
-  text-shadow: 0 0 12px var(--green);
-}
-.splash-terminal {
-  background: #09090b;
-  border: 1px solid rgba(0, 255, 65, 0.15);
-  padding: 1.25rem;
-  border-radius: var(--radius);
-  font-family: var(--font-mono);
-  font-size: 0.8rem;
-  line-height: 1.6;
-  min-height: 110px;
-}
-.splash-line {
-  color: var(--text-dim);
-  margin-bottom: 0.25rem;
-}
-.splash-cursor {
-  color: var(--green);
-  animation: blink 0.8s step-end infinite;
-}
-.splash-bar-wrap {
-  width: 100%;
-  height: 4px;
-  background: rgba(255, 255, 255, 0.05);
-  overflow: hidden;
-}
-.splash-bar {
-  height: 100%;
-  width: 0%;
-  background: var(--green);
-  box-shadow: 0 0 8px var(--green);
-  transition: width 2.8s cubic-bezier(0.1, 0.8, 0.2, 1);
+.front-door-skip:hover {
+  opacity: 1;
 }
 
-@keyframes blink {
-  50% { opacity: 0; }
+@media (max-width: 480px) {
+  .front-door-name { font-size: clamp(2rem, 9vw, 2.6rem); }
+  .front-door-cred, .front-door-project { min-width: 0; flex: 1 1 45%; }
 }
 
 /* ── FLOATING PILL NAV ── */

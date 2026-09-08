@@ -1757,13 +1757,13 @@
   let dragHasMoved = false;
 
   window.addEventListener('wheel', (e) => {
-    if (document.body.classList.contains('in-deep-dive')) return;
+    if (document.body.classList.contains('in-deep-dive') || document.body.classList.contains('front-door-active')) return;
     const delta = e.deltaY * 0.0018;
     scrollVelocity += delta;
   }, { passive: true });
 
   window.addEventListener('pointerdown', (e) => {
-    if (e.target.closest('.interactive-ui') || document.body.classList.contains('in-deep-dive')) return;
+    if (e.target.closest('.interactive-ui') || document.body.classList.contains('in-deep-dive') || document.body.classList.contains('front-door-active')) return;
     isDragging = true;
     dragStartY = e.clientY;
     dragStartX = e.clientX;
@@ -1977,7 +1977,7 @@
   });
 
   window.addEventListener('click', (e) => {
-    if (document.body.classList.contains('in-deep-dive')) return;
+    if (document.body.classList.contains('in-deep-dive') || document.body.classList.contains('front-door-active')) return;
     if (dragHasMoved || totalDragDistance > 12) return;
     if (e.target.closest('.interactive-ui') || e.target.closest('.at-drawer') || e.target.closest('button') || e.target.closest('a')) return;
 

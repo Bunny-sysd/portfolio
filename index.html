@@ -28,7 +28,7 @@
   <link
     href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
     rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=2.3" />
+  <link rel="stylesheet" href="style.css?v=2.4" />
   <style>
     html,
     body {
@@ -87,6 +87,52 @@
 </head>
 
 <body class="terminal-theme">
+
+  <!-- ── FRONT DOOR: instant credentials-first landing, shown every load ── -->
+  <div class="front-door" id="frontDoor">
+    <div class="front-door-inner">
+      <div class="front-door-eyebrow">Cybersecurity Researcher · Canada</div>
+      <h1 class="front-door-name">Aaron Alva</h1>
+      <p class="front-door-location">Grade 11 · Building security automation tools &amp; vulnerability research</p>
+
+      <div class="front-door-creds">
+        <a class="front-door-cred" href="https://www.credly.com/badges/e6b7f224-b57d-4224-9f7a-cabe2b3fb257" target="_blank" rel="noopener noreferrer">
+          <span class="front-door-cred-label">GIAC GFACT</span>
+          <span class="front-door-cred-value">Certified · Scored 94</span>
+        </a>
+        <a class="front-door-cred" href="https://tryhackme.com/p/354221973" target="_blank" rel="noopener noreferrer">
+          <span class="front-door-cred-label">TryHackMe</span>
+          <span class="front-door-cred-value">Top 1% · 91 Rooms</span>
+        </a>
+        <a class="front-door-cred" href="https://app.hackthebox.com/users/3735054" target="_blank" rel="noopener noreferrer">
+          <span class="front-door-cred-label">Hack The Box</span>
+          <span class="front-door-cred-value">maxthemadman · Apprentice L25</span>
+        </a>
+      </div>
+
+      <div class="front-door-projects">
+        <a class="front-door-project" href="https://github.com/bunny-sysd/mutagen" target="_blank" rel="noopener noreferrer">
+          <span class="front-door-project-name">Mutagen ↗</span>
+          <span class="front-door-project-desc">Agentic AI fuzzer &amp; auto-patcher</span>
+        </a>
+        <a class="front-door-project" href="https://github.com/Bunny-sysd/vigil-hunter" target="_blank" rel="noopener noreferrer">
+          <span class="front-door-project-name">Vigil ↗</span>
+          <span class="front-door-project-desc">Threat-hunting CLI</span>
+        </a>
+      </div>
+
+      <button class="front-door-enter" id="frontDoorEnter" type="button">
+        Enter the Experience
+        <span class="front-door-enter-arrow">→</span>
+      </button>
+
+      <div class="front-door-contact">
+        <a href="mailto:aaronalva@yahoo.com">aaronalva@yahoo.com</a>
+      </div>
+    </div>
+
+    <button class="front-door-skip" id="frontDoorSkip" type="button" aria-label="Skip to 3D experience">Skip [ESC]</button>
+  </div>
 
   <!-- ── CYBER CORNER RETICLES (ACTIVE THEORY HUD) ── -->
   <div class="cyber-reticle top-left"></div>
@@ -1251,8 +1297,8 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/CustomEase.min.js"></script>
   <script type="module" src="src/main.jsx"></script>
-  <script src="three-bg.js?v=10.1"></script>
-  <script src="app.js?v=10.1"></script>
+  <script src="three-bg.js?v=10.2"></script>
+  <script src="app.js?v=10.2"></script>
 </body>
 
 </html>

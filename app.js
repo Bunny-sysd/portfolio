@@ -83,377 +83,36 @@ document.querySelectorAll('.decrypt-trigger').forEach(el => {
   el.addEventListener('mouseenter', () => decryptText(el));
 });
 
-// ── SPLASH SCREEN ──
-(function initSplashController() {
-  const splash   = document.getElementById('splash');
-  if (!splash) {
-    document.body.style.overflow = '';
-    // Trigger scroll reveals immediately
-    document.querySelectorAll('.reveal-up').forEach((el) => {
-      el.classList.add('visible');
-    });
-    return;
-  }
-  const bar      = document.getElementById('splashBar');
-  const skipBtn  = document.getElementById('splashSkipBtn');
-  const lines    = [
-    document.getElementById('splashLine1'),
-    document.getElementById('splashLine2'),
-    document.getElementById('splashLine3'),
-  ];
+// ── FRONT DOOR: instant credentials-first landing, shown every load.
+// No auto-resolve, no fail-safe timer — only an explicit click or Escape
+// dismisses it. Input to the 3D scene underneath is locked via the
+// front-door-active body class, checked by three-bg.js's wheel/pointer/
+// click guards (the same pattern the drawer system uses for in-deep-dive),
+// and by the global 1-6/arrow hotkey handler above. ──
+(function initFrontDoor() {
+  const gate = document.getElementById('frontDoor');
+  if (!gate) return;
 
-  const messages = [
-    '> [SYS] Loading user profile: Aaron Alva... [OK]',
-    '> Syncing vulnerability decompiler...',
-    '> Authorization granted. Decrypting interface...',
-  ];
-
-  let lineIdx = 0;
-  let charIdx = 0;
+  const enterBtn = document.getElementById('frontDoorEnter');
+  const skipBtn = document.getElementById('frontDoorSkip');
   let resolved = false;
 
-  function resolveSplash() {
+  function enterSite() {
     if (resolved) return;
     resolved = true;
-
-    if (splash) splash.classList.add('hidden');
-    document.body.style.overflow = '';
-    
-    // Trigger scroll reveals
-    document.querySelectorAll('.hero-section .reveal-up').forEach((el, i) => {
-      setTimeout(() => el.classList.add('visible'), i * 100);
-    });
-
-    // Run active hero diagnostic simulation
-    runHeroTerminalDiagnostics();
+    gate.classList.add('hidden');
+    document.body.classList.remove('front-door-active');
   }
 
-  function typeNext() {
-    if (resolved) return;
-    if (lineIdx >= messages.length) {
-      setTimeout(resolveSplash, 400);
-      return;
-    }
-    const msg  = messages[lineIdx];
-    const line = lines[lineIdx];
+  if (enterBtn) enterBtn.addEventListener('click', enterSite);
+  if (skipBtn) skipBtn.addEventListener('click', enterSite);
 
-    if (charIdx < msg.length) {
-      if (line) line.textContent += msg[charIdx++];
-      setTimeout(typeNext, 20);
-    } else {
-      lineIdx++;
-      charIdx = 0;
-      if (lineIdx < messages.length) {
-        setTimeout(typeNext, 120);
-      } else {
-        setTimeout(resolveSplash, 300);
-      }
-    }
-  }
-
-  // Bind failsafe button click
-  if (skipBtn) {
-    skipBtn.addEventListener('click', resolveSplash);
-  }
-
-  // Bind Escape keyboard key
-  window.addEventListener('keydown', e => {
-    if (e.key === 'Escape') {
-      resolveSplash();
-    }
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !resolved) enterSite();
   });
 
-  // Ensure Auto-Start on window load
-  window.addEventListener('load', () => {
-    // Start typing
-    setTimeout(() => {
-      if (resolved) return;
-      typeNext();
-      if (bar) bar.style.width = '100%';
-    }, 150);
-
-    // Hard fail-safe timeout in case anything is delayed
-    setTimeout(resolveSplash, 4000);
-  });
-
-  document.body.style.overflow = 'hidden';
+  document.body.classList.add('front-door-active');
 })();
-
-// ── HERO BOOT TERMINAL SIMULATION ────────────────
-function runHeroTerminalDiagnostics() {
-  const terminal = document.getElementById('heroTerminalOutput');
-  const inputEl = document.getElementById('terminalInput');
-  const chips = document.querySelectorAll('.command-chip');
-  if (!terminal) return;
-
-  // Clear output terminal body
-  terminal.innerHTML = '';
-
-  const diagnosticLines = [
-    { text: '> [SYS] Initializing local Gemma 4 environment... [OK]', delay: 100, class: 'text-dim' },
-    { text: '> [SYS] Establishing secure VM pipeline link... [OK]', delay: 350, class: 'text-dim' },
-    { text: '> [SYS] Loading user profile: Aaron Lawrence Alva... [OK]', delay: 600, class: 'text-dim' },
-    { text: '> [SYS] Mapping 91 TryHackMe completed rooms (Top 1%)... [OK]', delay: 850, class: 'text-dim' },
-    { text: '> [SYS] Initializing NLP processing translation agent... [OK]', delay: 1100, class: 'text-green' },
-    { text: '> Available modules loaded. Click any highlighted command below or type your inquiry.', delay: 1350, class: 'text-cyan' },
-    { text: '==================================================', delay: 1500, class: 'separator' },
-    { text: 'AARON ALVA // ', delay: 1700, isName: true }
-  ];
-
-  diagnosticLines.forEach(line => {
-    setTimeout(() => {
-      const div = document.createElement('div');
-      
-      if (line.isName) {
-        div.className = 'console-line identity-line';
-        
-        const prefix = document.createElement('span');
-        prefix.className = 'role-prefix';
-        prefix.textContent = line.text;
-        
-        const nameText = document.createElement('span');
-        nameText.className = 'text-white';
-        nameText.dataset.text = 'Cybersecurity Researcher & Agentic AI Developer';
-        nameText.textContent = '';
-        
-        div.appendChild(prefix);
-        div.appendChild(nameText);
-        terminal.appendChild(div);
-        
-        // Decrypt name text once printed
-        setTimeout(() => {
-          decryptText(nameText);
-        }, 150);
-        
-        // Add description below name text
-        setTimeout(() => {
-          const desc = document.createElement('div');
-          desc.className = 'console-line bio-line text-dim mt-4';
-          desc.textContent = 'Building closed-loop AI pipelines that decompile, fuzz, exploit, and patch target C binaries autonomously. Creating Mutagen, an agentic zero-day fuzzer.';
-          terminal.appendChild(desc);
-          terminal.scrollTop = terminal.scrollHeight;
-        }, 800);
-
-      } else {
-        div.className = 'console-line ' + (line.class || '');
-        div.textContent = line.text;
-        terminal.appendChild(div);
-      }
-      
-      terminal.scrollTop = terminal.scrollHeight;
-    }, line.delay);
-  });
-
-  // Helper to print a line to terminal output
-  function printLine(text, cssClass = '') {
-    const div = document.createElement('div');
-    div.className = 'console-line ' + cssClass;
-    div.textContent = text;
-    terminal.appendChild(div);
-    terminal.scrollTop = terminal.scrollHeight;
-  }
-
-  // Execute terminal command
-  function executeCommand(cmd) {
-    const trimmed = cmd.trim();
-    if (!trimmed) return;
-
-    // Print command header
-    printLine('guest@0xportfolio:~$ ' + trimmed, 'prompt-symbol');
-
-    const lowerCmd = trimmed.toLowerCase();
-
-    if (lowerCmd === 'clear') {
-      terminal.innerHTML = '';
-      return;
-    }
-
-    if (lowerCmd === './view_mutagen_fuzzer') {
-      printLine('[OK] Triggering autonomous fuzzer pipeline logging...', 'text-cyan');
-      let logDelay = 100;
-      const logs = [
-        '[08:42:01] [SYS] AI zero-day fuzzer engine active.',
-        '[08:42:03] [Ghidra] Disassembling C binary buffers...',
-        '[08:42:07] [HEAP] Crash caught at instruction offset 0x004011d4.',
-        '[08:42:11] [PoC] Compiling buffer overflow exploit payload: VERIFIED.',
-        '[08:42:15] [PATCH] Safe buffer injection patch applied to source code.',
-        '[08:42:19] [AUDIT] Re-fuzz pass: 0 leaks, 0 crashes. Target secured.'
-      ];
-      logs.forEach(log => {
-        setTimeout(() => {
-          printLine(log, 'text-green');
-        }, logDelay);
-        logDelay += 200;
-      });
-      return;
-    }
-
-    if (lowerCmd === 'cat certifications.txt') {
-      printLine('[OK] Querying local credentials vault...', 'text-cyan');
-      setTimeout(() => {
-        printLine('------------------------------------------------------------', 'text-muted');
-        printLine('LEGAL NAME: Aaron Lawrence Alva', 'text-white');
-        printLine('VERIFIED CREDENTIALS:', 'text-green');
-        printLine('  1. TryHackMe Intro to Cybersecurity (91 Rooms Completed (Top 1% Global)) - VERIFIED', 'text-dim');
-        printLine('  2. TryHackMe AI Security (Prompt Injection / Attack Mapping) - VERIFIED', 'text-dim');
-        printLine('------------------------------------------------------------', 'text-muted');
-      }, 200);
-      return;
-    }
-
-    if (lowerCmd === 'cat resume.md') {
-      printLine('[OK] Fetching formatted functional resume...', 'text-cyan');
-      setTimeout(() => {
-        printLine('============================================================', 'text-muted');
-        printLine('AARON ALVA // Mississauga, ON // Email: aaron.lawrence.alva@gmail.com', 'text-white');
-        printLine('------------------------------------------------------------', 'text-muted');
-        printLine('SUMMARY:', 'text-green');
-        printLine('  Motivated Grade 11 honours student with deep passion for network defense,', 'text-dim');
-        printLine('  ethical hacking, and automated security pipelines. Self-taught with fully', 'text-dim');
-        printLine('  operational VirtualBox home lab running threat simulations.', 'text-dim');
-        printLine('------------------------------------------------------------', 'text-muted');
-        printLine('TECHNICAL SKILLS:', 'text-green');
-        printLine('  - Security: Wireshark, Nmap, Burp Suite, Metasploit, GraphSpy', 'text-dim');
-        printLine('  - Code: Python, Bash, Advanced SQL, JS, TS, C++, C#', 'text-dim');
-        printLine('  - Systems: Kali Linux, Ubuntu, Arch, Windows 10/11, VirtualBox', 'text-dim');
-        printLine('  - Frameworks: MITRE ATT&CK, OWASP Top 10, TCP/IP Model', 'text-dim');
-        printLine('------------------------------------------------------------', 'text-muted');
-        printLine('ACHIEVEMENTS:', 'text-green');
-        printLine('  - Safe Virtual Hacking Environment: Designed VirtualBox lab simulating attacks.', 'text-dim');
-        printLine('  - Local Business AI Automation: Built lead-securing and security-hardened pipelines.', 'text-dim');
-        printLine('  - Web Vulnerability Research: Exploited SQLi & privilege escalation vectors.', 'text-dim');
-        printLine('  - Gemma 4 Fine-Tuning: Finetuned local transformer model for red team pentesting.', 'text-dim');
-        printLine('------------------------------------------------------------', 'text-muted');
-        printLine('EDUCATION:', 'text-green');
-        printLine('  - Ontario Secondary School Diploma (St. Joseph, Mississauga, ON) // Grade 11 (GIAC GFACT Certified)', 'text-dim');
-        printLine('  - Standing: Honours (80+) // Computer Science & Math coursework', 'text-dim');
-        printLine('============================================================', 'text-muted');
-      }, 200);
-      return;
-    }
-
-    if (lowerCmd === 'cat skills.db') {
-      printLine('[OK] Fetching dynamic skills matrix database...', 'text-cyan');
-      setTimeout(() => {
-        printLine('------------------------------------------------------------', 'text-muted');
-        printLine('OFFENSIVE: Nmap, Metasploit, John the Ripper, Hydra, Custom Exploits', 'text-white');
-        printLine('DEFENSIVE: MITRE ATT&CK, OWASP Top 10, Threat Modeling', 'text-white');
-        printLine('AI/ML: Fine-tuning transformers, Dataset prep, Hugging Face API', 'text-white');
-        printLine('DEVELOPMENT: HTML, CSS, Vanilla JS, REST APIs, JSON Data Pipelines', 'text-white');
-        printLine('------------------------------------------------------------', 'text-muted');
-      }, 200);
-      return;
-    }
-
-    if (lowerCmd === 'cat profile.md') {
-      printLine('[OK] Querying user catalog database...', 'text-cyan');
-      setTimeout(() => {
-        printLine('------------------------------------------------------------', 'text-muted');
-        printLine('IDENTITY: Aaron Lawrence Alva // Cybersecurity Researcher', 'text-white');
-        printLine('BIO: I design closed-loop AI systems that find and fix zero-day vulnerabilities in C codebases automatically.', 'text-dim');
-        printLine('PROJECTS: Mutagen (fuzzer), SignalHub (analytics), PentestAI', 'text-dim');
-        printLine('CONTACT: aaron.lawrence.alva@gmail.com', 'text-green');
-        printLine('------------------------------------------------------------', 'text-muted');
-      }, 200);
-      return;
-    }
-
-    // Default catch-all
-    printLine('Error: Command not found: ' + trimmed, 'text-muted');
-  }
-
-  // NLP simulated engine
-  function processNaturalLanguage(query) {
-    printLine('guest@0xportfolio:~$ ' + query, 'text-white');
-    printLine('> [NLP_AGENT] Parsing input... translating to system call...', 'text-cyan');
-
-    const cleanQuery = query.toLowerCase();
-    let targetCommand = 'cat profile.md'; // fallback
-
-    if (cleanQuery.includes('cert') || cleanQuery.includes('education') || cleanQuery.includes('giac') || cleanQuery.includes('credential') || cleanQuery.includes('badge') || cleanQuery.includes('thm')) {
-      targetCommand = 'cat certifications.txt';
-    } else if (cleanQuery.includes('resume') || cleanQuery.includes('cv') || cleanQuery.includes('career') || cleanQuery.includes('experience') || cleanQuery.includes('history')) {
-      targetCommand = 'cat resume.md';
-    } else if (cleanQuery.includes('skill') || cleanQuery.includes('arsenal') || cleanQuery.includes('tools') || cleanQuery.includes('techno') || cleanQuery.includes('offensive') || cleanQuery.includes('defense')) {
-      targetCommand = 'cat skills.db';
-    } else if (cleanQuery.includes('mutagen') || cleanQuery.includes('fuzzer') || cleanQuery.includes('zero') || cleanQuery.includes('exploit') || cleanQuery.includes('sandbox')) {
-      targetCommand = './view_mutagen_fuzzer';
-    } else if (cleanQuery.includes('clear') || cleanQuery.includes('clean') || cleanQuery.includes('reset')) {
-      targetCommand = 'clear';
-    } else if (cleanQuery.includes('profile') || cleanQuery.includes('who') || cleanQuery.includes('bio') || cleanQuery.includes('name') || cleanQuery.includes('about')) {
-      targetCommand = 'cat profile.md';
-    } else {
-      // dynamic query grep
-      targetCommand = 'grep -i "' + query.replace(/[^a-zA-Z0-9 ]/g, '') + '" /usr/vault/credentials.db';
-    }
-
-    setTimeout(() => {
-      printLine('> Executing system call: ' + targetCommand, 'text-muted');
-      setTimeout(() => {
-        if (targetCommand.startsWith('grep')) {
-          printLine('guest@0xportfolio:~$ ' + targetCommand, 'prompt-symbol');
-          printLine('[OK] Searching database...', 'text-cyan');
-          setTimeout(() => {
-            printLine('No exact entry for "' + query + '" found in /usr/vault/credentials.db.', 'text-muted');
-            printLine('Suggested action: try click suggested command controls.', 'text-green');
-          }, 300);
-        } else {
-          executeCommand(targetCommand);
-        }
-      }, 300);
-    }, 850);
-  }
-
-  // Clickable Chips action listener
-  chips.forEach(chip => {
-    chip.addEventListener('click', () => {
-      if (navigator.vibrate) {
-        navigator.vibrate(10); // Sharp, 10ms click vibration
-      }
-      const cmd = chip.getAttribute('data-cmd');
-      if (!cmd || !inputEl) return;
-      
-      // Simulate typing speed
-      inputEl.value = '';
-      inputEl.focus();
-      let charIdx = 0;
-      const typeInterval = setInterval(() => {
-        if (charIdx < cmd.length) {
-          inputEl.value += cmd[charIdx++];
-        } else {
-          clearInterval(typeInterval);
-          setTimeout(() => {
-            executeCommand(cmd);
-            inputEl.value = '';
-          }, 200);
-        }
-      }, 30);
-    });
-  });
-
-  // Text Prompt input listener
-  if (inputEl) {
-    inputEl.addEventListener('keydown', e => {
-      if (e.key === 'Enter') {
-        const val = inputEl.value.trim();
-        if (!val) return;
-
-        // Reset input field
-        inputEl.value = '';
-
-        // If it's a direct command or in the chips, run directly
-        const knownCommands = ['./view_mutagen_fuzzer', 'cat certifications.txt', 'cat skills.db', 'cat profile.md', 'cat resume.md', 'clear'];
-        const matchedCmd = knownCommands.find(c => c.toLowerCase() === val.toLowerCase());
-        if (matchedCmd) {
-          executeCommand(val); // execute matching command with user's casing
-        } else {
-          // Process via NLP simulated translator
-          processNaturalLanguage(val);
-        }
-      }
-    });
-  }
-}
 
 // ── FLOATING PILL NAV ACTIVE TAB HIGHLIGHT ────────
 (function initActiveNav() {
@@ -2762,6 +2421,7 @@ console.log(
   // Keyboard Navigation: Arrows, 1-6 Hotkeys, Mute M, ESC
   window.addEventListener('keydown', (e) => {
     if (['INPUT', 'TEXTAREA'].includes(document.activeElement?.tagName)) return;
+    if (document.body.classList.contains('front-door-active')) return;
 
     if (e.key >= '1' && e.key <= '6') {
       const idx = parseInt(e.key, 10) - 1;
