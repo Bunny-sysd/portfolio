@@ -51,6 +51,7 @@ common cliché in security portfolios — reads "enthusiast," not
 | 3 | Cut all simulated/mocked widgets + dead-code sweep | ✅ Done, committed |
 | 4 | Real tool-run artifacts (SARIF, asciinema, real patch diff, writeup) | ⛔ Blocked on Aaron |
 | 5 | Deep dead-code sweep (old pre-cylinder design + unmounted React tree) | ✅ Done, committed |
+| 6 | Active Theory-level 3D upgrade (see Part 6 below) | 🚧 In progress — post-processing + Mutagen scene done |
 
 **All commits so far are local only — nothing has been pushed to the
 `bunny-sysd/portfolio` remote.** Do not push without explicit go-ahead each
@@ -290,6 +291,46 @@ Two items from the first pass got finished in a second round the same day:
   rendered from that tree).
 
 Nothing identified as worth doing is left outstanding from Part 5.
+
+---
+
+## Part 6 — Active Theory-level 3D upgrade
+
+Goal: push the opt-in 3D experience toward activetheory.net quality. Safe to
+be bold here because the front door already gives recruiters everything in
+seconds. Ideas were ranked by payoff/effort; done so far:
+
+- ✅ **Two-way front door.** OVERVIEW link in the header, a mobile-menu row,
+  and a command-palette entry all reopen it (`window.openFrontDoor`), closing
+  any open drawer/menu first. (Also fixed: the palette's six project entries
+  did nothing — no handler for their `card` action.)
+- ✅ **Post-processing** (`three-bg.js`, "8b" block): selective bloom + a
+  film pass (corner-only chromatic aberration, vignette, grain). Cards are
+  excluded from bloom by zeroing their color/emissive during the bloom pass
+  so their text never smears. Composite reads UnrealBloomPass's glow-only
+  buffer — reading the composer output instead draws the scene twice.
+  Skipped on "low" GPU tier; the FPS watchdog drops it on slow machines.
+- ✅ **Mutagen signature scene** (`mutagenScene` in `three-bg.js`): a halo of
+  C/fuzzing code fragments around the Mutagen card that keep scrambling;
+  periodically an on-screen fragment faults (red SIGSEGV + shockwave) then
+  turns mint PATCHED — Mutagen's real loop. Only visible near scroll
+  station 2; hidden while a drawer is open.
+
+Next, in recommended order:
+1. **Mobile card framing (real bug, pre-existing).** On phones the resting
+   camera leaves each project card mostly off the left edge of the screen
+   (verified identical on the code from before this part started).
+2. Signature scenes for the other projects, same pattern as Mutagen: Vigil
+   (a scan sweeping a node network, findings lighting up), Proving Grounds
+   (a machine's layers being peeled open), SignalHub (live data streams).
+3. Camera flights between projects instead of rotating the cylinder.
+4. Three.js upgrade off r128 (biggest risk — whole engine targets r128).
+
+Testing note: headless Playwright defaults to a software GPU (SwiftShader),
+which the engine's tier detection treats as "low" — so post-processing is
+skipped and screenshots lie. Launch with
+`args: ['--use-angle=d3d11', '--ignore-gpu-blocklist', '--enable-gpu']`
+to render on the real GPU.
 
 ---
 

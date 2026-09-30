@@ -1661,6 +1661,259 @@
     cardMeshes.push(mesh);
   });
 
+  // ── MUTAGEN SIGNATURE SCENE ──
+  // A ring of C/fuzzing code fragments around the Mutagen card that keeps
+  // re-scrambling (inputs being mutated); every few seconds one fragment
+  // faults (red flash + shockwave = crash found) then settles bright cyan
+  // (patched + verified) — Mutagen's actual loop, not generic sci-fi.
+  // Fades in only near Mutagen's scroll station, hidden while a drawer is open.
+  const mutagenScene = (() => {
+    const card = cardMeshes[1];
+    const STATION = 2; // card i centres at scrollProgress = i + 1
+    const TOKENS = [
+      'strcpy(', 'memcpy(', 'malloc(', 'free(p)', 'buf[i]', 'len + 1',
+      '0x41414141', 'NULL', '*ptr', 'argv[1]', 'size_t', 'char[64]',
+      'while (', 'sizeof', 'p->next', '0xdeadbeef', 'gets(', '%s%s%n',
+      'if (!p)', 'realloc(', 'uint8_t', 'i <= n', 'EOF', '\\x90\\x90',
+      'SIGSEGV', 'PATCHED'
+    ];
+    const CRASH_CELL = TOKENS.indexOf('SIGSEGV');
+    const PATCH_CELL = TOKENS.indexOf('PATCHED');
+    const MUTABLE_CELLS = TOKENS.length - 2;
+    const GRID = 6; // 6x6 atlas, 36 cells >= token count
+    const CELL_PX = 170;
+
+    const atlasCanvas = document.createElement('canvas');
+    atlasCanvas.width = atlasCanvas.height = GRID * CELL_PX;
+    const atlasTex = new THREE.CanvasTexture(atlasCanvas);
+    atlasTex.minFilter = THREE.LinearFilter;
+    atlasTex.magFilter = THREE.LinearFilter;
+
+    function drawAtlas() {
+      const ctx = atlasCanvas.getContext('2d');
+      ctx.clearRect(0, 0, atlasCanvas.width, atlasCanvas.height);
+      ctx.fillStyle = '#ffffff';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      TOKENS.forEach((tok, i) => {
+        let size = 44;
+        ctx.font = `600 ${size}px "JetBrains Mono", monospace`;
+        const w = ctx.measureText(tok).width;
+        if (w > CELL_PX * 0.92) {
+          size = Math.floor(size * (CELL_PX * 0.92) / w);
+          ctx.font = `600 ${size}px "JetBrains Mono", monospace`;
+        }
+        ctx.fillText(tok, (i % GRID + 0.5) * CELL_PX, (Math.floor(i / GRID) + 0.5) * CELL_PX);
+      });
+      atlasTex.needsUpdate = true;
+    }
+    drawAtlas();
+    if (document.fonts && document.fonts.load) {
+      document.fonts.load('600 44px "JetBrains Mono"').then(drawAtlas).catch(() => {});
+    }
+
+    const count = perfProfile.tier === 'low' ? 36 : 64;
+    const ringScale = isMobile ? 0.86 : 1.0;
+    const positions = new Float32Array(count * 3);
+    const cells = new Float32Array(count);
+    const colors = new Float32Array(count * 3);
+    const scales = new Float32Array(count);
+    const tokens = [];
+    const baseColor = new THREE.Color(0.40, 0.66, 0.86);
+
+    // A halo hugging the card's outline (not a wide ring): the card usually
+    // rests off-centre, and a wide ring put half itself off-screen while the
+    // visible arc cut across the middle of the frame as noise.
+    const halfW = cardWidth / 2, halfH = cardHeight / 2;
+    for (let i = 0; i < count; i++) {
+      const margin = (0.9 + Math.random() * 2.4) * ringScale;
+      const w2 = halfW + margin, h2 = halfH + margin;
+      // Stratified around the outline so fragments don't clump and overlap.
+      const perimeterPos = ((i + 0.15 + Math.random() * 0.7) / count) * 2 * (w2 + h2);
+      let x, y;
+      if (perimeterPos < w2) { x = -w2 + 2 * perimeterPos; y = h2; }
+      else if (perimeterPos < w2 + h2) { x = w2; y = h2 - 2 * (perimeterPos - w2); }
+      else if (perimeterPos < 2 * w2 + h2) { x = w2 - 2 * (perimeterPos - w2 - h2); y = -h2; }
+      else { x = -w2; y = -h2 + 2 * (perimeterPos - 2 * w2 - h2); }
+      positions[i * 3] = x;
+      positions[i * 3 + 1] = y;
+      positions[i * 3 + 2] = -0.8 - Math.random() * 2.2;
+      cells[i] = Math.floor(Math.random() * MUTABLE_CELLS);
+      const tint = 0.75 + Math.random() * 0.5;
+      colors[i * 3] = baseColor.r * tint;
+      colors[i * 3 + 1] = baseColor.g * tint;
+      colors[i * 3 + 2] = baseColor.b * tint;
+      scales[i] = 0.75 + Math.random() * 0.45;
+      tokens.push({ nextSwap: Math.random() * 2, tint: tint, baseScale: scales[i] });
+    }
+
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    geo.setAttribute('aCell', new THREE.BufferAttribute(cells, 1));
+    geo.setAttribute('aColor', new THREE.BufferAttribute(colors, 3));
+    geo.setAttribute('aScale', new THREE.BufferAttribute(scales, 1));
+
+    const drawSize = new THREE.Vector2();
+    const mat = new THREE.ShaderMaterial({
+      uniforms: {
+        uAtlas: { value: atlasTex },
+        uOpacity: { value: 0 },
+        uSize: { value: isMobile ? 2.2 : 2.8 },
+        uViewportScale: { value: 500 },
+        uTime: { value: 0 }
+      },
+      vertexShader: `
+        attribute float aCell;
+        attribute vec3 aColor;
+        attribute float aScale;
+        uniform float uSize;
+        uniform float uViewportScale;
+        uniform float uTime;
+        varying float vCell;
+        varying vec3 vColor;
+        void main() {
+          vCell = aCell;
+          vColor = aColor;
+          // Each fragment breathes in and out from the card on its own phase.
+          vec3 p = position;
+          p.xy += normalize(p.xy) * sin(uTime * 0.9 + p.x * 1.7 + p.y * 1.3) * 0.35;
+          vec4 mv = modelViewMatrix * vec4(p, 1.0);
+          gl_PointSize = uSize * aScale * uViewportScale / -mv.z;
+          gl_Position = projectionMatrix * mv;
+        }`,
+      fragmentShader: `
+        uniform sampler2D uAtlas;
+        uniform float uOpacity;
+        varying float vCell;
+        varying vec3 vColor;
+        void main() {
+          float g = ${GRID.toFixed(1)};
+          vec2 cell = vec2(mod(vCell, g), floor(vCell / g));
+          vec2 uv = vec2((cell.x + gl_PointCoord.x) / g, 1.0 - (cell.y + gl_PointCoord.y) / g);
+          float a = texture2D(uAtlas, uv).a * uOpacity;
+          if (a < 0.02) discard;
+          gl_FragColor = vec4(vColor * a, a);
+        }`,
+      transparent: true,
+      depthWrite: false,
+      blending: THREE.AdditiveBlending
+    });
+
+    const cloud = new THREE.Points(geo, mat);
+    const group = new THREE.Group();
+    group.add(cloud);
+    group.visible = false;
+    tubeRigGroup.add(group);
+
+    const shockwave = new THREE.Mesh(
+      new THREE.RingGeometry(0.85, 1.0, 48),
+      new THREE.MeshBasicMaterial({
+        color: 0xff4d6d, transparent: true, opacity: 0,
+        blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide
+      })
+    );
+    tubeRigGroup.add(shockwave);
+
+    const crashColor = new THREE.Color(2.4, 0.45, 0.6);   // >1 so bloom catches it
+    const patchColor = new THREE.Color(0.5, 1.6, 0.85);  // mint: "fixed"
+    const tmp = new THREE.Color();
+    const tmpVec = new THREE.Vector3();
+    let fault = null;            // { index, start }
+    let nextFaultAt = 1.2;
+    const CRASH_DUR = 0.9, PATCH_DUR = 1.3, SETTLE_DUR = 1.0;
+
+    function setTokenColor(i, c) {
+      colors[i * 3] = c.r; colors[i * 3 + 1] = c.g; colors[i * 3 + 2] = c.b;
+    }
+
+    return {
+      update(t, progress, deepDive) {
+        const dist = Math.abs(progress - STATION);
+        const w = (1 - THREE.MathUtils.smoothstep(dist, 0.35, 1.0)) * (1 - deepDive);
+        group.visible = w > 0.01;
+        if (!group.visible) { shockwave.visible = false; return; }
+
+        const reduced = reduceMotionQuery.matches;
+        mat.uniforms.uOpacity.value = w;
+        renderer.getDrawingBufferSize(drawSize);
+        mat.uniforms.uViewportScale.value = drawSize.y * 0.5;
+
+        // Follow the card (position and facing, so the ring frames it rather
+        // than being seen edge-on); converge inward as the scene arrives.
+        group.position.copy(card.position);
+        group.quaternion.copy(card.quaternion);
+        group.scale.setScalar(1 + (1 - w) * 0.55);
+        if (!reduced) mat.uniforms.uTime.value = t;
+
+        // Mutation: tokens keep swapping to other fragments.
+        for (let i = 0; i < count; i++) {
+          if (fault && fault.index === i) continue;
+          if (t >= tokens[i].nextSwap) {
+            cells[i] = Math.floor(Math.random() * MUTABLE_CELLS);
+            tokens[i].nextSwap = t + (reduced ? 2.5 + Math.random() * 3 : 0.25 + Math.random() * 2.2);
+          }
+        }
+
+        // Fault cycle: crash -> patched -> settle back to base.
+        if (!fault && t >= nextFaultAt) {
+          // Only fault a fragment that's actually on screen — the card often
+          // rests near the frame edge, leaving part of the halo off-screen.
+          const onScreen = [];
+          for (let i = 0; i < count; i++) {
+            tmpVec.fromBufferAttribute(geo.attributes.position, i);
+            cloud.localToWorld(tmpVec).project(camera);
+            if (Math.abs(tmpVec.x) < 0.85 && Math.abs(tmpVec.y) < 0.8 && tmpVec.z < 1) onScreen.push(i);
+          }
+          if (onScreen.length) {
+            fault = { index: onScreen[Math.floor(Math.random() * onScreen.length)], start: t };
+            cells[fault.index] = CRASH_CELL;
+          } else {
+            nextFaultAt = t + 0.5;
+          }
+        }
+        shockwave.visible = false;
+        if (fault) {
+          const i = fault.index;
+          const e = t - fault.start;
+          tmp.copy(baseColor).multiplyScalar(tokens[i].tint);
+          if (e < CRASH_DUR) {
+            setTokenColor(i, crashColor);
+            scales[i] = tokens[i].baseScale * 2.2;
+            if (!reduced) {
+              const k = e / CRASH_DUR;
+              tmpVec.fromBufferAttribute(geo.attributes.position, i);
+              cloud.localToWorld(tmpVec);
+              tubeRigGroup.worldToLocal(tmpVec);
+              shockwave.position.copy(tmpVec);
+              shockwave.lookAt(camera.position);
+              shockwave.scale.setScalar(0.4 + k * 3.2);
+              shockwave.material.opacity = (1 - k) * 0.85 * w;
+              shockwave.visible = true;
+            }
+          } else if (e < CRASH_DUR + PATCH_DUR) {
+            cells[i] = PATCH_CELL;
+            setTokenColor(i, patchColor);
+            scales[i] = tokens[i].baseScale * 1.4;
+          } else if (e < CRASH_DUR + PATCH_DUR + SETTLE_DUR) {
+            const k = (e - CRASH_DUR - PATCH_DUR) / SETTLE_DUR;
+            setTokenColor(i, tmp.lerp(patchColor, 1 - k));
+            scales[i] = tokens[i].baseScale * (1.4 - 0.4 * k);
+          } else {
+            setTokenColor(i, tmp);
+            scales[i] = tokens[i].baseScale;
+            tokens[i].nextSwap = t;
+            fault = null;
+            nextFaultAt = t + 1.0 + Math.random() * 1.2;
+          }
+        }
+
+        geo.attributes.aCell.needsUpdate = true;
+        geo.attributes.aColor.needsUpdate = true;
+        geo.attributes.aScale.needsUpdate = true;
+      }
+    };
+  })();
+
   // ── VOLUMETRIC CYBER GAS PARTICLE CLOUD (Puff / Plasma Mist) ──
   const gasParticleCount = 180;
   const gasGeo = new THREE.BufferGeometry();
@@ -2178,6 +2431,7 @@
     targetScroll = Math.max(0, Math.min(6.0, targetScroll));
     scrollProgress += (targetScroll - scrollProgress) * 0.12;
     if (cinematicTimeline) cinematicTimeline.time(scrollProgress);
+    mutagenScene.update(timeVal, scrollProgress, deepDiveProgress);
 
     // ── FIRST-PERSON DESCENT CAMERA ──
     // The machine stays world-anchored. Scroll moves the viewer: orbit the claw, then
