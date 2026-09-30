@@ -1996,6 +1996,115 @@
     }
   });
 
+  // 8b. Cinematic post-processing: selective bloom + film finish.
+  // The cards carry readable text, so during the bloom pass their color and
+  // emissive are zeroed: same geometry (jello deformation included), so they
+  // still occlude glow behind them, but never bloom into a smear themselves.
+  const reduceMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const postFX = (() => {
+    const supported = typeof THREE.EffectComposer === 'function'
+      && typeof THREE.UnrealBloomPass === 'function'
+      && typeof THREE.ShaderPass === 'function';
+    if (!supported || perfProfile.tier === 'low') return null;
+
+    // Bloom composites onto an opaque buffer; match the page background.
+    renderer.setClearColor(0x02040a, 1);
+
+    const bloomComposer = new THREE.EffectComposer(renderer);
+    bloomComposer.renderToScreen = false;
+    bloomComposer.addPass(new THREE.RenderPass(scene, camera));
+    const bloomPass = new THREE.UnrealBloomPass(
+      new THREE.Vector2(window.innerWidth, window.innerHeight),
+      0.6,  // strength
+      0.5,  // radius
+      0.7   // luminance threshold
+    );
+    bloomComposer.addPass(bloomPass);
+
+    const filmPass = new THREE.ShaderPass(new THREE.ShaderMaterial({
+      uniforms: {
+        tDiffuse: { value: null },
+        // The pass's glow-only composite. (Its composer output is scene + glow,
+        // which added on top of the final render would draw the scene twice.)
+        bloomTexture: { value: bloomPass.renderTargetsHorizontal[0].texture },
+        uTime: { value: 0 },
+        uAberration: { value: 0.004 },
+        uVignette: { value: 0.45 },
+        uGrain: { value: 0.035 }
+      },
+      vertexShader: `
+        varying vec2 vUv;
+        void main() {
+          vUv = uv;
+          gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+        }`,
+      fragmentShader: `
+        uniform sampler2D tDiffuse;
+        uniform sampler2D bloomTexture;
+        uniform float uTime;
+        uniform float uAberration;
+        uniform float uVignette;
+        uniform float uGrain;
+        varying vec2 vUv;
+
+        float hash(vec2 p) {
+          return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453);
+        }
+
+        void main() {
+          vec2 c = vUv - 0.5;
+          float d = dot(c, c);
+          // Lens-style chromatic aberration, quadratic in distance so it only
+          // really shows in the corners — cards often sit off-centre mid-
+          // transition, and even a few px of channel split ruins small text.
+          vec2 off = c * uAberration * d * d * 8.0;
+          vec3 col = vec3(
+            texture2D(tDiffuse, vUv + off).r,
+            texture2D(tDiffuse, vUv).g,
+            texture2D(tDiffuse, vUv - off).b
+          );
+          col += texture2D(bloomTexture, vUv).rgb;
+          col *= 1.0 - uVignette * smoothstep(0.08, 0.5, d);
+          col += (hash(gl_FragCoord.xy + fract(uTime) * 97.0) - 0.5) * uGrain;
+          gl_FragColor = vec4(col, 1.0);
+        }`
+    }), 'tDiffuse');
+
+    const finalComposer = new THREE.EffectComposer(renderer);
+    finalComposer.addPass(new THREE.RenderPass(scene, camera));
+    finalComposer.addPass(filmPass);
+
+    const savedColors = cardMeshes.map(() => ({ color: new THREE.Color(), emissive: new THREE.Color() }));
+
+    return {
+      render(timeSeconds) {
+        cardMeshes.forEach((m, i) => {
+          savedColors[i].color.copy(m.material.color);
+          savedColors[i].emissive.copy(m.material.emissive);
+          m.material.color.setRGB(0, 0, 0);
+          m.material.emissive.setRGB(0, 0, 0);
+        });
+        bloomComposer.render();
+        cardMeshes.forEach((m, i) => {
+          m.material.color.copy(savedColors[i].color);
+          m.material.emissive.copy(savedColors[i].emissive);
+        });
+        // Static grain under reduced motion: keep the texture, drop the flicker.
+        filmPass.uniforms.uTime.value = reduceMotionQuery.matches ? 0 : timeSeconds;
+        finalComposer.render();
+      },
+      setSize(w, h) {
+        bloomComposer.setSize(w, h);
+        finalComposer.setSize(w, h);
+      },
+      setPixelRatio(r) {
+        bloomComposer.setPixelRatio(r);
+        finalComposer.setPixelRatio(r);
+      }
+    };
+  })();
+  let postFXEnabled = !!postFX;
+
   // 9. Window Resize
   window.addEventListener('resize', () => {
     const isNowMobile = window.innerWidth < 768;
@@ -2003,6 +2112,7 @@
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
+    if (postFX) postFX.setSize(window.innerWidth, window.innerHeight);
   }, { passive: true });
 
   // 10. Master Animation & Render Loop with Adaptive Watchdog
@@ -2029,7 +2139,11 @@
       if (rollingFps < 42 && !adaptiveLodSteppedDown) {
         adaptiveLodSteppedDown = true;
         renderer.setPixelRatio(1.0);
+        if (postFX) postFX.setPixelRatio(1.0);
         if (entangleLines) entangleLines.visible = false;
+      } else if (rollingFps < 30 && adaptiveLodSteppedDown && postFXEnabled) {
+        // Second step: post-processing costs two scene renders per frame.
+        postFXEnabled = false;
       }
     }
 
@@ -2754,7 +2868,8 @@
     spinePointLight.position.y = scrollProgress * verticalStep;
     spineAccentLight.position.y = scrollProgress * verticalStep - 20;
 
-    renderer.render(scene, camera);
+    if (postFXEnabled) postFX.render(timeVal);
+    else renderer.render(scene, camera);
   }
 
   requestAnimationFrame(render);
