@@ -28,7 +28,7 @@
   <link
     href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
     rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=2.7" />
+  <link rel="stylesheet" href="style.css?v=2.8" />
   <style>
     html,
     body {
@@ -165,7 +165,7 @@
     <div class="at-header-left">
       <a href="#orbit" class="at-logo" id="atLogo" onclick="window.rotateCylinderToCard(0); return false;" title="Return to Cyber Orbit Core">
         <span class="at-logo-icon">0x</span>
-        <span class="at-logo-label">AARON ALVA // ACTIVE THEORY ORBIT</span>
+        <span class="at-logo-label">AARON ALVA</span>
       </a>
     </div>
 
@@ -191,6 +191,8 @@
       <!-- Desktop controls (hidden on mobile) -->
       <div class="desktop-controls">
         <div class="at-nav-pill">
+          <button class="at-nav-link" id="btnNavOverview" data-open-front-door title="Back to the overview page">OVERVIEW</button>
+          <span class="at-nav-divider">———</span>
           <button class="at-nav-link" id="btnNavWork" onclick="window.rotateCylinderToCard(1)">WORK</button>
           <span class="at-nav-divider">———</span>
           <button class="at-nav-link" id="btnNavContact" onclick="window.rotateCylinderToCard(6)">CONTACT</button>
@@ -292,7 +294,14 @@
 
       <div class="mobile-tools-section">
         <div class="mobile-section-label">SYSTEM CONTROLS</div>
-        
+
+        <div class="mobile-tool-row">
+          <button class="mobile-tool-btn" id="mobileOverviewBtn" data-open-front-door>
+            <span>[←]</span>
+            <span>BACK TO OVERVIEW</span>
+          </button>
+        </div>
+
         <div class="mobile-tool-row">
           <button class="mobile-tool-btn" id="mobileAudioToggleBtn">
             <span id="mobileAudioIcon">[VOL]</span>
@@ -1160,6 +1169,13 @@
 
         <div class="cmd-group">
           <div class="cmd-group-title">QUICK ACTIONS</div>
+          <div class="cmd-item" data-action="overview">
+            <span class="cmd-item-icon">[←]</span>
+            <div class="cmd-item-text">
+              <span class="cmd-item-title">Back to Overview</span>
+              <span class="cmd-item-desc">Credentials, projects &amp; contact at a glance</span>
+            </div>
+          </div>
           <div class="cmd-item" data-action="copy-email">
             <span class="cmd-item-icon">[MAIL]</span>
             <div class="cmd-item-text">
@@ -1208,7 +1224,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/CustomEase.min.js"></script>
   <script src="three-bg.js?v=10.2"></script>
-  <script src="app.js?v=10.5"></script>
+  <script src="app.js?v=10.6"></script>
 </body>
 
 </html>

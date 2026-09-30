@@ -1617,7 +1617,6 @@ a.front-door-cred:hover {
   .desktop-only, .desktop-controls { display: flex !important; }
   .at-logo-label { display: none !important; }
   .at-telemetry-badge { display: none !important; }
-  .theme-switchers-cluster { display: none !important; }
   .at-header {
     top: 1rem;
     left: 1.25rem;
@@ -1635,6 +1634,12 @@ a.front-door-cred:hover {
   .at-mobile-menu-btn { display: none !important; }
   .desktop-only, .desktop-controls { display: flex !important; }
   .at-logo-label { display: inline !important; }
+}
+
+/* Narrow desktop: the decorative clock/status badge is the first thing to go
+   so the stage badge and nav pill each stay on one line. */
+@media (min-width: 1100px) and (max-width: 1439px) {
+  .at-telemetry-badge { display: none !important; }
 }
 
 /* ══════════════════════════════════════════════════════

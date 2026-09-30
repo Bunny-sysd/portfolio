@@ -95,20 +95,40 @@ document.querySelectorAll('.decrypt-trigger').forEach(el => {
 
   const enterBtn = document.getElementById('frontDoorEnter');
   const skipBtn = document.getElementById('frontDoorSkip');
-  let resolved = false;
+  const isOpen = () => document.body.classList.contains('front-door-active');
 
-  function enterSite() {
-    if (resolved) return;
-    resolved = true;
+  function closeFrontDoor() {
+    if (!isOpen()) return;
     gate.classList.add('hidden');
+    gate.setAttribute('aria-hidden', 'true');
     document.body.classList.remove('front-door-active');
   }
 
-  if (enterBtn) enterBtn.addEventListener('click', enterSite);
-  if (skipBtn) skipBtn.addEventListener('click', enterSite);
+  function openFrontDoor() {
+    if (isOpen()) return;
+    // The front door sits above everything, but a drawer or menu left open
+    // underneath would still be there on return to 3D — close them first.
+    if (document.body.classList.contains('in-deep-dive') && typeof window.closeActiveTheoryDrawer === 'function') {
+      window.closeActiveTheoryDrawer();
+    }
+    if (typeof window.closeMobileMenu === 'function') window.closeMobileMenu();
+    gate.classList.remove('hidden');
+    gate.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('front-door-active');
+    gate.scrollTop = 0;
+    if (enterBtn) enterBtn.focus({ preventScroll: true });
+  }
+
+  window.openFrontDoor = openFrontDoor;
+
+  if (enterBtn) enterBtn.addEventListener('click', closeFrontDoor);
+  if (skipBtn) skipBtn.addEventListener('click', closeFrontDoor);
+  document.querySelectorAll('[data-open-front-door]').forEach((btn) => {
+    btn.addEventListener('click', openFrontDoor);
+  });
 
   window.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && !resolved) enterSite();
+    if (e.key === 'Escape' && isOpen()) closeFrontDoor();
   });
 
   document.body.classList.add('front-door-active');
@@ -400,14 +420,15 @@ const SoundFX = (function initWebAudioSFX() {
     if (!item) return;
     const action = item.dataset.action;
 
-    if (action === 'nav') {
-      const targetId = item.dataset.target;
+    if (action === 'card') {
       closePalette();
-      const sec = document.querySelector(targetId);
-      if (sec) {
-        sec.scrollIntoView({ behavior: 'smooth' });
+      if (typeof window.goToCard === 'function') {
+        window.goToCard(parseInt(item.dataset.card, 10));
         SoundFX.action();
       }
+    } else if (action === 'overview') {
+      closePalette();
+      if (typeof window.openFrontDoor === 'function') window.openFrontDoor();
     } else if (action === 'copy-email') {
       const email = 'aaron.lawrence.alva@gmail.com';
       navigator.clipboard.writeText(email).then(() => {
@@ -710,20 +731,23 @@ console.log(
     });
   }
 
+  window.goToCard = function(idx) {
+    updateActiveUI(idx);
+    if (typeof window.rotateCylinderToCard === 'function') {
+      window.rotateCylinderToCard(idx + 1);
+    }
+    if (typeof window.triggerActiveTheoryCardDeepDive === 'function') {
+      window.triggerActiveTheoryCardDeepDive(cardIds[idx]);
+    }
+  };
+
   // Keyboard Navigation: Arrows, 1-6 Hotkeys, Mute M, ESC
   window.addEventListener('keydown', (e) => {
     if (['INPUT', 'TEXTAREA'].includes(document.activeElement?.tagName)) return;
     if (document.body.classList.contains('front-door-active')) return;
 
     if (e.key >= '1' && e.key <= '6') {
-      const idx = parseInt(e.key, 10) - 1;
-      updateActiveUI(idx);
-      if (typeof window.rotateCylinderToCard === 'function') {
-        window.rotateCylinderToCard(idx + 1);
-      }
-      if (typeof window.triggerActiveTheoryCardDeepDive === 'function') {
-        window.triggerActiveTheoryCardDeepDive(cardIds[idx]);
-      }
+      window.goToCard(parseInt(e.key, 10) - 1);
     } else if (e.key === 'm' || e.key === 'M') {
       if (typeof SoundFX?.toggleState === 'function') {
         SoundFX.toggleState();
