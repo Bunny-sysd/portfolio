@@ -2,12 +2,7 @@ import { defineConfig } from 'vite';
 
 export default defineConfig({
   base: './',
-  build: {
-    outDir: 'docs',
-  },
-  server: {
-    port: 5173,
-    strictPort: false,
-    host: '127.0.0.1'
-  }
+  build: { outDir: 'docs' },
+  server: { port: 5173, strictPort: false, host: '127.0.0.1' },
+  test: { include: ['tests/unit/**/*.test.js'], environment: 'node' }
 });

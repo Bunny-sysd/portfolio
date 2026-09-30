@@ -9,3 +9,4 @@ dist/
 .vite/
 docs/
 .superpowers/
+test-results/
