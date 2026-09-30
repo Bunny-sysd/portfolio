@@ -10,6 +10,12 @@ for (const viewport of [{ width: 1600, height: 1000 }, { width: 390, height: 844
       await scrollToProgress(page, p, 1200);
       await page.screenshot({ path: `${SHOTS}/scene-${tag}-${String(p).padEnd(5, '0')}.png` });
     }
+    await scrollToProgress(page, 0.10, 1500);
+    const mist = await page.$eval('.mist', (el) => parseFloat(getComputedStyle(el).opacity));
+    check(mist > 0.3, `[${tag}] mist engulfs the camera while passing the first layer (${mist})`);
+    await scrollToProgress(page, 0.20, 1500);
+    const clear = await page.$eval('.mist', (el) => parseFloat(getComputedStyle(el).opacity));
+    check(clear < 0.05, `[${tag}] mist clears between layers (${clear})`);
     await scrollToProgress(page, 0, 1500);
     const [r, , b] = await pixel(page, Math.round(viewport.width / 2), Math.round(viewport.height * 0.52));
     check(r > b, `[${tag}] warm dusk near the horizon at the top (r=${r} b=${b})`);

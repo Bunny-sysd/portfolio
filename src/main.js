@@ -1,3 +1,4 @@
+import * as THREE from 'three';
 import './styles/base.css';
 import './styles/chapters.css';
 import { createScroll } from './scroll.js';
@@ -6,9 +7,12 @@ import { buildMailto } from './contact.js';
 import { createStage } from './scene/stage.js';
 import { createSky } from './scene/sky.js';
 import { createCameraRig } from './scene/camera.js';
+import { createClouds } from './scene/clouds.js';
 
 const reduceQuery = matchMedia('(prefers-reduced-motion: reduce)');
 const reducedMotion = () => reduceQuery.matches;
+const WHITE = new THREE.Color(1, 1, 1);
+const mistColor = new THREE.Color();
 
 const scroll = createScroll({ reducedMotion });
 const chapters = createChapters(document);
@@ -32,6 +36,8 @@ const stage = createStage(document.getElementById('scene'));
 if (!stage) document.documentElement.classList.add('no-webgl');
 const sky = stage && createSky(stage.scene);
 const rig = stage && createCameraRig(stage.camera, { reducedMotion });
+const clouds = stage && createClouds(stage.scene, { sheetsPerLayer: stage.settings.sheetsPerLayer, reducedMotion });
+const mistEl = document.querySelector('.mist');
 
 addEventListener('resize', () => {
   if (!stage) return;
@@ -49,6 +55,9 @@ function frame(now) {
   if (!stage || document.hidden) return;
   rig.update(p);
   sky.update(p, stage.camera);
+  const mist = clouds.update(p, now / 1000, stage.camera, sky.colors);
+  mistEl.style.setProperty('--mist', (mist * 0.85).toFixed(3));
+  mistEl.style.setProperty('--mist-color', `#${mistColor.copy(sky.colors.horizon).lerp(WHITE, 0.55).getHexString(THREE.SRGBColorSpace)}`);
   stage.renderer.render(stage.scene, stage.camera);
 }
 requestAnimationFrame(frame);

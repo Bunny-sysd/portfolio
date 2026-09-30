@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html><body style="margin:0;background:#000">
+<input id="p" type="range" min="0" max="1" step="0.001" value="0" style="position:fixed;top:10px;left:10px;width:60vw;z-index:2">
+<canvas id="c" style="width:100vw;height:100vh;display:block"></canvas>
+<div id="mist" style="position:fixed;inset:0;pointer-events:none;background:rgb(255,230,220);opacity:0"></div>
+<script type="module">
+  import * as THREE from 'three';
+  import { createSky } from '/src/scene/sky.js';
+  import { createCameraRig } from '/src/scene/camera.js';
+  import { createClouds } from '/src/scene/clouds.js';
+  const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('c'), antialias: true });
+  renderer.setSize(innerWidth, innerHeight, false);
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(50, innerWidth / innerHeight, 0.1, 2000);
+  const sky = createSky(scene);
+  const rig = createCameraRig(camera, { reducedMotion: () => false });
+  const clouds = createClouds(scene, { sheetsPerLayer: 3, reducedMotion: () => false });
+  const slider = document.getElementById('p');
+  const mistEl = document.getElementById('mist');
+  renderer.setAnimationLoop((t) => {
+    const p = parseFloat(slider.value);
+    rig.update(p); sky.update(p, camera);
+    const mist = clouds.update(p, t / 1000, camera, sky.colors);
+    mistEl.style.opacity = (mist * 0.85).toFixed(3);
+    renderer.render(scene, camera);
+  });
+</script>
+</body></html>
