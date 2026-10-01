@@ -12,5 +12,5 @@ export function detectTier({ gpu = '', memory = 8, cores = 8, width = 1600 } = {
 export const TIER_SETTINGS = {
   low:  { renderScale: 0.4, postFX: false },
   mid:  { renderScale: 0.5, postFX: true },
-  high: { renderScale: 0.6, postFX: true },
+  high: { renderScale: 0.7, postFX: true },
 };

@@ -13,7 +13,7 @@ const WORLD_Y = 8;
 const DECK_HALF = 14;           // half-thickness of each deck, shader units
 const GROUND = -75 * WORLD_Y;   // city plane, below the landing altitude
 const COVERAGE = [0.0, 0.03, 0.06, 0.1, 0.16]; // lower decks get gappier so the city shows through
-const STEPS = { high: 64, mid: 40, low: 28 };
+const STEPS = { high: 80, mid: 48, low: 28 };
 
 // Deck centres sit on the camera's own path at each CLOUD_LAYER_P, so the
 // camera punches through one between every chapter and every beat is in clear air.
@@ -69,17 +69,34 @@ const fragmentShader = /* glsl */`
     return v;
   }
 
+  // Billow noise: creased, cauliflower-like lumps instead of smooth blobs.
+  float billow(vec3 p) { return 1.0 - abs(noise3(p) * 2.0 - 1.0); }
+
   // One cumulus deck (centre c, extra coverage cover, seed k):
   // flat base, rounded tops, eroded edges.
-  float deckDensity(vec3 p, float c, float cover, float k, int oct) {
+  // Wind carries the decks along and the noise slowly evolves in y, so the
+  // billows churn and reshape rather than sliding past as a rigid texture.
+  // Where the march is fine enough to resolve it (fineW > 0, i.e. short
+  // steps near the camera) a billow erosion pass bites into the thin edges:
+  // creased rims and small curls, dense cores left intact. Coarse far steps
+  // skip it — sampled every ~40 units it would only alias into streaks.
+  float deckDensity(vec3 p, float c, float cover, float k, int oct, float fineW) {
     float h = (p.y - (c - DECK_HALF)) / (2.0 * DECK_HALF);
     if (h < 0.0 || h > 1.0) return 0.0;
-    vec3 q = p * 0.013 + vec3(uTime * 0.004 + k * 3.7, k * 1.9, uTime * 0.002);
+    vec3 wind = vec3(uTime * 0.9, uTime * 0.12, uTime * 0.45);
+    vec3 q = (p + wind) * 0.015 + vec3(k * 3.7, k * 1.9, 0.0);
     float base = fbm(q * vec3(1.0, 1.8, 1.0), oct);
     float cov = noise3(vec3(p.xz * 0.0025, 1.7 + k));
     float shape = smoothstep(0.0, 0.1, h) * smoothstep(1.0, 0.35 + 0.5 * cov, h);
-    float d = (base - 0.40 - cover + cov * 0.12) * 4.2 * shape;
-    d -= (1.0 - fbm(p * 0.075, 3)) * 0.35 * (1.0 - 0.6 * h);
+    float d = (base - 0.40 - cover + cov * 0.12) * 5.6 * shape;
+    if (d <= -0.4) return 0.0;
+    vec3 e = (p + wind * 1.6) * 0.075;
+    d -= (1.0 - fbm(e, 3)) * 0.35 * (1.0 - 0.6 * h);
+    if (fineW > 0.0 && d > 0.0 && d < 0.7) {
+      vec3 f = e * 2.7 + vec3(0.0, uTime * 0.05, 0.0);
+      float fine = billow(f) * 0.62 + billow(f * 2.3 + 4.1) * 0.38;
+      d -= (1.0 - fine) * 0.45 * (1.0 - d / 0.7) * fineW;
+    }
     return clamp(d, 0.0, 1.0);
   }
 
@@ -157,23 +174,33 @@ const fragmentShader = /* glsl */`
         float ta = (lo - ro.y) / rd.y, tb = (hi - ro.y) / rd.y;
         t0 = max(min(ta, tb), 0.0); t1 = min(max(ta, tb), 1800.0);
       }
+      // Inside a deck, sideways rays would cross the whole slab; past a few
+      // hundred units it's opaque fog anyway, so spend the steps up close.
+      if (ro.y > lo && ro.y < hi) t1 = min(t1, 380.0);
       if (t1 <= t0) continue;
       float dt = max((t1 - t0) / float(perDeck), 0.8);
       float t = t0 + dt * jitter;
-      for (int i = 0; i < 32; i++) {
+      for (int i = 0; i < 40; i++) {
         if (i >= perDeck || t > t1 || acc.a > 0.97) break;
         vec3 p = ro + rd * t;
         int oct = t < 200.0 ? 5 : 3;
-        float den = deckDensity(p, c, uCover[k], float(k), oct);
+        float den = deckDensity(p, c, uCover[k], float(k), oct, 1.0 - smoothstep(3.0, 9.0, dt));
         if (den > 0.01) {
+          // Light march toward the sun with growing strides: near samples give
+          // crisp self-shadowed crevices, far ones the deck's overall shade.
+          // The second, weaker extinction fakes multiple scattering so shadowed
+          // cores stay luminous instead of going grey.
           float sh = 0.0;
-          for (int j = 1; j <= 4; j++) sh += deckDensity(p + uSunDir * float(j) * 4.0, c, uCover[k], float(k), 2);
-          float trans = exp(-sh * 1.6);
+          for (int j = 1; j <= 5; j++) { float fj = float(j); sh += deckDensity(p + uSunDir * fj * fj * 1.6, c, uCover[k], float(k), 2, 0.0) * (0.6 + fj * 0.2); }
+          float trans = max(exp(-sh * 1.9), exp(-sh * 0.45) * 0.35);
           float powder = 1.0 - exp(-den * 3.0);
           float hgt = clamp((p.y - lo) / (hi - lo), 0.0, 1.0);
-          vec3 amb = mix(uZenith * 0.22, uZenith * 0.55 + uHorizon * 0.2, hgt);
+          vec3 amb = mix(uZenith * 0.12, uZenith * 0.5 + uHorizon * 0.2, hgt * hgt);
           float forward = pow(max(dot(rd, uSunDir), 0.0), 24.0) * (1.0 - den);
-          vec3 col = amb + uSunCol * trans * powder * (2.0 + forward * 1.5) * (1.0 - uNight * 0.8);
+          // At night the decks go to dark silhouettes, their bellies picking up
+          // a faint sodium glow from the city below.
+          vec3 col = amb * (1.0 - 0.75 * uNight) + uSunCol * trans * powder * (2.0 + forward * 1.5) * (1.0 - uNight * 0.96)
+                   + vec3(1.0, 0.55, 0.25) * 0.05 * uNight * (1.0 - hgt) * powder;
           col = mix(col, horizonFog, 1.0 - exp(-t * 0.0006));
           float a = 1.0 - exp(-den * dt * 0.8);
           acc.rgb += (1.0 - acc.a) * a * col;

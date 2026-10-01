@@ -16,8 +16,10 @@ export function createChapters(doc, { scroll }) {
   const last = new Array(items.length).fill(-1);
   items.forEach((it, i) => {
     if (it.at === undefined) return;
-    it.el.addEventListener('focusin', () => {
-      if (!(last[i] > 0.9)) scroll.scrollToProgress(it.at);
+    // Keyboard focus only (:focus-visible): a mouse click on a beat that is
+    // still fading in must reach its button, not re-aim the scroll.
+    it.el.addEventListener('focusin', (e) => {
+      if (!(last[i] > 0.9) && e.target.matches(':focus-visible')) scroll.scrollToProgress(it.at);
     });
   });
   return {

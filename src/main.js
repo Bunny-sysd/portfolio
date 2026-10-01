@@ -10,7 +10,7 @@ import { createStage } from './scene/stage.js';
 import { createCameraRig } from './scene/camera.js';
 import { createVolume, mistAt } from './scene/volume.js';
 import { createPost } from './scene/post.js';
-import { altitudeAt, paletteAt } from './timeline.js';
+import { paletteAt } from './timeline.js';
 
 const reduceQuery = matchMedia('(prefers-reduced-motion: reduce)');
 const reducedMotion = () => reduceQuery.matches;
@@ -20,7 +20,12 @@ const mistColor = new THREE.Color();
 const root = document.documentElement;
 const scroll = createScroll({ reducedMotion });
 const chapters = createChapters(document, { scroll });
-initCaseStudies({ scroll });
+// The scene runs on its own eased "film" clock: progress follows scroll like a
+// camera dolly (critically damped, so it glides to a stop instead of halting
+// with the wheel), its speed feeds a slight FOV rush, and `dive` is the
+// case-study transition (0 = in the descent, 1 = plunged into the cloud).
+const film = { p: scroll.progress(), speed: 0, dive: 0, diveTarget: 0, last: 0 };
+initCaseStudies({ scroll, onDive: (on) => { film.diveTarget = on ? 1 : 0; } });
 
 document.getElementById('to-top').addEventListener('click', (e) => {
   e.preventDefault();
@@ -40,6 +45,7 @@ form.addEventListener('submit', (e) => {
 const canvas = document.getElementById('scene');
 const stage = createStage(canvas);
 if (!stage) root.classList.add('no-webgl');
+if (import.meta.env.DEV) window.__stage = stage; // dev-only handle for GPU timing (tests/e2e/_gpu.mjs)
 const rig = stage && createCameraRig(stage.camera, { reducedMotion });
 const volume = stage && createVolume(stage.scene, { tier: stage.tier, reducedMotion });
 const mistEl = document.querySelector('.mist');
@@ -49,8 +55,7 @@ let post = stage && stage.settings.postFX ? createPost(stage.renderer, stage.sce
 addEventListener('resize', () => {
   if (!stage) return;
   stage.camera.aspect = innerWidth / innerHeight;
-  stage.camera.fov = innerWidth < 768 ? 62 : 50;
-  stage.camera.updateProjectionMatrix();
+  stage.camera.updateProjectionMatrix(); // fov is owned by the camera rig
   stage.renderer.setSize(innerWidth, innerHeight, false);
   if (post) post.setSize(innerWidth, innerHeight);
 }, { passive: true });
@@ -120,12 +125,21 @@ function frame(now) {
   const p = scroll.progress();
   chapters.update(p);
   if (!stage || contextLost || document.hidden) return;
-  rig.update(p);
-  volume.update(p, now / 1000, stage.camera, stage.renderer);
+  const dt = Math.min(0.1, Math.max(0, (now - film.last) / 1000)); film.last = now;
+  if (reducedMotion()) { film.p = p; film.speed = 0; film.dive = film.diveTarget; } else {
+    const prev = film.p;
+    film.p += (p - film.p) * (1 - Math.exp(-dt * 3.2));
+    const rush = Math.min(1, Math.abs(film.p - prev) / Math.max(dt, 1e-3) * 6);
+    film.speed += (rush - film.speed) * (1 - Math.exp(-dt * 2.5));
+    film.dive += (film.diveTarget - film.dive) * (1 - Math.exp(-dt * 4.5));
+  }
+  rig.update(film.p, { time: now / 1000, speed: film.speed, dive: film.dive });
+  volume.update(film.p, now / 1000, stage.camera, stage.renderer);
   // A light DOM veil on top of the raymarched cloud keeps each pass-through
-  // soft even at the lowest step count.
-  const [r, g, b] = paletteAt(p).horizon;
-  const mistKey = `${(mistAt(altitudeAt(p)) * 0.5).toFixed(3)}|${mistColor.setRGB(r, g, b, THREE.SRGBColorSpace).lerp(WHITE, 0.55).getHexString(THREE.SRGBColorSpace)}`;
+  // soft even at the lowest step count; the case-study dive washes it in too.
+  const [r, g, b] = paletteAt(film.p).horizon;
+  const veil = Math.max(mistAt(stage.camera.position.y) * 0.5, film.dive * 0.7);
+  const mistKey = `${veil.toFixed(3)}|${mistColor.setRGB(r, g, b, THREE.SRGBColorSpace).lerp(WHITE, 0.55).getHexString(THREE.SRGBColorSpace)}`;
   if (mistKey !== lastMist) {
     lastMist = mistKey;
     const [m, hex] = mistKey.split('|');
