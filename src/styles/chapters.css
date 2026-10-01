@@ -8,7 +8,11 @@
   opacity: var(--o, 0);
   transform: translate3d(0, calc((1 - var(--o, 0)) * 28px), 0);
   will-change: opacity, transform;
+  pointer-events: none; /* a faded beat must not catch clicks meant for the beat on screen */
 }
+.beat.is-live { pointer-events: auto; }
+/* Visible before any JS runs; chapters.js overrides --o inline from then on. */
+#hero { --o: 1; }
 .beat__inner { position: relative; max-width: min(820px, 92vw); }
 .beat__inner::before {
   content: ''; position: absolute; inset: -56px -72px; z-index: -1;

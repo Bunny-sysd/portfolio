@@ -41,3 +41,4 @@ html.scroll-locked { overflow: hidden; }
   opacity: var(--o, 0); pointer-events: none;
 }
 .to-top.is-live { pointer-events: auto; }
+.to-top:not(.is-live) { visibility: hidden; } /* out of the tab order until it shows */
