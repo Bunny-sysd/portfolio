@@ -1,5 +1,14 @@
 import { withPage, check, scrollToProgress, opacityOf, contrastOf, SHOTS } from './lib.mjs';
 
+// Hero lines checked for WCAG AA (4.5:1 — none of them is large text) over
+// the brightest backdrop in the film, the low sun.
+const HERO_CONTRAST = {
+  eyebrow: '#hero .eyebrow',
+  lede: '#hero .lede',
+  link: '#hero .hero-links a',
+  cred: '#hero .creds li:first-child a',
+};
+
 const CHAPTER_AT = { who: 0.20, mutagen: 0.33, vigil: 0.46, signalhub: 0.59, 'proving-grounds': 0.72 };
 const ALL_BEATS_AT = { hero: 0, ...CHAPTER_AT, contact: 1.0 };
 
@@ -23,6 +32,12 @@ for (const viewport of [{ width: 1600, height: 1000 }, { width: 390, height: 844
     check((await page.textContent('#hero')).includes('100+ Rooms'), `[${tag}] THM credential in hero`);
     check(await opacityOf(page, '#hero') > 0.95, `[${tag}] hero visible at load, no interaction`);
     await page.screenshot({ path: `${SHOTS}/content-${tag}-hero.png` });
+    if (viewport.width === 1600 || viewport.width === 390) {
+      for (const [name, sel] of Object.entries(HERO_CONTRAST)) {
+        const ratio = await contrastOf(page, sel);
+        check(ratio >= 4.5, `[${tag}] hero ${name} meets WCAG AA contrast (${ratio.toFixed(2)}:1)`);
+      }
+    }
 
     for (const [id, at] of Object.entries(ALL_BEATS_AT)) {
       await scrollToProgress(page, at);

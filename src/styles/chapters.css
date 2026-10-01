@@ -25,11 +25,24 @@
   background: radial-gradient(closest-side, rgba(2, 4, 10, 0.78), rgba(2, 4, 10, 0));
 }
 .beat--right .beat__inner { margin-left: auto; }
+/* The hero sits over the brightest backdrop in the film (the low sun and its
+   peach glow), so on top of the per-block glow above it gets a full-bleed,
+   directional shade: deepest under the left-hand text column, clear by the
+   time it reaches the sun. Keeps every hero line at WCAG AA while the right
+   of the frame still reads as an open sunset. Lives on the section, not
+   .beat__inner, so the creds' backdrop-filter sampling is unchanged in kind. */
+.hero::before {
+  content: ''; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  background: linear-gradient(90deg, rgba(2, 4, 10, 0.36) 0%, rgba(2, 4, 10, 0.3) 46%, rgba(2, 4, 10, 0) 72%);
+}
 
 .eyebrow {
   margin: 0; font: 500 12px/1.5 var(--font-mono);
   letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent);
 }
+/* Over the warm sky the cyan accent can't hold 4.5:1; hero labels and links
+   use the near-white text colour instead (links keep their underline). */
+.hero .eyebrow, .hero .hero-links a { color: var(--text); }
 .beat h1, .beat h2 {
   margin: 0.25em 0 0.3em; font-family: var(--font-display); font-weight: 800;
   letter-spacing: -0.02em; line-height: 0.95;
@@ -78,6 +91,10 @@
   .hero { align-items: center; padding-bottom: 0; }
   .beat--right .beat__inner { margin-left: 0; }
   .beat__inner::before { inset: -32px -24px; }
+  /* Single column: the text spans the whole width, so shade evenly top to bottom. */
+  .hero::before {
+    background: linear-gradient(180deg, rgba(2, 4, 10, 0.18) 0%, rgba(2, 4, 10, 0.34) 14%, rgba(2, 4, 10, 0.34) 86%, rgba(2, 4, 10, 0.18) 100%);
+  }
 }
 
 /* Short window: a shallow viewport leaves little vertical room between the
