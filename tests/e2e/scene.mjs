@@ -72,3 +72,31 @@ for (const viewport of [{ width: 1600, height: 1000 }, { width: 390, height: 844
     check(errors.length === 0, `[${tag}] no console errors ${JSON.stringify(errors)}`);
   });
 }
+
+// FPS watchdog must ignore time spent away from the tab and one-off stalls:
+// two tab switches and two 2 s main-thread stalls, each followed by enough
+// normal frames to close a watchdog window, must leave quality at full.
+await withPage({ viewport: { width: 1600, height: 1000 } }, async (page, errors) => {
+  const quality = () => page.evaluate(() => document.documentElement.dataset.quality);
+  await page.waitForTimeout(2500);
+  check(await quality() === 'full', `watchdog: starts at full quality (${await quality()})`);
+  for (let i = 0; i < 2; i++) {
+    await page.evaluate(() => {
+      Object.defineProperty(document, 'hidden', { configurable: true, get: () => true });
+      document.dispatchEvent(new Event('visibilitychange'));
+    });
+    await page.waitForTimeout(2500);
+    await page.evaluate(() => {
+      delete document.hidden;
+      document.dispatchEvent(new Event('visibilitychange'));
+    });
+    await page.waitForTimeout(2500);
+  }
+  check(await quality() === 'full', `watchdog: two tab switches keep full quality (${await quality()})`);
+  for (let i = 0; i < 2; i++) {
+    await page.evaluate(() => { const t = performance.now(); while (performance.now() - t < 2000); });
+    await page.waitForTimeout(2500);
+  }
+  check(await quality() === 'full', `watchdog: two 2 s stalls keep full quality, post FX still on (${await quality()})`);
+  check(errors.length === 0, `watchdog: no console errors ${JSON.stringify(errors)}`);
+});

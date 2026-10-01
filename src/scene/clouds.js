@@ -55,8 +55,9 @@ export function createClouds(scene, { sheetsPerLayer, reducedMotion }) {
   const sheets = [];
   const shared = { uLit: new THREE.Color(), uShade: new THREE.Color(), uFog: new THREE.Color(), uCam: new THREE.Vector3() };
 
+  const perLayer = Math.min(sheetsPerLayer, SHEET_OFFSETS.length);
   layers.forEach((layer, li) => {
-    for (let s = 0; s < sheetsPerLayer; s++) {
+    for (let s = 0; s < perLayer; s++) {
       const material = new THREE.ShaderMaterial({
         uniforms: {
           uTime: { value: 0 },
@@ -76,6 +77,7 @@ export function createClouds(scene, { sheetsPerLayer, reducedMotion }) {
       const mesh = new THREE.Mesh(geometry, material);
       mesh.rotation.x = -Math.PI / 2;
       mesh.position.y = layer.y + SHEET_OFFSETS[s];
+      mesh.userData.sheet = s;
       scene.add(mesh);
       sheets.push(mesh);
     }
@@ -97,6 +99,10 @@ export function createClouds(scene, { sheetsPerLayer, reducedMotion }) {
       let mist = 0;
       for (const layer of layers) mist = Math.max(mist, 1 - smoothstep(0, MIST_RADIUS, Math.abs(camera.position.y - layer.y)));
       return mist;
+    },
+    // FPS watchdog's last notch: hide all but the first n sheets of each layer.
+    setSheetsPerLayer(n) {
+      for (const m of sheets) m.visible = m.userData.sheet < n;
     },
     dispose() {
       for (const m of sheets) { scene.remove(m); m.material.dispose(); }
