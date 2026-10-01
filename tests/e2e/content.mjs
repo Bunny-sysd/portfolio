@@ -33,6 +33,10 @@ for (const viewport of [{ width: 1600, height: 1000 }, { width: 390, height: 844
       await scrollToProgress(page, at);
       check(await opacityOf(page, `#chapter-${id}`) > 0.9, `[${tag}] ${id} visible on its beat`);
       check(await opacityOf(page, '#hero') < 0.05, `[${tag}] hero gone at ${id}`);
+      if (id === 'who') {
+        const whoContrast = await contrastOf(page, '#chapter-who .beat__inner > p:nth-of-type(2)');
+        check(whoContrast >= 4.5, `[${tag}] who paragraph meets WCAG AA contrast (${whoContrast.toFixed(2)}:1)`);
+      }
       if (id === 'mutagen') {
         const mutagenContrast = await contrastOf(page, '#chapter-mutagen .beat__inner > p:nth-of-type(2)');
         check(mutagenContrast >= 4.5, `[${tag}] mutagen paragraph meets WCAG AA contrast (${mutagenContrast.toFixed(2)}:1)`);
@@ -51,3 +55,23 @@ for (const viewport of [{ width: 1600, height: 1000 }, { width: 390, height: 844
     check(errors.length === 0, `[${tag}] no console errors ${JSON.stringify(errors)}`);
   });
 }
+
+// Short window (folded-in follow-up): a shallow viewport leaves little room
+// between the fixed chrome and the fold, so verify each beat's text box is
+// never clipped top or bottom at its own beat.
+const BEAT_SELECTOR = (id) => (id === 'hero' ? '#hero .beat__inner' : id === 'contact' ? '#contact .beat__inner' : `#chapter-${id} .beat__inner`);
+
+await withPage({ viewport: { width: 1280, height: 600 } }, async (page, errors) => {
+  for (const [id, at] of Object.entries(ALL_BEATS_AT)) {
+    await scrollToProgress(page, at);
+    const rect = await page.$eval(BEAT_SELECTOR(id), (el) => {
+      const r = el.getBoundingClientRect();
+      return { top: r.top, bottom: r.bottom };
+    });
+    check(
+      rect.top >= 0 && rect.bottom <= 600,
+      `[1280x600] ${id} beat text fits within the short viewport (top=${rect.top.toFixed(1)} bottom=${rect.bottom.toFixed(1)})`,
+    );
+  }
+  check(errors.length === 0, `[1280x600] no console errors ${JSON.stringify(errors)}`);
+});

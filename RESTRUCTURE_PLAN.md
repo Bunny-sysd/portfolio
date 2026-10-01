@@ -51,7 +51,8 @@ common cliché in security portfolios — reads "enthusiast," not
 | 3 | Cut all simulated/mocked widgets + dead-code sweep | ✅ Done, committed |
 | 4 | Real tool-run artifacts (SARIF, asciinema, real patch diff, writeup) | ⛔ Blocked on Aaron |
 | 5 | Deep dead-code sweep (old pre-cylinder design + unmounted React tree) | ✅ Done, committed |
-| 6 | Active Theory-level 3D upgrade (see Part 6 below) | 🚧 In progress — post-processing + Mutagen scene done |
+| 6 | Active Theory-level 3D upgrade (see Part 6 below) | ⛔ Superseded by Part 7 (see below) — the scroll-cylinder engine this part upgraded was retired, not finished |
+| 7 | Cinematic descent rebuild (see Part 7 below) | ✅ Done, committed on branch `cinematic-descent` (old engine retired in the Task 8 cleanup) |
 
 **All commits so far are local only — nothing has been pushed to the
 `bunny-sysd/portfolio` remote.** Do not push without explicit go-ahead each
@@ -294,7 +295,19 @@ Nothing identified as worth doing is left outstanding from Part 5.
 
 ---
 
-## Part 6 — Active Theory-level 3D upgrade
+## Part 6 — Active Theory-level 3D upgrade — **superseded by Part 7**
+
+> **Superseded.** This part upgraded the scroll-cylinder engine
+> (`app.js`/`three-bg.js`, CDN-loaded Three.js r128 + GSAP). That whole
+> engine — root and `public/` copies alike — was retired in the Task 8
+> cleanup of the cinematic-descent rebuild (Part 7, below) and no longer
+> exists in the working tree (recoverable from git history on `main` if ever
+> needed). Everything below is kept as historical record of work that did
+> land before the rebuild superseded it; none of it should be used as a
+> guide for current work — read Part 7 and `CLAUDE.md` instead. Notably,
+> item 1 in the "next steps" list below (the mobile card-framing bug) is
+> **resolved** by the rebuild: the new design has no cylinder/cards to frame
+> at all, so that whole class of bug doesn't apply to the current scene.
 
 Goal: push the opt-in 3D experience toward activetheory.net quality. Safe to
 be bold here because the front door already gives recruiters everything in
@@ -331,6 +344,51 @@ which the engine's tier detection treats as "low" — so post-processing is
 skipped and screenshots lie. Launch with
 `args: ['--use-angle=d3d11', '--ignore-gpu-blocklist', '--enable-gpu']`
 to render on the real GPU.
+
+---
+
+## Part 7 — Cinematic descent rebuild (branch `cinematic-descent`)
+
+Full ground-up rebuild of the 3D experience, replacing the scroll-cylinder
+engine (Part 6) entirely rather than continuing to upgrade it. Spec and plan:
+
+- `specs/2026-09-30-cinematic-descent-design.md` — the design spec.
+- `specs/2026-09-30-cinematic-descent-plan.md` — the implementation plan
+  (8 tasks; this rebuild's own portable status/roadmap, analogous to this
+  file but scoped to the branch).
+
+Shape of the rebuild, for anyone orienting from this file instead of the
+spec/plan directly:
+
+- Scroll is now **real native page scroll** (no `overflow: hidden` trick),
+  optionally smoothed by [Lenis](https://github.com/darkroomengineering/lenis)
+  and skipped entirely under `prefers-reduced-motion: reduce`.
+- The 3D scene is npm-package Three.js (`three` ^0.186), imported as real ES
+  modules from `src/scene/`, not CDN `<script>` tags — a sky/cloud/city
+  descent scrubbed by scroll progress, not a rotating card cylinder.
+- `src/timeline.js` is the single source of truth for every progress-driven
+  value (chapter positions, palette, opacity curves, camera altitude), so
+  the DOM chapter text and the 3D scene can never disagree about where a
+  given scroll position is in the story.
+- DOM chapter text ("beats") crossfades over the scene via CSS custom
+  properties, not canvas-drawn cards.
+- Old-site case-study widgets (`phase-flow`, `commands` typewriter,
+  `ctf-tabs`) were ported into real `<dialog>` elements with deep-link hash
+  routing, rather than left as dead/simulated code.
+- Full test coverage: `tests/unit/*.test.js` (`npm test`, vitest) for pure
+  logic (`timeline.js`, `tier.js`, etc.) and `tests/e2e/*.mjs` (`npm run e2e`,
+  Playwright against a running dev server) for content, scene rendering,
+  case-study interaction, and fallback behavior (no-WebGL, reduced motion).
+- **The old engine is retired**, not archived in-tree: `app.js`,
+  `three-bg.js`, `public/app.js`, `public/three-bg.js`, and `style.css` were
+  deleted in the Task 8 cleanup once nothing in `index.html` or `src/`
+  referenced them. They remain in git history on `main` if ever needed.
+- The Part 6 mobile card-framing bug (resting camera left each project card
+  mostly off the left edge of the screen on phones) is **resolved** by this
+  rebuild — there's no card cylinder left for that bug to apply to.
+
+See `CLAUDE.md` for the current architecture reference (stack, file layout,
+fallbacks) now that it has been rewritten for this design.
 
 ---
 

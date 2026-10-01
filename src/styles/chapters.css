@@ -79,3 +79,22 @@
   .beat--right .beat__inner { margin-left: 0; }
   .beat__inner::before { inset: -32px -24px; }
 }
+
+/* Short window: a shallow viewport leaves little vertical room between the
+   fixed scene chrome and the fold. Without this, the tallest beats (the
+   stats-and-button chapters, and especially the contact form) outgrow their
+   100svh box; since .beat doesn't clip overflow, that bleed inflates the
+   document's real scrollHeight past the design's `--track-h`, which throws
+   off every later beat's scroll-to-progress alignment, not just the one that
+   overflowed. Shrinking headings/margins/the form keeps every beat's content
+   within its box so nothing clips and the scroll math stays exact. */
+@media (max-height: 650px) {
+  .beat h1 { font-size: clamp(40px, 7vw, 86px); }
+  .beat h2 { font-size: clamp(32px, 5vw, 60px); margin: 0.12em 0 0.18em; }
+  .beat p { margin-bottom: 0.5em; }
+  .stats { margin: 10px 0 16px; }
+  .creds { margin: 14px 0 10px; }
+  .contact-form { gap: 8px; margin: 12px 0; }
+  .contact-form textarea { height: 56px; }
+  .hero-links { margin-bottom: 0; }
+}
