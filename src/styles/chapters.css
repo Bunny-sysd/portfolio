@@ -15,6 +15,15 @@
   background: radial-gradient(closest-side, rgba(2, 4, 10, 0.55), rgba(2, 4, 10, 0));
   filter: blur(10px);
 }
+/* Chapter/contact paragraphs sit over a wider range of backdrops (bright dusk
+   sky down to the lit city grid) than the hero's, so they get a stronger,
+   slightly larger scrim to hold WCAG AA contrast throughout. Scoped away from
+   .hero so its credential pills' backdrop-filter (which samples this pseudo
+   through blur) keeps its original look. */
+.beat:not(.hero) .beat__inner::before {
+  inset: -64px -88px;
+  background: radial-gradient(closest-side, rgba(2, 4, 10, 0.78), rgba(2, 4, 10, 0));
+}
 .beat--right .beat__inner { margin-left: auto; }
 
 .eyebrow {

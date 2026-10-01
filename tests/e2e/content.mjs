@@ -1,4 +1,4 @@
-import { withPage, check, scrollToProgress, opacityOf, SHOTS } from './lib.mjs';
+import { withPage, check, scrollToProgress, opacityOf, contrastOf, SHOTS } from './lib.mjs';
 
 const CHAPTER_AT = { who: 0.20, mutagen: 0.33, vigil: 0.46, signalhub: 0.59, 'proving-grounds': 0.72 };
 const ALL_BEATS_AT = { hero: 0, ...CHAPTER_AT, contact: 1.0 };
@@ -33,10 +33,16 @@ for (const viewport of [{ width: 1600, height: 1000 }, { width: 390, height: 844
       await scrollToProgress(page, at);
       check(await opacityOf(page, `#chapter-${id}`) > 0.9, `[${tag}] ${id} visible on its beat`);
       check(await opacityOf(page, '#hero') < 0.05, `[${tag}] hero gone at ${id}`);
+      if (id === 'mutagen') {
+        const mutagenContrast = await contrastOf(page, '#chapter-mutagen .beat__inner > p:nth-of-type(2)');
+        check(mutagenContrast >= 4.5, `[${tag}] mutagen paragraph meets WCAG AA contrast (${mutagenContrast.toFixed(2)}:1)`);
+      }
     }
     await scrollToProgress(page, 1);
     check(await opacityOf(page, '#contact') > 0.95, `[${tag}] contact visible at the bottom`);
     check(await page.$('#contact-form') !== null, `[${tag}] contact form present`);
+    const contactContrast = await contrastOf(page, '#contact .beat__inner > p:nth-of-type(2)');
+    check(contactContrast >= 4.5, `[${tag}] contact paragraph meets WCAG AA contrast over the city grid (${contactContrast.toFixed(2)}:1)`);
     await page.screenshot({ path: `${SHOTS}/content-${tag}-contact.png` });
 
     await page.click('#to-top');
