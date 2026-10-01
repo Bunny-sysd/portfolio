@@ -28,18 +28,28 @@ const FilmShader = {
 
 export function createPost(renderer, scene, camera, { reducedMotion }) {
   const composer = new EffectComposer(renderer);
-  composer.addPass(new RenderPass(scene, camera));
+  const renderPass = new RenderPass(scene, camera);
+  composer.addPass(renderPass);
   // Text is DOM, so nothing here can smear it; threshold keeps bloom to the
   // sun, city lights and packets.
-  composer.addPass(new UnrealBloomPass(new THREE.Vector2(innerWidth, innerHeight), 0.75, 0.6, 0.82));
+  const bloom = new UnrealBloomPass(new THREE.Vector2(innerWidth, innerHeight), 0.75, 0.6, 0.82);
+  composer.addPass(bloom);
   // OutputPass (tonemap + linear->sRGB) runs before the film pass so grain is
   // added in display-referred (gamma) space, not scene-linear — additive
   // noise before the sRGB encode disproportionately amplifies in near-black
   // regions (e.g. night sky) after encoding, which made grain look like
   // flickering brightness there instead of even per-pixel grain.
-  composer.addPass(new OutputPass());
+  const output = new OutputPass();
+  composer.addPass(output);
   const film = new ShaderPass(FilmShader);
   composer.addPass(film);
+  // EffectComposer.dispose() only frees its own ping-pong render targets and
+  // internal copyPass — it never touches composer.passes. Each pass owns GPU
+  // resources of its own (UnrealBloomPass: several render targets + blur/
+  // composite materials; ShaderPass/OutputPass: a material + fullscreen
+  // quad), so they're disposed explicitly here or they leak once the fps
+  // watchdog tears post FX down.
+  const passes = [renderPass, bloom, output, film];
   return {
     render(time) {
       film.uniforms.uTime.value = reducedMotion() ? 0 : time;
@@ -47,6 +57,9 @@ export function createPost(renderer, scene, camera, { reducedMotion }) {
     },
     setSize(w, h) { composer.setSize(w, h); },
     setPixelRatio(r) { composer.setPixelRatio(r); },
-    dispose() { composer.dispose(); },
+    dispose() {
+      for (const pass of passes) pass.dispose();
+      composer.dispose();
+    },
   };
 }
