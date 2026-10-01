@@ -1,7 +1,7 @@
 import { withPage, check, scrollToProgress, pixel, SHOTS } from './lib.mjs';
 
 const POINTS = [0, 0.1, 0.2, 0.265, 0.33, 0.46, 0.59, 0.72, 0.85, 1];
-const CITY_GLOW_MARGIN = 300; // measured delta is ~830px (mobile) to ~5500px (desktop); this leaves large headroom
+const CITY_GLOW_MARGIN = 40; // point-light pixels; tuned against measured counts (see commit)
 
 // Hides the DOM chrome (chapter text, overview link, mist overlay) so a
 // screenshot's bright-pixel count reflects only what's drawn on the WebGL
@@ -30,8 +30,17 @@ async function canvasBrightPixels(page, viewport) {
   return page.evaluate(async (b64) => {
     const img = new Image(); img.src = 'data:image/png;base64,' + b64; await img.decode();
     const c = new OffscreenCanvas(img.width, img.height); const g = c.getContext('2d'); g.drawImage(img, 0, 0);
-    const d = g.getImageData(0, 0, c.width, c.height).data; let n = 0;
-    for (let i = 0; i < d.length; i += 4) if (d[i + 2] > 170 && d[i + 1] > 140) n++;
+    // Count point lights, not brightness: a bright pixel with darkness a few
+    // pixels away on some side. Sunlit cloud is bright but smooth, so it no
+    // longer counts as "city"; lights scattered on a dark ground do.
+    const { width: w, height: h } = c;
+    const d = g.getImageData(0, 0, w, h).data;
+    const lum = (x, y) => { const i = (y * w + x) * 4; return 0.2126 * d[i] + 0.7152 * d[i + 1] + 0.0722 * d[i + 2]; };
+    const R = 4; let n = 0;
+    for (let y = R; y < h - R; y++) for (let x = R; x < w - R; x++) {
+      if (lum(x, y) < 140) continue;
+      if (Math.min(lum(x - R, y), lum(x + R, y), lum(x, y - R), lum(x, y + R)) < 60) n++;
+    }
     return n;
   }, shot.toString('base64'));
 }

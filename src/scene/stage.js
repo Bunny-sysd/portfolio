@@ -21,7 +21,7 @@ export function createStage(canvas) {
   if (!supportsWebGL()) return null;
   let renderer;
   try {
-    renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: 'high-performance' });
+    renderer = new THREE.WebGLRenderer({ canvas, antialias: false, powerPreference: 'high-performance' });
   } catch {
     return null;
   }
@@ -40,9 +40,13 @@ export function createStage(canvas) {
     width: innerWidth,
   });
   const settings = TIER_SETTINGS[tier];
-  renderer.setPixelRatio(Math.min(devicePixelRatio || 1, settings.dprCap));
+  renderer.setPixelRatio(settings.renderScale);
   renderer.setSize(innerWidth, innerHeight, false);
   renderer.outputColorSpace = THREE.SRGBColorSpace;
+  // The volumetric deck is HDR (sunlit cloud tops > 1); filmic tone mapping
+  // rolls highlights off instead of clipping channels into yellow-green.
+  renderer.toneMapping = THREE.NeutralToneMapping;
+  renderer.toneMappingExposure = 1.0;
 
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(innerWidth < 768 ? 62 : 50, innerWidth / innerHeight, 0.1, 2000);

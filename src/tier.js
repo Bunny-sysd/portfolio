@@ -6,8 +6,11 @@ export function detectTier({ gpu = '', memory = 8, cores = 8, width = 1600 } = {
   return 'high';
 }
 
+// renderScale is the canvas resolution in device-independent pixels: the
+// volumetric backdrop is soft by nature, and all text is DOM, so rendering it
+// below 1× and letting the browser upscale buys most of the frame budget.
 export const TIER_SETTINGS = {
-  low:  { dprCap: 1.0, sheetsPerLayer: 1, postFX: false, cityLights: 250 },
-  mid:  { dprCap: 1.5, sheetsPerLayer: 2, postFX: true,  cityLights: 500 },
-  high: { dprCap: 2.0, sheetsPerLayer: 3, postFX: true,  cityLights: 900 },
+  low:  { renderScale: 0.4, postFX: false },
+  mid:  { renderScale: 0.5, postFX: true },
+  high: { renderScale: 0.6, postFX: true },
 };

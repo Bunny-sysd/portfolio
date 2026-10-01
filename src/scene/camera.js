@@ -1,6 +1,8 @@
 import * as THREE from 'three';
 import { altitudeAt, clamp01 } from '../timeline.js';
 
+const FORWARD = 450; // world units travelled forward over the whole scroll
+
 export function createCameraRig(camera, { reducedMotion }) {
   const pointer = { x: 0, y: 0 };
   const smooth = { x: 0, y: 0 };
@@ -17,10 +19,14 @@ export function createCameraRig(camera, { reducedMotion }) {
       smooth.x += (pointer.x * k - smooth.x) * 0.05;
       smooth.y += (pointer.y * k - smooth.y) * 0.05;
       const y = altitudeAt(p);
-      camera.position.set(smooth.x * 2.5, y - smooth.y * 1.2, 0);
+      // Fly forward the whole film while descending — the forward rush is
+      // what makes cloud banks stream past instead of just rising.
+      const z = -FORWARD * clamp01(p);
+      camera.position.set(smooth.x * 2.5, y - smooth.y * 1.2, z);
       // Level with the horizon at the top; tilting down toward the city below.
-      target.set(smooth.x * 6, y - (3 + 32 * clamp01(p)), -80);
+      target.set(smooth.x * 6, y - (3 + 32 * clamp01(p)), z - 80);
       camera.lookAt(target);
+      camera.updateMatrixWorld();
     },
     dispose() {
       window.removeEventListener('pointermove', onMove);

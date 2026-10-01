@@ -31,8 +31,8 @@ export function createPost(renderer, scene, camera, { reducedMotion }) {
   const renderPass = new RenderPass(scene, camera);
   composer.addPass(renderPass);
   // Text is DOM, so nothing here can smear it; threshold keeps bloom to the
-  // sun, city lights and packets.
-  const bloom = new UnrealBloomPass(new THREE.Vector2(innerWidth, innerHeight), 0.75, 0.6, 0.82);
+  // sun core and city lights; the lit cloud deck stays under the threshold.
+  const bloom = new UnrealBloomPass(new THREE.Vector2(innerWidth, innerHeight), 0.45, 0.5, 1.6);
   composer.addPass(bloom);
   // OutputPass (tonemap + linear->sRGB) runs before the film pass so grain is
   // added in display-referred (gamma) space, not scene-linear — additive

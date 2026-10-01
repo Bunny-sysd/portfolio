@@ -7,11 +7,10 @@ import { createChapters } from './chapters.js';
 import { initCaseStudies } from './case-study.js';
 import { buildMailto } from './contact.js';
 import { createStage } from './scene/stage.js';
-import { createSky } from './scene/sky.js';
 import { createCameraRig } from './scene/camera.js';
-import { createClouds } from './scene/clouds.js';
-import { createCity } from './scene/city.js';
+import { createVolume, mistAt } from './scene/volume.js';
 import { createPost } from './scene/post.js';
+import { altitudeAt, paletteAt } from './timeline.js';
 
 const reduceQuery = matchMedia('(prefers-reduced-motion: reduce)');
 const reducedMotion = () => reduceQuery.matches;
@@ -41,11 +40,10 @@ form.addEventListener('submit', (e) => {
 const canvas = document.getElementById('scene');
 const stage = createStage(canvas);
 if (!stage) root.classList.add('no-webgl');
-const sky = stage && createSky(stage.scene);
 const rig = stage && createCameraRig(stage.camera, { reducedMotion });
-const clouds = stage && createClouds(stage.scene, { sheetsPerLayer: stage.settings.sheetsPerLayer, reducedMotion });
-const city = stage && createCity(stage.scene, { lights: stage.settings.cityLights, reducedMotion });
+const volume = stage && createVolume(stage.scene, { tier: stage.tier, reducedMotion });
 const mistEl = document.querySelector('.mist');
+let lastMist = '';
 let post = stage && stage.settings.postFX ? createPost(stage.renderer, stage.scene, stage.camera, { reducedMotion }) : null;
 
 addEventListener('resize', () => {
@@ -74,8 +72,8 @@ if (stage) {
   });
 }
 
-// FPS watchdog: steps quality down one notch per sustained slump — DPR to 1,
-// then post FX off, then one cloud sheet per layer. Only a sustained slump
+// FPS watchdog: steps quality down one notch per sustained slump — lower
+// render resolution, then post FX off, then fewer cloud march steps. Only a sustained slump
 // counts: a window is restarted whenever the tab comes back or a single frame
 // gap exceeds STALL_MS (tab switch, GC pause, dialog), and it takes two bad
 // windows in a row to step down. The current level is mirrored on
@@ -87,18 +85,21 @@ const restartWatch = (now) => { watch.frames = 0; watch.since = now; watch.last 
 if (stage) root.dataset.quality = QUALITY[0];
 document.addEventListener('visibilitychange', () => restartWatch(performance.now()));
 // Each call takes the next notch that actually changes something (a low-tier
-// device already runs at DPR 1 without post FX, so it goes straight to clouds).
+// device already runs without post FX, so it skips that notch).
+const MIN_SCALE = 0.3;
 function stepDown() {
-  if (watch.step < 1 && stage.renderer.getPixelRatio() > 1) {
-    stage.renderer.setPixelRatio(1);
-    if (post) post.setPixelRatio(1);
+  const ratio = stage.renderer.getPixelRatio();
+  if (watch.step < 1 && ratio > MIN_SCALE) {
+    const next = Math.max(MIN_SCALE, ratio * 0.7);
+    stage.renderer.setPixelRatio(next);
+    if (post) post.setPixelRatio(next);
     watch.step = 1;
   } else if (watch.step < 2 && post) {
     post.dispose();
     post = null;
     watch.step = 2;
   } else if (watch.step < 3) {
-    clouds.setSheetsPerLayer(1);
+    volume.reduceSteps();
     watch.step = 3;
   } else return;
   root.dataset.quality = QUALITY[watch.step];
@@ -120,11 +121,17 @@ function frame(now) {
   chapters.update(p);
   if (!stage || contextLost || document.hidden) return;
   rig.update(p);
-  sky.update(p, stage.camera);
-  const mist = clouds.update(p, now / 1000, stage.camera, sky.colors);
-  city.update(p, now / 1000, stage.camera);
-  mistEl.style.setProperty('--mist', (mist * 0.85).toFixed(3));
-  mistEl.style.setProperty('--mist-color', `#${mistColor.copy(sky.colors.horizon).lerp(WHITE, 0.55).getHexString(THREE.SRGBColorSpace)}`);
+  volume.update(p, now / 1000, stage.camera, stage.renderer);
+  // A light DOM veil on top of the raymarched cloud keeps each pass-through
+  // soft even at the lowest step count.
+  const [r, g, b] = paletteAt(p).horizon;
+  const mistKey = `${(mistAt(altitudeAt(p)) * 0.5).toFixed(3)}|${mistColor.setRGB(r, g, b, THREE.SRGBColorSpace).lerp(WHITE, 0.55).getHexString(THREE.SRGBColorSpace)}`;
+  if (mistKey !== lastMist) {
+    lastMist = mistKey;
+    const [m, hex] = mistKey.split('|');
+    mistEl.style.setProperty('--mist', m);
+    mistEl.style.setProperty('--mist-color', `#${hex}`);
+  }
   watchdog(now);
   if (post) post.render(now / 1000);
   else stage.renderer.render(stage.scene, stage.camera);

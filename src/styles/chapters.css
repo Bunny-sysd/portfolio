@@ -26,7 +26,7 @@
    through blur) keeps its original look. */
 .beat:not(.hero) .beat__inner::before {
   inset: -64px -88px;
-  background: radial-gradient(closest-side, rgba(2, 4, 10, 0.78), rgba(2, 4, 10, 0));
+  background: radial-gradient(closest-side, rgba(2, 4, 10, 0.9), rgba(2, 4, 10, 0));
 }
 .beat--right .beat__inner { margin-left: auto; }
 /* The hero sits over the brightest backdrop in the film (the low sun and its
@@ -55,6 +55,9 @@
 .beat h2 { font-size: clamp(44px, 6.5vw, 96px); }
 .beat p { margin: 0 0 1em; color: var(--text-dim); font-size: clamp(16px, 1.25vw, 19px); max-width: 54ch; }
 .beat .lede { color: var(--text); }
+/* Sunlit cloud tops behind the early chapters are brighter than the old sky;
+   body copy there needs a touch more opacity to stay at WCAG AA. */
+.beat:not(.hero) p { color: rgba(248, 250, 252, 0.92); }
 
 .stats { display: flex; flex-wrap: wrap; gap: 8px 22px; margin: 18px 0 26px; padding: 0; list-style: none; }
 .stats li { font: 500 13px/1.4 var(--font-mono); color: var(--text-dim); }

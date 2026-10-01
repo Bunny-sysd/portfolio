@@ -390,6 +390,23 @@ spec/plan directly:
 See `CLAUDE.md` for the current architecture reference (stack, file layout,
 fallbacks) now that it has been rewritten for this design.
 
+### Part 7b — Volumetric cloud backdrop (2026-10-01)
+
+Aaron's review of the first descent build: "not cinematic — no clouds moving
+as you scroll." AI video (Higgsfield) was tried and is blocked on the free
+plan, so the backdrop was rebuilt in code instead:
+
+- `src/scene/sky.js`, `clouds.js`, `city.js` (and `tests/unit/clouds.test.js`,
+  `tests/pages/clouds.html`) were replaced by one module, `src/scene/volume.js`:
+  a full-screen raymarched shader with five cumulus decks the camera flies
+  forward through and punches down between chapters, ending over a
+  procedural night city.
+- `tier.js` now sets a sub-1× `renderScale` per tier; the FPS watchdog's last
+  notch reduces march steps instead of cloud sheets.
+- Chapter body copy got a stronger scrim and brighter dim text to keep
+  WCAG AA (now ≥6:1) over sunlit cloud tops.
+- The prototype that was approved lives untracked in `spike/` (not shipped).
+
 ---
 
 ## Standing gotchas (cinematic-descent build)
