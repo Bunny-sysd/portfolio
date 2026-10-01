@@ -392,28 +392,42 @@ fallbacks) now that it has been rewritten for this design.
 
 ---
 
-## Standing gotchas (read before editing `app.js` / `three-bg.js`)
+## Standing gotchas (cinematic-descent build)
 
-- **Root + `public/` duplication is real and intentional.** `app.js` and
-  `three-bg.js` exist byte-identical at repo root and in `public/` (root
-  serves `file://` direct-open; `public/` is what Vite dev/build serves).
-  Edit one, copy to the other, `diff` to confirm — every time.
-- **Cache-busting**: `index.html` references these files with `?v=X.Y`
-  query strings. Bump the version on every edit to the referenced file, or
-  a stale browser cache can produce a false bug report (happened once
-  already this project).
-- **`prefers-reduced-motion: reduce` has masked two real bugs** by disabling
-  an entire feature instead of just its decorative motion. Always test both
-  settings when touching anything animated.
-- **Scroll is entirely synthetic.** `overflow: hidden !important` on
-  `html, body` means there's no real DOM scroll — wheel/drag accumulate into
-  a `scrollProgress` integer (0–6) consumed per-frame. Native `ScrollTrigger`
-  scroll-detection cannot attach to this page; GSAP is used as a manually
-  scrubbed timeline engine instead (`.time(scrollProgress)`), not with its
-  own scroll listener.
-- **Cards are Canvas2D, not DOM** (`generateCardTexture()` →
-  `THREE.CanvasTexture` on a plane mesh) — CSS cannot style them directly;
-  color/font changes for cards must be made in the JS texture-drawing code.
+> The gotchas that used to live here (root/`public/` file duplication,
+> `?v=X.Y` cache-busting query strings, fully synthetic `scrollProgress`
+> scroll, Canvas2D-drawn cards) applied to the retired `app.js`/`three-bg.js`
+> cylinder engine deleted in the Task 8 cleanup. They no longer apply to
+> anything in the working tree — `app.js`, `three-bg.js`, and their `public/`
+> copies are gone, recoverable only from git history on `main`. Replaced
+> below with the real gotchas for the current `src/`-based architecture.
+
+- **`src/timeline.js` is the single source of truth** for beat positions
+  (`CHAPTERS`), the sky palette (`paletteAt`), opacity curves, and camera
+  altitude (`altitudeAt`). Never hardcode a progress value or a color
+  keyframe anywhere else — both the DOM chapter text (`chapters.js`) and the
+  3D scene modules read from here, and they'll drift out of sync with each
+  other the moment a second copy of a number exists.
+- **Playwright needs real-GPU launch args to mean anything.** Headless
+  Chromium's default software GPU (SwiftShader) gets classified `low` by
+  `src/tier.js`'s `detectTier()`, which skips post-processing — a screenshot
+  or scene assertion taken without `lib.mjs`'s `GPU_ARGS`
+  (`--use-angle=d3d11 --ignore-gpu-blocklist --enable-gpu`) is testing a
+  degraded scene and can produce a false pass or fail. `fallbacks.mjs`'s
+  no-WebGL case is the one deliberate exception — it launches with
+  `--disable-webgl --disable-3d-apis` on purpose.
+- **`prefers-reduced-motion: reduce` must keep content fully working** —
+  only decorative motion (camera idle drift, cloud drift, Lenis smoothing)
+  stops; scroll-driven state changes and all content must still reveal
+  correctly. This has masked real bugs twice in this project's history by
+  disabling a whole feature instead of just its decorative part — always
+  test both settings when touching anything animated.
+- **`npm test` (vitest 5) needs Node ≥22.12 locally.** CI (GitHub Actions,
+  Node 20) only runs `npm run build` — a unit-test regression will not fail
+  CI by itself, so run `npm test` locally before trusting a change.
+- **Never commit `.superpowers/` or `test-results/`** — both are gitignored
+  on purpose (session/plan scratch and Playwright screenshot/report output,
+  respectively). Double-check `git status --short` after any `git add -A`.
 - Chrome DevTools MCP has a history of developing a stuck browser-profile
   lock across session boundaries. Playwright (installed, `chromium` browser
   present) is the reliable fallback — has been used throughout for all
