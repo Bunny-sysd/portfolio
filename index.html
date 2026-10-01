@@ -117,7 +117,643 @@
     </section>
   </main>
 
-  <!-- case-study dialogs are inserted here in Task 7 -->
+<dialog id="case-who" class="case" aria-labelledby="case-who-title" data-lenis-prevent>
+  <header class="case__head"><div><p class="eyebrow">01 — OPERATOR CLASSIFICATION &amp; SYSTEMS RESEARCH</p><h2 id="case-who-title">AARON ALVA // RESEARCHER PROFILE</h2></div>
+  <button class="case__close" data-close aria-label="Close case study">Close ✕</button></header>
+  <div class="case__body"><div style="max-width: 1080px; margin: 0 auto;">
+          
+          <!-- Tactical HUD Overview -->
+          <div class="dossier-panel">
+            <div class="dossier-header-bar">
+              <span class="dossier-header-title">OPERATOR CLASSIFICATION &amp; RESEARCH FOCUS</span>
+              <span class="dossier-header-status">CLEARANCE: GIAC-GFACT-CERTIFIED // SANS INSTITUTE</span>
+            </div>
+            <p style="font-size: 1.12rem; line-height: 1.85; color: rgba(255,255,255,0.92); margin: 0 0 1.25rem 0;">
+              I am a <strong style="color: var(--green);">Grade 11 cybersecurity researcher and systems developer</strong> specializing in autonomous vulnerability discovery, agentic AI fuzzing architectures, and low-level Linux systems security. My research focuses on instrumenting native C/C++ binaries with AddressSanitizer (ASan) inside air-gapped sandboxes, engineering high-entropy Abstract Syntax Tree (AST) mutation engines, and correlating live CVE telemetry via automated pipelines.
+            </p>
+            <div class="dossier-grid-4">
+              <div class="dossier-stat-box">
+                <div class="dossier-stat-val">TOP 1%</div>
+                <div class="dossier-stat-lbl">Global CTF Rank</div>
+              </div>
+              <div class="dossier-stat-box">
+                <div class="dossier-stat-val">100+</div>
+                <div class="dossier-stat-lbl">Completed Rooms</div>
+              </div>
+              <div class="dossier-stat-box">
+                <div class="dossier-stat-val">GFACT</div>
+                <div class="dossier-stat-lbl">GIAC Certified</div>
+              </div>
+              <div class="dossier-stat-box">
+                <div class="dossier-stat-val">14.2K</div>
+                <div class="dossier-stat-lbl">Mutation Cycles</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- SANS Institute GIAC GFACT Credential Folded Dossier -->
+          <div class="dossier-panel" style="border-left: 3px solid #ffd700; background: rgba(10, 16, 32, 0.7);">
+            <div class="dossier-header-bar">
+              <span class="dossier-header-title" style="color: #ffd700;">SANS INSTITUTE — GIAC GFACT CERTIFICATION</span>
+              <span class="dossier-header-status">ISSUED: 1 SEP 2026 // CYBERSTART CANADA SCHOLAR</span>
+            </div>
+            <p style="font-size: 1.05rem; line-height: 1.8; color: rgba(255,255,255,0.92); margin: 0 0 1rem 0;">
+              Achieved official <strong style="color: #ffd700;">GIAC GFACT</strong> (Foundational Cybersecurity Technologies) certification via full national scholarship from SANS Institute as a CyberStart Canada Top Performer. Validates rigorous academic mastery across computer architecture, binary logic, network protocols, Linux systems security, and automated Python security scripting.
+            </p>
+            <div class="skill-tag-cloud" style="margin-bottom: 1.25rem;">
+              <span class="skill-tag-pill gold">SANS INSTITUTE SCHOLAR</span>
+              <span class="skill-tag-pill gold">GIAC GFACT CERTIFIED</span>
+              <span class="skill-tag-pill">COMPUTER ARCHITECTURE</span>
+              <span class="skill-tag-pill">BINARY LOGIC &amp; X86_64</span>
+              <span class="skill-tag-pill">NETWORK PROTOCOLS &amp; PCAP</span>
+              <span class="skill-tag-pill">LINUX SYSTEMS SECURITY</span>
+              <span class="skill-tag-pill">PYTHON AUTOMATION</span>
+            </div>
+            <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+              <a href="https://www.credly.com/badges/e6b7f224-b57d-4224-9f7a-cabe2b3fb257" target="_blank" rel="noopener noreferrer" class="at-action-btn" style="padding: 0.65rem 1.25rem; font-size: 0.8rem; border-color: #ffd700; color: #ffd700; background: rgba(255, 215, 0, 0.08);">Verify Credly Credential (Issued 1 Sep 2026) ↗</a>
+              <a href="https://www.giac.org/certifications/foundational-cybersecurity-technologies-gfact/" target="_blank" rel="noopener noreferrer" class="at-action-btn" style="padding: 0.65rem 1.25rem; font-size: 0.8rem; border-color: rgba(255,215,0,0.3); color: rgba(255,255,255,0.85);">SANS GFACT Syllabus ↗</a>
+            </div>
+          </div>
+
+          <!-- Tactical Core Competencies -->
+          <div class="dossier-panel">
+            <div class="dossier-header-bar">
+              <span class="dossier-header-title">TACTICAL CORE COMPETENCIES</span>
+              <span class="dossier-header-status">TAXONOMY: OFFENSIVE &amp; DEFENSIVE SYSTEMS</span>
+            </div>
+            <div class="skill-tag-cloud" style="margin-bottom: 1.25rem;">
+              <span class="skill-tag-pill">VULNERABILITY DISCOVERY</span>
+              <span class="skill-tag-pill">LINUX PRIVILEGE ESCALATION</span>
+              <span class="skill-tag-pill">DOCKER / ASAN SANDBOXING</span>
+              <span class="skill-tag-pill">AI &amp; LLM SECURITY</span>
+              <span class="skill-tag-pill">THREAT INTELLIGENCE</span>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+              <div class="dossier-pod">
+                <div class="dossier-pod-title">Binary Exploitation &amp; Memory Safety</div>
+                <p class="dossier-pod-desc">Analyzing stack frame layouts, buffer overflow boundaries, Heap Use-After-Free (UAF), and triaging crash signals with GDB/GEF and AddressSanitizer.</p>
+              </div>
+              <div class="dossier-pod">
+                <div class="dossier-pod-title">Linux Kernel &amp; Privilege Escalation</div>
+                <p class="dossier-pod-desc">Exploiting SUID/SGID binaries, Linux capability misconfigurations, cron job race conditions, and inspecting system activity with <code>auditd</code> and <code>strace</code>.</p>
+              </div>
+              <div class="dossier-pod">
+                <div class="dossier-pod-title">Agentic AI &amp; LLM Security Systems</div>
+                <p class="dossier-pod-desc">Architecting LLM-driven AST input mutators, autonomous vulnerability patch generators, and sandboxing neural pipelines against prompt injection vectors.</p>
+              </div>
+              <div class="dossier-pod">
+                <div class="dossier-pod-title">Network Forensics &amp; Threat Intelligence</div>
+                <p class="dossier-pod-desc">Deep-packet inspection via Wireshark/tcpdump, TCP 3-way handshake analysis, NVD API v2 live correlation, and exporting standardized SARIF v2.1 reports.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Formal Vulnerability Research Methodology (4-Phase Lifecycle) -->
+          <div class="dossier-panel">
+            <div class="dossier-header-bar">
+              <span class="dossier-header-title">STRUCTURED VULNERABILITY RESEARCH METHODOLOGY</span>
+              <span class="dossier-header-status">STANDARDIZED VR &amp; EXPLOIT LIFECYCLE</span>
+            </div>
+            <div class="dossier-grid-2">
+              <div class="dossier-pod">
+                <div class="dossier-pod-title">1. Attack Surface Enumeration &amp; CFG Analysis</div>
+                <p class="dossier-pod-desc">Decompiling target binaries via Ghidra and Clang AST to extract Control Flow Graphs (CFG), trace user-controlled input sources, and identify dangerous sink APIs (e.g. <code>strcpy</code>, <code>memcpy</code>, <code>malloc</code>, <code>free</code>).</p>
+              </div>
+              <div class="dossier-pod">
+                <div class="dossier-pod-title">2. Context-Aware Semantic Fuzzing</div>
+                <p class="dossier-pod-desc">Synthesizing high-entropy mutated testcases that target boundary conditions (e.g. <code>INT_MAX</code>, off-by-one fenceposts, format string sequences <code>%n%s</code>, and endianness conversions).</p>
+              </div>
+              <div class="dossier-pod">
+                <div class="dossier-pod-title">3. Air-Gapped Sandboxed Instrumentation</div>
+                <p class="dossier-pod-desc">Executing dynamic harnesses inside non-root Docker containers with <code>--network=none</code>, strict seccomp filters dropping unneeded system calls, and AddressSanitizer (ASan) memory watchdogs.</p>
+              </div>
+              <div class="dossier-pod">
+                <div class="dossier-pod-title">4. Root Cause Analysis (RCA) &amp; Auto-Patching</div>
+                <p class="dossier-pod-desc">Capturing crash signals (<code>SIGSEGV</code>, <code>SIGABRT</code>), deduplicating via instruction pointer (RIP) hashing, isolating minimal reproducible testcases, and drafting verified AST diff patches.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Research Milestones Timeline -->
+          <div class="dossier-panel">
+            <div class="dossier-header-bar">
+              <span class="dossier-header-title">CHRONOLOGICAL RESEARCH MILESTONES</span>
+              <span class="dossier-header-status">VERIFIED ACADEMIC &amp; CTF ACHIEVEMENTS</span>
+            </div>
+            <div class="dossier-timeline-item">
+              <div class="dossier-timeline-date">SEP 2026 // SANS INSTITUTE</div>
+              <div class="dossier-timeline-title">GIAC GFACT Certification // SANS Institute (Issued Sep 1, 2026)</div>
+              <div class="dossier-timeline-desc">Achieved official GIAC Foundational Cybersecurity Technologies (GFACT) certification after being awarded a full national scholarship as a Top Performer in CyberStart Canada. Validates rigorous mastery in binary logic, computer architecture, network protocols, and Linux systems security.</div>
+            </div>
+            <div class="dossier-timeline-item">
+              <div class="dossier-timeline-date">2024 – PRESENT</div>
+              <div class="dossier-timeline-title">TryHackMe Top 1% Worldwide // Offensive Security</div>
+              <div class="dossier-timeline-desc">Achieved top 1% global ranking across 100+ completed rooms covering Active Directory Kerberoasting, buffer overflows, web exploitation (SQLi/SSRF/IDOR), and Linux privilege escalation.</div>
+            </div>
+            <div class="dossier-timeline-item">
+              <div class="dossier-timeline-date">2024 – PRESENT</div>
+              <div class="dossier-timeline-title">Mutagen Zero-Day Fuzzer &amp; Vigil Threat Hunter</div>
+              <div class="dossier-timeline-desc">Engineered autonomous security tools in Python, featuring Docker ASan harnesses, LLM AST mutators, and multi-source CVE correlation feeds.</div>
+            </div>
+          </div>
+
+          <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+            <a href="https://github.com/Bunny-sysd" target="_blank" rel="noopener noreferrer" class="at-action-btn" style="padding: 0.75rem 1.5rem; font-size: 0.85rem;">GitHub — Bunny-sysd ↗</a>
+            <a href="https://tryhackme.com/p/354221973" target="_blank" rel="noopener noreferrer" class="at-action-btn" style="padding: 0.75rem 1.5rem; font-size: 0.85rem; border-color: var(--cyan); color: var(--cyan);">[CTF] TryHackMe Profile ↗</a>
+          </div>
+        </div></div>
+</dialog>
+<dialog id="case-mutagen" class="case" aria-labelledby="case-mutagen-title" data-lenis-prevent>
+  <header class="case__head"><div><p class="eyebrow">02 — AGENTIC AI &amp; ZERO-DAY FUZZING</p><h2 id="case-mutagen-title">MUTAGEN ZERO-DAY FUZZER</h2></div>
+  <button class="case__close" data-close aria-label="Close case study">Close ✕</button></header>
+  <div class="case__body"><div style="max-width: 1080px; margin: 0 auto;">
+          
+          <!-- Overview Dossier -->
+          <div class="dossier-panel">
+            <div class="dossier-header-bar">
+              <span class="dossier-header-title">AUTONOMOUS 5-PHASE FUZZER &amp; AUTO-PATCHER</span>
+              <span class="dossier-header-status">STACK: PYTHON // GEMINI &middot; CLAUDE &middot; GPT &middot; OLLAMA // GHIDRA</span>
+            </div>
+            <p style="font-size: 1.08rem; line-height: 1.8; color: rgba(255,255,255,0.9); margin: 0 0 1.25rem 0;">
+              Mutagen is an agentic AI fuzzer built in Python that reads source code (or a compiled binary via Ghidra decompilation), finds vulnerabilities, generates exploits, patches the bugs, and proves the fix works &mdash; fully autonomously. Rather than the random mutation traditional fuzzers rely on, Mutagen uses an LLM (Gemini, Claude, GPT, or a local Ollama model) to reason about the code, target high-entropy edge cases, and learn from each failed attempt before retrying.
+            </p>
+            <div class="dossier-grid-4">
+              <div class="dossier-stat-box">
+                <div class="dossier-stat-val">5-PHASE</div>
+                <div class="dossier-stat-lbl">Analyze &rarr; Verify Pipeline</div>
+              </div>
+              <div class="dossier-stat-box">
+                <div class="dossier-stat-val">8 CWE</div>
+                <div class="dossier-stat-lbl">Vulnerability Classes</div>
+              </div>
+              <div class="dossier-stat-box">
+                <div class="dossier-stat-val">3 MODES</div>
+                <div class="dossier-stat-lbl">Audit &middot; Supply-Chain &middot; Malware</div>
+              </div>
+              <div class="dossier-stat-box">
+                <div class="dossier-stat-val">130+</div>
+                <div class="dossier-stat-lbl">Unit Tests</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 5-Stage Phase Flow Diagram -->
+          <div class="phase-flow-wrap">
+            <div class="phase-flow-header">
+              <span class="phase-flow-title">[FLOW] 5-PHASE AGENTIC FUZZ &amp; AUTO-PATCH PIPELINE</span>
+              <span class="phase-flow-readout" data-phase-readout>PHASE 1/5 &middot; ANALYZE</span>
+            </div>
+            <div class="phase-flow-diagram">
+              <div class="phase-node">
+                <div class="phase-node-shape"><span class="phase-node-num">01</span></div>
+                <div class="phase-node-label">Analyze</div>
+              </div>
+              <div class="phase-connector"><span class="phase-pulse"></span></div>
+              <div class="phase-node">
+                <div class="phase-node-shape"><span class="phase-node-num">02</span></div>
+                <div class="phase-node-label">Compile</div>
+              </div>
+              <div class="phase-connector"><span class="phase-pulse"></span></div>
+              <div class="phase-node">
+                <div class="phase-node-shape"><span class="phase-node-num">03</span></div>
+                <div class="phase-node-label">Fuzz</div>
+              </div>
+              <div class="phase-connector"><span class="phase-pulse"></span></div>
+              <div class="phase-node">
+                <div class="phase-node-shape"><span class="phase-node-num">04</span></div>
+                <div class="phase-node-label">Patch &amp; Exploit</div>
+              </div>
+              <div class="phase-connector"><span class="phase-pulse"></span></div>
+              <div class="phase-node">
+                <div class="phase-node-shape"><span class="phase-node-num">05</span></div>
+                <div class="phase-node-label">Verify</div>
+              </div>
+            </div>
+            <div class="phase-descriptions phase-descriptions-5col">
+              <div class="phase-desc-item">
+                <span class="phase-desc-tag">01 // ANALYZE</span>
+                <p>The LLM reads the target source (or decompiles a binary via Ghidra) and identifies candidate vulnerabilities and edge cases.</p>
+              </div>
+              <div class="phase-desc-item">
+                <span class="phase-desc-tag">02 // COMPILE</span>
+                <p>Compiles the target with a crash handler injected so failures can be captured and attributed precisely.</p>
+              </div>
+              <div class="phase-desc-item">
+                <span class="phase-desc-tag">03 // FUZZ</span>
+                <p>Executes AI-generated payloads against the target; the agent learns from failed attempts and retries with adjusted inputs.</p>
+              </div>
+              <div class="phase-desc-item">
+                <span class="phase-desc-tag">04 // PATCH &amp; EXPLOIT</span>
+                <p>Once a crash is confirmed, Mutagen drafts a secure C patch and a Python proof-of-concept exploit.</p>
+              </div>
+              <div class="phase-desc-item">
+                <span class="phase-desc-tag">05 // VERIFY</span>
+                <p>Re-runs the fuzzing campaign against the patched target to confirm the vulnerability is actually eliminated.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Plain-Language Usage Steps & Spaced CLI Command Block -->
+          <div class="dossier-panel">
+            <div class="dossier-header-bar">
+              <span class="dossier-header-title">USAGE WORKFLOW &amp; TERMINAL COMMANDS</span>
+              <span class="dossier-header-status">QUICK START</span>
+            </div>
+            <div style="font-size: 0.88rem; line-height: 1.7; color: rgba(255,255,255,0.85); margin-bottom: 0.75rem;">
+              <strong>Plain-Language Execution Steps:</strong>
+              <ol style="margin: 0.5rem 0 0 1.25rem; padding: 0; display: flex; flex-direction: column; gap: 0.35rem;">
+                <li>Point Mutagen at a source file or a compiled binary.</li>
+                <li>Optionally run in multi-agent swarm mode for harder targets.</li>
+                <li>Or fuzz every bundled target in one automated batch run.</li>
+              </ol>
+            </div>
+            <div class="command-block">
+              <div class="command-block-header">
+                <span>BASH // MUTAGEN CLI</span>
+                <button class="command-copy-btn" onclick="navigator.clipboard.writeText('mutagen --target targets/01_buffer_overflow.c\nmutagen --target path/to/binary.exe --binary\nmutagen --target targets/22_asyn_signal_uaf.c --mode agents\npython run_all.py --max-payloads 3')">Copy Commands</button>
+              </div>
+              <pre class="command-block-code"><span class="cmd-comment"># Fuzz a single source-code target</span>
+<span class="cmd-prompt">$ </span>mutagen --target targets/01_buffer_overflow.c
+
+<span class="cmd-comment"># Fuzz a compiled binary (decompiled via Ghidra)</span>
+<span class="cmd-prompt">$ </span>mutagen --target path/to/binary.exe --binary
+
+<span class="cmd-comment"># Run in multi-agent swarm mode on a harder target</span>
+<span class="cmd-prompt">$ </span>mutagen --target targets/22_asyn_signal_uaf.c --mode agents
+
+<span class="cmd-comment"># Fuzz every bundled target automatically</span>
+<span class="cmd-prompt">$ </span>python run_all.py --max-payloads 3</pre>
+            </div>
+          </div>
+
+          <!-- Real Exploit & Root Cause Analysis Case Study -->
+          <div class="dossier-panel">
+            <div class="dossier-header-bar">
+              <span class="dossier-header-title">BUFFER OVERFLOW (CWE-120) ROOT CAUSE ANALYSIS</span>
+              <span class="dossier-header-status">ILLUSTRATIVE EXAMPLE // VULNERABILITY TRIAGE &amp; AUTO-PATCH</span>
+            </div>
+            <div class="dossier-grid-2">
+              <div>
+                <div style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--cyan); margin-bottom: 0.35rem;">VULNERABLE C SOURCE SNIPPET:</div>
+                <div class="ide-panel">
+                  <div class="ide-panel-tabs"><span class="ide-tab active">example_target.c</span></div>
+                  <div class="ide-code">
+                    <div class="ide-line"><span class="ide-lineno">1</span><span class="ide-code-text dim">// Unescaping a string without validating the destination buffer size</span></div>
+                    <div class="ide-line"><span class="ide-lineno">2</span><span class="ide-code-text"><span class="cyan">char</span> *unescape(<span class="cyan">const char</span> *input, <span class="cyan">size_t</span> in_len) {</span></div>
+                    <div class="ide-line"><span class="ide-lineno">3</span><span class="ide-code-text">    <span class="cyan">char</span> *out = (<span class="cyan">char</span> *)<span class="warn">malloc</span>(in_len);</span></div>
+                    <div class="ide-line"><span class="ide-lineno">4</span><span class="ide-code-text">    <span class="cyan">size_t</span> out_idx = 0;</span></div>
+                    <div class="ide-line"><span class="ide-lineno">5</span><span class="ide-code-text">    <span class="cyan">for</span> (<span class="cyan">size_t</span> i = 0; i &lt; in_len; i++) {</span></div>
+                    <div class="ide-line"><span class="ide-lineno">6</span><span class="ide-code-text">        <span class="cyan">if</span> (input[i] == <span class="warn">'\\'</span> &amp;&amp; i + 1 &lt; in_len) {</span></div>
+                    <div class="ide-line"><span class="ide-lineno">7</span><span class="ide-code-text">            out[out_idx++] = parse_hex_byte(&amp;input[i + 1]);</span></div>
+                    <div class="ide-line"><span class="ide-lineno">8</span><span class="ide-code-text">            i += 3;</span></div>
+                    <div class="ide-line"><span class="ide-lineno">9</span><span class="ide-code-text">        } <span class="cyan">else</span> {</span></div>
+                    <div class="ide-line"><span class="ide-lineno">10</span><span class="ide-code-text">            out[out_idx++] = input[i]; <span class="err">// unbounded once out_idx &gt;= in_len</span></span></div>
+                    <div class="ide-line"><span class="ide-lineno">11</span><span class="ide-code-text">        }</span></div>
+                    <div class="ide-line"><span class="ide-lineno">12</span><span class="ide-code-text">    }</span></div>
+                    <div class="ide-line"><span class="ide-lineno">13</span><span class="ide-code-text">    out[out_idx] = <span class="warn">'\0'</span>;</span></div>
+                    <div class="ide-line"><span class="ide-lineno">14</span><span class="ide-code-text">    <span class="cyan">return</span> out;</span></div>
+                    <div class="ide-line"><span class="ide-lineno">15</span><span class="ide-code-text">}</span></div>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <div style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--green); margin-bottom: 0.35rem;">AUTO-GENERATED PATCH:</div>
+                <div class="ide-panel">
+                  <div class="ide-panel-tabs"><span class="ide-tab active">example_target.c &middot; patch</span></div>
+                  <div class="ide-code ide-diff">
+                    <div class="ide-line diff-context"><span class="ide-lineno">2</span><span class="ide-gutter">&nbsp;</span><span class="ide-code-text">char *unescape(const char *input, size_t in_len) {</span></div>
+                    <div class="ide-line diff-remove"><span class="ide-lineno">3</span><span class="ide-gutter">-</span><span class="ide-code-text">    char *out = (char *)malloc(in_len);</span></div>
+                    <div class="ide-line diff-add"><span class="ide-lineno">3</span><span class="ide-gutter">+</span><span class="ide-code-text">    size_t cap = in_len + 16;</span></div>
+                    <div class="ide-line diff-add"><span class="ide-lineno">4</span><span class="ide-gutter">+</span><span class="ide-code-text">    char *out = (char *)malloc(cap);</span></div>
+                    <div class="ide-line diff-add"><span class="ide-lineno">5</span><span class="ide-gutter">+</span><span class="ide-code-text">    if (!out) return NULL;</span></div>
+                    <div class="ide-line diff-context"><span class="ide-lineno">6</span><span class="ide-gutter">&nbsp;</span><span class="ide-code-text">    size_t out_idx = 0;</span></div>
+                    <div class="ide-line diff-context"><span class="ide-lineno">7</span><span class="ide-gutter">&nbsp;</span><span class="ide-code-text">    for (size_t i = 0; i &lt; in_len; i++) {</span></div>
+                    <div class="ide-line diff-add"><span class="ide-lineno">8</span><span class="ide-gutter">+</span><span class="ide-code-text">        if (out_idx + 2 &gt;= cap) {</span></div>
+                    <div class="ide-line diff-add"><span class="ide-lineno">9</span><span class="ide-gutter">+</span><span class="ide-code-text">            cap *= 2;</span></div>
+                    <div class="ide-line diff-add"><span class="ide-lineno">10</span><span class="ide-gutter">+</span><span class="ide-code-text">            out = (char *)realloc(out, cap);</span></div>
+                    <div class="ide-line diff-add"><span class="ide-lineno">11</span><span class="ide-gutter">+</span><span class="ide-code-text">        }</span></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <a href="https://github.com/bunny-sysd/mutagen" target="_blank" rel="noopener noreferrer" class="at-action-btn" style="padding: 0.75rem 1.5rem; font-size: 0.85rem; border-color: var(--green); color: var(--green);">↗ View GitHub Repository: Mutagen</a>
+        </div></div>
+</dialog>
+<dialog id="case-vigil" class="case" aria-labelledby="case-vigil-title" data-lenis-prevent>
+  <header class="case__head"><div><p class="eyebrow">03 — THREAT INTELLIGENCE &amp; CLI AUTOMATION</p><h2 id="case-vigil-title">VIGIL THREAT HUNTER</h2></div>
+  <button class="case__close" data-close aria-label="Close case study">Close ✕</button></header>
+  <div class="case__body"><div style="max-width: 1080px; margin: 0 auto;">
+          
+          <!-- Overview Dossier -->
+          <div class="dossier-panel">
+            <div class="dossier-header-bar">
+              <span class="dossier-header-title">AI-POWERED THREAT HUNTING &amp; TACTICAL COMPASS ENGINE</span>
+              <span class="dossier-header-status">STACK: PYTHON // NVD API v2 // OSV.DEV // SARIF v2.1</span>
+            </div>
+            <p style="font-size: 1.08rem; line-height: 1.8; color: rgba(255,255,255,0.9); margin: 0 0 1.25rem 0;">
+              Vigil is a human-in-the-loop threat hunting CLI built in Python &mdash; <strong style="color: var(--cyan);">the human decides, Vigil informs.</strong> It auto-detects and parses 8 recon/log formats (Nmap, auth logs, web server logs, PEASS output, source code, and more), correlates findings live against NVD and OSV.dev, and its Red Team Compass Engine turns that into ranked tactical next-steps with concrete CLI command templates for whichever engagement phase you're in, rather than acting on its own.
+            </p>
+            <div class="dossier-grid-4">
+              <div class="dossier-stat-box">
+                <div class="dossier-stat-val">8 FORMATS</div>
+                <div class="dossier-stat-lbl">Auto-Detected Inputs</div>
+              </div>
+              <div class="dossier-stat-box">
+                <div class="dossier-stat-val">REST v2</div>
+                <div class="dossier-stat-lbl">NVD Live Feed</div>
+              </div>
+              <div class="dossier-stat-box">
+                <div class="dossier-stat-val">SARIF</div>
+                <div class="dossier-stat-lbl">v2.1 OASIS Standard</div>
+              </div>
+              <div class="dossier-stat-box">
+                <div class="dossier-stat-val">PoC</div>
+                <div class="dossier-stat-lbl">Automated Crawler</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3-Stage Phase Flow Diagram -->
+          <div class="phase-flow-wrap">
+            <div class="phase-flow-header">
+              <span class="phase-flow-title">[FLOW] ANALYZE &rarr; COMPASS &rarr; REPORT WORKFLOW</span>
+              <span class="phase-flow-readout" data-phase-readout>PHASE 1/3 &middot; ANALYZE</span>
+            </div>
+            <div class="phase-flow-diagram">
+              <div class="phase-node">
+                <div class="phase-node-shape"><span class="phase-node-num">01</span></div>
+                <div class="phase-node-label">Analyze</div>
+              </div>
+              <div class="phase-connector"><span class="phase-pulse"></span></div>
+              <div class="phase-node">
+                <div class="phase-node-shape"><span class="phase-node-num">02</span></div>
+                <div class="phase-node-label">Compass</div>
+              </div>
+              <div class="phase-connector"><span class="phase-pulse"></span></div>
+              <div class="phase-node">
+                <div class="phase-node-shape"><span class="phase-node-num">03</span></div>
+                <div class="phase-node-label">Report</div>
+              </div>
+            </div>
+            <div class="phase-descriptions">
+              <div class="phase-desc-item">
+                <span class="phase-desc-tag">01 // ANALYZE</span>
+                <p><code>vigil analyze</code> ingests the scan, normalizes services into CPE 2.3 identifiers, and correlates them live against NVD and OSV.dev.</p>
+              </div>
+              <div class="phase-desc-item">
+                <span class="phase-desc-tag">02 // COMPASS</span>
+                <p><code>vigil compass</code> turns findings into ranked tactical next-steps for the current engagement phase &mdash; recon, initial access, or privilege escalation. You choose what to run.</p>
+              </div>
+              <div class="phase-desc-item">
+                <span class="phase-desc-tag">03 // REPORT</span>
+                <p>Export SARIF v2.1 / HTML / Markdown, then use <code>vigil diff</code> and <code>vigil session</code> to track how the engagement changes over time.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Plain-Language Usage Steps & Spaced CLI Command Block -->
+          <div class="dossier-panel">
+            <div class="dossier-header-bar">
+              <span class="dossier-header-title">USAGE WORKFLOW &amp; TERMINAL COMMANDS</span>
+              <span class="dossier-header-status">QUICK START</span>
+            </div>
+            <div style="font-size: 0.88rem; line-height: 1.7; color: rgba(255,255,255,0.85); margin-bottom: 0.75rem;">
+              <strong>Plain-Language Execution Steps:</strong>
+              <ol style="margin: 0.5rem 0 0 1.25rem; padding: 0; display: flex; flex-direction: column; gap: 0.35rem;">
+                <li>Analyze a recon scan or log file and correlate it against live CVE feeds.</li>
+                <li>Ask the Compass engine for ranked next-steps at your current engagement phase.</li>
+                <li>Diff scans over time to see what changed as the engagement progresses.</li>
+              </ol>
+            </div>
+            <div class="command-block">
+              <div class="command-block-header">
+                <span>BASH // VIGIL CLI</span>
+                <button class="command-copy-btn" onclick="navigator.clipboard.writeText('vigil analyze target_scan.txt --format sarif --output results.sarif\nvigil compass target_scan.txt --phase initial_access\nvigil diff scan_before.txt scan_after.txt')">Copy Commands</button>
+              </div>
+              <pre class="command-block-code"><span class="cmd-comment"># Analyze a scan and correlate against live CVE feeds</span>
+<span class="cmd-prompt">$ </span>vigil analyze target_scan.txt --format sarif --output results.sarif
+
+<span class="cmd-comment"># Get ranked tactical next-steps for this engagement phase</span>
+<span class="cmd-prompt">$ </span>vigil compass target_scan.txt --phase initial_access
+
+<span class="cmd-comment"># Track what changed between two scans</span>
+<span class="cmd-prompt">$ </span>vigil diff scan_before.txt scan_after.txt</pre>
+            </div>
+          </div>
+
+          <div class="dossier-panel">
+            <div class="dossier-header-bar">
+              <span class="dossier-header-title">CLI USAGE &amp; CORRELATION OUTPUT</span>
+              <span class="dossier-header-status">SAMPLE EXECUTION TRACE</span>
+            </div>
+            <div class="dd-console">
+              <div>> vigil analyze nmap_corporate.txt --format sarif --output report.sarif</div>
+              <div class="dim">> [INGEST] Parsed 48 services across 12 hosts from nmap_corporate.xml</div>
+              <div class="cyan">> [CPE_MAP] OpenSSH 7.4p1 → cpe:2.3:a:openbsd:openssh:7.4:p1:*:*:*:*:*:*</div>
+              <div class="cyan">> [CVE_MATCH] CVE-2018-15473 (OpenSSH User Enumeration) | CVSS: 5.3 (Medium)</div>
+              <div class="warn">> [POC_FOUND] github.com/Rhynorater/CVE-2018-15473 [STARS: 892] [VERIFIED]</div>
+              <div class="err">> [CRITICAL] Apache 2.4.49 → CVE-2021-41773 (Path Traversal + RCE) | CVSS: 9.8 (Critical)</div>
+              <div class="warn">> [POC_FOUND] github.com/inbug-team/CVE-2021-41773_PoC [STARS: 1420] [VERIFIED]</div>
+              <div>> [EXPORT] Generated: report.sarif (SARIF v2.1) + report.html (Interactive Dashboard)</div>
+            </div>
+          </div>
+
+          <a href="https://github.com/Bunny-sysd/vigil-hunter" target="_blank" rel="noopener noreferrer" class="at-action-btn" style="padding: 0.75rem 1.5rem; font-size: 0.85rem; border-color: var(--cyan); color: var(--cyan);">↗ View GitHub Repository: Vigil</a>
+        </div></div>
+</dialog>
+<dialog id="case-signalhub" class="case" aria-labelledby="case-signalhub-title" data-lenis-prevent>
+  <header class="case__head"><div><p class="eyebrow">04 — LIVE DATA PIPELINE &amp; NLP INTELLIGENCE</p><h2 id="case-signalhub-title">SIGNALHUB MARKET AI PIPELINE</h2></div>
+  <button class="case__close" data-close aria-label="Close case study">Close ✕</button></header>
+  <div class="case__body"><div style="max-width: 1080px; margin: 0 auto;">
+          
+          <!-- Overview Dossier -->
+          <div class="dossier-panel">
+            <div class="dossier-header-bar">
+              <span class="dossier-header-title">REAL-TIME DATA PIPELINE &amp; WEB APPLICATION</span>
+              <span class="dossier-header-status">HOSTED: FIREBASE CDN // SIGNALHUB-E79BA.WEB.APP</span>
+            </div>
+            <p style="font-size: 1.08rem; line-height: 1.8; color: rgba(255,255,255,0.9); margin: 0 0 1.25rem 0;">
+              SignalHub is a deployed financial market intelligence platform. It streams live equities and cryptocurrency price quotes via WebSocket and REST pipelines, normalizes financial news streams in JSON format, and evaluates macroeconomic sentiment and threat disclosures using natural language processing (NLP) pipelines.
+            </p>
+
+            <!-- 3-Stage Phase Flow Diagram -->
+            <div class="phase-flow-wrap">
+              <div class="phase-flow-header">
+                <span class="phase-flow-title">[FLOW] 3-STAGE REAL-TIME STREAMING &amp; SENTIMENT PIPELINE</span>
+                <span class="phase-flow-readout" data-phase-readout>PHASE 1/3 &middot; INGEST</span>
+              </div>
+              <div class="phase-flow-diagram">
+                <div class="phase-node">
+                  <div class="phase-node-shape"><span class="phase-node-num">01</span></div>
+                  <div class="phase-node-label">Ingest</div>
+                </div>
+                <div class="phase-connector"><span class="phase-pulse"></span></div>
+                <div class="phase-node">
+                  <div class="phase-node-shape"><span class="phase-node-num">02</span></div>
+                  <div class="phase-node-label">Process</div>
+                </div>
+                <div class="phase-connector"><span class="phase-pulse"></span></div>
+                <div class="phase-node">
+                  <div class="phase-node-shape"><span class="phase-node-num">03</span></div>
+                  <div class="phase-node-label">Deliver</div>
+                </div>
+              </div>
+              <div class="phase-descriptions">
+                <div class="phase-desc-item">
+                  <span class="phase-desc-tag">01 // INGEST</span>
+                  <p>Stream live price ticks and financial news feeds over high-throughput WebSocket sockets and REST feeds.</p>
+                </div>
+                <div class="phase-desc-item">
+                  <span class="phase-desc-tag">02 // PROCESS</span>
+                  <p>Evaluate financial headlines in parallel, computing sentiment momentum vectors and volatility indicators.</p>
+                </div>
+                <div class="phase-desc-item">
+                  <span class="phase-desc-tag">03 // DELIVER</span>
+                  <p>Render responsive 60 FPS charts on global Firebase edge CDN with zero-downtime deployment.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Plain-Language Usage Steps & Spaced Command Block -->
+            <div class="dossier-panel">
+              <div class="dossier-header-bar">
+                <span class="dossier-header-title">LAUNCH COMMANDS &amp; LOCAL DEV</span>
+                <span class="dossier-header-status">QUICK START</span>
+              </div>
+              <div style="font-size: 0.88rem; line-height: 1.7; color: rgba(255,255,255,0.85); margin-bottom: 0.75rem;">
+                <strong>Plain-Language Execution Steps:</strong>
+                <ol style="margin: 0.5rem 0 0 1.25rem; padding: 0; display: flex; flex-direction: column; gap: 0.35rem;">
+                  <li>Connect to real-time ticker stream over WebSocket pipeline.</li>
+                  <li>Evaluate news momentum and NLP sentiment indicators in parallel.</li>
+                  <li>Inspect real-time technical candlestick charts on the live Firebase web dashboard.</li>
+                </ol>
+              </div>
+              <div class="command-block">
+                <div class="command-block-header">
+                  <span>BASH // SIGNALHUB WORKFLOW</span>
+                  <button class="command-copy-btn" onclick="navigator.clipboard.writeText('npm run dev\nsignalhub stream --ticker NVDA,BTC --interval 1s\nopen https://signalhub-e79ba.web.app')">Copy Commands</button>
+                </div>
+                <pre class="command-block-code"><span class="cmd-comment"># Step 1: Launch local streaming market pipeline</span>
+<span class="cmd-prompt">$ </span>npm run dev
+
+<span class="cmd-comment"># Step 2: Connect to real-time ticker stream</span>
+<span class="cmd-prompt">$ </span>signalhub stream --ticker NVDA,BTC --interval 1s
+
+<span class="cmd-comment"># Step 3: Open live deployed web application</span>
+<span class="cmd-prompt">$ </span>open https://signalhub-e79ba.web.app</pre>
+              </div>
+            </div>
+          </div>
+          <a href="https://signalhub-e79ba.web.app" target="_blank" rel="noopener noreferrer" class="at-action-btn" style="padding: 0.75rem 1.5rem; font-size: 0.85rem; border-color: var(--green); color: var(--green);">Launch Live SignalHub Web App ↗</a>
+        </div></div>
+</dialog>
+<dialog id="case-proving-grounds" class="case" aria-labelledby="case-proving-grounds-title" data-lenis-prevent>
+  <header class="case__head"><div><p class="eyebrow">05 — OFFENSIVE SECURITY PROVING GROUNDS</p><h2 id="case-proving-grounds-title">TRYHACKME &amp; HACK THE BOX (TOP 1%)</h2></div>
+  <button class="case__close" data-close aria-label="Close case study">Close ✕</button></header>
+  <div class="case__body"><div style="max-width: 1080px; margin: 0 auto;">
+          <div class="dossier-panel">
+            <div class="dossier-header-bar">
+              <span class="dossier-header-title">OFFENSIVE SECURITY PROVING GROUNDS</span>
+              <span class="dossier-header-status">GLOBAL STANDING: TOP 1% WORLDWIDE // 100+ ROOMS</span>
+            </div>
+            <p style="font-size: 1.1rem; line-height: 1.8; color: rgba(255,255,255,0.9); margin: 0 0 1.25rem 0;">
+              Ranked in the <strong style="color: var(--cyan);">Top 1% Worldwide on TryHackMe</strong> out of 3,000,000+ registered cybersecurity students and practitioners across 100+ completed machines and challenges. Active competitor on Hack The Box, focusing on Linux privilege escalation, Active Directory attack paths (Kerberoasting, AS-REP Roasting), and web exploitation (SQLi, SSRF, IDOR).
+            </p>
+            <div class="dossier-grid-4">
+              <div class="dossier-stat-box">
+                <div class="dossier-stat-val">TOP 1%</div>
+                <div class="dossier-stat-lbl">Global Ranking</div>
+              </div>
+              <div class="dossier-stat-box">
+                <div class="dossier-stat-val">100+</div>
+                <div class="dossier-stat-lbl">Rooms Completed</div>
+              </div>
+              <div class="dossier-stat-box">
+                <div class="dossier-stat-val">100%</div>
+                <div class="dossier-stat-lbl">Offensive Paths</div>
+              </div>
+              <div class="dossier-stat-box">
+                <div class="dossier-stat-val">AD</div>
+                <div class="dossier-stat-lbl">Kerberoasting</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Hack The Box & TryHackMe Dossier -->
+          <div class="dossier-panel" style="border-left: 3px solid var(--cyan); background: rgba(8, 16, 32, 0.7);">
+            <div class="dossier-header-bar">
+              <span class="dossier-header-title" style="color: var(--cyan);">HACK THE BOX — OFFENSIVE PROFILE DOSSIER</span>
+              <span class="dossier-header-status">STATUS: APPRENTICE TIER // LEVEL 25</span>
+            </div>
+            <p style="font-size: 1.05rem; line-height: 1.8; color: rgba(255,255,255,0.92); margin: 0 0 1rem 0;">
+              Active practitioner on Hack The Box labs (<strong style="color: var(--cyan);">maxthemadman</strong>, Level 25, Apprentice Tier). Hands-on experience with real-world active attack chains including Kerberoasting, AS-REP Roasting, BloodHound domain mapping, SUID binary exploitation, and kernel privilege escalation.
+            </p>
+            <div class="skill-tag-cloud" style="margin-bottom: 1.25rem;">
+              <span class="skill-tag-pill cyan">HANDLE: maxthemadman</span>
+              <span class="skill-tag-pill cyan">TIER: APPRENTICE</span>
+              <span class="skill-tag-pill cyan">LEVEL: 25</span>
+              <span class="skill-tag-pill">ACTIVE DIRECTORY</span>
+              <span class="skill-tag-pill">KERBEROASTING</span>
+              <span class="skill-tag-pill">BLOODHOUND</span>
+              <span class="skill-tag-pill">LINUX PRIVESC</span>
+            </div>
+            <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+              <a href="https://app.hackthebox.com/users/3735054" target="_blank" rel="noopener noreferrer" class="at-action-btn" style="padding: 0.65rem 1.25rem; font-size: 0.8rem; border-color: var(--cyan); color: var(--cyan); background: rgba(0, 229, 255, 0.08);">View Hack The Box Profile (maxthemadman) ↗</a>
+              <a href="https://tryhackme.com/p/354221973" target="_blank" rel="noopener noreferrer" class="at-action-btn" style="padding: 0.65rem 1.25rem; font-size: 0.8rem; border-color: var(--green); color: var(--green);">View TryHackMe Profile (Top 1%) ↗</a>
+            </div>
+          </div>
+
+          <!-- Systematic 5-Phase Penetration Testing Methodology -->
+          <div class="dossier-panel">
+            <div class="dossier-header-bar">
+              <span class="dossier-header-title">5-STAGE OFFENSIVE METHODOLOGY &amp; WRITEUPS</span>
+              <span class="dossier-header-status">TACTICAL WORKFLOW</span>
+            </div>
+            <div class="dossier-grid-2">
+              <div class="dossier-pod">
+                <div class="dossier-pod-title">1. Reconnaissance &amp; Surface Mapping</div>
+                <p class="dossier-pod-desc">Fast TCP/UDP port enumeration with Nmap (<code>-sC -sV -p- -T4</code>), directory fuzzing via FFuf, and DNS virtual host brute-forcing.</p>
+              </div>
+              <div class="dossier-pod">
+                <div class="dossier-pod-title">2. Web Application Exploitation</div>
+                <p class="dossier-pod-desc">Exploiting Union-based SQL Injection, Server-Side Request Forgery (SSRF) against cloud metadata (<code>169.254.169.254</code>), Insecure Direct Object References (IDOR), and Local File Inclusion (LFI).</p>
+              </div>
+              <div class="dossier-pod">
+                <div class="dossier-pod-title">3. Linux Privilege Escalation</div>
+                <p class="dossier-pod-desc">Reverse-engineering SUID binaries, exploiting GTFOBins, abusing <code>sudo -l</code> token rights, writable <code>/etc/passwd</code>, and vulnerable cron jobs.</p>
+              </div>
+              <div class="dossier-pod">
+                <div class="dossier-pod-title">4. Active Directory Exploitation</div>
+                <p class="dossier-pod-desc">Executing Kerberoasting (<code>GetUserSPNs.py</code>), AS-REP Roasting, BloodHound graph path analysis, and Pass-the-Hash (PtH) lateral movement.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Interactive CTF Machine Case Study Selector -->
+          <div class="dossier-panel">
+            <div class="dossier-header-bar">
+              <span class="dossier-header-title">PENETRATION TESTING MACHINE WRITEUP BREAKDOWNS</span>
+              <span class="dossier-header-status">OFFENSIVE CASE STUDIES</span>
+            </div>
+            <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem; flex-wrap: wrap;" id="ctfMachineTabs">
+              <button class="target-btn active" data-machine="ad">[AD] VulnNet: Active (Active Directory &amp; Kerberoasting)</button>
+              <button class="target-btn" data-machine="linux">[LINUX] CyberPulse (Linux SUID &amp; Cap PrivEsc)</button>
+              <button class="target-btn" data-machine="web">[WEB] RetroAuth (Blind SQLi &amp; Cloud SSRF to RCE)</button>
+            </div>
+            <div class="dd-console" id="ctfMachineContent" style="font-size: 0.78rem; line-height: 1.7;">
+              <div style="color: var(--cyan); font-weight: bold;">[CASE STUDY: VULNNET ACTIVE // ACTIVE DIRECTORY COMPROMISE]</div>
+              <div class="dim">> Objective: Escalate from unauthenticated SMB null session to Domain Admin.</div>
+              <div>1. <span class="cyan">SMB Null Session:</span> Discovered readable IPC$ share listing service account usernames (<code>Enterprise-Backup</code>).</div>
+              <div>2. <span class="warn">Kerberoasting:</span> Executed <code>GetUserSPNs.py enterprise.local/Enterprise-Backup -request</code> to dump TGS ticket hashes for SPN <code>MSSQLSvc/db01.enterprise.local</code>.</div>
+              <div>3. <span class="warn">Hashcat Cracking:</span> Recovered plaintext password in 4.2 minutes using mode 13100 and rockyou.txt.</div>
+              <div>4. <span class="err">BloodHound Analysis:</span> Identified member of "Server Operators" group with permission to restart <code>AppReadiness</code> service.</div>
+              <div>5. <span class="green">Domain Admin:</span> Configured binary path to net user admin exploit and spawned privileged SYSTEM shell.</div>
+            </div>
+          </div>
+        </div></div>
+</dialog>
 
   <script type="module" src="/src/main.js"></script>
 </body>

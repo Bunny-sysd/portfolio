@@ -1,8 +1,10 @@
 import * as THREE from 'three';
 import './styles/base.css';
 import './styles/chapters.css';
+import './styles/case-study.css';
 import { createScroll } from './scroll.js';
 import { createChapters } from './chapters.js';
+import { initCaseStudies } from './case-study.js';
 import { buildMailto } from './contact.js';
 import { createStage } from './scene/stage.js';
 import { createSky } from './scene/sky.js';
@@ -17,6 +19,7 @@ const mistColor = new THREE.Color();
 
 const scroll = createScroll({ reducedMotion });
 const chapters = createChapters(document);
+initCaseStudies({ scroll });
 
 document.getElementById('to-top').addEventListener('click', (e) => {
   e.preventDefault();
