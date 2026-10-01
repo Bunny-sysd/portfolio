@@ -720,7 +720,7 @@ dialog.case[open] .case__head { animation: case-rise 0.6s 0.3s cubic-bezier(0.16
 dialog.case[open] .case__body { animation: case-rise 0.7s 0.42s cubic-bezier(0.16, 1, 0.3, 1) both; }
 dialog.case[open]::backdrop { animation: case-fade 0.5s ease both; }
 dialog.case.is-closing { animation: case-out 0.42s cubic-bezier(0.5, 0, 0.75, 0.4) both; }
-dialog.case.is-closing::backdrop { animation: case-fade 0.42s ease reverse both; }
+dialog.case.is-closing::backdrop { animation: case-fade-out 0.42s ease both; }
 @keyframes case-in {
   from { clip-path: circle(0 at var(--ox, 50%) var(--oy, 50%)); }
   to   { clip-path: circle(var(--or, 150vmax) at var(--ox, 50%) var(--oy, 50%)); }
@@ -731,9 +731,14 @@ dialog.case.is-closing::backdrop { animation: case-fade 0.42s ease reverse both;
 }
 @keyframes case-rise { from { opacity: 0; transform: translateY(24px); } }
 @keyframes case-fade { from { opacity: 0; } }
+@keyframes case-fade-out { to { opacity: 0; } }
 @media (prefers-reduced-motion: reduce) {
-  .track { transition: none; }
+  /* No zoom, iris or camera dive — but still a visible crossfade, so the
+     open/close isn't an abrupt cut. Opacity only: nothing moves. */
+  .track { transition: opacity 0.35s ease; }
   .beat { transition: none; }
   html.case-diving .beat { scale: none; filter: none; }
-  dialog.case[open], dialog.case[open] .case__head, dialog.case[open] .case__body { animation: case-fade 0.15s ease both; }
+  dialog.case[open] { animation: case-fade 0.4s ease both; }
+  dialog.case[open] .case__head, dialog.case[open] .case__body { animation: none; }
+  dialog.case.is-closing { animation: case-fade-out 0.3s ease both; }
 }

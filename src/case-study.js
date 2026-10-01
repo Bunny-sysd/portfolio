@@ -5,6 +5,7 @@ import { wireCtfTabs } from './widgets/ctf-tabs.js';
 
 const DIVE_MS = 380;  // camera plunges into the cloud before the dossier opens
 const CLOSE_MS = 420; // matches the case-out animation in case-study.css
+const FADE_MS = 300;  // reduced-motion close: a plain fade, no iris
 const DIALOG_W = 1120; // dialog.case max width in case-study.css
 
 // Opening a case study is a shot, not a popup: the descent text falls away,
@@ -52,11 +53,10 @@ export function initCaseStudies({ scroll, onDive = () => {} }) {
 
   function close(dialog) {
     if (!dialog.open || dialog.classList.contains('is-closing')) return;
-    if (reduced()) { dialog.close(); return; }
     dialog.classList.add('is-closing');
     onDive(false);
     root.classList.remove('case-diving');
-    setTimeout(() => dialog.close(), CLOSE_MS);
+    setTimeout(() => dialog.close(), reduced() ? FADE_MS : CLOSE_MS);
   }
 
   dialogs.forEach((dialog) => {
