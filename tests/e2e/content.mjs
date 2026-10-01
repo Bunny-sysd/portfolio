@@ -1,8 +1,21 @@
 import { withPage, check, scrollToProgress, opacityOf, SHOTS } from './lib.mjs';
 
 const CHAPTER_AT = { who: 0.20, mutagen: 0.33, vigil: 0.46, signalhub: 0.59, 'proving-grounds': 0.72 };
+const ALL_BEATS_AT = { hero: 0, ...CHAPTER_AT, contact: 1.0 };
 
-for (const viewport of [{ width: 1600, height: 1000 }, { width: 390, height: 844 }]) {
+async function checkHeadlinesFit(page, tag) {
+  const overflowing = await page.$$eval('#hero h1, .beat h2', (els) =>
+    els
+      .filter((el) => {
+        const r = el.getBoundingClientRect();
+        return el.scrollWidth > el.clientWidth + 1 || r.right > innerWidth;
+      })
+      .map((el) => el.textContent.trim())
+  );
+  check(overflowing.length === 0, `[${tag}] no headline overflows its box or the viewport (offenders: ${JSON.stringify(overflowing)})`);
+}
+
+for (const viewport of [{ width: 1600, height: 1000 }, { width: 390, height: 844 }, { width: 1280, height: 800 }, { width: 768, height: 1024 }]) {
   await withPage({ viewport }, async (page, errors) => {
     const tag = `${viewport.width}`;
     check(await page.textContent('#hero h1') === 'Aaron Alva', `[${tag}] hero name`);
@@ -10,6 +23,11 @@ for (const viewport of [{ width: 1600, height: 1000 }, { width: 390, height: 844
     check((await page.textContent('#hero')).includes('100+ Rooms'), `[${tag}] THM credential in hero`);
     check(await opacityOf(page, '#hero') > 0.95, `[${tag}] hero visible at load, no interaction`);
     await page.screenshot({ path: `${SHOTS}/content-${tag}-hero.png` });
+
+    for (const [id, at] of Object.entries(ALL_BEATS_AT)) {
+      await scrollToProgress(page, at);
+      await checkHeadlinesFit(page, `${tag} ${id}`);
+    }
 
     for (const [id, at] of Object.entries(CHAPTER_AT)) {
       await scrollToProgress(page, at);

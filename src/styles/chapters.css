@@ -9,7 +9,7 @@
   transform: translate3d(0, calc((1 - var(--o, 0)) * 28px), 0);
   will-change: opacity, transform;
 }
-.beat__inner { position: relative; max-width: 620px; }
+.beat__inner { position: relative; max-width: min(820px, 92vw); }
 .beat__inner::before {
   content: ''; position: absolute; inset: -56px -72px; z-index: -1;
   background: radial-gradient(closest-side, rgba(2, 4, 10, 0.55), rgba(2, 4, 10, 0));
