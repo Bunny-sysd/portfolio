@@ -32,9 +32,14 @@ export function createPost(renderer, scene, camera, { reducedMotion }) {
   // Text is DOM, so nothing here can smear it; threshold keeps bloom to the
   // sun, city lights and packets.
   composer.addPass(new UnrealBloomPass(new THREE.Vector2(innerWidth, innerHeight), 0.75, 0.6, 0.82));
+  // OutputPass (tonemap + linear->sRGB) runs before the film pass so grain is
+  // added in display-referred (gamma) space, not scene-linear — additive
+  // noise before the sRGB encode disproportionately amplifies in near-black
+  // regions (e.g. night sky) after encoding, which made grain look like
+  // flickering brightness there instead of even per-pixel grain.
+  composer.addPass(new OutputPass());
   const film = new ShaderPass(FilmShader);
   composer.addPass(film);
-  composer.addPass(new OutputPass());
   return {
     render(time) {
       film.uniforms.uTime.value = reducedMotion() ? 0 : time;
