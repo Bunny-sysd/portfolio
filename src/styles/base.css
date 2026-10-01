@@ -7,12 +7,17 @@
   --accent: #7DD3FC;
   --warm: #FCD34D;
   --ink: #02040a;
+  --dusk: linear-gradient(180deg, #f6b27a 0%, #b56a8f 18%, #3b2a5c 40%, #0d1530 66%, #02040a 100%);
   --track-h: 900svh;
 }
 *, *::before, *::after { box-sizing: border-box; }
 html, body { margin: 0; }
+/* The dusk gradient is the default backdrop so the page reads before the
+   bundle runs (or without JS at all); main.js adds .scene-live once the canvas
+   has drawn its first frame, and .no-webgl (no WebGL, or context lost) brings
+   the gradient back. */
 body {
-  background: var(--ink);
+  background: var(--dusk) fixed;
   color: var(--text);
   font: 400 17px/1.6 var(--font-sans);
   -webkit-font-smoothing: antialiased;
@@ -25,9 +30,8 @@ a { color: var(--accent); text-underline-offset: 3px; }
   position: fixed; inset: 0; z-index: 1; pointer-events: none;
   background: var(--mist-color, #f3d7c9); opacity: var(--mist, 0);
 }
-html.no-webgl body {
-  background: linear-gradient(180deg, #f6b27a 0%, #b56a8f 18%, #3b2a5c 40%, #0d1530 66%, #02040a 100%) fixed;
-}
+html.scene-live body { background: var(--ink); }
+html.no-webgl body { background: var(--dusk) fixed; }
 html.no-webgl #scene, html.no-webgl .mist { display: none; }
 html.scroll-locked { overflow: hidden; }
 
