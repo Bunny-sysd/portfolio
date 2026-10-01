@@ -42,7 +42,7 @@ for (const viewport of [{ width: 1600, height: 1000 }, { width: 390, height: 844
     check(!(await page.evaluate(() => document.documentElement.classList.contains('no-webgl'))), `[${tag}] WebGL active`);
     for (const p of POINTS) {
       await scrollToProgress(page, p, 1200);
-      await page.screenshot({ path: `${SHOTS}/scene-${tag}-${String(p).padEnd(5, '0')}.png` });
+      await page.screenshot({ path: `${SHOTS}/scene-${tag}-${p.toFixed(3)}.png` });
     }
     await scrollToProgress(page, 0.10, 1500);
     const mist = await page.$eval('.mist', (el) => parseFloat(getComputedStyle(el).opacity));
