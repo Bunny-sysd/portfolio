@@ -26,8 +26,11 @@ await withPage({ viewport: { width: 1600, height: 1000 } }, async (page, errors)
   await scrollToProgress(page, 0.72);
   await page.click('#chapter-proving-grounds [data-case]');
   await page.waitForTimeout(500);
-  await page.click('#case-proving-grounds .target-btn[data-machine="linux"]');
-  check((await page.textContent('#case-proving-grounds #ctfMachineContent')).includes('CYBERPULSE'), 'CTF tabs switch writeups');
+  check(await page.$eval('#case-proving-grounds', (d) => d.open), 'proving-grounds opens');
+  // No fabricated machine writeups: the dialog must not resurrect the old
+  // invented case-study console (removed with the ctf-tabs widget).
+  check(await page.$('#case-proving-grounds #ctfMachineContent') === null, 'no fabricated CTF writeup console');
+  check(!(await page.textContent('#case-proving-grounds')).toLowerCase().includes('writeup'), 'proving-grounds claims no writeups');
   await page.keyboard.press('Escape');
   await page.waitForTimeout(600);
 

@@ -59,7 +59,7 @@
 
     <section id="chapter-mutagen" class="beat beat--right" style="--at: 0.33">
       <div class="beat__inner">
-        <p class="eyebrow">02 — Agentic AI &amp; Zero-Day Fuzzing</p>
+        <p class="eyebrow">02 — Agentic AI &amp; Vulnerability Fuzzing</p>
         <h2>Mutagen</h2>
         <p>Mutagen is an agentic AI fuzzer built in Python that reads source code (or a compiled binary via Ghidra decompilation), finds vulnerabilities, generates exploits, patches the bugs, and proves the fix works — fully autonomously.</p>
         <ul class="stats"><li><b>5-phase</b> pipeline</li><li><b>8</b> CWE classes</li><li><b>3</b> modes</li><li><b>130+</b> unit tests</li></ul>
@@ -92,7 +92,7 @@
         <h2>Proving Grounds</h2>
         <p>Ranked in the Top 1% Worldwide on TryHackMe out of 3,000,000+ registered cybersecurity students and practitioners across 100+ completed machines and challenges.</p>
         <ul class="stats"><li><b>Top 1%</b> TryHackMe</li><li><b>100+</b> rooms</li><li><b>HTB</b> Apprentice · L25</li></ul>
-        <button class="case-btn" data-case="proving-grounds">View writeups</button>
+        <button class="case-btn" data-case="proving-grounds">View details</button>
       </div>
     </section>
 
@@ -131,7 +131,7 @@
             <p style="font-size: 1.12rem; line-height: 1.85; color: rgba(255,255,255,0.92); margin: 0 0 1.25rem 0;">
               I am a <strong style="color: var(--green);">Grade 11 cybersecurity researcher and systems developer</strong> specializing in autonomous vulnerability discovery, agentic AI fuzzing architectures, and low-level Linux systems security. My research focuses on instrumenting native C/C++ binaries with AddressSanitizer (ASan) inside air-gapped sandboxes, engineering high-entropy Abstract Syntax Tree (AST) mutation engines, and correlating live CVE telemetry via automated pipelines.
             </p>
-            <div class="dossier-grid-4">
+            <div class="dossier-grid-4" style="grid-template-columns: repeat(3, 1fr);">
               <div class="dossier-stat-box">
                 <div class="dossier-stat-val">TOP 1%</div>
                 <div class="dossier-stat-lbl">Global CTF Rank</div>
@@ -143,10 +143,6 @@
               <div class="dossier-stat-box">
                 <div class="dossier-stat-val">GFACT</div>
                 <div class="dossier-stat-lbl">GIAC Certified</div>
-              </div>
-              <div class="dossier-stat-box">
-                <div class="dossier-stat-val">14.2K</div>
-                <div class="dossier-stat-lbl">Mutation Cycles</div>
               </div>
             </div>
           </div>
@@ -252,7 +248,7 @@
             </div>
             <div class="dossier-timeline-item">
               <div class="dossier-timeline-date">2024 – PRESENT</div>
-              <div class="dossier-timeline-title">Mutagen Zero-Day Fuzzer &amp; Vigil Threat Hunter</div>
+              <div class="dossier-timeline-title">Mutagen AI Fuzzer &amp; Vigil Threat Hunter</div>
               <div class="dossier-timeline-desc">Engineered autonomous security tools in Python, featuring Docker ASan harnesses, LLM AST mutators, and multi-source CVE correlation feeds.</div>
             </div>
           </div>
@@ -264,7 +260,7 @@
         </div></div>
 </dialog>
 <dialog id="case-mutagen" class="case" aria-labelledby="case-mutagen-title" data-lenis-prevent>
-  <header class="case__head"><div><p class="eyebrow">02 — AGENTIC AI &amp; ZERO-DAY FUZZING</p><h2 id="case-mutagen-title">MUTAGEN ZERO-DAY FUZZER</h2></div>
+  <header class="case__head"><div><p class="eyebrow">02 — AGENTIC AI &amp; VULNERABILITY FUZZING</p><h2 id="case-mutagen-title">MUTAGEN AI FUZZER</h2></div>
   <button class="case__close" data-close aria-label="Close case study">Close ✕</button></header>
   <div class="case__body"><div style="max-width: 1080px; margin: 0 auto;">
           
@@ -708,7 +704,7 @@
           <!-- Systematic 5-Phase Penetration Testing Methodology -->
           <div class="dossier-panel">
             <div class="dossier-header-bar">
-              <span class="dossier-header-title">5-STAGE OFFENSIVE METHODOLOGY &amp; WRITEUPS</span>
+              <span class="dossier-header-title">OFFENSIVE TECHNIQUE AREAS</span>
               <span class="dossier-header-status">TACTICAL WORKFLOW</span>
             </div>
             <div class="dossier-grid-2">
@@ -731,27 +727,8 @@
             </div>
           </div>
 
-          <!-- Interactive CTF Machine Case Study Selector -->
-          <div class="dossier-panel">
-            <div class="dossier-header-bar">
-              <span class="dossier-header-title">PENETRATION TESTING MACHINE WRITEUP BREAKDOWNS</span>
-              <span class="dossier-header-status">OFFENSIVE CASE STUDIES</span>
-            </div>
-            <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem; flex-wrap: wrap;" id="ctfMachineTabs">
-              <button class="target-btn active" data-machine="ad">[AD] VulnNet: Active (Active Directory &amp; Kerberoasting)</button>
-              <button class="target-btn" data-machine="linux">[LINUX] CyberPulse (Linux SUID &amp; Cap PrivEsc)</button>
-              <button class="target-btn" data-machine="web">[WEB] RetroAuth (Blind SQLi &amp; Cloud SSRF to RCE)</button>
-            </div>
-            <div class="dd-console" id="ctfMachineContent" style="font-size: 0.78rem; line-height: 1.7;">
-              <div style="color: var(--cyan); font-weight: bold;">[CASE STUDY: VULNNET ACTIVE // ACTIVE DIRECTORY COMPROMISE]</div>
-              <div class="dim">> Objective: Escalate from unauthenticated SMB null session to Domain Admin.</div>
-              <div>1. <span class="cyan">SMB Null Session:</span> Discovered readable IPC$ share listing service account usernames (<code>Enterprise-Backup</code>).</div>
-              <div>2. <span class="warn">Kerberoasting:</span> Executed <code>GetUserSPNs.py enterprise.local/Enterprise-Backup -request</code> to dump TGS ticket hashes for SPN <code>MSSQLSvc/db01.enterprise.local</code>.</div>
-              <div>3. <span class="warn">Hashcat Cracking:</span> Recovered plaintext password in 4.2 minutes using mode 13100 and rockyou.txt.</div>
-              <div>4. <span class="err">BloodHound Analysis:</span> Identified member of "Server Operators" group with permission to restart <code>AppReadiness</code> service.</div>
-              <div>5. <span class="green">Domain Admin:</span> Configured binary path to net user admin exploit and spawned privileged SYSTEM shell.</div>
-            </div>
-          </div>
+          <!-- Real, verifiable proof lives on the linked HTB/THM profiles above;
+               no machine writeups are claimed here. -->
         </div></div>
 </dialog>
 

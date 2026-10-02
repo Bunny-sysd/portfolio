@@ -1,7 +1,6 @@
 import { CASE_IDS, caseIdFromHash } from './case-ids.js';
 import { runPhaseFlowsIn } from './widgets/phase-flow.js';
 import { revealCommandBlocks } from './widgets/commands.js';
-import { wireCtfTabs } from './widgets/ctf-tabs.js';
 
 const DIVE_MS = 380;  // camera plunges into the cloud before the dossier opens
 const CLOSE_MS = 420; // matches the case-out animation in case-study.css
@@ -79,7 +78,6 @@ export function initCaseStudies({ scroll, onDive = () => {} }) {
   document.querySelectorAll('[data-case]').forEach((btn) => {
     btn.addEventListener('click', () => open(btn.dataset.case, btn));
   });
-  wireCtfTabs(document);
 
   // Deep links work on first load and on in-page hash changes (links, back/forward).
   const openFromHash = () => { const id = caseIdFromHash(location.hash); if (id) open(id); };
