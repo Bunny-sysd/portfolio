@@ -27,7 +27,7 @@ const FilmShader = {
     }`,
 };
 
-export function createPost(renderer, scene, camera, { reducedMotion }) {
+export function createPost(renderer, scene, camera, { reducedMotion, contactFull = false }) {
   const composer = new EffectComposer(renderer);
   const renderPass = new RenderPass(scene, camera);
   composer.addPass(renderPass);
@@ -46,6 +46,7 @@ export function createPost(renderer, scene, camera, { reducedMotion }) {
     fluidPass.uniforms.uFrostR.value = Math.min(420, 0.45 * Math.min(w, h));
   };
   sizeFrost(innerWidth, innerHeight);
+  fluidPass.uniforms.uContactFull.value = contactFull ? 1 : 0;
   composer.addPass(fluidPass);
   // OutputPass (tonemap + linear->sRGB) runs before the film pass so grain is
   // added in display-referred (gamma) space, not scene-linear — additive
@@ -63,10 +64,50 @@ export function createPost(renderer, scene, camera, { reducedMotion }) {
   // quad), so they're disposed explicitly here or they leak once the fps
   // watchdog tears post FX down.
   const passes = [renderPass, bloom, fluidPass, output, film];
+
+  // Every material a pass owns (bloom keeps several, some in arrays).
+  const materialsOf = (pass) => {
+    const out = new Set();
+    for (const v of Object.values(pass)) {
+      if (v?.isMaterial) out.add(v);
+      else if (Array.isArray(v)) v.forEach((m) => m?.isMaterial && out.add(m));
+    }
+    return [...out];
+  };
   return {
+    // Compile the post chain's programs off the main thread, as the scene's
+    // are: left to its first frame, linking them synchronously blocked the
+    // main thread for ~300 ms. Programs are keyed by render target, so all
+    // but the last pass compile against a composer target and the final
+    // (screen) pass against the canvas.
+    precompile() {
+      // Variants are also keyed by the geometry's attributes: the passes draw
+      // with FullScreenQuad's position+uv triangle (no normals), the fluid sim
+      // with its own plane — so each is compiled on a matching shape.
+      const tri = new THREE.BufferGeometry();
+      tri.setAttribute('position', new THREE.Float32BufferAttribute([-1, 3, 0, -1, -1, 0, 3, -1, 0], 3));
+      tri.setAttribute('uv', new THREE.Float32BufferAttribute([0, 2, 0, 0, 2, 0], 2));
+      const plane = new THREE.PlaneGeometry(2, 2);
+      const cam = new THREE.Camera();
+      const sceneFor = (entries) => {
+        const sc = new THREE.Scene();
+        entries.forEach(([geo, m]) => { const mesh = new THREE.Mesh(geo, m); mesh.frustumCulled = false; sc.add(mesh); });
+        return sc;
+      };
+      const offscreen = sceneFor([...[bloom, fluidPass, output].flatMap(materialsOf).map((m) => [tri, m]), [plane, fluid.material]]);
+      const onscreen = sceneFor(materialsOf(film).map((m) => [tri, m]));
+      const prev = renderer.getRenderTarget();
+      renderer.setRenderTarget(composer.renderTarget2);
+      const a = renderer.compileAsync(offscreen, cam);
+      renderer.setRenderTarget(null);
+      const b = renderer.compileAsync(onscreen, cam);
+      renderer.setRenderTarget(prev);
+      return Promise.all([a, b]).finally(() => { tri.dispose(); plane.dispose(); });
+    },
     // The scene's programs differ when drawn into the composer's (linear,
     // un-tonemapped) target rather than the screen; precompile against this.
     get sceneTarget() { return composer.renderTarget1; },
+    fluidEnergy: () => fluid.energy(),
     render(time, { dive = 0, contact = 0 } = {}) {
       fluidPass.uniforms.uDive.value = dive;
       fluidPass.uniforms.uContact.value = contact;

@@ -40,15 +40,19 @@ export function createStage(canvas) {
     width: innerWidth,
   });
   const settings = TIER_SETTINGS[tier];
+  // Shader error checking reads every program's info log on first use, which
+  // forces a synchronous wait on the GPU process (~100–250 ms of main-thread
+  // block on load, even after compileAsync). Keep it while developing only.
+  renderer.debug.checkShaderErrors = import.meta.env.DEV;
   renderer.setPixelRatio(settings.renderScale);
   renderer.setSize(innerWidth, innerHeight, false);
   renderer.outputColorSpace = THREE.SRGBColorSpace;
-  // The volumetric deck is HDR (sunlit cloud tops > 1); filmic tone mapping
-  // rolls highlights off instead of clipping channels into yellow-green.
+  // Additive particles stack past 1 at the core; neutral tone mapping rolls
+  // that off instead of clipping channels.
   renderer.toneMapping = THREE.NeutralToneMapping;
   renderer.toneMappingExposure = 1.0;
 
   const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(innerWidth < 768 ? 62 : 50, innerWidth / innerHeight, 0.1, 2000);
+  const camera = new THREE.PerspectiveCamera(42, innerWidth / innerHeight, 0.1, 200);
   return { renderer, scene, camera, tier, settings };
 }

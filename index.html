@@ -18,109 +18,105 @@
   <meta name="twitter:image" content="og-image.png" />
   <meta http-equiv="X-Content-Type-Options" content="nosniff" />
   <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin" />
-  <meta name="theme-color" content="#2a1b3d" />
+  <meta name="theme-color" content="#03060b" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Space+Grotesk:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" />
 </head>
 <body>
   <canvas id="scene" aria-hidden="true"></canvas>
-  <div class="mist" aria-hidden="true"></div>
-  <a id="to-top" class="to-top beat-ctl" href="#top">Overview ↑</a>
-  <nav class="nav-pill" aria-label="Sections">
-    <a href="#chapter-mutagen" data-at="0.33">Work</a>
-    <span class="nav-pill__rule" aria-hidden="true"></span>
-    <a href="#contact" data-at="1">Contact</a>
-  </nav>
+  <a class="skip-link" href="#/work">Skip to work</a>
 
-  <main class="track" id="top">
-    <section id="hero" class="beat hero is-live" style="--at: 0">
-      <div class="beat__inner">
+  <header class="chrome">
+    <nav class="nav-pill" aria-label="Primary">
+      <a href="#/work" data-nav="work">Work</a>
+      <span class="nav-pill__rule" aria-hidden="true"></span>
+      <a href="#/contact" data-nav="contact">Contact</a>
+    </nav>
+    <div class="ticker" role="marquee" aria-label="Verified credentials">
+      <div class="ticker__track">
+        <span>GIAC GFACT · Scored 94</span><span>TryHackMe · Top 1% · 100+ rooms</span><span>Hack The Box · maxthemadman · Apprentice L25</span><span>Mutagen · 130+ unit tests</span>
+        <span aria-hidden="true">GIAC GFACT · Scored 94</span><span aria-hidden="true">TryHackMe · Top 1% · 100+ rooms</span><span aria-hidden="true">Hack The Box · maxthemadman · Apprentice L25</span><span aria-hidden="true">Mutagen · 130+ unit tests</span>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section id="view-home" class="view view--home is-active" aria-labelledby="home-title">
+      <div class="home">
         <p class="eyebrow">Cybersecurity Researcher · Canada</p>
-        <h1>Aaron Alva</h1>
+        <h1 id="home-title">Aaron Alva</h1>
         <p class="lede">Grade 11 · Building security automation tools &amp; vulnerability research</p>
         <ul class="creds">
           <li><a href="https://www.credly.com/badges/e6b7f224-b57d-4224-9f7a-cabe2b3fb257" target="_blank" rel="noopener noreferrer"><span>GIAC GFACT</span>Certified · Scored 94</a></li>
           <li><a href="https://tryhackme.com/p/354221973" target="_blank" rel="noopener noreferrer"><span>TryHackMe</span>Top 1% · 100+ Rooms</a></li>
           <li><a href="https://app.hackthebox.com/users/3735054" target="_blank" rel="noopener noreferrer"><span>Hack The Box</span>maxthemadman · Apprentice L25</a></li>
         </ul>
-        <p class="hero-links">
-          <a href="https://github.com/bunny-sysd/mutagen" target="_blank" rel="noopener noreferrer">Mutagen ↗</a>
-          <a href="https://github.com/Bunny-sysd/vigil-hunter" target="_blank" rel="noopener noreferrer">Vigil ↗</a>
-          <a href="mailto:aaron.lawrence.alva@gmail.com">aaron.lawrence.alva@gmail.com</a>
-        </p>
-        <p class="scroll-cue" aria-hidden="true">Scroll to descend</p>
+        <a class="cue" href="#/work">Scroll down</a>
       </div>
     </section>
 
-    <section id="chapter-who" class="beat" style="--at: 0.20">
-      <div class="beat__inner">
-        <p class="eyebrow">01 — Researcher</p>
-        <h2>Who</h2>
-        <p>I am a Grade 11 cybersecurity researcher and systems developer specializing in autonomous vulnerability discovery, agentic AI fuzzing architectures, and low-level Linux systems security.</p>
-        <button class="case-btn" data-case="who">View profile</button>
+    <section id="view-work" class="view view--work" aria-labelledby="work-title" tabindex="-1">
+      <h2 id="work-title" class="sr-only">Work</h2>
+      <div class="filters">
+        <p class="filters__q">What are you looking for?</p>
+        <ul>
+          <li><button type="button" data-filter="tools" aria-pressed="false">-&gt; tools</button></li>
+          <li><button type="button" data-filter="research" aria-pressed="false">-&gt; research</button></li>
+          <li><button type="button" data-filter="ctf" aria-pressed="false">-&gt; ctf</button></li>
+          <li><button type="button" data-filter="certs" aria-pressed="false">-&gt; certs</button></li>
+        </ul>
+      </div>
+      <div class="caption">
+        <p class="caption__index"></p>
+        <h3 class="caption__title"></h3>
+        <p class="caption__kind"></p>
+        <div class="caption__ctl">
+          <button type="button" class="arrow" data-step="-1" aria-label="Previous project">&lt;&lt;</button>
+          <a class="caption__open" href="#/work">Open project</a>
+          <button type="button" class="arrow" data-step="1" aria-label="Next project">&gt;&gt;</button>
+        </div>
+      </div>
+      <ul class="sr-only work-index" aria-label="All projects"></ul>
+    </section>
+
+    <section id="view-detail" class="view view--detail" aria-labelledby="detail-title" tabindex="-1">
+      <p class="detail__hint" aria-hidden="true">Scroll to close</p>
+      <div class="detail">
+        <h2 id="detail-title" class="detail__title"></h2>
+        <p class="detail__meta"></p>
+        <p class="detail__blurb"></p>
+        <ul class="detail__stats"></ul>
+        <ul class="detail__links"></ul>
+        <a class="detail__close" href="#/work">&lt;- Close</a>
       </div>
     </section>
 
-    <section id="chapter-mutagen" class="beat beat--right" style="--at: 0.33">
-      <div class="beat__inner">
-        <p class="eyebrow">02 — Agentic AI &amp; Vulnerability Fuzzing</p>
-        <h2>Mutagen</h2>
-        <p>Mutagen is an agentic AI fuzzer built in Python that reads source code (or a compiled binary via Ghidra decompilation), finds vulnerabilities, generates exploits, patches the bugs, and proves the fix works — fully autonomously.</p>
-        <ul class="stats"><li><b>5-phase</b> pipeline</li><li><b>8</b> CWE classes</li><li><b>3</b> modes</li><li><b>130+</b> unit tests</li></ul>
-        <button class="case-btn" data-case="mutagen">View case study</button>
-      </div>
-    </section>
-
-    <section id="chapter-vigil" class="beat" style="--at: 0.46">
-      <div class="beat__inner">
-        <p class="eyebrow">03 — Threat Intelligence &amp; CLI Automation</p>
-        <h2>Vigil</h2>
-        <p>Vigil is a human-in-the-loop threat hunting CLI built in Python — the human decides, Vigil informs.</p>
-        <ul class="stats"><li><b>8</b> formats auto-detected</li><li><b>NVD</b> API v2 live feed</li><li><b>SARIF</b> v2.1 output</li></ul>
-        <button class="case-btn" data-case="vigil">View case study</button>
-      </div>
-    </section>
-
-    <section id="chapter-signalhub" class="beat beat--right" style="--at: 0.59">
-      <div class="beat__inner">
-        <p class="eyebrow">04 — Live Data Pipeline &amp; NLP</p>
-        <h2>SignalHub</h2>
-        <p>SignalHub is a deployed financial market intelligence platform. It streams live equities and cryptocurrency price quotes via WebSocket and REST pipelines.</p>
-        <button class="case-btn" data-case="signalhub">View case study</button>
-      </div>
-    </section>
-
-    <section id="chapter-proving-grounds" class="beat" style="--at: 0.72">
-      <div class="beat__inner">
-        <p class="eyebrow">05 — Offensive Security Proving Grounds</p>
-        <h2>Proving Grounds</h2>
-        <p>Ranked in the Top 1% Worldwide on TryHackMe out of 3,000,000+ registered cybersecurity students and practitioners across 100+ completed machines and challenges.</p>
-        <ul class="stats"><li><b>Top 1%</b> TryHackMe</li><li><b>100+</b> rooms</li><li><b>HTB</b> Apprentice · L25</li></ul>
-        <button class="case-btn" data-case="proving-grounds">View details</button>
-      </div>
-    </section>
-
-    <section id="contact" class="beat contact" style="--at: 1">
-      <div class="beat__inner">
-        <p class="eyebrow">06 — Contact</p>
-        <h2>Get in touch</h2>
-        <p>Connect with Aaron Alva for cybersecurity research collaborations, vulnerability disclosures, internship opportunities, or general technical inquiries.</p>
+    <section id="view-contact" class="view view--contact" aria-labelledby="contact-title" tabindex="-1">
+      <p class="contact__eyebrow"><span aria-hidden="true">✦</span> Contact <span aria-hidden="true">✦</span></p>
+      <h2 id="contact-title" class="contact__big">Scan <span aria-hidden="true">→</span> Exploit <span aria-hidden="true">→</span> Patch</h2>
+      <div class="contact__grid">
         <form id="contact-form" class="contact-form" novalidate>
           <label>Name <input name="name" autocomplete="name" placeholder="Your name" /></label>
-          <label>Message <textarea name="message" rows="4" required placeholder="What would you like to talk about?"></textarea></label>
-          <button type="submit" class="case-btn">Open in your email app</button>
+          <label>Message <textarea name="message" rows="3" required placeholder="What would you like to talk about?"></textarea></label>
+          <button type="submit" class="btn">Open in your email app</button>
           <p class="form-note" role="status" aria-live="polite"></p>
         </form>
-        <p class="hero-links">
-          <a href="mailto:aaron.lawrence.alva@gmail.com">aaron.lawrence.alva@gmail.com</a>
+        <div class="contact__links">
+          <a class="contact__mail" href="mailto:aaron.lawrence.alva@gmail.com">aaron.lawrence.alva@gmail.com</a>
           <a href="https://github.com/Bunny-sysd" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
           <a href="https://tryhackme.com/p/354221973" target="_blank" rel="noopener noreferrer">TryHackMe ↗</a>
           <a href="https://app.hackthebox.com/users/3735054" target="_blank" rel="noopener noreferrer">Hack The Box ↗</a>
-        </p>
+        </div>
       </div>
     </section>
   </main>
+
+  <form class="term" autocomplete="off" aria-label="Terminal">
+    <div class="term__out" role="log" aria-live="polite"></div>
+    <label class="term__row"><span class="term__prompt" aria-hidden="true">aaron@portfolio:~$</span>
+      <input class="term__in" name="cmd" spellcheck="false" placeholder="type help…" aria-label="Terminal command, type help" /></label>
+  </form>
 
 <dialog id="case-who" class="case" aria-labelledby="case-who-title" data-lenis-prevent>
   <header class="case__head"><div><p class="eyebrow">01 — OPERATOR CLASSIFICATION &amp; SYSTEMS RESEARCH</p><h2 id="case-who-title">AARON ALVA // RESEARCHER PROFILE</h2></div>

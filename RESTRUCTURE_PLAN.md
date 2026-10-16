@@ -53,7 +53,8 @@ common cliché in security portfolios — reads "enthusiast," not
 | 5 | Deep dead-code sweep (old pre-cylinder design + unmounted React tree) | ✅ Done, committed |
 | 6 | Active Theory-level 3D upgrade (see Part 6 below) | ⛔ Superseded by Part 7 (see below) — the scroll-cylinder engine this part upgraded was retired, not finished |
 | 7 | Cinematic descent rebuild (see Part 7 below) | ✅ Done, committed on branch `cinematic-descent` (old engine retired in the Task 8 cleanup) |
-| 8 | Active Theory polish pass (see Part 8 below) | 🚧 In progress on branch `at-polish` |
+| 8 | Active Theory polish pass (see Part 8 below) | ✅ Done on branch `at-polish` (superseded as the live direction by Part 9) |
+| 9 | Active Theory-structured rebuild (see Part 9 below) | 🚧 In progress on branch `at-structure` |
 
 **All commits so far are local only — nothing has been pushed to the
 `bunny-sysd/portfolio` remote.** Do not push without explicit go-ahead each
@@ -515,3 +516,46 @@ Landed:
 Candidates next: project filters (Tools / Research / CTF), precompiling the
 post-pass shaders too (a ~95 ms task remains on the first composer render),
 a diagonal refractive wipe between chapters.
+
+---
+
+## Part 9 — Active Theory-structured rebuild (branch `at-structure`, started 2026-10-16)
+
+Aaron wants the site to look like activetheory.net *in structure* — with
+cyber features of his own — not the cloud descent. Agreed scope: AT's
+structure and interaction patterns, rebuilt from scratch; none of AT's code,
+shaders, models, textures, font or copy (an exact copy was asked for once and
+declined: infringement, DMCA risk on GitHub Pages, and a bad look on a
+security portfolio). The cloud site stays in git (`cinematic-descent`,
+`at-polish`).
+
+Mapping (AT → this site): loader counter → boot readout; chrome logo + dust →
+GPU particle core with the credentials beside it (still readable instantly);
+glass cards orbiting a spine → five glass cards (Mutagen, Vigil, SignalHub,
+Proving Grounds, Researcher) orbiting the core, each with an original
+Canvas2D "screen"; "what are you looking for?" → tools / research / ctf /
+certs; `/work/<id>` fly-in + streak + scroll to close → `#/work/<id>`, same
+shot, plus "Open full dossier"; frosted contact overlay with LAX → NYC → AMS
+→ SCAN → EXPLOIT → PATCH; music ticker → credentials ticker; AI chat box →
+terminal (`help`, `whoami`, `ls`, `cat`, `open`, `certs`, `contact`) answered
+only from site data. Kept from before, where AT is weaker: DOM text,
+keyboard paths, reduced motion, no-WebGL fallback.
+
+Bugs found and fixed along the way: camera parallax compounding into a
+~12-unit drift (scene viewed from the upper right); side cards culled from
+behind; decode caching stale text (caption showed the wrong project);
+contact frost stamping ghost copies (4 fixed taps → 12 jittered); post-chain
+shaders linking synchronously on the first frame (precompiled, on geometry
+whose attributes match FullScreenQuad's, against the right targets), and
+three's shader error checks forcing a sync GPU wait (dev-only now) —
+production's longest load task went from ~300 ms to ~105–185 ms.
+
+Tests: `tests/e2e/site.mjs` replaces `content`/`scene`/`polish`;
+`case-study.mjs` and `fallbacks.mjs` adapted; `perf.mjs` (production load)
+and `tests/unit/router.test.js` added; the descent's timeline/volume unit
+tests went with the descent.
+
+Not done yet: no project imagery (cards use procedural screens — real
+screenshots or terminal captures from Aaron would be better, and would also
+replace the simulated Vigil `[POC_FOUND]` output still in its dossier);
+sound; a page-to-page refractive wipe.

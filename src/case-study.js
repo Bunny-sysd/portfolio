@@ -1,4 +1,4 @@
-import { CASE_IDS, caseIdFromHash } from './case-ids.js';
+import { CASE_IDS } from './case-ids.js';
 import { runPhaseFlowsIn } from './widgets/phase-flow.js';
 import { revealCommandBlocks } from './widgets/commands.js';
 import { decodeText } from './widgets/decode.js';
@@ -49,7 +49,6 @@ export function initCaseStudies({ scroll, onDive = () => {} }) {
       const stopFlows = runPhaseFlowsIn(dialog);
       const stopDecode = decodeText(dialog.querySelectorAll('.case__head .eyebrow, .case__head h2'), { reduced: reduced(), delay: 450, duration: 1000 });
       stopWidgets = () => { stopCommands(); stopFlows(); stopDecode(); };
-      history.replaceState(null, '', `#${id}`);
     };
     // A deep link on load has nothing to dive from: open straight away.
     if (reduced() || !origin) show(); else pending = setTimeout(show, DIVE_MS);
@@ -74,7 +73,6 @@ export function initCaseStudies({ scroll, onDive = () => {} }) {
       stopWidgets();
       stopWidgets = () => {};
       scroll.start();
-      history.replaceState(null, '', location.pathname + location.search);
     });
     dialog.querySelector('[data-close]').addEventListener('click', () => close(dialog));
     // Scroll to close: keep pulling up past the top and the dossier closes,
@@ -106,9 +104,6 @@ export function initCaseStudies({ scroll, onDive = () => {} }) {
     btn.addEventListener('click', () => open(btn.dataset.case, btn));
   });
 
-  // Deep links work on first load and on in-page hash changes (links, back/forward).
-  const openFromHash = () => { const id = caseIdFromHash(location.hash); if (id) open(id); };
-  addEventListener('hashchange', openFromHash);
-  openFromHash();
+  // Deep links (#/work/<id>, legacy #<id>) are the router's job (router.js).
   return { open };
 }

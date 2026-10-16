@@ -1,46 +1,45 @@
-import * as THREE from 'three';
-import './styles/base.css';
-import './styles/chapters.css';
+import './styles/site.css';
 import './styles/case-study.css';
-import { createScroll } from './scroll.js';
-import { createChapters } from './chapters.js';
+import { PROJECTS } from './projects.js';
+import { createRouter } from './router.js';
+import { createViews } from './views.js';
+import { createTerminal } from './terminal.js';
 import { initCaseStudies } from './case-study.js';
 import { buildMailto } from './contact.js';
 import { createStage } from './scene/stage.js';
-import { createCameraRig } from './scene/camera.js';
-import { createVolume, mistAt } from './scene/volume.js';
+import { createWorld } from './scene/world.js';
 import { createPost } from './scene/post.js';
 import { createBootReadout } from './widgets/boot.js';
-import { paletteAt, contactOpacity } from './timeline.js';
 
 const reduceQuery = matchMedia('(prefers-reduced-motion: reduce)');
 const reducedMotion = () => reduceQuery.matches;
-const WHITE = new THREE.Color(1, 1, 1);
-const mistColor = new THREE.Color();
-
 const root = document.documentElement;
-const scroll = createScroll({ reducedMotion });
-const chapters = createChapters(document, { scroll });
-// The scene runs on its own eased "film" clock: progress follows scroll like a
-// camera dolly (critically damped, so it glides to a stop instead of halting
-// with the wheel), its speed feeds a slight FOV rush, and `dive` is the
-// case-study transition (0 = in the descent, 1 = plunged into the cloud).
-const film = { p: scroll.progress(), speed: 0, dive: 0, diveTarget: 0, last: 0 };
-initCaseStudies({ scroll, onDive: (on) => { film.diveTarget = on ? 1 : 0; } });
 
-document.getElementById('to-top').addEventListener('click', (e) => {
-  e.preventDefault();
-  scroll.scrollToProgress(0);
+// ── scene ────────────────────────────────────────────────────────────────
+const canvas = document.getElementById('scene');
+const stage = createStage(canvas);
+if (!stage) root.classList.add('no-webgl');
+if (import.meta.env.DEV) window.__stage = stage; // dev-only handle for GPU timing (tests/e2e/_gpu.mjs)
+const world = stage && createWorld(stage, { projects: PROJECTS, reducedMotion });
+if (import.meta.env.DEV) window.__world = world; // dev-only: card positions for e2e checks
+let post = stage && stage.settings.postFX ? createPost(stage.renderer, stage.scene, stage.camera, { reducedMotion, contactFull: true }) : null;
+root.classList.toggle('post-live', !!post);
+if (import.meta.env.DEV) window.__fluidEnergy = () => post?.fluidEnergy() ?? null; // dev-only: e2e fluid check
+
+// ── views, routing, dossiers ─────────────────────────────────────────────
+// The case-study dive (camera plunge + streak) is driven from here.
+const film = { dive: 0, diveTarget: 0, contact: 0, last: 0 };
+const caseStudies = initCaseStudies({ scroll: { stop() {}, start() {} }, onDive: (on) => { film.diveTarget = on ? 1 : 0; } });
+let router;
+const views = createViews(document, {
+  router: { go: (r) => router.go(r) },
+  reduced: reducedMotion,
+  pick: world ? (x, y) => world.pick(x, y) : null,
+  openDossier: (id, origin) => caseStudies.open(id, origin),
 });
-
-// Pill nav: glide the film to a beat instead of jumping (the hrefs still work
-// without JS, since every beat is a real anchor in the track).
-for (const a of document.querySelectorAll('.nav-pill a')) {
-  a.addEventListener('click', (e) => {
-    e.preventDefault();
-    scroll.scrollToProgress(Number(a.dataset.at));
-  });
-}
+router = createRouter((route, prev) => views.apply(route, prev));
+router.start();
+createTerminal(document.querySelector('.term'), { go: (r) => router.go(r) });
 
 const form = document.getElementById('contact-form');
 form.addEventListener('submit', (e) => {
@@ -52,88 +51,64 @@ form.addEventListener('submit', (e) => {
   note.textContent = 'Opening your email app with the message filled in…';
 });
 
-const canvas = document.getElementById('scene');
-const stage = createStage(canvas);
-if (!stage) root.classList.add('no-webgl');
-if (import.meta.env.DEV) window.__stage = stage; // dev-only handle for GPU timing (tests/e2e/_gpu.mjs)
-const rig = stage && createCameraRig(stage.camera, { reducedMotion });
-const volume = stage && createVolume(stage.scene, { tier: stage.tier, reducedMotion });
-const mistEl = document.querySelector('.mist');
-let lastMist = '';
-let post = stage && stage.settings.postFX ? createPost(stage.renderer, stage.scene, stage.camera, { reducedMotion }) : null;
-// The nav's CSS glow is a stand-in for the post pass's frosted corner.
-root.classList.toggle('post-live', !!post);
+if (!stage) { root.classList.add('scene-live'); }
 
-// Compile the scene's shaders off the main thread (KHR_parallel_shader_compile
-// where available) before the first draw. Drawing straight away compiled the
-// cloud raymarcher synchronously — an ~800 ms freeze while the hero was
-// already on screen. Programs are keyed by render target, so compile against
-// the one the scene will actually be drawn into.
+addEventListener('resize', () => {
+  if (!stage) return;
+  stage.camera.aspect = innerWidth / innerHeight;
+  stage.camera.updateProjectionMatrix();
+  stage.renderer.setSize(innerWidth, innerHeight, false);
+  world.setSize();
+  if (post) post.setSize(innerWidth, innerHeight);
+}, { passive: true });
+
+// ── context loss ─────────────────────────────────────────────────────────
+let contextLost = false;
+let sceneLive = false;
+if (stage) {
+  canvas.addEventListener('webglcontextlost', (e) => { e.preventDefault(); contextLost = true; root.classList.add('no-webgl'); });
+  canvas.addEventListener('webglcontextrestored', () => { contextLost = false; root.classList.remove('no-webgl'); });
+}
+
+// ── async shader compile ─────────────────────────────────────────────────
+// Compile off the main thread (KHR_parallel_shader_compile) before the first
+// draw, against the target the scene is actually drawn into — programs are
+// keyed by render target. The boot readout runs meanwhile.
 let sceneReady = !stage;
 const boot = stage ? createBootReadout(document.body, { reduced: reducedMotion() }) : null;
 if (stage) {
   const prevTarget = stage.renderer.getRenderTarget();
   if (post) stage.renderer.setRenderTarget(post.sceneTarget);
-  const compiling = stage.renderer.compileAsync(stage.scene, stage.camera);
+  const compiling = [stage.renderer.compileAsync(stage.scene, stage.camera)];
   stage.renderer.setRenderTarget(prevTarget);
-  compiling.catch(() => {}).then(() => { sceneReady = true; });
+  if (post) compiling.push(post.precompile());
+  Promise.all(compiling).catch(() => {}).then(() => { sceneReady = true; });
 }
 
-addEventListener('resize', () => {
-  if (!stage) return;
-  stage.camera.aspect = innerWidth / innerHeight;
-  stage.camera.updateProjectionMatrix(); // fov is owned by the camera rig
-  stage.renderer.setSize(innerWidth, innerHeight, false);
-  if (post) post.setSize(innerWidth, innerHeight);
-}, { passive: true });
-
-// Context loss (GPU reset, driver update, too many contexts): show the CSS
-// dusk fallback and stop touching the scene until the browser restores the
-// context; three re-uploads geometry, textures and programs on its own.
-let contextLost = false;
-let sceneLive = false; // set once the canvas has drawn, to retire the CSS dusk backdrop
-if (stage) {
-  canvas.addEventListener('webglcontextlost', (e) => {
-    e.preventDefault();
-    contextLost = true;
-    root.classList.add('no-webgl');
-  });
-  canvas.addEventListener('webglcontextrestored', () => {
-    contextLost = false;
-    root.classList.remove('no-webgl');
-  });
-}
-
-// FPS watchdog: steps quality down one notch per sustained slump — lower
-// render resolution, then post FX off, then fewer cloud march steps. Only a sustained slump
-// counts: a window is restarted whenever the tab comes back or a single frame
-// gap exceeds STALL_MS (tab switch, GC pause, dialog), and it takes two bad
-// windows in a row to step down. The current level is mirrored on
-// <html data-quality> for debugging and tests.
+// ── FPS watchdog ─────────────────────────────────────────────────────────
+// Steps quality down one notch per sustained slump (two bad 90-frame windows
+// in a row): lower resolution, then post FX off. Tab switches and one-off
+// stalls (>250 ms gaps) restart the window. Mirrored on <html data-quality>.
 const STALL_MS = 250;
-const QUALITY = ['full', 'reduced', 'no-post', 'minimal'];
+const QUALITY = ['full', 'reduced', 'no-post'];
 const watch = { frames: 0, since: 0, last: 0, bad: 0, step: 0 };
 const restartWatch = (now) => { watch.frames = 0; watch.since = now; watch.last = now; watch.bad = 0; };
 if (stage) root.dataset.quality = QUALITY[0];
 document.addEventListener('visibilitychange', () => restartWatch(performance.now()));
-// Each call takes the next notch that actually changes something (a low-tier
-// device already runs without post FX, so it skips that notch).
-const MIN_SCALE = 0.3;
+const MIN_SCALE = 0.5;
 function stepDown() {
   const ratio = stage.renderer.getPixelRatio();
   if (watch.step < 1 && ratio > MIN_SCALE) {
     const next = Math.max(MIN_SCALE, ratio * 0.7);
     stage.renderer.setPixelRatio(next);
     if (post) post.setPixelRatio(next);
+    world.setSize();
     watch.step = 1;
   } else if (watch.step < 2 && post) {
     post.dispose();
     post = null;
     root.classList.remove('post-live');
     watch.step = 2;
-  } else if (watch.step < 3) {
-    volume.reduceSteps();
-    watch.step = 3;
   } else return;
   root.dataset.quality = QUALITY[watch.step];
 }
@@ -147,35 +122,26 @@ function watchdog(now) {
   if (++watch.bad >= 2) { watch.bad = 0; stepDown(); }
 }
 
+// ── frame loop ───────────────────────────────────────────────────────────
 function frame(now) {
   requestAnimationFrame(frame);
-  scroll.raf(now);
-  const p = scroll.progress();
-  chapters.update(p);
   if (!stage || !sceneReady || contextLost || document.hidden) return;
-  const dt = Math.min(0.1, Math.max(0, (now - film.last) / 1000)); film.last = now;
-  if (reducedMotion()) { film.p = p; film.speed = 0; film.dive = film.diveTarget; } else {
-    const prev = film.p;
-    film.p += (p - film.p) * (1 - Math.exp(-dt * 3.2));
-    const rush = Math.min(1, Math.abs(film.p - prev) / Math.max(dt, 1e-3) * 6);
-    film.speed += (rush - film.speed) * (1 - Math.exp(-dt * 2.5));
-    film.dive += (film.diveTarget - film.dive) * (1 - Math.exp(-dt * 4.5));
-  }
-  rig.update(film.p, { time: now / 1000, speed: film.speed, dive: film.dive });
-  volume.update(film.p, now / 1000, stage.camera, stage.renderer);
-  // A light DOM veil on top of the raymarched cloud keeps each pass-through
-  // soft even at the lowest step count; the case-study dive washes it in too.
-  const [r, g, b] = paletteAt(film.p).horizon;
-  const veil = Math.max(mistAt(stage.camera.position.y) * 0.5, film.dive * 0.7);
-  const mistKey = `${veil.toFixed(3)}|${mistColor.setRGB(r, g, b, THREE.SRGBColorSpace).lerp(WHITE, 0.55).getHexString(THREE.SRGBColorSpace)}`;
-  if (mistKey !== lastMist) {
-    lastMist = mistKey;
-    const [m, hex] = mistKey.split('|');
-    mistEl.style.setProperty('--mist', m);
-    mistEl.style.setProperty('--mist-color', `#${hex}`);
-  }
+  const t = now / 1000;
+  const dt = Math.min(0.1, Math.max(0, t - film.last)); film.last = t;
+  const k = reducedMotion() ? 1 : 1 - Math.exp(-dt * 4.5);
+  film.dive += (film.diveTarget - film.dive) * k;
+  film.contact += ((views.state.view === 'contact' ? 1 : 0) - film.contact) * (reducedMotion() ? 1 : 1 - Math.exp(-dt * 5));
+  // Behind the contact overlay the scene settles back to the ring.
+  const sceneState = { ...views.state, view: views.state.view === 'contact' ? (views.state.base === 'home' ? 'home' : 'work') : views.state.view };
+  if (views.state.view === 'contact') sceneState.openId = null;
+  const { open } = world.update(sceneState, t);
+  views.state.pulse = sceneState.pulse;
   watchdog(now);
-  if (post) post.render(now / 1000, { dive: reducedMotion() ? 0 : film.dive, contact: contactOpacity(film.p) });
+  world.renderBackdrop();
+  // The detail shot reuses the dive streak: opening a project smears the
+  // room as its card flies in, then settles.
+  const streak = reducedMotion() ? 0 : Math.max(film.dive, open * (1 - open) * 4 * 0.6);
+  if (post) post.render(t, { dive: streak, contact: film.contact });
   else stage.renderer.render(stage.scene, stage.camera);
   if (!sceneLive) { sceneLive = true; root.classList.add('scene-live'); boot?.done(); }
 }

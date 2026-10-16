@@ -38,7 +38,7 @@ export const FluidShader = {
   uniforms: {
     tDiffuse: { value: null }, tVel: { value: null },
     uResolution: { value: new THREE.Vector2(1, 1) }, uTime: { value: 0 },
-    uStrength: { value: 0.012 }, uShift: { value: 0.0035 }, uFrost: { value: 1 }, uFrostR: { value: 420 }, uContact: { value: 0 }, uDive: { value: 0 },
+    uStrength: { value: 0.012 }, uShift: { value: 0.0035 }, uFrost: { value: 1 }, uFrostR: { value: 420 }, uContact: { value: 0 }, uContactFull: { value: 0 }, uDive: { value: 0 },
   },
   vertexShader: /* glsl */`
     varying vec2 vUv;
@@ -54,6 +54,7 @@ export const FluidShader = {
     uniform float uDive;
     uniform float uFrostR;
     uniform float uContact;
+    uniform float uContactFull; // 1: frost the whole frame (no finale to keep sharp)
     varying vec2 vUv;
     float hash(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
     float noise(vec2 p) {
@@ -80,10 +81,10 @@ export const FluidShader = {
       // out by mid-frame so the city lights — the end of the descent — stay
       // sharp on the right. Wide screens only: on a phone the form spans the
       // width and the city sits right under it.
-      float contact = uContact * smoothstep(0.62, 0.3, vUv.x) * step(1.0, uResolution.x / uResolution.y);
+      float contact = uContact * mix(smoothstep(0.62, 0.3, vUv.x) * step(1.0, uResolution.x / uResolution.y), 1.0, uContactFull);
       if (contact > 0.002) {
         vec2 qc = px / 70.0;
-        off += (vec2(noise(qc + vec2(uTime * 0.15, 0.0)), noise(qc + vec2(5.2, -uTime * 0.12))) - 0.5) * 0.02 * contact;
+        off += (vec2(noise(qc + vec2(uTime * 0.15, 0.0)), noise(qc + vec2(5.2, -uTime * 0.12))) - 0.5) * mix(0.02, 0.008, uContactFull) * contact;
       }
 
       vec2 uv = vUv - off;
@@ -91,11 +92,19 @@ export const FluidShader = {
       vec3 col = vec3(texture2D(tDiffuse, uv + split).r, texture2D(tDiffuse, uv).g, texture2D(tDiffuse, uv - split).b);
 
       if (contact > 0.002) {
-        // A four-tap ring blur reads as frosted rather than just wobbly glass.
-        vec2 r = vec2(5.0, 5.0) / uResolution * (1.0 + 3.0 * contact);
-        vec3 ring = texture2D(tDiffuse, uv + vec2(r.x, 0.0)).rgb + texture2D(tDiffuse, uv - vec2(r.x, 0.0)).rgb
-                  + texture2D(tDiffuse, uv + vec2(0.0, r.y)).rgb + texture2D(tDiffuse, uv - vec2(0.0, r.y)).rgb;
-        col = mix(col, (col + ring) / 5.0, contact);
+        // Frosted glass: a 12-tap disc blur on a golden-angle spiral, turned
+        // by a per-pixel random angle — a few fixed taps at this radius would
+        // just stamp offset copies of the scene; jittered ones read as grain.
+        float radius = 5.0 * (1.0 + mix(3.0, 6.0, uContactFull) * contact);
+        float spin = hash(px) * 6.2832;
+        vec3 acc = col;
+        for (int i = 1; i <= 12; i++) {
+          float fi = float(i);
+          float a = fi * 2.39996 + spin;
+          vec2 o = vec2(cos(a), sin(a)) * sqrt(fi / 12.0) * radius / uResolution;
+          acc += texture2D(tDiffuse, uv + o).rgb;
+        }
+        col = mix(col, acc / 13.0, contact);
         col = mix(col, vec3(dot(col, vec3(0.3, 0.59, 0.11))), 0.25 * contact) + vec3(0.006, 0.016, 0.022) * contact;
       }
 
@@ -146,6 +155,16 @@ export function createFluid(renderer, { reducedMotion }) {
   let last = 0;
   return {
     get texture() { return read.texture; },
+    material,
+    get target() { return write; },
+    // Dev/test probe: mean |velocity| over the field (reads it back — slow).
+    energy() {
+      const px = new Uint16Array(SIM * SIM * 4);
+      renderer.readRenderTargetPixels(read, 0, 0, SIM, SIM, px);
+      let e = 0;
+      for (let i = 0; i < px.length; i += 4) e += Math.hypot(THREE.DataUtils.fromHalfFloat(px[i]), THREE.DataUtils.fromHalfFloat(px[i + 1]));
+      return e / (SIM * SIM);
+    },
     update(time) {
       const dt = last ? Math.min(0.05, Math.max(1e-3, time - last)) : 1 / 60;
       last = time;

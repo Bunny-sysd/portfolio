@@ -1,25 +1,29 @@
 import { chromium } from 'playwright';
-import { withPage, check, scrollToProgress, opacityOf, contrastOf, pixel, SHOTS, BASE, GPU_ARGS } from './lib.mjs';
+import { withPage, check, opacityOf, contrastOf, SHOTS, BASE, GPU_ARGS } from './lib.mjs';
 
-await withPage({ viewport: { width: 1600, height: 1000 }, reducedMotion: 'reduce' }, async (page, errors) => {
-  check(await opacityOf(page, '#hero') > 0.95, 'reduced motion: hero visible');
-  await scrollToProgress(page, 0.33);
-  check(await opacityOf(page, '#chapter-mutagen') > 0.9, 'reduced motion: chapters still reveal on scroll');
-  check(await page.evaluate(() => !document.documentElement.classList.contains('lenis')), 'reduced motion: no smooth-scroll hijack');
-  check(errors.length === 0, `reduced motion: no errors ${JSON.stringify(errors)}`);
-});
+const view = (page) => page.evaluate(() => document.documentElement.dataset.view);
 
+// No WebGL: the DOM carries everything (home, the work caption and arrows,
+// details, contact) over the CSS backdrop.
 await withPage({ viewport: { width: 1600, height: 1000 } }, async (page, errors) => {
   check(await page.evaluate(() => document.documentElement.classList.contains('no-webgl')), 'no WebGL: fallback class set');
+  check(await opacityOf(page, '#view-home') > 0.95, 'no WebGL: home visible');
+  const lede = await contrastOf(page, '#view-home .lede');
+  check(lede >= 4.5, `no WebGL: home lede readable (${lede.toFixed(2)}:1)`);
   await page.screenshot({ path: `${SHOTS}/fallback-no-webgl.png` });
-  await scrollToProgress(page, 0.46);
-  check(await opacityOf(page, '#chapter-vigil') > 0.9, 'no WebGL: content still readable');
+  await page.click('.cue'); await page.waitForTimeout(1200);
+  check(await view(page) === 'work', 'no WebGL: work view reachable');
+  await page.click('[data-step="1"]'); await page.waitForTimeout(300);
+  check((await page.textContent('.caption__index')).startsWith('02'), 'no WebGL: carousel steps by its buttons');
+  await page.click('.caption__open'); await page.waitForTimeout(1000);
+  check(await view(page) === 'detail' && (await page.textContent('.detail__blurb')).length > 40, 'no WebGL: project detail readable');
   check(errors.length === 0, `no WebGL: no errors ${JSON.stringify(errors)}`);
 }, ['--disable-webgl', '--disable-3d-apis']);
 
-// WebGL context lost mid-session: CSS dusk fallback takes over, content stays
-// readable, and the scene comes back when the context is restored.
+// Context lost mid-session: the CSS backdrop takes over, the views keep
+// working, and the scene comes back on restore.
 await withPage({ viewport: { width: 1600, height: 1000 } }, async (page, errors) => {
+  await page.waitForFunction(() => document.documentElement.classList.contains('scene-live'));
   const noWebgl = () => page.evaluate(() => document.documentElement.classList.contains('no-webgl'));
   check(!(await noWebgl()), 'context loss: WebGL active before');
   const ext = await page.evaluateHandle(() => {
@@ -30,26 +34,22 @@ await withPage({ viewport: { width: 1600, height: 1000 } }, async (page, errors)
   await ext.evaluate((e) => e.loseContext());
   await page.waitForTimeout(500);
   check(await noWebgl(), 'context loss: fallback class set');
-  check(await opacityOf(page, '#hero') > 0.95, 'context loss: hero still visible');
-  const lede = await contrastOf(page, '#hero .lede');
-  check(lede >= 4.5, `context loss: hero lede readable over the CSS gradient (${lede.toFixed(2)}:1)`);
-  await page.screenshot({ path: `${SHOTS}/fallback-context-lost.png` });
-  await scrollToProgress(page, 0.46);
-  check(await opacityOf(page, '#chapter-vigil') > 0.9, 'context loss: chapters still reveal on scroll');
+  const lede = await contrastOf(page, '#view-home .lede');
+  check(lede >= 4.5, `context loss: home lede readable over the CSS backdrop (${lede.toFixed(2)}:1)`);
+  await page.click('.cue'); await page.waitForTimeout(1200);
+  check(await view(page) === 'work', 'context loss: views still navigate');
   await ext.evaluate((e) => e.restoreContext());
-  await page.waitForTimeout(1000);
+  await page.waitForTimeout(1500);
   check(!(await noWebgl()), 'context restored: fallback class removed');
-  await scrollToProgress(page, 0, 1500);
+  const card = await page.evaluate(() => window.__world.cards.cards[0].mesh.visible);
+  check(card, 'context restored: the card ring renders again');
   await page.screenshot({ path: `${SHOTS}/fallback-context-restored.png` });
-  const [r, g, b] = await pixel(page, 1200, 520);
-  check(r > 120 && r > b, `context restored: scene renders the warm horizon again (${r},${g},${b})`);
   check(errors.length === 0, `context loss/restore: no console errors ${JSON.stringify(errors)}`);
 });
 
-// No JavaScript at all (or before the bundle runs): the hero is already
-// visible and readable over the CSS dusk gradient. The dev server injects CSS
-// from JS, so when the served HTML has no stylesheet <link> (dev) the app's
-// sheets are linked into it here, the way the production build links them.
+// No JavaScript at all: home (name + credentials) is visible and readable.
+// The dev server injects CSS from JS, so its sheets are linked in here the
+// way the production build links them.
 {
   const browser = await chromium.launch({ args: GPU_ARGS });
   try {
@@ -58,7 +58,7 @@ await withPage({ viewport: { width: 1600, height: 1000 } }, async (page, errors)
       const res = await route.fetch();
       let html = await res.text();
       if (!/<link[^>]+rel="stylesheet"[^>]+href="[^"]*\/assets\/[^"]+\.css"/.test(html)) {
-        const links = ['src/styles/base.css', 'src/styles/chapters.css', 'src/styles/case-study.css']
+        const links = ['src/styles/site.css', 'src/styles/case-study.css']
           .map((s) => `<link rel="stylesheet" href="${new URL(s, BASE).href}">`).join('');
         html = html.replace('</head>', `${links}</head>`);
       }
@@ -66,10 +66,11 @@ await withPage({ viewport: { width: 1600, height: 1000 } }, async (page, errors)
     });
     await page.goto(BASE, { waitUntil: 'load' });
     await page.waitForTimeout(300);
-    check(await opacityOf(page, '#hero') > 0.95, 'no JS: hero visible before any script runs');
-    const h1 = await contrastOf(page, '#hero h1');
-    const lede = await contrastOf(page, '#hero .lede');
-    check(h1 >= 3 && lede >= 4.5, `no JS: hero readable over the dusk gradient (h1 ${h1.toFixed(2)}:1, lede ${lede.toFixed(2)}:1)`);
+    check(await opacityOf(page, '#view-home') > 0.95, 'no JS: home visible before any script runs');
+    const h1 = await contrastOf(page, '#home-title');
+    const lede = await contrastOf(page, '#view-home .lede');
+    check(h1 >= 3 && lede >= 4.5, `no JS: home readable (h1 ${h1.toFixed(2)}:1, lede ${lede.toFixed(2)}:1)`);
+    check((await page.textContent('#view-home')).includes('Scored 94'), 'no JS: credentials present');
     await page.screenshot({ path: `${SHOTS}/fallback-no-js.png` });
   } finally {
     await browser.close();
