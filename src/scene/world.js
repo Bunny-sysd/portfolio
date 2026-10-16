@@ -4,6 +4,7 @@ import { createCards } from './cards.js';
 import { createEnvironment } from './environment.js';
 import { createNetFloor } from './netfloor.js';
 import { createPerimeter } from './perimeter.js';
+import { createCensus } from './census.js';
 
 // The whole 3D world: particle core, orbiting glass cards, a far dust field,
 // and a camera that moves between per-view marks. Views ease into each other
@@ -50,7 +51,8 @@ export function createWorld(stage, { projects, reducedMotion }) {
   const env = createEnvironment({ tier: stage.tier, reducedMotion });
   const net = createNetFloor();
   const perimeter = createPerimeter({ tier: stage.tier });
-  scene.add(env.group, net.object, perimeter.group, core.object, cards.group, dust);
+  const census = createCensus();
+  scene.add(census.object, env.group, net.object, perimeter.group, core.object, cards.group, dust);
   scene.background = new THREE.Color('#03060b');
   scene.fog = new THREE.FogExp2('#03060b', 0.03); // dust only; the custom shaders fog themselves
 
@@ -70,6 +72,10 @@ export function createWorld(stage, { projects, reducedMotion }) {
   const onMove = (e) => { pointerSeen = true; pointer.set((e.clientX / innerWidth) * 2 - 1, -(e.clientY / innerHeight) * 2 + 1); };
   addEventListener('pointermove', onMove, { passive: true });
 
+  // The world takes on the colour of the project in focus; home is cyan.
+  const HOME_TINT = new THREE.Color('#7dd3fc');
+  const tint = HOME_TINT.clone();
+  const tintTarget = new THREE.Color();
   const eased = { enter: 0, open: 0, focus: 0, pulse: 0, spin: 0, last: 0 };
   const setSize = () => { cards.setSize(innerWidth, innerHeight, renderer.getPixelRatio()); env.setSize(innerWidth, innerHeight); };
   setSize();
@@ -117,9 +123,14 @@ export function createWorld(stage, { projects, reducedMotion }) {
       dust.rotation.y = snap ? 0 : time * 0.01;
       env.update({ time, dpr: renderer.getPixelRatio(), enter: eased.enter });
       const tm = snap ? 0 : time;
-      net.update({ time: tm, enter: eased.enter });
+      const order = projects.filter((p) => state.visible.has(p.id));
+      const focus = state.view === 'home' ? null : (state.openId ? projects.find((p) => p.id === state.openId) : order[state.index]);
+      if (focus) tintTarget.setHSL(focus.hue, 0.75, 0.62); else tintTarget.copy(HOME_TINT);
+      tint.lerp(tintTarget, ease(3));
+      net.update({ time: tm, enter: eased.enter, tint });
+      census.update({ time: tm, enter: eased.enter, tint });
       // The probes stand down while a project is open, so the card reads clean.
-      perimeter.update({ time: tm, dpr: renderer.getPixelRatio(), fade: 1 - 0.8 * eased.open });
+      perimeter.update({ time: tm, dpr: renderer.getPixelRatio(), fade: 1 - 0.8 * eased.open, tint });
       return { open: eased.open, enter: eased.enter };
     },
     // Glass needs what's behind it: draw everything but the cards first.
@@ -142,7 +153,7 @@ export function createWorld(stage, { projects, reducedMotion }) {
     },
     dispose() {
       removeEventListener('pointermove', onMove);
-      core.dispose(); cards.dispose(); env.dispose(); net.dispose(); perimeter.dispose();
+      core.dispose(); cards.dispose(); env.dispose(); net.dispose(); perimeter.dispose(); census.dispose();
       dust.geometry.dispose(); dust.material.map.dispose(); dust.material.dispose();
     },
   };

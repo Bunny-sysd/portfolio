@@ -23,6 +23,7 @@ const frag = /* glsl */`
   uniform float uTime;
   uniform float uVault;
   uniform float uFade;
+  uniform vec3 uTint;
   varying float vT;
   varying vec3 vWorld;
   float hash(float n) { return fract(sin(n * 91.345) * 47453.5453); }
@@ -40,7 +41,7 @@ const frag = /* glsl */`
     float r = length(vWorld.xz - vec2(0.0, -1.5));
     float scope = uVault * smoothstep(14.0, 8.0, r);
     vec3 base = mix(vec3(0.07, 0.30, 0.36), vec3(0.85, 0.52, 0.22), hot);
-    vec3 col = base * (0.22 + 1.1 * scope) + vec3(0.55, 0.92, 1.0) * packet;
+    vec3 col = mix(base, uTint * 0.45, scope * 0.6) * (0.22 + 1.1 * scope) + mix(vec3(0.55, 0.92, 1.0), uTint, 0.5) * packet;
     gl_FragColor = vec4(col * fog * near * uFade, 1.0);
     #include <colorspace_fragment>
   }`;
@@ -61,15 +62,16 @@ export function createNetFloor() {
   const material = new THREE.ShaderMaterial({
     vertexShader: vert, fragmentShader: frag,
     transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
-    uniforms: { uTime: { value: 0 }, uVault: { value: 0 }, uFade: { value: 1 } },
+    uniforms: { uTime: { value: 0 }, uVault: { value: 0 }, uFade: { value: 1 }, uTint: { value: new THREE.Color('#7dd3fc') } },
   });
   const line = new THREE.Line(geometry, material);
   line.frustumCulled = false;
   line.renderOrder = 1;
   return {
     object: line,
-    update({ time, enter }) {
+    update({ time, enter, tint }) {
       material.uniforms.uTime.value = time;
+      material.uniforms.uTint.value.copy(tint);
       material.uniforms.uVault.value = enter;
     },
     dispose() { geometry.dispose(); material.dispose(); },

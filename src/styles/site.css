@@ -197,6 +197,10 @@ html[data-view="home"] .term { display: none; }
   font-size: 11px; letter-spacing: 0.18em; color: var(--text-dim); pointer-events: none; transition: opacity 0.6s ease;
 }
 .boot__code { color: var(--accent); }
+.boot { display: flex; align-items: center; gap: 10px; white-space: nowrap; }
+.boot__steps { display: flex; gap: 4px; }
+.boot__steps i { width: 14px; height: 3px; border-radius: 2px; background: rgba(248, 250, 252, 0.18); transition: background 0.2s; }
+.boot__steps i.is-on { background: var(--accent); box-shadow: 0 0 8px var(--accent); }
 .boot.is-done { opacity: 0; }
 
 /* ── address-space layer: avalanche, identity, probe, status, sound ─── */
@@ -235,6 +239,12 @@ html.no-webgl .hud-stat, html[data-view="detail"] .hud-stat, html[data-view="con
 .caption__sig { position: absolute; left: calc(100% + 28px); bottom: 6px; display: grid; justify-items: start; gap: 6px; }
 .caption__sig .sigil { filter: drop-shadow(0 0 10px rgba(125, 211, 252, 0.3)); }
 .caption__hash { font: 400 9px var(--font-mono); letter-spacing: 0.08em; text-transform: none; color: var(--text-dim); white-space: nowrap; }
+
+/* Contact: the message as ciphertext, live. */
+.cipher { margin: 0; display: grid; gap: 4px; }
+.cipher__label { font: 500 9px var(--font-mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-dim); }
+.cipher__out { min-height: 2.6em; max-height: 4.2em; overflow: hidden; font: 400 10px/1.3 var(--font-mono); color: #5eead4; word-break: break-all; opacity: 0.35; transition: opacity 0.3s; }
+.cipher.is-live .cipher__out { opacity: 0.9; }
 
 /* The probe reticle (fine pointers only; the native cursor stays). */
 .probe { display: none; }

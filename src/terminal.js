@@ -44,6 +44,8 @@ export function createTerminal(form, { go }) {
       line('  ls | projects     list projects');
       line('  cat <project>     project summary');
       line('  open <project>    fly to a project');
+      line('  traceroute <proj> fly there hop by hop');
+      line('  nmap              scan this site');
       line('  hash <project>    sha256 of its title (its sigil)');
       line('  certs             verified credentials');
       line('  contact           get in touch');
@@ -72,6 +74,26 @@ export function createTerminal(form, { go }) {
       if (!p) return line(`hash: ${arg || '(none)'}: no such project — try ls`, 'is-err');
       const row = line(`sha256("${p.title}") = …`);
       sha256Hex(p.title).then((hex) => { row.textContent = hex ? `sha256("${p.title}") = ${hex}` : 'hash: needs a secure context (https)'; });
+    },
+    // A port scan of this site's own map — each view is a "service".
+    nmap: () => {
+      line('Starting scan of aaron-alva (this portfolio)…');
+      line('PORT      STATE     SERVICE');
+      line('80/tcp    open      home');
+      line(`443/tcp   open      work (${PROJECTS.length} projects)`);
+      line('587/tcp   open      contact (smtp, via your mail app)');
+      line('22/tcp    filtered  ssh: nice try');
+      line('Scan done: 4 ports, 3 open. Try: open mutagen', 'is-cmd');
+    },
+    traceroute: (arg) => {
+      const p = projectById(arg);
+      if (!p) return line(`traceroute: ${arg || '(none)'}: unknown host — try ls`, 'is-err');
+      const hops = [['home', { view: 'home' }], ['work', { view: 'work' }], [p.id, { view: 'detail', id: p.id }]];
+      line(`traceroute to ${p.id}, ${hops.length} hops max`);
+      hops.forEach(([name, route], i) => setTimeout(() => {
+        line(` ${i + 1}  ${name.padEnd(16)} reached`);
+        go(route);
+      }, i * 1100));
     },
     clear: () => out.replaceChildren(),
     sudo: () => line('sudo: permission denied — nice try.', 'is-err'),

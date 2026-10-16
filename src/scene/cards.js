@@ -20,6 +20,7 @@ const frag = /* glsl */`
   uniform float uActive;   // 0 side card → 1 front card
   uniform float uOpen;     // 0 → 1 while this card is the open project
   uniform float uAlpha;
+  uniform vec3 uTint;
   varying vec2 vUv;
 
   float hash(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
@@ -54,6 +55,10 @@ const frag = /* glsl */`
     col *= 1.0 - 0.05 * step(0.5, fract(gl_FragCoord.y * 0.5));
     col += vec3(0.55, 0.85, 0.95) * smoothstep(0.012, 0.0, abs(d)) * (0.35 + 0.5 * uActive);
     col += vec3(0.08) * smoothstep(0.2, 0.0, abs(vUv.x + vUv.y * 0.4 - fract(uTime * 0.05) * 2.0 + 0.3));
+    // The front card is under active scan: a tinted line sweeps down it.
+    float sweep = fract(uTime * 0.22);
+    float band = smoothstep(0.03, 0.0, abs(1.0 - vUv.y - sweep)) + smoothstep(0.25, 0.0, sweep - (1.0 - vUv.y)) * step(1.0 - vUv.y, sweep) * 0.12;
+    col += uTint * band * uActive * (1.0 - uOpen) * 0.5;
     gl_FragColor = vec4(col, shape * uAlpha);
     #include <tonemapping_fragment>
     #include <colorspace_fragment>
@@ -76,6 +81,7 @@ export function createCards(projects, { reducedMotion }) {
       uniforms: {
         tScreen: { value: texture }, tBg: { value: bgTarget.texture }, uRes: { value: res },
         uTime: { value: 0 }, uActive: { value: 0 }, uOpen: { value: 0 }, uAlpha: { value: 1 },
+        uTint: { value: new THREE.Color().setHSL(project.hue, 0.75, 0.62) },
       },
     });
     const mesh = new THREE.Mesh(geometry, material);

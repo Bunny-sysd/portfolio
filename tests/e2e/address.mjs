@@ -61,6 +61,25 @@ for (const reduced of [false, true]) {
     await page.keyboard.press('Escape'); await page.waitForTimeout(100);
     check(await page.evaluate(() => getComputedStyle(document.querySelector('.term')).display === 'none'), `${tag}: and it tucks away again on blur`);
 
+    // Terminal: nmap maps the site; traceroute flies there hop by hop.
+    await page.goto(BASE + '#/work'); await page.waitForTimeout(900);
+    await page.fill('.term__in', 'nmap'); await page.press('.term__in', 'Enter'); await page.waitForTimeout(150);
+    check((await page.textContent('.term__out')).includes('443/tcp'), `${tag}: terminal nmap lists the site's views as ports`);
+    await page.fill('.term__in', 'traceroute signalhub'); await page.press('.term__in', 'Enter');
+    await page.waitForTimeout(3200);
+    check(page.url().endsWith('#/work/signalhub'), `${tag}: traceroute ends on the project (${page.url().split('#')[1]})`);
+
+    // Contact: the message, really encrypted, as you type.
+    await page.goto(BASE + '#/contact'); await page.waitForTimeout(1200);
+    await page.fill('#contact-form textarea', 'hello from the test');
+    await page.waitForTimeout(300);
+    const ct = await page.textContent('.cipher__out');
+    check(/^[0-9a-f]{40,}$/.test(ct) && !ct.includes('hello'), `${tag}: contact shows the AES-GCM ciphertext (${ct.slice(0, 16)}…)`);
+    await page.fill('#contact-form textarea', 'hello from the test!');
+    await page.waitForTimeout(300);
+    check(await page.textContent('.cipher__out') !== ct, `${tag}: ciphertext changes with the message`);
+    await page.goto(BASE + '#/'); await page.waitForTimeout(900);
+
     // Perimeter tally ticks with motion, holds still without.
     const a = Number((await page.textContent('[data-blocked]')).replace(/,/g, ''));
     await page.waitForTimeout(4000);

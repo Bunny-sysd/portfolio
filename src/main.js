@@ -14,6 +14,7 @@ import { createAvalanche } from './widgets/avalanche.js';
 import { createSigil } from './widgets/sigil.js';
 import { createProbe } from './widgets/probe.js';
 import { createSound } from './widgets/sound.js';
+import { createCipher } from './widgets/cipher.js';
 
 const reduceQuery = matchMedia('(prefers-reduced-motion: reduce)');
 const reducedMotion = () => reduceQuery.matches;
@@ -32,7 +33,7 @@ if (import.meta.env.DEV) window.__fluidEnergy = () => post?.fluidEnergy() ?? nul
 
 // ── views, routing, dossiers ─────────────────────────────────────────────
 // The case-study dive (camera plunge + streak) is driven from here.
-const film = { dive: 0, diveTarget: 0, contact: 0, last: 0 };
+const film = { dive: 0, diveTarget: 0, contact: 0, glitch: 0, last: 0 };
 const caseStudies = initCaseStudies({ scroll: { stop() {}, start() {} }, onDive: (on) => { film.diveTarget = on ? 1 : 0; } });
 // ── address-space layer: avalanche transitions, sigils, probe, sound ─────
 const avalanche = createAvalanche(document.querySelector('.avalanche'), { reduced: reducedMotion });
@@ -57,7 +58,7 @@ const views = createViews(document, {
 router = createRouter((route, prev) => {
   views.apply(route, prev);
   // Every view change is an input change: the avalanche runs from where you acted.
-  if (prev && prev.view !== route.view && avalanche.trigger(lastPointer.x, lastPointer.y)) sound.cascade();
+  if (prev && prev.view !== route.view && avalanche.trigger(lastPointer.x, lastPointer.y)) { sound.cascade(); film.glitch = 1; }
 });
 router.start();
 const terminal = createTerminal(document.querySelector('.term'), { go: (r) => router.go(r) });
@@ -77,6 +78,7 @@ const blockedEl = document.querySelector('[data-blocked]');
 if (world) setInterval(() => { if (!document.hidden) blockedEl.textContent = world.perimeter.blocked.toLocaleString('en-US'); }, 500);
 
 const form = document.getElementById('contact-form');
+createCipher(form.elements.message, form.querySelector('.cipher'));
 form.addEventListener('submit', (e) => {
   e.preventDefault();
   const note = form.querySelector('.form-note');
@@ -165,6 +167,7 @@ function frame(now) {
   const dt = Math.min(0.1, Math.max(0, t - film.last)); film.last = t;
   const k = reducedMotion() ? 1 : 1 - Math.exp(-dt * 4.5);
   film.dive += (film.diveTarget - film.dive) * k;
+  film.glitch = Math.max(0, film.glitch - dt * 3.2);
   film.contact += ((views.state.view === 'contact' ? 1 : 0) - film.contact) * (reducedMotion() ? 1 : 1 - Math.exp(-dt * 5));
   // Behind the contact overlay the scene settles back to the ring.
   const sceneState = { ...views.state, view: views.state.view === 'contact' ? (views.state.base === 'home' ? 'home' : 'work') : views.state.view };
@@ -176,8 +179,12 @@ function frame(now) {
   // The detail shot reuses the dive streak: opening a project smears the
   // room as its card flies in, then settles.
   const streak = reducedMotion() ? 0 : Math.max(film.dive, open * (1 - open) * 4 * 0.6);
-  if (post) post.render(t, { dive: streak, contact: film.contact });
+  if (post) post.render(t, { dive: streak, contact: film.contact, glitch: film.glitch });
   else stage.renderer.render(stage.scene, stage.camera);
-  if (!sceneLive) { sceneLive = true; root.classList.add('scene-live'); boot?.done(); }
+  if (!sceneLive) {
+    sceneLive = true; root.classList.add('scene-live'); boot?.done();
+    // Channel up: the first frame decrypts out from the centre.
+    if (avalanche.trigger(innerWidth / 2, innerHeight / 2)) film.glitch = 0.7;
+  }
 }
 requestAnimationFrame(frame);

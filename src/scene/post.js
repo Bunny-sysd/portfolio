@@ -7,7 +7,7 @@ import { OutputPass } from 'three/examples/jsm/postprocessing/OutputPass.js';
 import { createFluid, FluidShader } from './fluid.js';
 
 const FilmShader = {
-  uniforms: { tDiffuse: { value: null }, uTime: { value: 0 }, uGrain: { value: 0.03 }, uVignette: { value: 0.32 } },
+  uniforms: { tDiffuse: { value: null }, uTime: { value: 0 }, uGrain: { value: 0.03 }, uVignette: { value: 0.32 }, uGlitch: { value: 0 } },
   vertexShader: /* glsl */`
     varying vec2 vUv;
     void main() { vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }`,
@@ -16,10 +16,20 @@ const FilmShader = {
     uniform float uTime;
     uniform float uGrain;
     uniform float uVignette;
+    uniform float uGlitch;
     varying vec2 vUv;
     float hash(vec2 p) { return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453); }
     void main() {
-      vec3 col = texture2D(tDiffuse, vUv).rgb;
+      // Transition glitch: a few horizontal slices jump sideways and the
+      // channels split, for a fraction of a second after a view change.
+      vec2 uv = vUv;
+      float g = uGlitch * uGlitch;
+      float row = floor(uv.y * 36.0);
+      float tick = floor(uTime * 24.0);
+      float jump = step(0.82, hash(vec2(row, tick))) * (hash(vec2(tick, row)) - 0.5);
+      uv.x += jump * 0.08 * g;
+      float split = 0.007 * g;
+      vec3 col = vec3(texture2D(tDiffuse, uv + vec2(split, 0.0)).r, texture2D(tDiffuse, uv).g, texture2D(tDiffuse, uv - vec2(split, 0.0)).b);
       vec2 c = vUv - 0.5;
       col *= 1.0 - uVignette * smoothstep(0.1, 0.55, dot(c, c));
       col += (hash(gl_FragCoord.xy + fract(uTime) * 97.0) - 0.5) * uGrain;
@@ -108,7 +118,8 @@ export function createPost(renderer, scene, camera, { reducedMotion, contactFull
     // un-tonemapped) target rather than the screen; precompile against this.
     get sceneTarget() { return composer.renderTarget1; },
     fluidEnergy: () => fluid.energy(),
-    render(time, { dive = 0, contact = 0 } = {}) {
+    render(time, { dive = 0, contact = 0, glitch = 0 } = {}) {
+      film.uniforms.uGlitch.value = reducedMotion() ? 0 : glitch;
       fluidPass.uniforms.uDive.value = dive;
       fluidPass.uniforms.uContact.value = contact;
       const t = reducedMotion() ? 0 : time;

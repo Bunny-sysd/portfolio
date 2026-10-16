@@ -580,3 +580,9 @@ generative sound (opt-in); Ctrl+K terminal. See CLAUDE.md for the files.
 Low end: everything new is either a single cheap draw (curve, probes,
 shell) or a 2D canvas/DOM; SwiftShader lands on the low tier and stays
 usable. Production load stays in the same 130–230 ms band as before.
+
+Round 2 (same day, "make it more cool"): census sky on the horizon,
+per-project world tint, card scan line, transition glitch in the film pass,
+TLS-handshake boot + centre avalanche on first frame, live AES-GCM
+ciphertext under the contact message, terminal `nmap`/`traceroute`.
+All tests pass; production load 150–237 ms.

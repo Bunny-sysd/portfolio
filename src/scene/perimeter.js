@@ -57,6 +57,7 @@ const shieldFrag = /* glsl */`
   #define HITS 12
   uniform vec4 uHits[HITS];   // xyz: impact direction, w: age 0 → 1 (≥1 idle)
   uniform float uFade;
+  uniform vec3 uTint;
   varying vec3 vDir;
   varying vec3 vN;
   varying vec3 vView;
@@ -77,7 +78,7 @@ const shieldFrag = /* glsl */`
       lit += ring * (0.25 + 0.75 * lattice) + spot + lattice * exp(-d * d * 40.0) * fade * 0.35;
     }
     float rim = pow(1.0 - abs(dot(vN, vView)), 4.0) * 0.035;
-    vec3 col = vec3(0.45, 0.85, 1.0) * (lit * 0.45 + rim);
+    vec3 col = mix(vec3(0.45, 0.85, 1.0), uTint, 0.55) * (lit * 0.45 + rim);
     gl_FragColor = vec4(col * uFade, 1.0);
     #include <colorspace_fragment>
   }`;
@@ -121,7 +122,7 @@ export function createPerimeter({ tier }) {
   const shieldMat = new THREE.ShaderMaterial({
     vertexShader: shieldVert, fragmentShader: shieldFrag,
     transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, side: THREE.DoubleSide,
-    uniforms: { uHits: { value: hits }, uFade: { value: 1 } },
+    uniforms: { uHits: { value: hits }, uFade: { value: 1 }, uTint: { value: new THREE.Color('#7dd3fc') } },
   });
   const shield = new THREE.Mesh(shieldGeo, shieldMat);
   shield.position.set(0, 0, 0);
@@ -133,7 +134,8 @@ export function createPerimeter({ tier }) {
     group,
     // Count of probes stopped so far — the HUD's live tally.
     blocked: 0,
-    update({ time, dpr, fade }) {
+    update({ time, dpr, fade, tint }) {
+      shieldMat.uniforms.uTint.value.copy(tint);
       probeMat.uniforms.uTime.value = time;
       probeMat.uniforms.uDPR.value = dpr;
       probeMat.uniforms.uFade.value = fade;

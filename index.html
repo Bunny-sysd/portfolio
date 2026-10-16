@@ -107,6 +107,7 @@
         <form id="contact-form" class="contact-form" novalidate>
           <label>Name <input name="name" autocomplete="name" placeholder="Your name" /></label>
           <label>Message <textarea name="message" rows="3" required placeholder="What would you like to talk about?"></textarea></label>
+          <p class="cipher" hidden><span class="cipher__label">On the wire · AES-256-GCM · throwaway key · preview only, your mail app sends the message itself</span><code class="cipher__out" aria-hidden="true"></code></p>
           <button type="submit" class="btn">Open in your email app</button>
           <p class="form-note" role="status" aria-live="polite"></p>
         </form>
