@@ -496,6 +496,10 @@ Landed:
 - `tests/e2e/polish.mjs` (added to `npm run e2e`); `scene.mjs`'s night-sky
   sample moved off the nav's frosted corner.
 
-Candidates next: contact as a frosted overlay (whole-frame frost on the same
-pass), a scrambling loader, project filters, shader warm-up spread across
+- Contact frost: a frosted-glass panel behind the form column (wide screens),
+  not AT's whole-frame frost — that blurred out the city-lights finale.
+- Overview ↑ moved under the nav pill (top-left collided with the contact
+  beat's eyebrow).
+
+Candidates next: a scrambling loader, project filters, shader warm-up spread across
 frames during load.

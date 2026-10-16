@@ -10,7 +10,7 @@ import { createStage } from './scene/stage.js';
 import { createCameraRig } from './scene/camera.js';
 import { createVolume, mistAt } from './scene/volume.js';
 import { createPost } from './scene/post.js';
-import { paletteAt } from './timeline.js';
+import { paletteAt, contactOpacity } from './timeline.js';
 
 const reduceQuery = matchMedia('(prefers-reduced-motion: reduce)');
 const reducedMotion = () => reduceQuery.matches;
@@ -159,7 +159,7 @@ function frame(now) {
     mistEl.style.setProperty('--mist-color', `#${hex}`);
   }
   watchdog(now);
-  if (post) post.render(now / 1000, { dive: reducedMotion() ? 0 : film.dive });
+  if (post) post.render(now / 1000, { dive: reducedMotion() ? 0 : film.dive, contact: contactOpacity(film.p) });
   else stage.renderer.render(stage.scene, stage.camera);
   if (!sceneLive) { sceneLive = true; root.classList.add('scene-live'); }
 }

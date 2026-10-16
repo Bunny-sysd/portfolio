@@ -64,8 +64,9 @@ export function createPost(renderer, scene, camera, { reducedMotion }) {
   // watchdog tears post FX down.
   const passes = [renderPass, bloom, fluidPass, output, film];
   return {
-    render(time, { dive = 0 } = {}) {
+    render(time, { dive = 0, contact = 0 } = {}) {
       fluidPass.uniforms.uDive.value = dive;
+      fluidPass.uniforms.uContact.value = contact;
       const t = reducedMotion() ? 0 : time;
       film.uniforms.uTime.value = t;
       fluid.update(time);

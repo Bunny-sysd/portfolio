@@ -40,7 +40,9 @@ html.no-webgl #scene, html.no-webgl .mist { display: none; }
 html.scroll-locked { overflow: hidden; }
 
 .to-top {
-  position: fixed; top: 18px; left: 18px; z-index: 5;
+  /* Tucked under the nav pill: top-left would collide with tall beats'
+     eyebrows (the contact form's starts near the top of the screen). */
+  position: fixed; top: 70px; right: 18px; z-index: 5;
   font: 500 12px/1 var(--font-mono); letter-spacing: 0.14em; text-transform: uppercase;
   color: var(--text); text-decoration: none;
   padding: 10px 14px; border-radius: 999px;

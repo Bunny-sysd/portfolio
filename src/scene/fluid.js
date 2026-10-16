@@ -38,7 +38,7 @@ export const FluidShader = {
   uniforms: {
     tDiffuse: { value: null }, tVel: { value: null },
     uResolution: { value: new THREE.Vector2(1, 1) }, uTime: { value: 0 },
-    uStrength: { value: 0.012 }, uShift: { value: 0.0035 }, uFrost: { value: 1 }, uFrostR: { value: 420 }, uDive: { value: 0 },
+    uStrength: { value: 0.012 }, uShift: { value: 0.0035 }, uFrost: { value: 1 }, uFrostR: { value: 420 }, uContact: { value: 0 }, uDive: { value: 0 },
   },
   vertexShader: /* glsl */`
     varying vec2 vUv;
@@ -53,6 +53,7 @@ export const FluidShader = {
     uniform float uFrost;
     uniform float uDive;
     uniform float uFrostR;
+    uniform float uContact;
     varying vec2 vUv;
     float hash(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
     float noise(vec2 p) {
@@ -75,9 +76,28 @@ export const FluidShader = {
                     noise(q + vec2(0.0, 3.1 - uTime * 0.2)) - noise(q + vec2(0.0, 4.9))) ;
       off += n * frost * 0.012;
 
+      // Contact: a frosted-glass panel behind the form column (left), fading
+      // out by mid-frame so the city lights — the end of the descent — stay
+      // sharp on the right. Wide screens only: on a phone the form spans the
+      // width and the city sits right under it.
+      float contact = uContact * smoothstep(0.62, 0.3, vUv.x) * step(1.0, uResolution.x / uResolution.y);
+      if (contact > 0.002) {
+        vec2 qc = px / 70.0;
+        off += (vec2(noise(qc + vec2(uTime * 0.15, 0.0)), noise(qc + vec2(5.2, -uTime * 0.12))) - 0.5) * 0.02 * contact;
+      }
+
       vec2 uv = vUv - off;
       vec2 split = vel / max(speed, 1e-4) * min(speed * uShift, 0.006);
       vec3 col = vec3(texture2D(tDiffuse, uv + split).r, texture2D(tDiffuse, uv).g, texture2D(tDiffuse, uv - split).b);
+
+      if (contact > 0.002) {
+        // A four-tap ring blur reads as frosted rather than just wobbly glass.
+        vec2 r = vec2(5.0, 5.0) / uResolution * (1.0 + 3.0 * contact);
+        vec3 ring = texture2D(tDiffuse, uv + vec2(r.x, 0.0)).rgb + texture2D(tDiffuse, uv - vec2(r.x, 0.0)).rgb
+                  + texture2D(tDiffuse, uv + vec2(0.0, r.y)).rgb + texture2D(tDiffuse, uv - vec2(0.0, r.y)).rgb;
+        col = mix(col, (col + ring) / 5.0, contact);
+        col = mix(col, vec3(dot(col, vec3(0.3, 0.59, 0.11))), 0.25 * contact) + vec3(0.02, 0.05, 0.07) * contact;
+      }
 
       // Case-study dive: the frame streaks toward the centre like a tunnel —
       // a radial smear, stretched horizontally, strongest at the edges.
