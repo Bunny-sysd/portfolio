@@ -1,12 +1,12 @@
 import * as THREE from 'three';
-import { createCore } from './core.js';
 import { createCards } from './cards.js';
 import { createEnvironment } from './environment.js';
 import { createNetFloor } from './netfloor.js';
 import { createPerimeter } from './perimeter.js';
 import { createCensus } from './census.js';
+import { createBlackHole } from './blackhole.js';
 
-// The whole 3D world: particle core, orbiting glass cards, a far dust field,
+// The whole 3D world: a black hole (the sinkhole), orbiting glass cards, a far dust field,
 // and a camera that moves between per-view marks. Views ease into each other
 // (critically damped), so a route change reads as one camera move; under
 // reduced motion every eased value snaps.
@@ -56,14 +56,22 @@ function createDust(count = 2500) {
 
 export function createWorld(stage, { projects, reducedMotion }) {
   const { scene, camera, renderer } = stage;
-  const core = createCore({ count: stage.tier === 'low' ? 24000 : 60000, reducedMotion });
   const cards = createCards(projects, { reducedMotion });
   const dust = createDust();
   const env = createEnvironment({ tier: stage.tier, reducedMotion });
   const net = createNetFloor();
   const perimeter = createPerimeter({ tier: stage.tier });
   const census = createCensus();
-  scene.add(census.object, env.group, net.object, perimeter.group, core.object, cards.group, dust);
+  const hole = createBlackHole({ tier: stage.tier, reducedMotion });
+  // The glass cards refract the backdrop *with* the hole traced into it.
+  cards.cards.forEach((c) => { c.material.uniforms.tBg.value = hole.target.texture; });
+  scene.add(census.object, env.group, net.object, perimeter.group, hole.group, cards.group, dust);
+  // The water's mirror re-renders the scene: keep the lens out of it (it
+  // samples this frame's backdrop in screen space, meaningless in the mirror).
+  const mirrorRender = env.water.onBeforeRender;
+  env.water.onBeforeRender = function (...args) { hole.lens.visible = false; mirrorRender.apply(this, args); hole.lens.visible = true; };
+  const bgScale = stage.tier === 'low' ? 0.5 : 1;
+  const drawRes = new THREE.Vector2();
   scene.background = new THREE.Color('#03060b');
   scene.fog = new THREE.FogExp2('#03060b', 0.03); // dust only; the custom shaders fog themselves
 
@@ -75,12 +83,9 @@ export function createWorld(stage, { projects, reducedMotion }) {
   camera.position.copy(base);
   // Centre until a real pointer moves (touch screens may never send one).
   const pointer = new THREE.Vector2(0, 0);
-  let pointerSeen = false;
   const smooth = new THREE.Vector2();
   const ray = new THREE.Raycaster();
-  const plane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
-  const hit = new THREE.Vector3(99, 99, 99);
-  const onMove = (e) => { pointerSeen = true; pointer.set((e.clientX / innerWidth) * 2 - 1, -(e.clientY / innerHeight) * 2 + 1); };
+  const onMove = (e) => { pointer.set((e.clientX / innerWidth) * 2 - 1, -(e.clientY / innerHeight) * 2 + 1); };
   addEventListener('pointermove', onMove, { passive: true });
 
   // The world takes on the colour of the project in focus; home is cyan.
@@ -89,12 +94,13 @@ export function createWorld(stage, { projects, reducedMotion }) {
   const tintTarget = new THREE.Color();
   const eased = { enter: 0, open: 0, focus: 0, pulse: 0, spin: 0, last: 0 };
   let intro = null; // { t: 0 → 1, path }
-  const setSize = () => { cards.setSize(innerWidth, innerHeight, renderer.getPixelRatio()); env.setSize(innerWidth, innerHeight); };
+  const setSize = () => { cards.setSize(innerWidth, innerHeight, renderer.getPixelRatio(), bgScale); env.setSize(innerWidth, innerHeight); };
   setSize();
 
   return {
     cards,
     perimeter,
+    hole,
     setSize,
     // Runs the establishing shot; resolves done() on finish or skip.
     playIntro() {
@@ -152,10 +158,6 @@ export function createWorld(stage, { projects, reducedMotion }) {
       if (Math.abs(camera.fov - fov) > 0.01) { camera.fov = fov; camera.updateProjectionMatrix(); }
       camera.updateMatrixWorld();
 
-      // Pointer ray against the core's plane, so the cloud parts under the cursor.
-      ray.setFromCamera(pointer, camera);
-      if (!snap && pointerSeen && ray.ray.intersectPlane(plane, hit)) core.update({ time, pulse: eased.pulse, focus: eased.focus, dpr: renderer.getPixelRatio(), pointer: hit });
-      else core.update({ time, pulse: eased.pulse, focus: eased.focus, dpr: renderer.getPixelRatio(), pointer: hit.set(99, 99, 99) });
       const half = (deg) => Math.tan((deg * Math.PI) / 360);
       const fillDist = 4.6 * half(mark.fov) / half(camera.fov);
       cards.update({ time, spin: eased.spin, visible: state.visible, openId: state.openId, open: eased.open, camera, enter: eased.enter, fillDist });
@@ -169,21 +171,23 @@ export function createWorld(stage, { projects, reducedMotion }) {
       net.update({ time: tm, enter: eased.enter, tint });
       census.update({ time: tm, enter: eased.enter, tint });
       // The probes stand down while a project is open, so the card reads clean.
-      perimeter.update({ time: tm, dpr: renderer.getPixelRatio(), fade: 1 - 0.8 * eased.open, tint });
+      perimeter.update({ time: tm, dpr: renderer.getPixelRatio(), fade: 1 - 0.8 * eased.open });
+      renderer.getDrawingBufferSize(drawRes);
+      hole.update({ time, camera, res: drawRes, pulse: eased.pulse, focus: eased.focus });
       return { open: eased.open, enter: eased.enter };
     },
     // Glass needs what's behind it: draw everything but the cards first.
+    // Every frame now: the black hole's lens bends it too. Water stays in
+    // (the lens edge must match the frame round it); cards and lens are out.
     renderBackdrop() {
-      if (!cards.group.children.some((m) => m.visible)) return;
       const prev = renderer.getRenderTarget();
-      // The water re-renders the scene for its mirror: skip it here, the
-      // glass only needs the towers and core behind it.
       cards.group.visible = false;
-      env.water.visible = false;
+      hole.lens.visible = false;
       renderer.setRenderTarget(cards.bgTarget);
       renderer.render(scene, camera);
       renderer.setRenderTarget(prev);
-      env.water.visible = true;
+      hole.render(renderer, camera, cards.bgTarget);
+      hole.lens.visible = true;
       cards.group.visible = true;
     },
     pick(clientX, clientY) {
@@ -192,7 +196,7 @@ export function createWorld(stage, { projects, reducedMotion }) {
     },
     dispose() {
       removeEventListener('pointermove', onMove);
-      core.dispose(); cards.dispose(); env.dispose(); net.dispose(); perimeter.dispose(); census.dispose();
+      hole.dispose(); cards.dispose(); env.dispose(); net.dispose(); perimeter.dispose(); census.dispose();
       dust.geometry.dispose(); dust.material.map.dispose(); dust.material.dispose();
     },
   };

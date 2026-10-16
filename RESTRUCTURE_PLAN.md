@@ -591,3 +591,10 @@ Round 3 (cinematic, after researching how award sites stage 3D — spline
 camera paths, "one or two strong moments", film lens language): a
 letterboxed establishing shot on first visit, a dolly zoom when a project
 opens, anamorphic streak flares and a hand-held camera breath.
+
+Round 4 (Aaron's idea): the particle core became a black hole — the
+security "sinkhole" — with an in-scene gravitational lens, a Keplerian
+accretion disk and probes falling in instead of hitting a shield.
+Then upgraded to a per-pixel ray-traced Schwarzschild black hole (geodesic
+integration, blackbody disk with Doppler beaming and gravitational
+redshift) after Aaron found the first, screen-warp version "baby stuff".

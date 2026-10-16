@@ -173,7 +173,7 @@ function buildShafts() {
         #include <colorspace_fragment>
       }`,
   });
-  for (const [x, z, s] of [[0, 0, 1], [-14, -18, 0.8], [17, -24, 0.7]]) {
+  for (const [x, z, s] of [[-14, -18, 0.8], [17, -24, 0.7], [-22, 6, 0.6]]) {
     const cone = new THREE.Mesh(new THREE.CylinderGeometry(0.6 * s, 4.5 * s, 34, 32, 1, true), mat);
     cone.position.set(x, FLOOR_Y + 17, z);
     group.add(cone);

@@ -98,9 +98,10 @@ export function createCards(projects, { reducedMotion }) {
     group,
     cards,
     bgTarget,
-    setSize(w, h, dpr) {
-      // The backdrop only ever shows through frosted glass: half resolution is plenty.
-      bgTarget.setSize(Math.max(1, (w * dpr) / 2 | 0), Math.max(1, (h * dpr) / 2 | 0));
+    // scale: the backdrop's resolution vs the frame. The black hole's lens
+    // redraws it unfrosted, so it's full-res except on the low tier.
+    setSize(w, h, dpr, scale = 0.5) {
+      bgTarget.setSize(Math.max(1, (w * dpr * scale) | 0), Math.max(1, (h * dpr * scale) | 0));
       res.set(w * dpr, h * dpr);
     },
     // spin: carousel position in slots (fractional while gliding); visible:

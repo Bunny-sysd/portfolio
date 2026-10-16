@@ -117,6 +117,11 @@ if (stage) {
   const prevTarget = stage.renderer.getRenderTarget();
   if (post) stage.renderer.setRenderTarget(post.sceneTarget);
   const compiling = [stage.renderer.compileAsync(stage.scene, stage.camera)];
+  // The black hole's ray tracer lives in its own scene and draws into its
+  // own target; it's the heaviest shader on the page, so it compiles here too.
+  stage.renderer.setRenderTarget(world.hole.target);
+  compiling.push(stage.renderer.compileAsync(world.hole.traceScene, stage.camera));
+  if (post) stage.renderer.setRenderTarget(post.sceneTarget);
   stage.renderer.setRenderTarget(prevTarget);
   if (post) compiling.push(post.precompile());
   Promise.all(compiling).catch(() => {}).then(() => { sceneReady = true; });
