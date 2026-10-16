@@ -152,3 +152,42 @@ await withPage({ viewport: { width: 1440, height: 900 } }, async (page) => {
   check(Math.max(...fovs) > 52 && Math.abs(end - 40) < 1.5, `dolly zoom: lens widens mid-move (peak ${Math.max(...fovs).toFixed(1)}°) and settles (${end.toFixed(1)}°)`);
   await page.screenshot({ path: `${SHOTS}/dolly-detail.png` });
 });
+
+// Each project opens with its own reveal (motion only); closing sinkholes the
+// card through the hole; contact is across the event horizon.
+for (const reduced of [false, true]) {
+  const tag = reduced ? 'reduced' : 'motion';
+  await withPage({ viewport: { width: 1440, height: 900 }, reducedMotion: reduced ? 'reduce' : 'no-preference' }, async (page, errors) => {
+    await live(page);
+    const lit = () => page.evaluate(() => {
+      const c = document.querySelector('.reveal');
+      const d = c.getContext('2d').getImageData(0, 0, c.width, c.height).data;
+      let n = 0; for (let i = 3; i < d.length; i += 4) if (d[i] > 0) n++;
+      return n;
+    });
+    for (const id of ['mutagen', 'vigil', 'signalhub', 'proving-grounds', 'who']) {
+      await page.goto(BASE + '#/work'); await page.waitForTimeout(1200);
+      await page.evaluate((id) => { location.hash = '#/work/' + id; }, id);
+      await page.waitForTimeout(700);
+      const n = await lit();
+      if (reduced) check(n === 0, `${tag}: ${id} opens without a reveal effect`);
+      else check(n > 300, `${tag}: ${id} opens with its own reveal (${n} px)`);
+    }
+    if (!reduced) {
+      await page.waitForTimeout(1200);
+      // Track the card's closest approach to the hole on every frame.
+      const closest = await page.evaluate(() => new Promise((res) => {
+        const card = window.__world.cards.cards.find((c) => c.project.id === 'who').mesh;
+        let min = Infinity; const t0 = performance.now();
+        const f = () => { min = Math.min(min, card.position.length()); if (performance.now() - t0 < 1500) requestAnimationFrame(f); else res(min); };
+        location.hash = '#/work';
+        requestAnimationFrame(f);
+      }));
+      check(closest < 1.2, `${tag}: closing a project sinkholes the card through the hole (closest ${closest.toFixed(2)})`);
+    }
+    await page.goto(BASE + '#/contact'); await page.waitForTimeout(2500);
+    const dist = await page.evaluate(() => window.__stage.camera.position.length());
+    check(dist < 3.5, `${tag}: contact puts the camera across the event horizon (${dist.toFixed(2)} from the hole)`);
+    check(errors.length === 0, `${tag}: reveals - no console errors ${JSON.stringify(errors)}`);
+  });
+}

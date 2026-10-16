@@ -27,7 +27,7 @@ const vert = /* glsl */`
     gl_Position = projectionMatrix * modelViewMatrix * vec4(p, 1.0);
     float r = length(p);
     vHeat = smoothstep(${(RS * 8).toFixed(2)}, ${(RS * 2).toFixed(2)}, r);
-    vGlow = (1.0 - aSeed.w) * smoothstep(0.0, 0.15, u) * smoothstep(${(RS * 1.1).toFixed(3)}, ${(RS * 2.4).toFixed(3)}, r);
+    vGlow = (1.0 - aSeed.w) * smoothstep(0.0, 0.15, u) * smoothstep(${(RS * 2.6).toFixed(3)}, ${(RS * 5.0).toFixed(3)}, r);
   }`;
 
 const frag = /* glsl */`

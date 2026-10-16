@@ -20,7 +20,8 @@ const MARKS = {
   work:    { pos: new THREE.Vector3(0, 2.4, 15.0),    look: new THREE.Vector3(0, 0.3, 2.5), fov: 40 },
 };
 MARKS.detail = MARKS.work;
-MARKS.contact = MARKS.work;
+// Contact is across the event horizon: the camera falls into the hole.
+MARKS.contact = { pos: new THREE.Vector3(0, 0.35, 2.4), look: new THREE.Vector3(0, 0, 0), fov: 78 };
 // Portrait screens stack the hero copy under the core: aim lower so the core
 // rides in the top half instead of sitting behind the text.
 const PORTRAIT_HOME = { pos: new THREE.Vector3(0, -0.6, 27.0), look: new THREE.Vector3(0, -4.4, 0), fov: 46 };
@@ -132,7 +133,7 @@ export function createWorld(stage, { projects, reducedMotion }) {
 
       const portrait = camera.aspect < 0.8;
       let mark = MARKS[state.view] || MARKS.home;
-      if (portrait) mark = mark === MARKS.home ? PORTRAIT_HOME : PORTRAIT_WORK;
+      if (portrait && mark !== MARKS.contact) mark = mark === MARKS.home ? PORTRAIT_HOME : PORTRAIT_WORK;
       if (intro) {
         intro.t = Math.min(1, intro.t + dt / INTRO_S);
         const k = smoothstep(intro.t);
@@ -148,9 +149,12 @@ export function createWorld(stage, { projects, reducedMotion }) {
       // centimetres — off under reduced motion.
       const hx = snap ? 0 : Math.sin(time * 0.63) * 0.035 + Math.sin(time * 1.37) * 0.015;
       const hy = snap ? 0 : Math.sin(time * 0.81 + 1.7) * 0.025 + Math.sin(time * 1.91) * 0.01;
+      // The pointer orbits the view round the hole (parallax is what sells it
+      // as an object in space), plus a slow drift of its own.
+      const drift = snap ? 0 : Math.sin(time * 0.09) * 0.9;
       camera.position.set(
-        base.x + smooth.x * 0.6 * (1 - eased.open) + hx,
-        base.y + smooth.y * 0.35 * (1 - eased.open) + hy,
+        base.x + (smooth.x * 1.6 + drift) * (1 - eased.open) + hx,
+        base.y + smooth.y * 0.8 * (1 - eased.open) + hy,
         base.z,
       );
       camera.lookAt(look);
@@ -196,6 +200,7 @@ export function createWorld(stage, { projects, reducedMotion }) {
       hole.lens.visible = true;
       cards.group.visible = true;
     },
+    cardRect: (id) => cards.rectOf(id, camera),
     pick(clientX, clientY) {
       ray.setFromCamera(new THREE.Vector2((clientX / innerWidth) * 2 - 1, -(clientY / innerHeight) * 2 + 1), camera);
       return cards.pick(ray);

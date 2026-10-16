@@ -598,3 +598,10 @@ accretion disk and probes falling in instead of hitting a shield.
 Then upgraded to a per-pixel ray-traced Schwarzschild black hole (geodesic
 integration, blackbody disk with Doppler beaming and gravitational
 redshift) after Aaron found the first, screen-warp version "baby stuff".
+
+Round 5: gravity made visible (leaning towers, Flamm funnel floor, lensed
+star field, infall streaks, cursor pull); five per-project opening effects;
+closing a project sinkholes the card; contact sits across the event horizon.
+Still to do: Aaron's final content pass ("embed all information"). Note for
+that pass: the Proving Grounds blurb says TryHackMe has "3,000,000+
+registered" users — not in the verified-facts list; confirm or drop it.

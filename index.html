@@ -294,7 +294,7 @@
                 <div class="dossier-stat-lbl">Vulnerability Classes</div>
               </div>
               <div class="dossier-stat-box">
-                <div class="dossier-stat-val">3 MODES</div>
+                <div class="dossier-stat-val">3 PROFILES</div>
                 <div class="dossier-stat-lbl">Audit &middot; Supply-Chain &middot; Malware</div>
               </div>
               <div class="dossier-stat-box">
@@ -571,89 +571,59 @@
         </div></div>
 </dialog>
 <dialog id="case-signalhub" class="case" aria-labelledby="case-signalhub-title" data-lenis-prevent>
-  <header class="case__head"><div><p class="eyebrow">04 — LIVE DATA PIPELINE &amp; NLP INTELLIGENCE</p><h2 id="case-signalhub-title">SIGNALHUB MARKET AI PIPELINE</h2></div>
+  <header class="case__head"><div><p class="eyebrow">04 — AI STOCK DASHBOARD</p><h2 id="case-signalhub-title">SIGNALHUB · APEX INTELLIGENCE</h2></div>
   <button class="case__close" data-close aria-label="Close case study">Close ✕</button></header>
   <div class="case__body"><div style="max-width: 1080px; margin: 0 auto;">
-          
+
           <!-- Overview Dossier -->
           <div class="dossier-panel">
             <div class="dossier-header-bar">
-              <span class="dossier-header-title">REAL-TIME DATA PIPELINE &amp; WEB APPLICATION</span>
-              <span class="dossier-header-status">HOSTED: FIREBASE CDN // SIGNALHUB-E79BA.WEB.APP</span>
+              <span class="dossier-header-title">DEPLOYED WEB APPLICATION</span>
+              <span class="dossier-header-status">HOSTED: FIREBASE // SIGNALHUB-E79BA.WEB.APP</span>
             </div>
             <p style="font-size: 1.08rem; line-height: 1.8; color: rgba(255,255,255,0.9); margin: 0 0 1.25rem 0;">
-              SignalHub is a deployed financial market intelligence platform. It streams live equities and cryptocurrency price quotes via WebSocket and REST pipelines, normalizes financial news streams in JSON format, and evaluates macroeconomic sentiment and threat disclosures using natural language processing (NLP) pipelines.
+              SignalHub ships as <strong>APEX Intelligence</strong>, an AI stock dashboard: a market snapshot with a Fear &amp; Greed gauge, top movers and sector performance; AI-scored picks with Buy, Watch or Avoid signals; a screener and watchlist; a scenario engine that projects target prices under macro and political events; and an AI assistant panel. It runs on simulated data out of the box &mdash; add a free API key for live prices and news.
             </p>
 
             <!-- 3-Stage Phase Flow Diagram -->
             <div class="phase-flow-wrap">
               <div class="phase-flow-header">
-                <span class="phase-flow-title">[FLOW] 3-STAGE REAL-TIME STREAMING &amp; SENTIMENT PIPELINE</span>
-                <span class="phase-flow-readout" data-phase-readout>PHASE 1/3 &middot; INGEST</span>
+                <span class="phase-flow-title">[FLOW] HOW A PICK IS MADE</span>
+                <span class="phase-flow-readout" data-phase-readout>PHASE 1/3 &middot; MARKET</span>
               </div>
               <div class="phase-flow-diagram">
                 <div class="phase-node">
                   <div class="phase-node-shape"><span class="phase-node-num">01</span></div>
-                  <div class="phase-node-label">Ingest</div>
+                  <div class="phase-node-label">Market</div>
                 </div>
                 <div class="phase-connector"><span class="phase-pulse"></span></div>
                 <div class="phase-node">
                   <div class="phase-node-shape"><span class="phase-node-num">02</span></div>
-                  <div class="phase-node-label">Process</div>
+                  <div class="phase-node-label">Score</div>
                 </div>
                 <div class="phase-connector"><span class="phase-pulse"></span></div>
                 <div class="phase-node">
                   <div class="phase-node-shape"><span class="phase-node-num">03</span></div>
-                  <div class="phase-node-label">Deliver</div>
+                  <div class="phase-node-label">Decide</div>
                 </div>
               </div>
               <div class="phase-descriptions">
                 <div class="phase-desc-item">
-                  <span class="phase-desc-tag">01 // INGEST</span>
-                  <p>Stream live price ticks and financial news feeds over high-throughput WebSocket sockets and REST feeds.</p>
+                  <span class="phase-desc-tag">01 // MARKET</span>
+                  <p>Snapshot, movers, trending names, sector performance and a Fear &amp; Greed gauge &mdash; simulated by default, live with your own API key.</p>
                 </div>
                 <div class="phase-desc-item">
-                  <span class="phase-desc-tag">02 // PROCESS</span>
-                  <p>Evaluate financial headlines in parallel, computing sentiment momentum vectors and volatility indicators.</p>
+                  <span class="phase-desc-tag">02 // SCORE</span>
+                  <p>Each stock gets an AI score and a Buy, Watch or Avoid signal; the screener filters by sector, signal and minimum score.</p>
                 </div>
                 <div class="phase-desc-item">
-                  <span class="phase-desc-tag">03 // DELIVER</span>
-                  <p>Render responsive 60 FPS charts on global Firebase edge CDN with zero-downtime deployment.</p>
+                  <span class="phase-desc-tag">03 // DECIDE</span>
+                  <p>Track names on a watchlist, run what-if scenarios for target prices, and ask the assistant panel about the market.</p>
                 </div>
-              </div>
-            </div>
-
-            <!-- Plain-Language Usage Steps & Spaced Command Block -->
-            <div class="dossier-panel">
-              <div class="dossier-header-bar">
-                <span class="dossier-header-title">LAUNCH COMMANDS &amp; LOCAL DEV</span>
-                <span class="dossier-header-status">QUICK START</span>
-              </div>
-              <div style="font-size: 0.88rem; line-height: 1.7; color: rgba(255,255,255,0.85); margin-bottom: 0.75rem;">
-                <strong>Plain-Language Execution Steps:</strong>
-                <ol style="margin: 0.5rem 0 0 1.25rem; padding: 0; display: flex; flex-direction: column; gap: 0.35rem;">
-                  <li>Connect to real-time ticker stream over WebSocket pipeline.</li>
-                  <li>Evaluate news momentum and NLP sentiment indicators in parallel.</li>
-                  <li>Inspect real-time technical candlestick charts on the live Firebase web dashboard.</li>
-                </ol>
-              </div>
-              <div class="command-block">
-                <div class="command-block-header">
-                  <span>BASH // SIGNALHUB WORKFLOW</span>
-                  <button class="command-copy-btn" onclick="navigator.clipboard.writeText('npm run dev\nsignalhub stream --ticker NVDA,BTC --interval 1s\nopen https://signalhub-e79ba.web.app')">Copy Commands</button>
-                </div>
-                <pre class="command-block-code"><span class="cmd-comment"># Step 1: Launch local streaming market pipeline</span>
-<span class="cmd-prompt">$ </span>npm run dev
-
-<span class="cmd-comment"># Step 2: Connect to real-time ticker stream</span>
-<span class="cmd-prompt">$ </span>signalhub stream --ticker NVDA,BTC --interval 1s
-
-<span class="cmd-comment"># Step 3: Open live deployed web application</span>
-<span class="cmd-prompt">$ </span>open https://signalhub-e79ba.web.app</pre>
               </div>
             </div>
           </div>
-          <a href="https://signalhub-e79ba.web.app" target="_blank" rel="noopener noreferrer" class="at-action-btn" style="padding: 0.75rem 1.5rem; font-size: 0.85rem; border-color: var(--green); color: var(--green);">Launch Live SignalHub Web App ↗</a>
+          <a href="https://signalhub-e79ba.web.app" target="_blank" rel="noopener noreferrer" class="at-action-btn" style="padding: 0.75rem 1.5rem; font-size: 0.85rem; border-color: var(--green); color: var(--green);">Open the live app (APEX Intelligence) ↗</a>
         </div></div>
 </dialog>
 <dialog id="case-proving-grounds" class="case" aria-labelledby="case-proving-grounds-title" data-lenis-prevent>
@@ -666,7 +636,7 @@
               <span class="dossier-header-status">GLOBAL STANDING: TOP 1% WORLDWIDE // 100+ ROOMS</span>
             </div>
             <p style="font-size: 1.1rem; line-height: 1.8; color: rgba(255,255,255,0.9); margin: 0 0 1.25rem 0;">
-              Ranked in the <strong style="color: var(--cyan);">Top 1% Worldwide on TryHackMe</strong> out of 3,000,000+ registered cybersecurity students and practitioners across 100+ completed machines and challenges. Active competitor on Hack The Box, focusing on Linux privilege escalation, Active Directory attack paths (Kerberoasting, AS-REP Roasting), and web exploitation (SQLi, SSRF, IDOR).
+              Ranked in the <strong style="color: var(--cyan);">Top 1% Worldwide on TryHackMe</strong> with 100+ rooms completed. Active competitor on Hack The Box, focusing on Linux privilege escalation, Active Directory attack paths (Kerberoasting, AS-REP Roasting), and web exploitation (SQLi, SSRF, IDOR).
             </p>
             <div class="dossier-grid-4">
               <div class="dossier-stat-box">

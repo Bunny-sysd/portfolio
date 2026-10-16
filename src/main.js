@@ -1,6 +1,6 @@
 import './styles/site.css';
 import './styles/case-study.css';
-import { PROJECTS } from './projects.js';
+import { PROJECTS, projectById } from './projects.js';
 import { createRouter } from './router.js';
 import { createViews } from './views.js';
 import { createTerminal } from './terminal.js';
@@ -15,6 +15,7 @@ import { createSigil } from './widgets/sigil.js';
 import { createProbe } from './widgets/probe.js';
 import { createSound } from './widgets/sound.js';
 import { createCipher } from './widgets/cipher.js';
+import { createReveal } from './widgets/reveal.js';
 
 const reduceQuery = matchMedia('(prefers-reduced-motion: reduce)');
 const reducedMotion = () => reduceQuery.matches;
@@ -43,6 +44,7 @@ const idSigil = createSigil(document.querySelector('.hud-id .sigil'), { reduced:
 idSigil.set('Aaron Alva').then((hex) => { if (hex) document.querySelector('.hud-id__hash').textContent = `sha256 ${hex.slice(0, 8)}…`; });
 const capSigil = createSigil(document.querySelector('.caption .sigil'), { reduced: reducedMotion });
 const capHash = document.querySelector('.caption__hash');
+const reveal = world ? createReveal({ reduced: reducedMotion, rectOf: (id) => world.cardRect(id), projectOf: projectById }) : null;
 const lastPointer = { x: innerWidth / 2, y: innerHeight / 2 };
 addEventListener('pointerdown', (e) => { lastPointer.x = e.clientX; lastPointer.y = e.clientY; }, { passive: true, capture: true });
 
@@ -58,7 +60,16 @@ const views = createViews(document, {
 router = createRouter((route, prev) => {
   views.apply(route, prev);
   // Every view change is an input change: the avalanche runs from where you acted.
-  if (prev && prev.view !== route.view && avalanche.trigger(lastPointer.x, lastPointer.y)) { sound.cascade(); film.glitch = 1; }
+  if (!prev || prev.view === route.view) return;
+  // Opening a project plays that project's own reveal; other view changes
+  // run the avalanche. Crossing into contact flashes at the horizon.
+  if (route.view !== 'detail') reveal?.stop();
+  const played = route.view === 'detail' ? reveal?.play(route.id) : avalanche.trigger(lastPointer.x, lastPointer.y);
+  if (played) { sound.cascade(); film.glitch = 1; }
+  if (route.view === 'contact' && !reducedMotion()) {
+    root.classList.remove('is-crossing'); void root.offsetWidth; root.classList.add('is-crossing');
+    setTimeout(() => root.classList.remove('is-crossing'), 1200);
+  }
 });
 router.start();
 const terminal = createTerminal(document.querySelector('.term'), { go: (r) => router.go(r) });
@@ -197,7 +208,7 @@ function frame(now) {
   film.glitch = Math.max(0, film.glitch - dt * 3.2);
   film.contact += ((views.state.view === 'contact' ? 1 : 0) - film.contact) * (reducedMotion() ? 1 : 1 - Math.exp(-dt * 5));
   // Behind the contact overlay the scene settles back to the ring.
-  const sceneState = { ...views.state, view: views.state.view === 'contact' ? (views.state.base === 'home' ? 'home' : 'work') : views.state.view };
+  const sceneState = { ...views.state };
   if (views.state.view === 'contact') sceneState.openId = null;
   const { open } = world.update(sceneState, t);
   views.state.pulse = sceneState.pulse;

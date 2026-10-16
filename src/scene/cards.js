@@ -87,13 +87,15 @@ export function createCards(projects, { reducedMotion }) {
     const mesh = new THREE.Mesh(geometry, material);
     mesh.userData.id = project.id;
     group.add(mesh);
-    return { project, mesh, material, texture, canvas, shown: 1, open: 0 };
+    return { project, mesh, material, texture, canvas, shown: 1, open: 0, closing: false };
   });
   // Titles use the web font: redraw once it's ready.
   document.fonts?.ready.then(() => cards.forEach((c, i) => { drawScreen(c.canvas, c.project, i, cards.length); c.texture.needsUpdate = true; }));
 
   const tmp = new THREE.Vector3();
   const right = new THREE.Vector3();
+  const center = new THREE.Vector3(0, 0, 0);
+  const corner = new THREE.Vector3();
   return {
     group,
     cards,
@@ -115,7 +117,10 @@ export function createCards(projects, { reducedMotion }) {
         const k = order.indexOf(c);
         const target = k >= 0 ? 1 : 0;
         c.shown += (target - c.shown) * Math.min(1, dt * 7);
-        c.open += ((c.project.id === openId ? 1 : 0) - c.open) * Math.min(1, dt * 5);
+        // Leaving its detail view, a card is sinkholed: it falls into the
+        // black hole, stretched, and re-emerges into its slot in the ring.
+        if (c.project.id === openId) c.closing = false; else if (c.open > 0.02) c.closing = true;
+        c.open += ((c.project.id === openId ? 1 : 0) - c.open) * Math.min(1, dt * (c.closing ? 3.2 : 5));
         if (reducedMotion()) { c.shown = target; c.open = c.project.id === openId ? 1 : 0; }
         // Wrap the slot offset into (-n/2, n/2] so the ring is continuous.
         let s = k - spin; s = ((s % n) + n) % n; if (s > n / 2) s -= n;
@@ -134,10 +139,28 @@ export function createCards(projects, { reducedMotion }) {
           camera.getWorldDirection(tmp);
           const fill = tmp.multiplyScalar(fillDist).add(camera.position);
           fill.add(right.setFromMatrixColumn(camera.matrixWorld, 0).multiplyScalar(innerWidth >= 768 ? 0.75 : 0));
-          m.position.lerp(fill, c.open * c.open * (3 - 2 * c.open));
-          m.quaternion.slerp(camera.quaternion, c.open);
-        }
-        m.scale.setScalar(c.shown * (0.85 + 0.15 * front) * enter + 1e-4);
+          if (c.closing && !reducedMotion()) {
+            const s = 1 - c.open; // 0 → 1 over the close
+            if (s < 0.5) {
+              // Falling in: toward the centre, accelerating, spaghettified.
+              const k = Math.pow(s * 2, 2.2);
+              m.position.copy(fill).lerp(center, k);
+              m.quaternion.slerp(camera.quaternion, 1);
+              m.scale.set((1 + k * 2.2) * (1 - k * 0.9), 1 - k * 0.97, 1).multiplyScalar(enter);
+            } else {
+              // Re-emerging from the hole into its slot.
+              const k = 1 - Math.pow(1 - (s - 0.5) * 2, 3);
+              m.position.lerp(center, 1 - k);
+              m.scale.setScalar(Math.max(1e-4, k) * c.shown * (0.85 + 0.15 * front) * enter);
+            }
+            c.squeezed = true;
+          } else {
+            m.position.lerp(fill, c.open * c.open * (3 - 2 * c.open));
+            m.quaternion.slerp(camera.quaternion, c.open);
+            c.squeezed = false;
+          }
+        } else c.squeezed = false;
+        if (!c.squeezed) m.scale.setScalar(c.shown * (0.85 + 0.15 * front) * enter + 1e-4);
         m.visible = c.shown * enter > 0.01;
         const u = c.material.uniforms;
         u.uTime.value = reducedMotion() ? 0 : time;
@@ -145,6 +168,18 @@ export function createCards(projects, { reducedMotion }) {
         u.uOpen.value = c.open;
         u.uAlpha.value = Math.min(1, c.shown * enter) * (openId && c.project.id !== openId ? 1 - open * 0.9 : 1);
       });
+    },
+    // A card's bounding box on screen, CSS px (for the reveal effects).
+    rectOf(id, camera) {
+      const c = cards.find((k) => k.project.id === id);
+      if (!c || !c.mesh.visible) return null;
+      let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+      for (const [sx, sy] of [[-1, -1], [1, -1], [1, 1], [-1, 1]]) {
+        corner.set(sx * CARD_W / 2, sy * CARD_H / 2, 0).applyMatrix4(c.mesh.matrixWorld).project(camera);
+        const x = (corner.x * 0.5 + 0.5) * innerWidth, y = (0.5 - corner.y * 0.5) * innerHeight;
+        x0 = Math.min(x0, x); y0 = Math.min(y0, y); x1 = Math.max(x1, x); y1 = Math.max(y1, y);
+      }
+      return { x: x0, y: y0, w: x1 - x0, h: y1 - y0 };
     },
     pick(raycaster) {
       const hit = raycaster.intersectObjects(cards.filter((c) => c.mesh.visible).map((c) => c.mesh))[0];

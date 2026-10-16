@@ -23,7 +23,7 @@ import { FullScreenQuad } from 'three/examples/jsm/postprocessing/Pass.js';
 export const RS = 0.55;          // Schwarzschild radius (world units)
 export const HORIZON = RS * 2.6; // apparent shadow radius, ≈ 2.6 rs
 // The disk's frame, shared with the infalling matter (infall.js).
-export const AXIS = new THREE.Vector3(0, 1, 0).applyEuler(new THREE.Euler(0.2, 0, -0.1)).normalize();
+export const AXIS = new THREE.Vector3(0, 1, 0).applyEuler(new THREE.Euler(0.34, 0, -0.12)).normalize();
 export const E1 = new THREE.Vector3(1, 0, 0).projectOnPlane(AXIS).normalize();
 export const E2 = new THREE.Vector3().crossVectors(AXIS, E1).normalize();
 const BOUND = 9.0;               // ray-traced sphere round the hole
@@ -41,6 +41,7 @@ const vert = /* glsl */`
 const traceFrag = (steps, octaves) => /* glsl */`
   #define STEPS ${steps}
   #define OCTAVES ${octaves}
+  #define THICK(r) (0.03 + 0.06 * (r))
   #define STEP_K ${steps < 64 ? '0.15' : '0.085'}
   uniform sampler2D tBg;
   uniform mat4 uViewProj;
@@ -95,7 +96,7 @@ const traceFrag = (steps, octaves) => /* glsl */`
     float grav = sqrt(max(1.0 - ${RS.toFixed(3)} / r, 0.0));
     float g = dopp * grav;
     float Tobs = T * g;
-    float I = min(pow(g, 3.0) * pow(Tobs / 6000.0, 2.0) * 0.8, 3.0);
+    float I = min(pow(g, 3.0) * pow(Tobs / 6000.0, 2.0) * 0.8, 1.6);
     vec3 col = blackbody(Tobs) * I * dens;
     return vec4(col, clamp(dens * 0.95, 0.0, 1.0));
   }
@@ -123,16 +124,29 @@ const traceFrag = (steps, octaves) => /* glsl */`
         float r = sqrt(r2);
         if (r < ${RS.toFixed(3)}) { absorbed = true; break; }
         if (r > ${(BOUND + 0.05).toFixed(2)} && dot(p, v) > 0.0) break;
-        // Small steps near the hole, long ones far out.
+        // Small steps near the hole, long ones far out — and never a step
+        // that could jump over the disk's slab: within reach of it, the step
+        // is capped at the distance to its surface (plus a fraction inside).
         float dt = clamp(STEP_K * (r - ${RS.toFixed(3)} * 0.6), 0.012, 0.6);
+        float hh = dot(p, uAxis);
+        float rq = length(p - uAxis * hh);
+        float Hq = THICK(rq);
+        if (rq < ${(R_OUT * 1.08).toFixed(2)}) dt = min(dt, max(abs(hh) - 3.0 * Hq, 0.0) + max(Hq * 0.45, 0.012));
         vec3 a = -1.5 * ${RS.toFixed(3)} * h2 * p / (r2 * r2 * r);
         vec3 pn = p + v * dt + 0.5 * a * dt * dt;
         v += a * dt;
-        float s0 = dot(p, uAxis), s1 = dot(pn, uAxis);
-        if (s0 * s1 < 0.0) {
-          vec4 e = disk(mix(p, pn, s0 / (s0 - s1)), v);
-          col += trans * e.rgb;
-          trans *= 1.0 - e.a;
+        // A volume, not a sheet: gas fills a slab that flares with radius,
+        // densest at the midplane (Gaussian profile). Light is gathered along
+        // the path through it, so grazing views glow thicker at the limb.
+        float hgt = dot(pn, uAxis);
+        vec3 pp = pn - uAxis * hgt;
+        float H = THICK(length(pp));
+        if (abs(hgt) < 3.0 * H) {
+          vec4 e = disk(pp, v);
+          float prof = exp(-hgt * hgt / (H * H));
+          float k = dt / (2.0 * H) * 0.62;
+          col += trans * e.rgb * prof * k;
+          trans *= 1.0 - clamp(e.a * prof * k, 0.0, 1.0);
           if (trans < 0.02) break;
         }
         p = pn;
@@ -150,7 +164,11 @@ const traceFrag = (steps, octaves) => /* glsl */`
       vec2 uv = mix(gl_FragCoord.xy / uRes, bent, k * k);
       bg = texture2D(tBg, clamp(uv, vec2(0.001), vec2(0.999))).rgb;
     }
-    gl_FragColor = vec4(col * uGlow + trans * bg, 1.0);
+    // Highlight compression on the disk's own light, so the beamed near side
+    // keeps its gas lanes instead of clipping to a white blob.
+    col *= uGlow;
+    col = col / (1.0 + max(max(col.r, col.g), col.b) * 0.55);
+    gl_FragColor = vec4(col + trans * bg, 1.0);
   }`;
 
 const blitFrag = /* glsl */`
@@ -175,7 +193,7 @@ export function createBlackHole({ tier, reducedMotion }) {
   const axis = AXIS, e1 = E1, e2 = E2;
   const geometry = new THREE.PlaneGeometry(2 * LENS_R, 2 * LENS_R);
   // Weak devices trace fewer, longer steps with simpler gas.
-  const steps = tier === 'low' ? 32 : tier === 'mid' ? 96 : 140;
+  const steps = tier === 'low' ? 56 : tier === 'mid' ? 170 : 260;
   const octaves = tier === 'low' ? 3 : 5;
   // …and at half the backdrop's resolution (the disk is soft anyway).
   const traceScale = tier === 'low' ? 0.5 : 1;
@@ -240,7 +258,7 @@ export function createBlackHole({ tier, reducedMotion }) {
       blit.uniforms.uScreenR.value = cr;
       const u = trace.uniforms;
       u.uC.value.copy(c);
-      u.uTime.value = reducedMotion() ? 0 : time * 0.6;
+      u.uTime.value = reducedMotion() ? 0 : time;
       u.uGlow.value = (1 + pulse * 0.6) * (1 - 0.35 * focus);
       u.uViewProj.value.multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse);
     },
