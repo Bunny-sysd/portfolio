@@ -10,6 +10,10 @@ import { createStage } from './scene/stage.js';
 import { createWorld } from './scene/world.js';
 import { createPost } from './scene/post.js';
 import { createBootReadout } from './widgets/boot.js';
+import { createAvalanche } from './widgets/avalanche.js';
+import { createSigil } from './widgets/sigil.js';
+import { createProbe } from './widgets/probe.js';
+import { createSound } from './widgets/sound.js';
 
 const reduceQuery = matchMedia('(prefers-reduced-motion: reduce)');
 const reducedMotion = () => reduceQuery.matches;
@@ -30,16 +34,47 @@ if (import.meta.env.DEV) window.__fluidEnergy = () => post?.fluidEnergy() ?? nul
 // The case-study dive (camera plunge + streak) is driven from here.
 const film = { dive: 0, diveTarget: 0, contact: 0, last: 0 };
 const caseStudies = initCaseStudies({ scroll: { stop() {}, start() {} }, onDive: (on) => { film.diveTarget = on ? 1 : 0; } });
+// ── address-space layer: avalanche transitions, sigils, probe, sound ─────
+const avalanche = createAvalanche(document.querySelector('.avalanche'), { reduced: reducedMotion });
+const sound = createSound(document.querySelector('.sound'));
+createProbe(document, { reduced: reducedMotion });
+const idSigil = createSigil(document.querySelector('.hud-id .sigil'), { reduced: reducedMotion });
+idSigil.set('Aaron Alva').then((hex) => { if (hex) document.querySelector('.hud-id__hash').textContent = `sha256 ${hex.slice(0, 8)}…`; });
+const capSigil = createSigil(document.querySelector('.caption .sigil'), { reduced: reducedMotion });
+const capHash = document.querySelector('.caption__hash');
+const lastPointer = { x: innerWidth / 2, y: innerHeight / 2 };
+addEventListener('pointerdown', (e) => { lastPointer.x = e.clientX; lastPointer.y = e.clientY; }, { passive: true, capture: true });
+
 let router;
 const views = createViews(document, {
+  onCaption: (p) => capSigil.set(p.title).then((hex) => { if (hex) capHash.textContent = `sha256 ${hex.slice(0, 12)}…`; }),
+  onStep: () => sound.tick(),
   router: { go: (r) => router.go(r) },
   reduced: reducedMotion,
   pick: world ? (x, y) => world.pick(x, y) : null,
   openDossier: (id, origin) => caseStudies.open(id, origin),
 });
-router = createRouter((route, prev) => views.apply(route, prev));
+router = createRouter((route, prev) => {
+  views.apply(route, prev);
+  // Every view change is an input change: the avalanche runs from where you acted.
+  if (prev && prev.view !== route.view && avalanche.trigger(lastPointer.x, lastPointer.y)) sound.cascade();
+});
 router.start();
-createTerminal(document.querySelector('.term'), { go: (r) => router.go(r) });
+const terminal = createTerminal(document.querySelector('.term'), { go: (r) => router.go(r) });
+// Ctrl/⌘+K (or /) summons the terminal from anywhere, home included.
+addEventListener('keydown', (e) => {
+  const typing = e.target.closest?.('input, textarea');
+  if (((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') || (e.key === '/' && !typing)) {
+    if (document.querySelector('dialog[open]')) return;
+    e.preventDefault();
+    if (views.state.view === 'detail' || views.state.view === 'contact') router.go({ view: 'work' });
+    root.classList.add('term-summoned');
+    terminal.focus();
+  }
+});
+// Live tally from the perimeter simulation (twice a second is plenty).
+const blockedEl = document.querySelector('[data-blocked]');
+if (world) setInterval(() => { if (!document.hidden) blockedEl.textContent = world.perimeter.blocked.toLocaleString('en-US'); }, 500);
 
 const form = document.getElementById('contact-form');
 form.addEventListener('submit', (e) => {

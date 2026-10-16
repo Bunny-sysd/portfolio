@@ -1,4 +1,5 @@
 import { PROJECTS, projectById } from './projects.js';
+import { sha256Hex } from './widgets/sigil.js';
 
 // The "ask me anything" box, as a terminal: a handful of commands answered
 // from the site's own verified data — nothing is sent anywhere. Input is only
@@ -43,6 +44,7 @@ export function createTerminal(form, { go }) {
       line('  ls | projects     list projects');
       line('  cat <project>     project summary');
       line('  open <project>    fly to a project');
+      line('  hash <project>    sha256 of its title (its sigil)');
       line('  certs             verified credentials');
       line('  contact           get in touch');
       line('  clear             clear the screen');
@@ -65,6 +67,12 @@ export function createTerminal(form, { go }) {
       go({ view: 'detail', id: p.id });
     },
     contact: () => { link('aaron.lawrence.alva@gmail.com', 'mailto:aaron.lawrence.alva@gmail.com'); go({ view: 'contact' }); },
+    hash: (arg) => {
+      const p = projectById(arg);
+      if (!p) return line(`hash: ${arg || '(none)'}: no such project — try ls`, 'is-err');
+      const row = line(`sha256("${p.title}") = …`);
+      sha256Hex(p.title).then((hex) => { row.textContent = hex ? `sha256("${p.title}") = ${hex}` : 'hash: needs a secure context (https)'; });
+    },
     clear: () => out.replaceChildren(),
     sudo: () => line('sudo: permission denied — nice try.', 'is-err'),
   };
@@ -91,6 +99,6 @@ export function createTerminal(form, { go }) {
     e.stopPropagation(); // arrow keys here are for history, not the carousel
   });
   input.addEventListener('focus', () => form.classList.add('is-open'));
-  input.addEventListener('blur', () => { if (!out.childElementCount) form.classList.remove('is-open'); });
-  return { run: (cmd) => { input.value = cmd; form.requestSubmit(); } };
+  input.addEventListener('blur', () => { if (!out.childElementCount) form.classList.remove('is-open'); document.documentElement.classList.remove('term-summoned'); });
+  return { run: (cmd) => { input.value = cmd; form.requestSubmit(); }, focus: () => input.focus() };
 }

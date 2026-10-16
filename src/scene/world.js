@@ -2,6 +2,8 @@ import * as THREE from 'three';
 import { createCore } from './core.js';
 import { createCards } from './cards.js';
 import { createEnvironment } from './environment.js';
+import { createNetFloor } from './netfloor.js';
+import { createPerimeter } from './perimeter.js';
 
 // The whole 3D world: particle core, orbiting glass cards, a far dust field,
 // and a camera that moves between per-view marks. Views ease into each other
@@ -46,7 +48,9 @@ export function createWorld(stage, { projects, reducedMotion }) {
   const cards = createCards(projects, { reducedMotion });
   const dust = createDust();
   const env = createEnvironment({ tier: stage.tier, reducedMotion });
-  scene.add(env.group, core.object, cards.group, dust);
+  const net = createNetFloor();
+  const perimeter = createPerimeter({ tier: stage.tier });
+  scene.add(env.group, net.object, perimeter.group, core.object, cards.group, dust);
   scene.background = new THREE.Color('#03060b');
   scene.fog = new THREE.FogExp2('#03060b', 0.03); // dust only; the custom shaders fog themselves
 
@@ -72,6 +76,7 @@ export function createWorld(stage, { projects, reducedMotion }) {
 
   return {
     cards,
+    perimeter,
     setSize,
     // state: { view, spin, visible: Set<id>, openId, pulse }
     update(state, time) {
@@ -111,6 +116,10 @@ export function createWorld(stage, { projects, reducedMotion }) {
       cards.update({ time, spin: eased.spin, visible: state.visible, openId: state.openId, open: eased.open, camera, enter: eased.enter });
       dust.rotation.y = snap ? 0 : time * 0.01;
       env.update({ time, dpr: renderer.getPixelRatio(), enter: eased.enter });
+      const tm = snap ? 0 : time;
+      net.update({ time: tm, enter: eased.enter });
+      // The probes stand down while a project is open, so the card reads clean.
+      perimeter.update({ time: tm, dpr: renderer.getPixelRatio(), fade: 1 - 0.8 * eased.open });
       return { open: eased.open, enter: eased.enter };
     },
     // Glass needs what's behind it: draw everything but the cards first.
@@ -133,7 +142,7 @@ export function createWorld(stage, { projects, reducedMotion }) {
     },
     dispose() {
       removeEventListener('pointermove', onMove);
-      core.dispose(); cards.dispose(); env.dispose();
+      core.dispose(); cards.dispose(); env.dispose(); net.dispose(); perimeter.dispose();
       dust.geometry.dispose(); dust.material.map.dispose(); dust.material.dispose();
     },
   };

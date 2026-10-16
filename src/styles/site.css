@@ -199,16 +199,81 @@ html[data-view="home"] .term { display: none; }
 .boot__code { color: var(--accent); }
 .boot.is-done { opacity: 0; }
 
+/* ── address-space layer: avalanche, identity, probe, status, sound ─── */
+.avalanche { position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: 1; pointer-events: none; mix-blend-mode: screen; }
+.hud-id {
+  position: fixed; top: 20px; left: 20px; z-index: 6; display: flex; align-items: center; gap: 12px;
+  text-decoration: none; color: var(--text); font: 500 10px/1.5 var(--font-mono); letter-spacing: 0.16em; text-transform: uppercase;
+}
+.hud-id .sigil { width: 63px; height: 63px; filter: drop-shadow(0 0 10px rgba(125, 211, 252, 0.35)); }
+.hud-id__txt { display: grid; }
+.hud-id__txt b { font-weight: 700; font-size: 11px; letter-spacing: 0.3em; }
+.hud-id__hash { color: var(--text-dim); text-transform: none; letter-spacing: 0.08em; }
+.hud-id:hover b { color: var(--accent); }
+
+.hud-stat {
+  position: fixed; right: 22px; bottom: 20px; z-index: 5; margin: 0; display: flex; align-items: center; gap: 8px;
+  font: 500 10px var(--font-mono); letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-dim);
+  transition: opacity 0.4s;
+}
+.hud-stat [data-blocked] { color: #fda4af; font-variant-numeric: tabular-nums; }
+.hud-stat__sim { padding: 1px 5px; border: 1px solid rgba(248, 250, 252, 0.2); border-radius: 4px; font-size: 9px; }
+.hud-stat__dot { width: 6px; height: 6px; border-radius: 50%; background: #5eead4; box-shadow: 0 0 10px #5eead4; animation: hud-dot 2.4s ease-in-out infinite; }
+@keyframes hud-dot { 50% { opacity: 0.35; } }
+html.no-webgl .hud-stat, html[data-view="detail"] .hud-stat, html[data-view="contact"] .hud-stat { opacity: 0; visibility: hidden; }
+
+.sound {
+  font: 500 10px var(--font-mono); letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-dim);
+  background: rgba(6, 12, 20, 0.4); border: 1px solid rgba(248, 250, 252, 0.1); border-radius: 8px; padding: 6px 10px; cursor: pointer;
+}
+.sound__state { color: var(--text); }
+.sound[aria-pressed="true"] { border-color: var(--line); }
+.sound[aria-pressed="true"] .sound__state { color: var(--accent); }
+.sound:hover { color: var(--text); border-color: var(--accent); }
+
+/* Caption sigil: the project's SHA-256, beside its title. */
+.caption__sig { position: absolute; left: calc(100% + 28px); bottom: 6px; display: grid; justify-items: start; gap: 6px; }
+.caption__sig .sigil { filter: drop-shadow(0 0 10px rgba(125, 211, 252, 0.3)); }
+.caption__hash { font: 400 9px var(--font-mono); letter-spacing: 0.08em; text-transform: none; color: var(--text-dim); white-space: nowrap; }
+
+/* The probe reticle (fine pointers only; the native cursor stays). */
+.probe { display: none; }
+html.has-probe .probe { display: block; position: fixed; inset: 0; z-index: 9; pointer-events: none; opacity: 0; transition: opacity 0.3s; }
+html.has-probe .probe.is-live { opacity: 1; }
+.probe__ring { position: absolute; left: 0; top: 0; width: 22px; height: 22px; }
+.probe__ring i { position: absolute; width: 6px; height: 6px; border: 1px solid var(--accent); }
+.probe__ring i:nth-child(1) { left: 0; top: 0; border-width: 1px 0 0 1px; }
+.probe__ring i:nth-child(2) { right: 0; top: 0; border-width: 1px 1px 0 0; }
+.probe__ring i:nth-child(3) { left: 0; bottom: 0; border-width: 0 0 1px 1px; }
+.probe__ring i:nth-child(4) { right: 0; bottom: 0; border-width: 0 1px 1px 0; }
+.probe__read {
+  position: absolute; left: 0; top: 0; white-space: nowrap; font: 500 9px var(--font-mono); letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--accent); text-shadow: 0 0 8px rgba(3, 6, 11, 0.9);
+}
+.probe.is-locked .probe__ring i { border-color: var(--violet); }
+.probe.is-locked .probe__read { color: var(--violet); }
+.probe.is-verified .probe__ring i { border-color: #5eead4; width: 9px; height: 9px; }
+.probe.is-verified .probe__read { color: #5eead4; }
+html:has(dialog[open]) .probe { display: none; }
+
+/* Ctrl/⌘+K brings the terminal up over home too. */
+html.term-summoned[data-view="home"] .term { display: block; }
+
 /* ── small screens ──────────────────────────────────────────────────── */
 @media (max-width: 767px) {
   .chrome { top: 12px; right: 12px; }
   .ticker { display: none; }
+  .hud-id { top: 14px; left: 14px; gap: 8px; }
+  .hud-id .sigil { width: 40px !important; height: 40px !important; }
+  .hud-id__hash { display: none; }
+  .hud-stat { display: none; }
+  .caption__sig { display: none; }
   .nav-pill__rule { width: 18px; }
   .home { left: 20px; right: 20px; bottom: 40px; }
   /* Full-width copy over the core's lower edge: a taller, denser shade. */
   .home::before { inset: -90px -40px -50px; background: linear-gradient(180deg, rgba(3, 6, 11, 0), rgba(3, 6, 11, 0.82) 22%, rgba(3, 6, 11, 0.9)); filter: blur(8px); }
   .home h1 { font-size: clamp(46px, 14vw, 72px); }
-  .filters { top: 70px; bottom: auto; left: 20px; font-size: 11px; }
+  .filters { top: 112px; bottom: auto; left: 20px; font-size: 11px; }
   .filters ul { grid-auto-flow: column; gap: 12px; }
   .filters__q { display: none; }
   .caption { bottom: 96px; min-width: 0; width: calc(100vw - 40px); }
@@ -230,4 +295,6 @@ html[data-view="home"] .term { display: none; }
   .cue::after { animation: none; }
   .view, .view.is-active { transition: opacity 0.2s linear, visibility 0s; }
   .filters button { transition: none; }
+  .hud-stat__dot { animation: none; }
+  .probe, .probe.is-live { transition: none; }
 }

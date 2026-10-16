@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "vite build",
     "test": "vitest run",
-    "e2e": "node tests/e2e/site.mjs && node tests/e2e/case-study.mjs && node tests/e2e/fallbacks.mjs"
+    "e2e": "node tests/e2e/site.mjs && node tests/e2e/case-study.mjs && node tests/e2e/fallbacks.mjs && node tests/e2e/address.mjs"
   },
   "dependencies": {
     "playwright": "^1.61.1",

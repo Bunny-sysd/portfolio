@@ -10,7 +10,7 @@ const LEAVE_PX = 220;    // wheel travel that crosses home ⇄ work
 // detail panel, filters, and every input that moves between them (wheel, keys,
 // swipe, canvas clicks). The scene reads `state` each frame; nothing here
 // touches WebGL. All copy comes from projects.js.
-export function createViews(doc, { router, reduced, pick, openDossier }) {
+export function createViews(doc, { router, reduced, pick, openDossier, onCaption, onStep }) {
   const root = doc.documentElement;
   const $ = (s) => doc.querySelector(s);
   const views = { home: $('#view-home'), work: $('#view-work'), detail: $('#view-detail'), contact: $('#view-contact') };
@@ -36,6 +36,7 @@ export function createViews(doc, { router, reduced, pick, openDossier }) {
     $('.caption__kind').textContent = p.kind;
     $('.caption__open').href = `#/work/${p.id}`;
     decodeText([$('.caption__title'), $('.caption__kind')], { reduced: reduced(), duration: 520 });
+    onCaption?.(p);
   }
 
   function renderDetail(p) {
@@ -116,6 +117,7 @@ export function createViews(doc, { router, reduced, pick, openDossier }) {
     state.index = (state.index + dir + n) % n;
     state.spin += dir;
     renderCaption();
+    onStep?.();
   }
 
   function setFilter(tag) {

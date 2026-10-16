@@ -25,6 +25,19 @@ Single-page portfolio (`bunny-sysd.github.io/portfolio`) structured after active
 - `docs/` is gitignored build output, deployed by GitHub Actions on push to `main`.
 - `.agents/mcp_config.json` is gitignored and holds a live-looking secret. Never `git add -f` it or echo it.
 
+## Address-space layer (branch `address-space`)
+
+The concept tying the site together: **the site is an address space you're scanning**, and each effect is a real security idea, not decoration. Researched from IPv4 census maps (CAIDA, Hilbert-curve layout), binary visualisers (binvis entropy colouring), hash avalanche demos, defence-in-depth diagrams and SOC threat maps.
+- `src/hilbert.js` — `d2xy`/`xy2d`/`toIPv4` (order-16 Hilbert map of the screen onto the 2^32 IPv4 space; plain arithmetic so it stays exact past 32-bit ints). Unit-tested.
+- `scene/netfloor.js` — one order-7 Hilbert curve (16384 cells) on the water as a single `THREE.Line`; scan packets crawl it, a few 16-cell blocks burn amber like high-entropy regions; the stretch round the core lights up in work ("in scope").
+- `scene/perimeter.js` — defence in depth: hostile probes (rose) arc in from the forest and stop at a shell round the core that only shows where it's hit (impact ring over a lat/long lattice). Probes are closed-form in the vertex shader; the CPU runs the same formula to place the 12 newest impacts and to count `blocked` for the HUD (labelled **sim** on the page — it's a simulation, never present it as real traffic). Fades while a project is open.
+- `widgets/avalanche.js` — view changes run a hash-avalanche wave: a 2D-canvas bit-cell front from the last pointerdown, ~half the cells it crosses flip (reseeded per wave). Plain canvas so it works on every tier and without WebGL; off under reduced motion.
+- `widgets/sigil.js` — real SHA-256 (WebCrypto) of a title drawn as a 16×16 = 256-bit grid; changing project flips the differing bits in a cascade. Identity sigil top-left is `sha256("Aaron Alva")`; the caption's is the project title's. No `crypto.subtle` (insecure context) → no sigil, nothing breaks.
+- `widgets/probe.js` — fine-pointer reticle (native cursor kept) reading the IPv4 address under the pointer; over a control it locks to the bounds and runs a zero-trust "auth… → ✓ verified" beat. Hidden while a dialog is open.
+- `widgets/sound.js` — generative WebAudio (drone + step ticks + avalanche blips), off by default, remembered in localStorage, never auto-starts without a gesture.
+- Terminal: `hash <project>` prints the full digest; Ctrl/⌘+K or `/` summons it from any view (`html.term-summoned` shows it on home).
+- `tests/e2e/address.mjs` covers all of it in both motion settings, plus a SwiftShader run that must land on the low tier (no post) and keep working (~27 fps CPU-only). `tests/e2e/_shots.mjs [WxH] [prefix]` is a dev helper for eyeballing screenshots.
+
 ## Fallbacks
 
 - **No WebGL**: `createStage()` returns `null`, `html.no-webgl`; the DOM carries the whole site over a CSS radial backdrop — the work caption with its arrows and Open button, details, contact. Same class while the context is lost.

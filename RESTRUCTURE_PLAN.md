@@ -566,3 +566,17 @@ Not done yet: no project imagery (cards use procedural screens — real
 screenshots or terminal captures from Aaron would be better, and would also
 replace the simulated Vigil `[POC_FOUND]` output still in its dossier);
 sound; a page-to-page refractive wipe.
+
+## Part 10 — address-space layer (branch `address-space`, 2026-10-16)
+
+Aaron's challenge: research cybersecurity design, connect the meanings, and
+make it feel premium/2030 while staying light on low-end devices. Concept:
+**the site is an address space being scanned.** Hilbert-curve floor (IPv4
+census / binvis layout) with scan packets; defence-in-depth perimeter shell
+stopping hostile probes; hash-avalanche view transitions; real SHA-256
+sigils for identity and each project; a probe cursor reading the IPv4
+address under the pointer with a zero-trust verify beat on controls;
+generative sound (opt-in); Ctrl+K terminal. See CLAUDE.md for the files.
+Low end: everything new is either a single cheap draw (curve, probes,
+shell) or a 2D canvas/DOM; SwiftShader lands on the low tier and stays
+usable. Production load stays in the same 130–230 ms band as before.

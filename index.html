@@ -25,8 +25,13 @@
 </head>
 <body>
   <canvas id="scene" aria-hidden="true"></canvas>
+  <canvas class="avalanche" aria-hidden="true"></canvas>
   <a class="skip-link" href="#/work">Skip to work</a>
 
+  <a class="hud-id" href="#/" aria-label="Aaron Alva, home">
+    <canvas class="sigil" aria-hidden="true"></canvas>
+    <span class="hud-id__txt" aria-hidden="true"><b>AA / SEC</b><span class="hud-id__hash">sha256 · identity</span></span>
+  </a>
   <header class="chrome">
     <nav class="nav-pill" aria-label="Primary">
       <a href="#/work" data-nav="work">Work</a>
@@ -39,7 +44,9 @@
         <span aria-hidden="true">GIAC GFACT · Scored 94</span><span aria-hidden="true">TryHackMe · Top 1% · 100+ rooms</span><span aria-hidden="true">Hack The Box · maxthemadman · Apprentice L25</span><span aria-hidden="true">Mutagen · 130+ unit tests</span>
       </div>
     </div>
+    <button type="button" class="sound" aria-pressed="false" hidden>Sound <span class="sound__state">off</span></button>
   </header>
+  <p class="hud-stat" aria-hidden="true"><span class="hud-stat__dot"></span>Perimeter holding · <span data-blocked>0</span> probes deflected <span class="hud-stat__sim">sim</span></p>
 
   <main>
     <section id="view-home" class="view view--home is-active" aria-labelledby="home-title">
@@ -68,6 +75,7 @@
         </ul>
       </div>
       <div class="caption">
+        <div class="caption__sig" aria-hidden="true"><canvas class="sigil"></canvas><code class="caption__hash"></code></div>
         <p class="caption__index"></p>
         <h3 class="caption__title"></h3>
         <p class="caption__kind"></p>
