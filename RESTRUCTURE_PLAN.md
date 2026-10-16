@@ -555,6 +555,13 @@ Tests: `tests/e2e/site.mjs` replaces `content`/`scene`/`polish`;
 and `tests/unit/router.test.js` added; the descent's timeline/volume unit
 tests went with the descent.
 
+Scenery (added after Aaron pointed out the first pass was "a core in a
+void", unlike AT's places): a procedural night data forest of particle
+towers on reflective water with light shafts; home stands down a corridor
+between the towers, and entering work flies up it into a vault of glyph
+pillars and floor rings round the card ring. Scene pass incl. the mirror
+stays < 0.5 ms at 1080p; production load 128–202 ms.
+
 Not done yet: no project imagery (cards use procedural screens — real
 screenshots or terminal captures from Aaron would be better, and would also
 replace the simulated Vigil `[POC_FOUND]` output still in its dossier);

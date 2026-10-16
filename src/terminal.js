@@ -15,6 +15,9 @@ export function createTerminal(form, { go }) {
   const input = form.querySelector('.term__in');
   const history = [];
   let cursor = 0;
+  // Hidden in the markup, so without this script it can't fall back to a
+  // native form submit; shown once the handlers below are attached.
+  form.hidden = false;
 
   const line = (text, cls) => {
     const p = document.createElement('p');
