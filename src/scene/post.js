@@ -64,6 +64,9 @@ export function createPost(renderer, scene, camera, { reducedMotion }) {
   // watchdog tears post FX down.
   const passes = [renderPass, bloom, fluidPass, output, film];
   return {
+    // The scene's programs differ when drawn into the composer's (linear,
+    // un-tonemapped) target rather than the screen; precompile against this.
+    get sceneTarget() { return composer.renderTarget1; },
     render(time, { dive = 0, contact = 0 } = {}) {
       fluidPass.uniforms.uDive.value = dive;
       fluidPass.uniforms.uContact.value = contact;

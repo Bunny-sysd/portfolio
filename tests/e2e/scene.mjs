@@ -9,7 +9,7 @@ const CITY_GLOW_MARGIN = 40; // point-light pixels; tuned against measured count
 // satisfy this on its own the way it could when the clip included the page.
 async function hideChrome(page) {
   await page.evaluate(() => {
-    for (const sel of ['.track', '#to-top', '.mist']) {
+    for (const sel of ['.track', '#to-top', '.nav-pill', '.boot', '.mist']) {
       const el = document.querySelector(sel);
       if (el) el.style.visibility = 'hidden';
     }
@@ -17,7 +17,7 @@ async function hideChrome(page) {
 }
 async function showChrome(page) {
   await page.evaluate(() => {
-    for (const sel of ['.track', '#to-top', '.mist']) {
+    for (const sel of ['.track', '#to-top', '.nav-pill', '.boot', '.mist']) {
       const el = document.querySelector(sel);
       if (el) el.style.removeProperty('visibility');
     }
@@ -60,12 +60,18 @@ for (const viewport of [{ width: 1600, height: 1000 }, { width: 390, height: 844
     const clear = await page.$eval('.mist', (el) => parseFloat(getComputedStyle(el).opacity));
     check(clear < 0.05, `[${tag}] mist clears between layers (${clear})`);
     await scrollToProgress(page, 0, 1500);
+    // Sky samples are taken with the DOM hidden: at 390px the horizon point
+    // falls on the hero's GIAC pill, which made this measure a pill, not sky.
+    await hideChrome(page);
     const [r, , b] = await pixel(page, Math.round(viewport.width / 2), Math.round(viewport.height * 0.52));
+    await showChrome(page);
     check(r > b, `[${tag}] warm dusk near the horizon at the top (r=${r} b=${b})`);
     await scrollToProgress(page, 1, 1500);
     // Sampled on the left: the top-right corner is the nav's frosted glow
     // (post pass), which lifts the sky there on purpose.
+    await hideChrome(page);
     const [r2, g2, b2] = await pixel(page, Math.round(viewport.width * 0.15), 8);
+    await showChrome(page);
     check(r2 + g2 + b2 < 120, `[${tag}] dark night sky at the bottom (${r2},${g2},${b2})`);
     await scrollToProgress(page, 0.40, 1500);
     const brightBeforeReveal = await canvasBrightPixels(page, viewport);

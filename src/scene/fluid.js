@@ -96,7 +96,7 @@ export const FluidShader = {
         vec3 ring = texture2D(tDiffuse, uv + vec2(r.x, 0.0)).rgb + texture2D(tDiffuse, uv - vec2(r.x, 0.0)).rgb
                   + texture2D(tDiffuse, uv + vec2(0.0, r.y)).rgb + texture2D(tDiffuse, uv - vec2(0.0, r.y)).rgb;
         col = mix(col, (col + ring) / 5.0, contact);
-        col = mix(col, vec3(dot(col, vec3(0.3, 0.59, 0.11))), 0.25 * contact) + vec3(0.02, 0.05, 0.07) * contact;
+        col = mix(col, vec3(dot(col, vec3(0.3, 0.59, 0.11))), 0.25 * contact) + vec3(0.006, 0.016, 0.022) * contact;
       }
 
       // Case-study dive: the frame streaks toward the centre like a tunnel —

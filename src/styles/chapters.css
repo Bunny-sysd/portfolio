@@ -98,9 +98,11 @@
   .hero { align-items: center; padding-bottom: 0; }
   .beat--right .beat__inner { margin-left: 0; }
   .beat__inner::before { inset: -32px -24px; }
-  /* Single column: the text spans the whole width, so shade evenly top to bottom. */
+  /* Single column: the text spans the whole width, so shade evenly top to
+     bottom. 0.4, not 0.34: the drifting cloud behind the hero links pushed
+     them as low as 4.4:1 at some moments; this holds them above AA throughout. */
   .hero::before {
-    background: linear-gradient(180deg, rgba(2, 4, 10, 0.18) 0%, rgba(2, 4, 10, 0.34) 14%, rgba(2, 4, 10, 0.34) 86%, rgba(2, 4, 10, 0.18) 100%);
+    background: linear-gradient(180deg, rgba(2, 4, 10, 0.18) 0%, rgba(2, 4, 10, 0.4) 14%, rgba(2, 4, 10, 0.4) 86%, rgba(2, 4, 10, 0.18) 100%);
   }
 }
 

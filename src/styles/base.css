@@ -76,3 +76,13 @@ html:not(.post-live) .nav-pill::before {
 .nav-pill a:hover { color: var(--accent); background: rgba(125, 211, 252, 0.08); }
 .nav-pill__rule { width: 40px; height: 1px; background: rgba(248, 250, 252, 0.45); }
 @media (max-width: 480px) { .nav-pill__rule { width: 18px; } .nav-pill { gap: 6px; } }
+
+/* Boot readout (widgets/boot.js): bottom-left, out of the hero's way. */
+.boot {
+  position: fixed; left: 18px; bottom: 16px; z-index: 5; margin: 0;
+  font: 500 11px/1 var(--font-mono); letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--text-dim); pointer-events: none;
+  transition: opacity 0.6s ease;
+}
+.boot__code { color: var(--accent); }
+.boot.is-done { opacity: 0; }

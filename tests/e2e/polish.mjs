@@ -24,6 +24,15 @@ for (const reduced of [false, true]) {
   const tag = reduced ? 'reduced' : 'motion';
   await withPage({ ...VIEW, reducedMotion: reduced ? 'reduce' : 'no-preference' }, async (page, errors) => {
     await page.waitForFunction(() => document.documentElement.classList.contains('scene-live'));
+    // Shaders compile off the main thread, so loading never freezes the page
+    // (drawing straight away used to block it for ~800 ms).
+    const longest = await page.evaluate(() => new Promise((res) => {
+      const d = []; new PerformanceObserver((l) => l.getEntries().forEach((e) => d.push(e.duration))).observe({ type: 'longtask', buffered: true });
+      setTimeout(() => res(Math.round(Math.max(0, ...d))), 200);
+    }));
+    check(longest < 250, `${tag}: no main-thread freeze while the scene loads (longest task ${longest} ms)`);
+    await page.waitForTimeout(2000);
+    check(!(await page.$('.boot')), `${tag}: boot readout clears once the scene is live`);
     await scrollToProgress(page, 0.2, 2500);
     const quality = await page.evaluate(() => document.documentElement.dataset.quality);
     check(quality === 'full', `${tag}: post FX running (quality=${quality})`);

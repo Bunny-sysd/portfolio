@@ -501,5 +501,17 @@ Landed:
 - Overview ↑ moved under the nav pill (top-left collided with the contact
   beat's eyebrow).
 
-Candidates next: a scrambling loader, project filters, shader warm-up spread across
-frames during load.
+- Load: shaders compile via `compileAsync` before the first draw (killed an
+  ~800 ms main-thread freeze — AT's time-sliced uploads are the same idea),
+  with a small non-blocking "Compiling scene → SCENE ONLINE" readout instead
+  of AT's full-screen loader (the hero must read instantly).
+- Mobile hero shade 0.34 → 0.4: the earlier first frame exposed that the
+  first hero link dipped to ~4.4:1 as clouds drifted behind it (worst case
+  over 6 s of drift is now 5.1:1; every hero line ≥ 4.7:1).
+- scene.mjs sky samples now hide the DOM first — at 390px the "warm dusk"
+  point had been landing on the GIAC credential pill, not the sky. Contact
+  frost tint cut so it doesn't haze the night sky.
+
+Candidates next: project filters (Tools / Research / CTF), precompiling the
+post-pass shaders too (a ~95 ms task remains on the first composer render),
+a diagonal refractive wipe between chapters.

@@ -10,6 +10,7 @@ import { createStage } from './scene/stage.js';
 import { createCameraRig } from './scene/camera.js';
 import { createVolume, mistAt } from './scene/volume.js';
 import { createPost } from './scene/post.js';
+import { createBootReadout } from './widgets/boot.js';
 import { paletteAt, contactOpacity } from './timeline.js';
 
 const reduceQuery = matchMedia('(prefers-reduced-motion: reduce)');
@@ -62,6 +63,21 @@ let lastMist = '';
 let post = stage && stage.settings.postFX ? createPost(stage.renderer, stage.scene, stage.camera, { reducedMotion }) : null;
 // The nav's CSS glow is a stand-in for the post pass's frosted corner.
 root.classList.toggle('post-live', !!post);
+
+// Compile the scene's shaders off the main thread (KHR_parallel_shader_compile
+// where available) before the first draw. Drawing straight away compiled the
+// cloud raymarcher synchronously — an ~800 ms freeze while the hero was
+// already on screen. Programs are keyed by render target, so compile against
+// the one the scene will actually be drawn into.
+let sceneReady = !stage;
+const boot = stage ? createBootReadout(document.body, { reduced: reducedMotion() }) : null;
+if (stage) {
+  const prevTarget = stage.renderer.getRenderTarget();
+  if (post) stage.renderer.setRenderTarget(post.sceneTarget);
+  const compiling = stage.renderer.compileAsync(stage.scene, stage.camera);
+  stage.renderer.setRenderTarget(prevTarget);
+  compiling.catch(() => {}).then(() => { sceneReady = true; });
+}
 
 addEventListener('resize', () => {
   if (!stage) return;
@@ -136,7 +152,7 @@ function frame(now) {
   scroll.raf(now);
   const p = scroll.progress();
   chapters.update(p);
-  if (!stage || contextLost || document.hidden) return;
+  if (!stage || !sceneReady || contextLost || document.hidden) return;
   const dt = Math.min(0.1, Math.max(0, (now - film.last) / 1000)); film.last = now;
   if (reducedMotion()) { film.p = p; film.speed = 0; film.dive = film.diveTarget; } else {
     const prev = film.p;
@@ -161,6 +177,6 @@ function frame(now) {
   watchdog(now);
   if (post) post.render(now / 1000, { dive: reducedMotion() ? 0 : film.dive, contact: contactOpacity(film.p) });
   else stage.renderer.render(stage.scene, stage.camera);
-  if (!sceneLive) { sceneLive = true; root.classList.add('scene-live'); }
+  if (!sceneLive) { sceneLive = true; root.classList.add('scene-live'); boot?.done(); }
 }
 requestAnimationFrame(frame);
