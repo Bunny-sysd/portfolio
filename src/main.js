@@ -38,7 +38,7 @@ const caseStudies = initCaseStudies({ scroll: { stop() {}, start() {} }, onDive:
 // ── address-space layer: avalanche transitions, sigils, probe, sound ─────
 const avalanche = createAvalanche(document.querySelector('.avalanche'), { reduced: reducedMotion });
 const sound = createSound(document.querySelector('.sound'));
-createProbe(document, { reduced: reducedMotion });
+createProbe(document, { reduced: reducedMotion, gravity: world ? () => world.hole.screen : null });
 const idSigil = createSigil(document.querySelector('.hud-id .sigil'), { reduced: reducedMotion });
 idSigil.set('Aaron Alva').then((hex) => { if (hex) document.querySelector('.hud-id__hash').textContent = `sha256 ${hex.slice(0, 8)}…`; });
 const capSigil = createSigil(document.querySelector('.caption .sigil'), { reduced: reducedMotion });

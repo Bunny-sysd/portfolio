@@ -18,11 +18,18 @@ const towerVert = /* glsl */`
   varying vec3 vColor;
   varying float vAlpha;
   void main() {
-    vec4 mv = modelViewMatrix * vec4(position, 1.0);
+    // The hole's pull: towers lean in toward it, more with height and with
+    // nearness (∝ 1/r²) — the whole forest is bent round the mass.
+    vec3 p = position;
+    float h = p.y - ${FLOOR_Y.toFixed(1)};
+    vec2 toC = -p.xz;
+    float rr = max(length(toC), 1.0);
+    float lean = min(46.0 / (rr * rr), 1.6) * smoothstep(0.0, 22.0, h) * (h / 6.0);
+    p.xz += toC / rr * min(lean, rr - 2.0);
+    vec4 mv = modelViewMatrix * vec4(p, 1.0);
     gl_Position = projectionMatrix * mv;
     float dist = -mv.z;
     // Data flowing up each tower: a soft bright band climbing on a loop.
-    float h = position.y - ${FLOOR_Y.toFixed(1)};
     float band = smoothstep(0.82, 1.0, fract(h / max(aInfo.y, 1.0) * 0.6 - uTime * 0.12 + aInfo.x));
     float rack = 0.35 + 0.65 * step(0.5, fract(h * 1.6 + aInfo.x * 7.0));
     vec3 cool = vec3(0.10, 0.62, 0.72), warm = vec3(0.95, 0.66, 0.30), glyph = vec3(0.55, 0.85, 1.0);
@@ -131,7 +138,11 @@ const WaterShader = {
     float noise(vec2 p) { vec2 i = floor(p), f = fract(p); f = f * f * (3.0 - 2.0 * f);
       return mix(mix(hash(i), hash(i + vec2(1, 0)), f.x), mix(hash(i + vec2(0, 1)), hash(i + vec2(1, 1)), f.x), f.y); }
     void main() {
+      // Space pulled in toward the hole: the survey grid and rings are drawn
+      // in coordinates dragged inward near the centre.
       vec2 w = vWorld.xz;
+      float rw = length(w);
+      w -= w / max(rw, 1e-3) * 3.2 * exp(-rw / 5.0);
       vec2 ripple = vec2(noise(w * 0.9 + uTime * 0.25), noise(w * 0.9 - uTime * 0.2 + 4.0)) - 0.5;
       vec4 uv = vUv; uv.xy += ripple * uv.w * 0.008;
       vec3 refl = texture2DProj(tDiffuse, uv).rgb;

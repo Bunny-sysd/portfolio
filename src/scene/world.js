@@ -5,6 +5,8 @@ import { createNetFloor } from './netfloor.js';
 import { createPerimeter } from './perimeter.js';
 import { createCensus } from './census.js';
 import { createBlackHole } from './blackhole.js';
+import { createInfall } from './infall.js';
+import { createStars } from './stars.js';
 
 // The whole 3D world: a black hole (the sinkhole), orbiting glass cards, a far dust field,
 // and a camera that moves between per-view marks. Views ease into each other
@@ -65,7 +67,9 @@ export function createWorld(stage, { projects, reducedMotion }) {
   const hole = createBlackHole({ tier: stage.tier, reducedMotion });
   // The glass cards refract the backdrop *with* the hole traced into it.
   cards.cards.forEach((c) => { c.material.uniforms.tBg.value = hole.target.texture; });
-  scene.add(census.object, env.group, net.object, perimeter.group, hole.group, cards.group, dust);
+  const infall = createInfall({ tier: stage.tier });
+  const stars = createStars({ tier: stage.tier });
+  scene.add(stars.object, census.object, env.group, net.object, perimeter.group, infall.object, hole.group, cards.group, dust);
   // The water's mirror re-renders the scene: keep the lens out of it (it
   // samples this frame's backdrop in screen space, meaningless in the mirror).
   const mirrorRender = env.water.onBeforeRender;
@@ -172,6 +176,8 @@ export function createWorld(stage, { projects, reducedMotion }) {
       census.update({ time: tm, enter: eased.enter, tint });
       // The probes stand down while a project is open, so the card reads clean.
       perimeter.update({ time: tm, dpr: renderer.getPixelRatio(), fade: 1 - 0.8 * eased.open });
+      infall.update({ time: tm, fade: 1 - 0.6 * eased.open });
+      stars.update({ dpr: renderer.getPixelRatio() });
       renderer.getDrawingBufferSize(drawRes);
       hole.update({ time, camera, res: drawRes, pulse: eased.pulse, focus: eased.focus });
       return { open: eased.open, enter: eased.enter };
@@ -196,7 +202,7 @@ export function createWorld(stage, { projects, reducedMotion }) {
     },
     dispose() {
       removeEventListener('pointermove', onMove);
-      hole.dispose(); cards.dispose(); env.dispose(); net.dispose(); perimeter.dispose(); census.dispose();
+      hole.dispose(); cards.dispose(); env.dispose(); net.dispose(); perimeter.dispose(); census.dispose(); infall.dispose(); stars.dispose();
       dust.geometry.dispose(); dust.material.map.dispose(); dust.material.dispose();
     },
   };

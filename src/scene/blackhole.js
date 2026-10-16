@@ -22,6 +22,10 @@ import { FullScreenQuad } from 'three/examples/jsm/postprocessing/Pass.js';
 // the innermost stable orbit (3 rs); gas shears Keplerian-fast inward.
 export const RS = 0.55;          // Schwarzschild radius (world units)
 export const HORIZON = RS * 2.6; // apparent shadow radius, ≈ 2.6 rs
+// The disk's frame, shared with the infalling matter (infall.js).
+export const AXIS = new THREE.Vector3(0, 1, 0).applyEuler(new THREE.Euler(0.2, 0, -0.1)).normalize();
+export const E1 = new THREE.Vector3(1, 0, 0).projectOnPlane(AXIS).normalize();
+export const E2 = new THREE.Vector3().crossVectors(AXIS, E1).normalize();
 const BOUND = 9.0;               // ray-traced sphere round the hole
 const LENS_R = 12.0;             // world radius of the drawn disc
 const R_IN = RS * 3.0, R_OUT = 4.4;
@@ -168,9 +172,7 @@ const copyMat = new THREE.ShaderMaterial({
 });
 
 export function createBlackHole({ tier, reducedMotion }) {
-  const axis = new THREE.Vector3(0, 1, 0).applyEuler(new THREE.Euler(0.2, 0, -0.1)).normalize();
-  const e1 = new THREE.Vector3(1, 0, 0).projectOnPlane(axis).normalize();
-  const e2 = new THREE.Vector3().crossVectors(axis, e1).normalize();
+  const axis = AXIS, e1 = E1, e2 = E2;
   const geometry = new THREE.PlaneGeometry(2 * LENS_R, 2 * LENS_R);
   // Weak devices trace fewer, longer steps with simpler gas.
   const steps = tier === 'low' ? 32 : tier === 'mid' ? 96 : 140;
@@ -219,6 +221,7 @@ export function createBlackHole({ tier, reducedMotion }) {
     group: lens,
     lens,
     target,
+    screen: { x: -1e4, y: -1e4, r: 0 },
     // Drawn-at-hole scene objects (the plane faces the camera); `glow` and
     // `time` drive the disk.
     update({ time, camera, res, pulse, focus }) {
@@ -228,6 +231,10 @@ export function createBlackHole({ tier, reducedMotion }) {
       tracer.quaternion.copy(camera.quaternion);
       tracer.updateMatrixWorld();
       const [cx, cy, cr] = onScreen(camera, res.x, res.y);
+      // In CSS px, for DOM effects (the probe feels the pull).
+      this.screen.x = cx / res.x * innerWidth;
+      this.screen.y = innerHeight - cy / res.y * innerHeight;
+      this.screen.r = cr / res.x * innerWidth * (HORIZON / LENS_R);
       blit.uniforms.uRes.value.copy(res);
       blit.uniforms.uScreenC.value.set(cx, cy);
       blit.uniforms.uScreenR.value = cr;

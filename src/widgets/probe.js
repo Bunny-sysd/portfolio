@@ -7,7 +7,7 @@ import { toIPv4 } from '../hilbert.js';
 // nothing is trusted by position. Fine pointers only; the native cursor stays.
 const TARGETS = 'a, button, input, textarea, [tabindex="0"]';
 
-export function createProbe(doc, { reduced }) {
+export function createProbe(doc, { reduced, gravity }) {
   const fine = matchMedia('(hover: hover) and (pointer: fine)');
   const el = doc.createElement('div');
   el.className = 'probe';
@@ -18,17 +18,34 @@ export function createProbe(doc, { reduced }) {
   const root = doc.documentElement;
 
   const pos = { x: -100, y: -100, tx: -100, ty: -100, w: 22, h: 22, tw: 22, th: 22 };
+  const ptr = { x: -100, y: -100 }; // the real pointer; tx/ty is where the reticle is drawn
   let lock = null, lockAt = 0, raf = 0, lastText = '';
 
   const setText = (t) => { if (t !== lastText) { read.textContent = t; lastText = t; } };
+  let horizon = false;
   function tick(now) {
     raf = 0;
+    horizon = false;
     if (lock && !lock.isConnected) lock = null;
     if (lock) {
       const r = lock.getBoundingClientRect();
       pos.tx = r.left + r.width / 2; pos.ty = r.top + r.height / 2;
       pos.tw = r.width + 12; pos.th = r.height + 10;
-    } else { pos.tw = pos.th = root.classList.contains('is-pointing') ? 34 : 22; }
+    } else {
+      pos.tw = pos.th = root.classList.contains('is-pointing') ? 34 : 22;
+      pos.tx = ptr.x; pos.ty = ptr.y;
+      // Gravity: near the black hole the reticle is dragged toward it (∝ 1/d²)
+      // and squeezed along the pull — a small spaghettification.
+      const g = gravity?.();
+      if (g && g.r > 0) {
+        const dx = g.x - pos.tx, dy = g.y - pos.ty;
+        const d = Math.hypot(dx, dy);
+        const pull = Math.min(0.45, (g.r * g.r * 1.4) / (d * d + 1));
+        pos.tx += dx * pull; pos.ty += dy * pull;
+        pos.tw *= 1 - pull * 0.8;
+        if (d < g.r * 1.15) horizon = true;
+      }
+    }
     const k = reduced() ? 1 : 0.28;
     let moving = false;
     for (const [a, b] of [['x', 'tx'], ['y', 'ty'], ['w', 'tw'], ['h', 'th']]) {
@@ -45,6 +62,8 @@ export function createProbe(doc, { reduced }) {
       setText(done ? '✓ verified' : 'auth…');
       el.classList.toggle('is-verified', done);
       if (!done) moving = true;
+    } else if (horizon) {
+      setText('⚠ event horizon');
     } else if (root.classList.contains('is-pointing')) {
       setText('▸ open');
     } else {
@@ -59,7 +78,7 @@ export function createProbe(doc, { reduced }) {
   fine.addEventListener?.('change', enable);
   addEventListener('pointermove', (e) => {
     if (e.pointerType !== 'mouse') return;
-    pos.tx = e.clientX; pos.ty = e.clientY;
+    ptr.x = e.clientX; ptr.y = e.clientY;
     const t = e.target.closest?.(TARGETS);
     if (t !== lock) {
       lock = t && !t.closest('dialog, .term__out') ? t : null;
