@@ -22,6 +22,10 @@ body {
   font: 400 17px/1.6 var(--font-sans);
   -webkit-font-smoothing: antialiased;
 }
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
 a { color: var(--accent); text-underline-offset: 3px; }
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
 
@@ -36,7 +40,7 @@ html.no-webgl #scene, html.no-webgl .mist { display: none; }
 html.scroll-locked { overflow: hidden; }
 
 .to-top {
-  position: fixed; top: 18px; right: 18px; z-index: 5;
+  position: fixed; top: 18px; left: 18px; z-index: 5;
   font: 500 12px/1 var(--font-mono); letter-spacing: 0.14em; text-transform: uppercase;
   color: var(--text); text-decoration: none;
   padding: 10px 14px; border-radius: 999px;
@@ -46,3 +50,27 @@ html.scroll-locked { overflow: hidden; }
 }
 .to-top.is-live { pointer-events: auto; }
 .to-top:not(.is-live) { visibility: hidden; } /* out of the tab order until it shows */
+
+/* Section nav, top right. The glow beneath it is the frosted-glass corner in
+   the post pass (scene/fluid.js); without post FX (low tier, watchdog, no
+   WebGL) the soft ::before haze here stands in for it. */
+.nav-pill {
+  position: fixed; top: 18px; right: 18px; z-index: 5;
+  display: flex; align-items: center; gap: 14px;
+  padding: 6px 8px; border-radius: 999px;
+  background: rgba(2, 4, 10, 0.55); backdrop-filter: blur(10px);
+  border: 1px solid rgba(125, 211, 252, 0.22);
+  box-shadow: inset 0 1px 0 rgba(248, 250, 252, 0.08), 0 10px 30px -12px rgba(125, 211, 252, 0.45);
+}
+html:not(.post-live) .nav-pill::before {
+  content: ''; position: absolute; inset: -40px -60px -70px; z-index: -1; pointer-events: none;
+  background: radial-gradient(closest-side, rgba(125, 211, 252, 0.16), rgba(125, 211, 252, 0));
+}
+.nav-pill a {
+  font: 500 12px/1 var(--font-mono); letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--text); text-decoration: none; padding: 8px 10px; border-radius: 999px;
+  transition: color 0.2s ease, background 0.2s ease;
+}
+.nav-pill a:hover { color: var(--accent); background: rgba(125, 211, 252, 0.08); }
+.nav-pill__rule { width: 40px; height: 1px; background: rgba(248, 250, 252, 0.45); }
+@media (max-width: 480px) { .nav-pill__rule { width: 18px; } .nav-pill { gap: 6px; } }

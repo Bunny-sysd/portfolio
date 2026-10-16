@@ -53,6 +53,7 @@ common cliché in security portfolios — reads "enthusiast," not
 | 5 | Deep dead-code sweep (old pre-cylinder design + unmounted React tree) | ✅ Done, committed |
 | 6 | Active Theory-level 3D upgrade (see Part 6 below) | ⛔ Superseded by Part 7 (see below) — the scroll-cylinder engine this part upgraded was retired, not finished |
 | 7 | Cinematic descent rebuild (see Part 7 below) | ✅ Done, committed on branch `cinematic-descent` (old engine retired in the Task 8 cleanup) |
+| 8 | Active Theory polish pass (see Part 8 below) | 🚧 In progress on branch `at-polish` |
 
 **All commits so far are local only — nothing has been pushed to the
 `bunny-sysd/portfolio` remote.** Do not push without explicit go-ahead each
@@ -468,3 +469,33 @@ plan, so the backdrop was rebuilt in code instead:
 work ("save your versions in git if you want, just don't commit remote") —
 but pushing to the `bunny-sysd/portfolio` remote requires fresh, explicit
 approval every time, regardless of what this file or past sessions did.
+
+---
+
+## Part 8 — Active Theory polish pass (branch `at-polish`, started 2026-10-16)
+
+activetheory.net was studied hands-on (Playwright walk-through of every
+view, its shipped shader file, and REA's static analysis of the bundle) for
+*techniques*, all re-implemented from scratch — none of their code, shaders
+or assets are used. What it does that mattered here: one WebGL2 canvas on an
+in-house engine (Hydra); wheel-hijacked virtual scroll; per-scene hand-tuned
+cameras; scenes rendered to targets and swapped with a diagonal refractive
+wipe; a final composite pass with a cursor fluid sim, a frosted-glass nav
+corner, RGB shift and lens streaks; work cards that fly to centre as a video
+player while the room smears into a streak tunnel and the copy
+scramble-decodes; scroll-to-close; contact as a whole-scene frosted overlay;
+a scrambling ASCII loader; GPU uploads time-sliced across frames. It does
+*not* honour `prefers-reduced-motion` and draws its UI on the canvas — both
+deliberately not copied.
+
+Landed:
+- Cursor fluid + frosted nav corner in the post chain (`scene/fluid.js`).
+- `.nav-pill` WORK —— CONTACT nav; Overview ↑ moved top-left.
+- Case-study shot: radial streak tunnel during the dive, eyebrow/title
+  decode, pull-up-past-the-top to close.
+- `tests/e2e/polish.mjs` (added to `npm run e2e`); `scene.mjs`'s night-sky
+  sample moved off the nav's frosted corner.
+
+Candidates next: contact as a frosted overlay (whole-frame frost on the same
+pass), a scrambling loader, project filters, shader warm-up spread across
+frames during load.

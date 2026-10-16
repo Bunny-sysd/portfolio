@@ -32,6 +32,15 @@ document.getElementById('to-top').addEventListener('click', (e) => {
   scroll.scrollToProgress(0);
 });
 
+// Pill nav: glide the film to a beat instead of jumping (the hrefs still work
+// without JS, since every beat is a real anchor in the track).
+for (const a of document.querySelectorAll('.nav-pill a')) {
+  a.addEventListener('click', (e) => {
+    e.preventDefault();
+    scroll.scrollToProgress(Number(a.dataset.at));
+  });
+}
+
 const form = document.getElementById('contact-form');
 form.addEventListener('submit', (e) => {
   e.preventDefault();
@@ -51,6 +60,8 @@ const volume = stage && createVolume(stage.scene, { tier: stage.tier, reducedMot
 const mistEl = document.querySelector('.mist');
 let lastMist = '';
 let post = stage && stage.settings.postFX ? createPost(stage.renderer, stage.scene, stage.camera, { reducedMotion }) : null;
+// The nav's CSS glow is a stand-in for the post pass's frosted corner.
+root.classList.toggle('post-live', !!post);
 
 addEventListener('resize', () => {
   if (!stage) return;
@@ -102,6 +113,7 @@ function stepDown() {
   } else if (watch.step < 2 && post) {
     post.dispose();
     post = null;
+    root.classList.remove('post-live');
     watch.step = 2;
   } else if (watch.step < 3) {
     volume.reduceSteps();
@@ -147,7 +159,7 @@ function frame(now) {
     mistEl.style.setProperty('--mist-color', `#${hex}`);
   }
   watchdog(now);
-  if (post) post.render(now / 1000);
+  if (post) post.render(now / 1000, { dive: reducedMotion() ? 0 : film.dive });
   else stage.renderer.render(stage.scene, stage.camera);
   if (!sceneLive) { sceneLive = true; root.classList.add('scene-live'); }
 }

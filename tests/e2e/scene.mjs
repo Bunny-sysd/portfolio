@@ -63,7 +63,9 @@ for (const viewport of [{ width: 1600, height: 1000 }, { width: 390, height: 844
     const [r, , b] = await pixel(page, Math.round(viewport.width / 2), Math.round(viewport.height * 0.52));
     check(r > b, `[${tag}] warm dusk near the horizon at the top (r=${r} b=${b})`);
     await scrollToProgress(page, 1, 1500);
-    const [r2, g2, b2] = await pixel(page, Math.round(viewport.width * 0.85), 8);
+    // Sampled on the left: the top-right corner is the nav's frosted glow
+    // (post pass), which lifts the sky there on purpose.
+    const [r2, g2, b2] = await pixel(page, Math.round(viewport.width * 0.15), 8);
     check(r2 + g2 + b2 < 120, `[${tag}] dark night sky at the bottom (${r2},${g2},${b2})`);
     await scrollToProgress(page, 0.40, 1500);
     const brightBeforeReveal = await canvasBrightPixels(page, viewport);

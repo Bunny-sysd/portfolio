@@ -742,3 +742,17 @@ dialog.case.is-closing::backdrop { animation: case-fade-out 0.42s ease both; }
   dialog.case[open] .case__head, dialog.case[open] .case__body { animation: none; }
   dialog.case.is-closing { animation: case-fade-out 0.3s ease both; }
 }
+
+/* "Scroll up to close" hint at the very top of a dossier; its bar fills with
+   --pull (0–1) as the reader keeps pulling past the top (case-study.js). */
+.case__pull {
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  margin: 0; padding: 14px 0 4px;
+  font: 500 11px/1 var(--font-mono); letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--text-dim);
+}
+.case__pull i {
+  display: block; width: 72px; height: 2px; border-radius: 2px;
+  background: linear-gradient(90deg, var(--accent) calc(var(--pull, 0) * 100%), rgba(248, 250, 252, 0.18) 0);
+}
+@media (hover: none) { .case__pull { display: none; } } /* touch: no wheel to pull with */
