@@ -13,7 +13,11 @@ export function check(cond, msg) {
 
 export async function withPage(ctxOpts, fn, launchArgs = GPU_ARGS) {
   const browser = await chromium.launch({ args: launchArgs });
-  const page = await browser.newPage(ctxOpts);
+  // The establishing shot plays once per session; suites skip it unless they
+  // ask for it ({ intro: true }).
+  const { intro = false, ...opts } = ctxOpts;
+  const page = await browser.newPage(opts);
+  if (!intro) await page.addInitScript(() => { try { sessionStorage.setItem('aa-intro', 'seen'); } catch {} });
   const errors = [];
   page.on('pageerror', (e) => errors.push(e.message));
   page.on('console', (m) => { if (m.type() === 'error') errors.push(m.text()); });

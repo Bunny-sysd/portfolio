@@ -586,3 +586,8 @@ per-project world tint, card scan line, transition glitch in the film pass,
 TLS-handshake boot + centre avalanche on first frame, live AES-GCM
 ciphertext under the contact message, terminal `nmap`/`traceroute`.
 All tests pass; production load 150–237 ms.
+
+Round 3 (cinematic, after researching how award sites stage 3D — spline
+camera paths, "one or two strong moments", film lens language): a
+letterboxed establishing shot on first visit, a dolly zoom when a project
+opens, anamorphic streak flares and a hand-held camera breath.

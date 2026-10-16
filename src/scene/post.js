@@ -7,7 +7,7 @@ import { OutputPass } from 'three/examples/jsm/postprocessing/OutputPass.js';
 import { createFluid, FluidShader } from './fluid.js';
 
 const FilmShader = {
-  uniforms: { tDiffuse: { value: null }, uTime: { value: 0 }, uGrain: { value: 0.03 }, uVignette: { value: 0.32 }, uGlitch: { value: 0 } },
+  uniforms: { tDiffuse: { value: null }, uTime: { value: 0 }, uGrain: { value: 0.03 }, uVignette: { value: 0.32 }, uGlitch: { value: 0 }, uStreak: { value: 0.16 } },
   vertexShader: /* glsl */`
     varying vec2 vUv;
     void main() { vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }`,
@@ -17,6 +17,7 @@ const FilmShader = {
     uniform float uGrain;
     uniform float uVignette;
     uniform float uGlitch;
+    uniform float uStreak;
     varying vec2 vUv;
     float hash(vec2 p) { return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453); }
     void main() {
@@ -30,6 +31,18 @@ const FilmShader = {
       uv.x += jump * 0.08 * g;
       float split = 0.007 * g;
       vec3 col = vec3(texture2D(tDiffuse, uv + vec2(split, 0.0)).r, texture2D(tDiffuse, uv).g, texture2D(tDiffuse, uv - vec2(split, 0.0)).b);
+      // Anamorphic streaks: bright points smear sideways into thin blue
+      // lines, the way cylindrical cinema lenses flare. 16 taps, spread
+      // quadratically so the streak is long but cheap.
+      vec3 streak = vec3(0.0);
+      for (int i = 1; i <= 8; i++) {
+        float fi = float(i);
+        float o = fi * fi * 0.0018;
+        vec3 a = texture2D(tDiffuse, uv + vec2(o, 0.0)).rgb;
+        vec3 b = texture2D(tDiffuse, uv - vec2(o, 0.0)).rgb;
+        streak += (max(a - 0.72, 0.0) + max(b - 0.72, 0.0)) * (1.0 - fi / 9.0);
+      }
+      col += vec3(0.35, 0.62, 1.0) * dot(streak, vec3(0.333)) * uStreak;
       vec2 c = vUv - 0.5;
       col *= 1.0 - uVignette * smoothstep(0.1, 0.55, dot(c, c));
       col += (hash(gl_FragCoord.xy + fract(uTime) * 97.0) - 0.5) * uGrain;

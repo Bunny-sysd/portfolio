@@ -240,6 +240,27 @@ html.no-webgl .hud-stat, html[data-view="detail"] .hud-stat, html[data-view="con
 .caption__sig .sigil { filter: drop-shadow(0 0 10px rgba(125, 211, 252, 0.3)); }
 .caption__hash { font: 400 9px var(--font-mono); letter-spacing: 0.08em; text-transform: none; color: var(--text-dim); white-space: nowrap; }
 
+/* Establishing shot: 2.39:1 letterbox bars, slate in the bottom bar; the
+   home copy waits for the camera to land. */
+.letterbox { position: fixed; inset: 0; z-index: 8; pointer-events: none; }
+.letterbox::before, .letterbox::after {
+  content: ''; position: absolute; left: 0; right: 0; height: max(0px, calc((100vh - 100vw / 2.39) / 2)); min-height: 7vh;
+  background: #000; transform: scaleY(0); transition: transform 0.9s var(--ease);
+}
+.letterbox::before { top: 0; transform-origin: top; }
+.letterbox::after { bottom: 0; transform-origin: bottom; }
+.letterbox p { position: absolute; z-index: 1; left: 50%; transform: translateX(-50%); margin: 0; opacity: 0; transition: opacity 0.6s; white-space: nowrap;
+  font: 500 11px var(--font-mono); letter-spacing: 0.32em; text-transform: uppercase; color: var(--text-dim); }
+.letterbox__slate { bottom: 3.4vh; color: var(--text) !important; }
+.letterbox__slate span { color: var(--accent); }
+.letterbox__skip { top: 3vh; font-size: 9px !important; }
+html.is-intro .letterbox::before, html.is-intro .letterbox::after { transform: scaleY(1); }
+html.is-intro .letterbox p { opacity: 1; transition-delay: 0.5s; }
+.home > * { transition: opacity 0.9s var(--ease), transform 0.9s var(--ease); }
+html.is-intro .home > * { opacity: 0; transform: translateY(14px); }
+html.is-intro .hud-stat, html.is-intro .hud-id, html.is-intro .chrome { opacity: 0; }
+.hud-id, .chrome { transition: opacity 0.8s; }
+
 /* Contact: the message as ciphertext, live. */
 .cipher { margin: 0; display: grid; gap: 4px; }
 .cipher__label { font: 500 9px var(--font-mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-dim); }

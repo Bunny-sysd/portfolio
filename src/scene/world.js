@@ -24,6 +24,17 @@ MARKS.contact = MARKS.work;
 const PORTRAIT_HOME = { pos: new THREE.Vector3(0, -0.6, 27.0), look: new THREE.Vector3(0, -4.4, 0), fov: 46 };
 const PORTRAIT_WORK = { pos: new THREE.Vector3(0, 2.4, 19.0), look: new THREE.Vector3(0, 0.0, 2.5), fov: 50 };
 
+// The establishing shot: a crane-down from high over the address space,
+// through the towers, onto the home mark. Camera and aim each ride a
+// Catmull-Rom spline (the aim slightly ahead of the camera, so it always
+// faces where it's going).
+const INTRO_S = 6.0;
+const introPath = (end) => ({
+  pos: new THREE.CatmullRomCurve3([new THREE.Vector3(26, 38, 70), new THREE.Vector3(14, 20, 52), new THREE.Vector3(3, 5, 40), end.pos.clone()]),
+  look: new THREE.CatmullRomCurve3([new THREE.Vector3(0, -3, -10), new THREE.Vector3(-1, -1, -4), new THREE.Vector3(-3, 0.4, -1), end.look.clone()]),
+});
+const smoothstep = (t) => t * t * (3 - 2 * t);
+
 function createDust(count = 2500) {
   const pos = new Float32Array(count * 3);
   for (let i = 0; i < count; i++) {
@@ -77,6 +88,7 @@ export function createWorld(stage, { projects, reducedMotion }) {
   const tint = HOME_TINT.clone();
   const tintTarget = new THREE.Color();
   const eased = { enter: 0, open: 0, focus: 0, pulse: 0, spin: 0, last: 0 };
+  let intro = null; // { t: 0 → 1, path }
   const setSize = () => { cards.setSize(innerWidth, innerHeight, renderer.getPixelRatio()); env.setSize(innerWidth, innerHeight); };
   setSize();
 
@@ -84,6 +96,15 @@ export function createWorld(stage, { projects, reducedMotion }) {
     cards,
     perimeter,
     setSize,
+    // Runs the establishing shot; resolves done() on finish or skip.
+    playIntro() {
+      if (reducedMotion()) return false;
+      intro = { t: 0, path: introPath(camera.aspect < 0.8 ? PORTRAIT_HOME : MARKS.home) };
+      return true;
+    },
+    // Any input cuts the shot: the camera glides from wherever it is.
+    skipIntro() { intro = null; },
+    get introPlaying() { return !!intro; },
     // state: { view, spin, visible: Set<id>, openId, pulse }
     update(state, time) {
       const dt = eased.last ? Math.min(0.1, time - eased.last) : 1 / 60;
@@ -102,16 +123,32 @@ export function createWorld(stage, { projects, reducedMotion }) {
       const portrait = camera.aspect < 0.8;
       let mark = MARKS[state.view] || MARKS.home;
       if (portrait) mark = mark === MARKS.home ? PORTRAIT_HOME : PORTRAIT_WORK;
-      base.lerp(mark.pos, ease(2.6));
-      look.lerp(mark.look, ease(2.6));
+      if (intro) {
+        intro.t = Math.min(1, intro.t + dt / INTRO_S);
+        const k = smoothstep(intro.t);
+        intro.path.pos.getPoint(k, base);
+        intro.path.look.getPoint(Math.min(1, k + 0.02), look);
+        if (intro.t >= 1) intro = null;
+      } else {
+        base.lerp(mark.pos, ease(2.6));
+        look.lerp(mark.look, ease(2.6));
+      }
       if (snap) smooth.set(0, 0); else smooth.lerp(pointer.clone().clampScalar(-1, 1), ease(2));
+      // A breathing, hand-held camera: two slow incommensurate sines, a few
+      // centimetres — off under reduced motion.
+      const hx = snap ? 0 : Math.sin(time * 0.63) * 0.035 + Math.sin(time * 1.37) * 0.015;
+      const hy = snap ? 0 : Math.sin(time * 0.81 + 1.7) * 0.025 + Math.sin(time * 1.91) * 0.01;
       camera.position.set(
-        base.x + smooth.x * 0.6 * (1 - eased.open),
-        base.y + smooth.y * 0.35 * (1 - eased.open),
+        base.x + smooth.x * 0.6 * (1 - eased.open) + hx,
+        base.y + smooth.y * 0.35 * (1 - eased.open) + hy,
         base.z,
       );
       camera.lookAt(look);
-      const fov = mark.fov + eased.pulse * 4;
+      // Opening a project is a dolly zoom (the "Vertigo" shot): the lens
+      // widens mid-move while the card is pulled in to hold its size, so the
+      // world behind stretches away. Peaks halfway, back to the mark's lens.
+      const dolly = snap ? 0 : Math.sin(Math.PI * eased.open) * 24;
+      const fov = mark.fov + eased.pulse * 4 + dolly;
       if (Math.abs(camera.fov - fov) > 0.01) { camera.fov = fov; camera.updateProjectionMatrix(); }
       camera.updateMatrixWorld();
 
@@ -119,7 +156,9 @@ export function createWorld(stage, { projects, reducedMotion }) {
       ray.setFromCamera(pointer, camera);
       if (!snap && pointerSeen && ray.ray.intersectPlane(plane, hit)) core.update({ time, pulse: eased.pulse, focus: eased.focus, dpr: renderer.getPixelRatio(), pointer: hit });
       else core.update({ time, pulse: eased.pulse, focus: eased.focus, dpr: renderer.getPixelRatio(), pointer: hit.set(99, 99, 99) });
-      cards.update({ time, spin: eased.spin, visible: state.visible, openId: state.openId, open: eased.open, camera, enter: eased.enter });
+      const half = (deg) => Math.tan((deg * Math.PI) / 360);
+      const fillDist = 4.6 * half(mark.fov) / half(camera.fov);
+      cards.update({ time, spin: eased.spin, visible: state.visible, openId: state.openId, open: eased.open, camera, enter: eased.enter, fillDist });
       dust.rotation.y = snap ? 0 : time * 0.01;
       env.update({ time, dpr: renderer.getPixelRatio(), enter: eased.enter });
       const tm = snap ? 0 : time;

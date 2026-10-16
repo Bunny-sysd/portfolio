@@ -122,6 +122,28 @@ if (stage) {
   Promise.all(compiling).catch(() => {}).then(() => { sceneReady = true; });
 }
 
+// ── establishing shot ────────────────────────────────────────────────────
+// Once per session, landing on home: letterboxed crane-down onto the home
+// mark, copy held back until it lands. Any input cuts it; reduced motion and
+// deep links never see it.
+const INTRO_KEY = 'aa-intro';
+let introOn = false;
+const seenIntro = () => { try { return sessionStorage.getItem(INTRO_KEY) === 'seen'; } catch { return true; } };
+const cut = () => { if (introOn) world.skipIntro(); };
+const CUT_EVENTS = ['wheel', 'pointerdown', 'keydown', 'touchstart'];
+function startIntro() {
+  if (seenIntro() || views.state.view !== 'home' || !world.playIntro()) return;
+  introOn = true;
+  root.classList.add('is-intro');
+  CUT_EVENTS.forEach((ev) => addEventListener(ev, cut, { passive: true, capture: true }));
+}
+function endIntro() {
+  introOn = false;
+  root.classList.remove('is-intro');
+  CUT_EVENTS.forEach((ev) => removeEventListener(ev, cut, { capture: true }));
+  try { sessionStorage.setItem(INTRO_KEY, 'seen'); } catch { /* private mode: replays, harmless */ }
+}
+
 // ── FPS watchdog ─────────────────────────────────────────────────────────
 // Steps quality down one notch per sustained slump (two bad 90-frame windows
 // in a row): lower resolution, then post FX off. Tab switches and one-off
@@ -185,6 +207,8 @@ function frame(now) {
     sceneLive = true; root.classList.add('scene-live'); boot?.done();
     // Channel up: the first frame decrypts out from the centre.
     if (avalanche.trigger(innerWidth / 2, innerHeight / 2)) film.glitch = 0.7;
+    startIntro();
   }
+  if (introOn && !world.introPlaying) endIntro();
 }
 requestAnimationFrame(frame);

@@ -106,7 +106,7 @@ export function createCards(projects, { reducedMotion }) {
     // spin: carousel position in slots (fractional while gliding); visible:
     // ids passing the filter; openId: the project in detail view; open: 0–1
     // eased detail transition; camera: to place the open card in front of it.
-    update({ time, spin, visible, openId, open, camera, enter }) {
+    update({ time, spin, visible, openId, open, camera, enter, fillDist = 4.6 }) {
       const order = cards.filter((c) => visible.has(c.project.id));
       const n = Math.max(1, order.length);
       const dt = 1 / 60;
@@ -131,7 +131,7 @@ export function createCards(projects, { reducedMotion }) {
         if (c.open > 0.001) {
           // In front of the camera, nudged right of centre to clear the copy panel.
           camera.getWorldDirection(tmp);
-          const fill = tmp.multiplyScalar(4.6).add(camera.position);
+          const fill = tmp.multiplyScalar(fillDist).add(camera.position);
           fill.add(right.setFromMatrixColumn(camera.matrixWorld, 0).multiplyScalar(innerWidth >= 768 ? 0.75 : 0));
           m.position.lerp(fill, c.open * c.open * (3 - 2 * c.open));
           m.quaternion.slerp(camera.quaternion, c.open);

@@ -108,3 +108,47 @@ await withPage({ viewport: { width: 1280, height: 720 } }, async (page, errors) 
   await page.screenshot({ path: `${SHOTS}/address-lowend.png` });
   check(errors.length === 0, `low-end: no console errors ${JSON.stringify(errors)}`);
 }, ['--use-angle=swiftshader', '--enable-unsafe-swiftshader']);
+
+// The establishing shot: once per session on home, letterboxed, copy held
+// back until the camera lands; any input cuts it; never under reduced motion.
+await withPage({ viewport: { width: 1440, height: 900 }, intro: true }, async (page, errors) => {
+  await live(page);
+  await page.waitForTimeout(300);
+  const on = await page.evaluate(() => document.documentElement.classList.contains('is-intro'));
+  check(on, 'intro: plays on a first visit to home');
+  await page.waitForTimeout(1200);
+  const y0 = await page.evaluate(() => window.__stage.camera.position.y);
+  check(y0 > 4, `intro: camera starts high over the address space (y ${y0.toFixed(1)})`);
+  await page.screenshot({ path: `${SHOTS}/intro-mid.png` });
+  await page.waitForTimeout(6000);
+  const after = await page.evaluate(() => ({ on: document.documentElement.classList.contains('is-intro'), op: getComputedStyle(document.querySelector('#home-title')).opacity, y: window.__stage.camera.position.y }));
+  check(!after.on && Number(after.op) > 0.95 && Math.abs(after.y - 0.2) < 0.4, `intro: lands on the home mark and shows the copy (${JSON.stringify(after)})`);
+  await page.reload(); await live(page); await page.waitForTimeout(300);
+  check(!(await page.evaluate(() => document.documentElement.classList.contains('is-intro'))), 'intro: only once per session');
+  check(errors.length === 0, `intro: no console errors ${JSON.stringify(errors)}`);
+});
+await withPage({ viewport: { width: 1440, height: 900 }, intro: true }, async (page) => {
+  await live(page);
+  await page.waitForTimeout(800);
+  await page.keyboard.press('Space');
+  await page.waitForTimeout(400);
+  check(!(await page.evaluate(() => document.documentElement.classList.contains('is-intro'))), 'intro: a key press cuts it');
+});
+await withPage({ viewport: { width: 1440, height: 900 }, intro: true, reducedMotion: 'reduce' }, async (page) => {
+  await live(page);
+  await page.waitForTimeout(300);
+  check(!(await page.evaluate(() => document.documentElement.classList.contains('is-intro'))), 'intro: never under reduced motion');
+});
+
+// Opening a project is a dolly zoom: the lens widens mid-move, then settles.
+await withPage({ viewport: { width: 1440, height: 900 } }, async (page) => {
+  await live(page);
+  await page.goto(BASE + '#/work'); await page.waitForTimeout(2200);
+  const fovs = [];
+  await page.click('.caption__open');
+  for (let i = 0; i < 12; i++) { fovs.push(await page.evaluate(() => window.__stage.camera.fov)); await page.waitForTimeout(80); }
+  await page.waitForTimeout(1600);
+  const end = await page.evaluate(() => window.__stage.camera.fov);
+  check(Math.max(...fovs) > 52 && Math.abs(end - 40) < 1.5, `dolly zoom: lens widens mid-move (peak ${Math.max(...fovs).toFixed(1)}°) and settles (${end.toFixed(1)}°)`);
+  await page.screenshot({ path: `${SHOTS}/dolly-detail.png` });
+});
