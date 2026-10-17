@@ -71,11 +71,16 @@ export function createWorld(stage, { projects, reducedMotion }) {
   const infall = createInfall({ tier: stage.tier });
   const stars = createStars({ tier: stage.tier });
   scene.add(stars.object, census.object, env.group, net.object, perimeter.group, infall.object, hole.group, cards.group, dust);
+  // Only the top tier ray-traces the hole into a backdrop and mirrors the
+  // water — both re-render the whole scene and are far too heavy for a phone.
+  const fullHole = stage.tier === 'high';
   // The water's mirror re-renders the scene: keep the lens out of it (it
   // samples this frame's backdrop in screen space, meaningless in the mirror).
-  const mirrorRender = env.water.onBeforeRender;
-  env.water.onBeforeRender = function (...args) { hole.lens.visible = false; mirrorRender.apply(this, args); hole.lens.visible = true; };
-  const bgScale = stage.tier === 'low' ? 0.5 : 1;
+  if (fullHole && env.water.onBeforeRender) {
+    const mirrorRender = env.water.onBeforeRender;
+    env.water.onBeforeRender = function (...args) { hole.lens.visible = false; mirrorRender.apply(this, args); hole.lens.visible = true; };
+  }
+  const bgScale = 1;
   const drawRes = new THREE.Vector2();
   scene.background = new THREE.Color('#03060b');
   scene.fog = new THREE.FogExp2('#03060b', 0.03); // dust only; the custom shaders fog themselves
@@ -190,9 +195,11 @@ export function createWorld(stage, { projects, reducedMotion }) {
       return { open: eased.open, enter: eased.enter };
     },
     // Glass needs what's behind it: draw everything but the cards first.
-    // Every frame now: the black hole's lens bends it too. Water stays in
-    // (the lens edge must match the frame round it); cards and lens are out.
+    // Top tier only: render the scene (minus cards and lens) into a backdrop
+    // and ray-trace the hole into it. On phones/tablets this whole extra pass
+    // is skipped — the cheap hole needs no backdrop, so cards show dark glass.
     renderBackdrop() {
+      if (!fullHole) return;
       const prev = renderer.getRenderTarget();
       cards.group.visible = false;
       hole.lens.visible = false;

@@ -38,6 +38,7 @@ export function createStage(canvas) {
     memory: navigator.deviceMemory ?? 8,
     cores: navigator.hardwareConcurrency ?? 8,
     width: innerWidth,
+    touch: matchMedia('(pointer: coarse)').matches,
   });
   const settings = TIER_SETTINGS[tier];
   // Shader error checking reads every program's info log on first use, which

@@ -47,6 +47,15 @@ The concept tying the site together: **the site is an address space you're scann
 - Round 3 (cinematic): an **establishing shot** — once per session on home, `world.playIntro()` rides two Catmull-Rom splines (camera + an aim sampled slightly ahead) from high over the address space down onto the home mark in 6 s, letterboxed 2.39:1 (`.letterbox`, `html.is-intro`), home copy and chrome held back until it lands; any wheel/pointer/key/touch cuts it and the camera glides from where it is; never under reduced motion or on deep links. `lib.mjs` marks it seen for every suite unless a page asks `{ intro: true }`. **Dolly zoom** on opening/closing a project: fov += 24·sin(π·open) while the open card's distance is scaled by tan(markFov/2)/tan(fov/2) so it holds its size and the world stretches. **Anamorphic streaks** (16 horizontal taps over a 0.72 threshold) in the film pass. A **hand-held camera** breath (two slow sines, a few cm), off under reduced motion.
 - `tests/e2e/address.mjs` covers all of it in both motion settings, plus a SwiftShader run that must land on the low tier (no post) and keep working (~27 fps CPU-only). `tests/e2e/_shots.mjs [WxH] [prefix]` is a dev helper for eyeballing screenshots.
 
+## Performance tiers (mobile was unusable — fixed 2026-10-17)
+
+The ray-traced black hole + water mirror are desktop-only. On a phone they ran per-pixel geodesics plus 3–4 full scene renders and the site was unusable.
+- `tier.js`: phones/touch/small or weak devices → **low**, laptops → **mid**, only capable large non-touch desktops → **high** (`touch` from `matchMedia('(pointer: coarse)')`, passed in `stage.js`).
+- **Only `high` ray-traces the hole and mirrors the water.** `blackhole.js` has two builds: the full per-pixel tracer (high) and `createCheapHole` (mid/low) — an accretion-disk ring + an opaque event-horizon sphere + a billboarded photon ring, no lensing, no backdrop sampling; it exposes the same API (`group`, `lens`, `target` = a 1×1 black texture, `screen`, `update`, `render` no-op, `raytraced` flag).
+- `world.js`: `fullHole = tier==='high'` gates the backdrop pass (`renderBackdrop` returns early otherwise — cards then show dark glass) and the water-mirror `onBeforeRender` wrap. `main.js` only precompiles the tracer when `hole.raytraced`.
+- `environment.js`: non-high gets a **flat water** (grid + vault rings, no `Reflector`), so the scene isn't re-rendered for a mirror.
+- Result: phone (viewport 390, `low`) runs ~60 fps even on SwiftShader (was ~12); the full ray-traced look is unchanged on desktop. If mobile ever regresses, check nothing added a full-scene re-render (Reflector, backdrop pass, or a per-pixel full-screen shader) outside the `fullHole` guard.
+
 ## Fallbacks
 
 - **No WebGL**: `createStage()` returns `null`, `html.no-webgl`; the DOM carries the whole site over a CSS radial backdrop — the work caption with its arrows and Open button, details, contact. Same class while the context is lost.

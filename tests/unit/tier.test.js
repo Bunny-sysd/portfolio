@@ -10,9 +10,13 @@ describe('detectTier', () => {
     expect(detectTier({ gpu: 'Apple GPU', memory: 2 })).toBe('low');
     expect(detectTier({ gpu: 'Apple GPU', cores: 2 })).toBe('low');
   });
-  it('uses mid for phones and high for desktops', () => {
-    expect(detectTier({ gpu: 'Apple GPU', width: 390 })).toBe('mid');
-    expect(detectTier({ gpu: 'NVIDIA GeForce RTX 5060 Ti', width: 1600 })).toBe('high');
+  it('keeps phones and touch devices off the expensive ray-traced hole (low)', () => {
+    expect(detectTier({ gpu: 'Apple A15 GPU', width: 390, memory: 8, cores: 8 })).toBe('low');
+    expect(detectTier({ gpu: 'Apple M2', width: 1600, cores: 8, memory: 16, touch: true })).toBe('low');
+  });
+  it('uses mid for laptops and high only for capable desktops', () => {
+    expect(detectTier({ gpu: 'Intel Iris', width: 1366, cores: 8, memory: 8 })).toBe('mid');
+    expect(detectTier({ gpu: 'NVIDIA GeForce RTX 5060 Ti', width: 1920, cores: 16, memory: 16 })).toBe('high');
   });
   it('has settings for every tier', () => {
     for (const t of ['low', 'mid', 'high']) expect(TIER_SETTINGS[t].renderScale).toBeGreaterThan(0);

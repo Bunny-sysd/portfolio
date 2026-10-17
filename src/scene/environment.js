@@ -199,11 +199,43 @@ export function createEnvironment({ tier, reducedMotion }) {
     uniforms: { uTime: { value: 0 }, uDPR: { value: 1 }, uVault: { value: 0 }, uForest: { value: 1 } },
   }));
   towers.frustumCulled = false;
-  const scale = tier === 'high' ? 0.5 : 0.35;
-  const water = new Reflector(new THREE.PlaneGeometry(160, 160), {
-    shader: WaterShader, clipBias: 0.003, multisample: 0,
-    textureWidth: Math.round(innerWidth * scale), textureHeight: Math.round(innerHeight * scale),
-  });
+  const scale = 0.5;
+  // Only the top tier gets the real mirror (a Reflector re-renders the whole
+  // scene each frame). Phones/tablets get a cheap water: the same grid + vault
+  // rings, but a flat dark surface with no reflection — one plain draw.
+  const mirror = tier === 'high';
+  let water;
+  if (mirror) {
+    water = new Reflector(new THREE.PlaneGeometry(160, 160), {
+      shader: WaterShader, clipBias: 0.003, multisample: 0,
+      textureWidth: Math.round(innerWidth * scale), textureHeight: Math.round(innerHeight * scale),
+    });
+  } else {
+    const flat = {
+      uniforms: { uTime: { value: 0 }, uVault: { value: 0 }, uBg: { value: BG.clone() } },
+      vertexShader: /* glsl */`
+        varying vec3 vWorld;
+        void main() { vWorld = (modelMatrix * vec4(position, 1.0)).xyz; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }`,
+      fragmentShader: /* glsl */`
+        uniform float uTime; uniform float uVault; uniform vec3 uBg;
+        varying vec3 vWorld;
+        void main() {
+          vec2 w = vWorld.xz;
+          float dist = length(vWorld - cameraPosition);
+          float fade = exp(-dist * 0.035);
+          vec3 col = uBg;
+          vec2 g = abs(fract(w / 2.0) - 0.5);
+          col += vec3(0.05, 0.16, 0.2) * smoothstep(0.02, 0.0, min(g.x, g.y)) * fade * (0.18 + 0.32 * uVault);
+          float r = length(w - vec2(0.0, -1.5));
+          float rings = smoothstep(0.06, 0.0, abs(r - 7.5)) + smoothstep(0.04, 0.0, abs(r - 9.2)) * 0.7 + smoothstep(0.03, 0.0, abs(r - 12.5)) * 0.5;
+          col += vec3(0.25, 0.75, 0.9) * rings * (0.6 + 0.4 * sin(r * 2.0 - uTime * 1.5)) * uVault * fade;
+          gl_FragColor = vec4(col, 1.0);
+          #include <tonemapping_fragment>
+          #include <colorspace_fragment>
+        }`,
+    };
+    water = new THREE.Mesh(new THREE.PlaneGeometry(160, 160), new THREE.ShaderMaterial(flat));
+  }
   water.rotation.x = -Math.PI / 2;
   water.position.y = FLOOR_Y;
   const shafts = buildShafts();
@@ -223,7 +255,7 @@ export function createEnvironment({ tier, reducedMotion }) {
       shafts.mat.uniforms.uStrength.value = 1 - 0.4 * enter;
     },
     setSize(w, h) {
-      water.getRenderTarget().setSize(Math.round(w * scale), Math.round(h * scale));
+      if (mirror) water.getRenderTarget().setSize(Math.round(w * scale), Math.round(h * scale));
     },
     dispose() {
       towers.geometry.dispose(); towers.material.dispose();

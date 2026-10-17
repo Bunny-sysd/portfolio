@@ -189,7 +189,108 @@ const copyMat = new THREE.ShaderMaterial({
   depthTest: false, depthWrite: false,
 });
 
+// A cheap black hole for phones/tablets (tier !== 'high'): a real accretion
+// disk, a dark event-horizon sphere and a bright photon ring — drawn as three
+// ordinary meshes, no per-pixel geodesic tracing and no backdrop sampling, so
+// it costs a few draws instead of a full-screen ray march. No gravitational
+// lensing (the one thing that melts a mobile GPU), but it still reads as a
+// black hole: shadow, glowing tilted disk, beamed bright side, photon ring.
+const cheapDiskFrag = /* glsl */`
+  uniform float uTime;
+  uniform float uGlow;
+  uniform vec3 uAxis;
+  varying vec3 vLocal;
+  varying vec3 vWorld;
+  float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1,311.7)))*43758.5); }
+  float noise(vec2 p){ vec2 i=floor(p),f=fract(p); f=f*f*(3.0-2.0*f);
+    return mix(mix(hash(i),hash(i+vec2(1,0)),f.x),mix(hash(i+vec2(0,1)),hash(i+vec2(1,1)),f.x),f.y); }
+  float fbm(vec2 p){ float a=0.5,s=0.0; for(int i=0;i<4;i++){ s+=a*noise(p); p*=2.03; a*=0.5; } return s; }
+  void main(){
+    float r = length(vLocal.xy);
+    float inner = ${(RS * 3.0).toFixed(3)};
+    if (r < inner * 0.95 || r > ${(R_OUT).toFixed(1)}) discard;
+    float x = r / inner;
+    float ang = atan(vLocal.y, vLocal.x);
+    float w = uTime * 1.6 / pow(x, 1.5);
+    float gas = fbm(vec2(ang*3.0 + w, x*2.2)) * 0.6 + fbm(vec2(ang*7.0 - w, x))*0.4;
+    float heat = pow(inner / r, 1.8);
+    vec3 hot = vec3(1.0,0.95,0.85), warm = vec3(1.0,0.6,0.25), cool = vec3(0.6,0.16,0.08);
+    vec3 col = mix(mix(cool,warm,smoothstep(0.1,0.45,heat)),hot,smoothstep(0.5,1.0,heat));
+    // Doppler beaming: the side turning toward the camera is brighter.
+    vec3 tangent = normalize(cross(uAxis, vWorld));
+    vec3 toCam = normalize(cameraPosition - vWorld);
+    float beam = pow(clamp(1.0 + 0.7*dot(tangent,toCam),0.3,2.0),2.2);
+    float edge = smoothstep(inner*0.95, inner*1.15, r) * smoothstep(${R_OUT.toFixed(1)}, ${(R_OUT*0.5).toFixed(2)}, r);
+    float a = edge * heat * (0.4 + gas) * beam;
+    gl_FragColor = vec4(col * a * 1.8 * uGlow, 1.0);
+    #include <colorspace_fragment>
+  }`;
+const cheapDiskVert = /* glsl */`
+  varying vec3 vLocal; varying vec3 vWorld;
+  void main(){ vLocal = position; vec4 wp = modelMatrix * vec4(position,1.0); vWorld = wp.xyz;
+    gl_Position = projectionMatrix * viewMatrix * wp; }`;
+
+function createCheapHole({ reducedMotion }) {
+  const group = new THREE.Group();
+  // Event horizon: an opaque dark sphere — occludes the disk's far side and
+  // anything behind, so it reads as a hole in the scene.
+  const shadow = new THREE.Mesh(
+    new THREE.SphereGeometry(HORIZON * 0.98, 32, 24),
+    new THREE.MeshBasicMaterial({ color: 0x000000 }),
+  );
+  // Accretion disk: a flat ring tilted onto the shared axis.
+  const diskGeo = new THREE.RingGeometry(RS * 2.6, R_OUT, 96, 4);
+  const diskMat = new THREE.ShaderMaterial({
+    vertexShader: cheapDiskVert, fragmentShader: cheapDiskFrag,
+    transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, side: THREE.DoubleSide,
+    uniforms: { uTime: { value: 0 }, uGlow: { value: 1 }, uAxis: { value: AXIS } },
+  });
+  const disk = new THREE.Mesh(diskGeo, diskMat);
+  disk.quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, 1), AXIS);
+  // Photon ring: a thin bright camera-facing ring hugging the shadow.
+  const ringMat = new THREE.MeshBasicMaterial({ color: 0xffd9a8, transparent: true, opacity: 0.9, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide });
+  const ring = new THREE.Mesh(new THREE.RingGeometry(HORIZON * 1.0, HORIZON * 1.12, 64), ringMat);
+  group.add(shadow, disk, ring);
+
+  const c = new THREE.Vector3(), e = new THREE.Vector3(), right = new THREE.Vector3();
+  const empty = new THREE.Scene();
+  const black = new THREE.DataTexture(new Uint8Array([0, 0, 0, 255]), 1, 1, THREE.RGBAFormat);
+  black.needsUpdate = true;
+  return {
+    group,
+    raytraced: false,
+    lens: group, // so world.js can hide it during any backdrop/mirror pass
+    target: { texture: black, width: 1, height: 1, setSize() {} },
+    traceScene: empty,
+    screen: { x: -1e4, y: -1e4, r: 0 },
+    update({ time, camera, res, pulse, focus }) {
+      group.getWorldPosition(c);
+      ring.quaternion.copy(camera.quaternion); // billboard the photon ring
+      const t = reducedMotion() ? 0 : time;
+      diskMat.uniforms.uTime.value = t;
+      diskMat.uniforms.uGlow.value = (1 + pulse * 0.6) * (1 - 0.35 * focus);
+      ringMat.opacity = 0.9 * (1 - 0.4 * focus);
+      // Screen position + radius for the probe's gravity pull.
+      right.setFromMatrixColumn(camera.matrixWorld, 0);
+      const p = e.copy(c).project(camera);
+      const q = e.copy(c).addScaledVector(right, HORIZON).project(camera);
+      this.screen.x = (p.x * 0.5 + 0.5) * innerWidth;
+      this.screen.y = (0.5 - p.y * 0.5) * innerHeight;
+      this.screen.r = Math.abs(q.x - p.x) * 0.5 * innerWidth;
+    },
+    render() { /* no backdrop pass on cheap tiers */ },
+    dispose() {
+      shadow.geometry.dispose(); shadow.material.dispose();
+      diskGeo.dispose(); diskMat.dispose();
+      ring.geometry.dispose(); ringMat.dispose(); black.dispose();
+    },
+  };
+}
+
 export function createBlackHole({ tier, reducedMotion }) {
+  // Only the top tier gets the expensive per-pixel ray-traced hole; phones
+  // and tablets get the cheap look-alike so the site stays smooth.
+  if (tier !== 'high') return createCheapHole({ reducedMotion });
   const axis = AXIS, e1 = E1, e2 = E2;
   const geometry = new THREE.PlaneGeometry(2 * LENS_R, 2 * LENS_R);
   // Weak devices trace fewer, longer steps with simpler gas.
@@ -237,6 +338,7 @@ export function createBlackHole({ tier, reducedMotion }) {
   };
   return {
     group: lens,
+    raytraced: true,
     lens,
     target,
     screen: { x: -1e4, y: -1e4, r: 0 },
