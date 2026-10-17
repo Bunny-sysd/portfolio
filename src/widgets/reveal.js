@@ -183,6 +183,59 @@ const FX = {
       label(ctx, 'sha256 identity · unfolding', r.x + 14, r.y - 12, '#7dd3fc', fade);
     },
   },
+  // Jarvis booting: a neural core powers on, tokens stream out, "online".
+  jarvis: {
+    init: () => ({ nodes: Array.from({ length: 12 }, (_, i) => i / 12 * Math.PI * 2) }),
+    draw(ctx, t, r, st) {
+      const cx = r.x + r.w / 2, cy = r.y + r.h / 2, R = Math.min(r.w, r.h) * 0.32;
+      const fade = 1 - clamp01((t - 0.85) / 0.15);
+      const boot = ease(t / 0.5);
+      ctx.strokeStyle = '#c4b5fd'; ctx.lineWidth = 1;
+      const pts = st.nodes.map((a) => [cx + Math.cos(a) * R * boot, cy + Math.sin(a) * R * boot]);
+      pts.forEach((p, i) => { const q = pts[(i + 5) % pts.length]; ctx.globalAlpha = 0.25 * fade; ctx.beginPath(); ctx.moveTo(...p); ctx.lineTo(...q); ctx.stroke(); });
+      ctx.globalAlpha = fade; ctx.fillStyle = '#c4b5fd';
+      pts.forEach((p) => { ctx.beginPath(); ctx.arc(p[0], p[1], 3, 0, 6.28); ctx.fill(); });
+      // Core glow.
+      ctx.globalAlpha = fade * (0.4 + 0.3 * Math.sin(t * 20));
+      ctx.beginPath(); ctx.arc(cx, cy, 10 + boot * 6, 0, 6.28); ctx.fill();
+      // Token stream after boot.
+      if (t > 0.45) {
+        ctx.globalAlpha = fade; ctx.font = '500 11px "JetBrains Mono", monospace'; ctx.fillStyle = '#e6faff';
+        const toks = 'plan recon enum exploit note'.split(' ');
+        for (let i = 0; i < Math.min(toks.length, Math.floor((t - 0.45) / 0.09)); i++) ctx.fillText(toks[i], cx + R + 16, cy - 20 + i * 16);
+      }
+      ctx.globalAlpha = 1;
+      label(ctx, t > 0.6 ? '◉ agent online · local GPU' : 'loading model…', r.x + 14, r.y - 12, '#c4b5fd', fade);
+    },
+  },
+  // Homelab: the topology draws itself — host, switch, then the machines.
+  homelab: {
+    init: () => ({}),
+    draw(ctx, t, r) {
+      const cx = r.x + r.w / 2;
+      const fade = 1 - clamp01((t - 0.85) / 0.15);
+      const host = [cx, r.y + r.h * 0.18], sw = [cx, r.y + r.h * 0.46];
+      const box = (i) => [cx + (i - 1) * r.w * 0.26, r.y + r.h * 0.78];
+      const wires = [[host, sw], [sw, box(0)], [sw, box(1)], [sw, box(2)]];
+      ctx.strokeStyle = '#5eead4'; ctx.lineWidth = 2;
+      wires.forEach(([a, b], i) => {
+        const k = ease(clamp01((t - i * 0.12) / 0.3));
+        if (k <= 0) return;
+        ctx.globalAlpha = fade; ctx.beginPath(); ctx.moveTo(...a); ctx.lineTo(a[0] + (b[0] - a[0]) * k, a[1] + (b[1] - a[1]) * k); ctx.stroke();
+      });
+      const node = (p, lab, at) => {
+        const k = ease(clamp01((t - at) / 0.25)); if (k <= 0) return;
+        ctx.globalAlpha = fade * k; ctx.fillStyle = 'rgba(8,16,24,0.9)'; ctx.strokeStyle = '#5eead4'; ctx.lineWidth = 2;
+        ctx.fillRect(p[0] - 34, p[1] - 14, 68, 28); ctx.strokeRect(p[0] - 34, p[1] - 14, 68, 28);
+        ctx.fillStyle = '#e6faff'; ctx.font = '600 10px "JetBrains Mono", monospace'; ctx.textAlign = 'center';
+        ctx.fillText(lab, p[0], p[1] + 4); ctx.textAlign = 'left';
+      };
+      node(host, 'PROXMOX', 0); node(sw, 'SWITCH', 0.12);
+      node(box(0), 'DC', 0.3); node(box(1), 'WIN01', 0.42); node(box(2), 'WIN02', 0.54);
+      ctx.globalAlpha = 1;
+      label(ctx, '◢ lab online', r.x + 14, r.y - 12, '#5eead4', fade);
+    },
+  },
 };
 
 export function createReveal({ reduced, rectOf, projectOf }) {

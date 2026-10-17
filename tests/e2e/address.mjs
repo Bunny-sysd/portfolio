@@ -165,7 +165,7 @@ for (const reduced of [false, true]) {
       let n = 0; for (let i = 3; i < d.length; i += 4) if (d[i] > 0) n++;
       return n;
     });
-    for (const id of ['mutagen', 'vigil', 'signalhub', 'proving-grounds', 'who']) {
+    for (const id of ['mutagen', 'vigil', 'signalhub', 'proving-grounds', 'jarvis', 'homelab', 'who']) {
       await page.goto(BASE + '#/work'); await page.waitForTimeout(1200);
       await page.evaluate((id) => { location.hash = '#/work/' + id; }, id);
       await page.waitForTimeout(700);
@@ -198,7 +198,7 @@ for (const reduced of [false, true]) {
   const tag = reduced ? 'reduced' : 'motion';
   await withPage({ viewport: { width: 1440, height: 900 }, reducedMotion: reduced ? 'reduce' : 'no-preference' }, async (page, errors) => {
     await live(page);
-    const expect = { mutagen: 5, vigil: 3, signalhub: 3, 'proving-grounds': 3, who: 3 };
+    const expect = { mutagen: 5, vigil: 3, signalhub: 3, 'proving-grounds': 3, jarvis: 5, homelab: 4, who: 4 };
     for (const [id, n] of Object.entries(expect)) {
       await page.goto(BASE + '#/work/' + id); await page.waitForTimeout(900);
       const nodes = await page.$$eval('.flow:not([hidden]) .flow__node', (b) => b.length);

@@ -88,7 +88,7 @@ export function createCards(projects, { reducedMotion }) {
     const mesh = new THREE.Mesh(geometry, material);
     mesh.userData.id = project.id;
     group.add(mesh);
-    return { project, mesh, material, texture, canvas, index: i, shown: 1, open: 0, closing: false, live: false, drawnAt: 0, drawnStage: -1 };
+    return { project, mesh, material, texture, canvas, index: i, hasDossier: !!document.getElementById(`case-${project.id}`), shown: 1, open: 0, closing: false, live: false, drawnAt: 0, drawnStage: -1 };
   });
   // Titles use the web font: redraw once it's ready.
   document.fonts?.ready.then(() => cards.forEach((c, i) => { drawScreen(c.canvas, c.project, i, cards.length); c.texture.needsUpdate = true; }));
@@ -176,7 +176,7 @@ export function createCards(projects, { reducedMotion }) {
           const stage = liveStage.id === c.project.id ? liveStage.index : 0;
           const still = reducedMotion();
           if (!c.live || stage !== c.drawnStage || (!still && now - c.drawnAt > 66)) {
-            drawLive(c.canvas, c.project, c.index, cards.length, { stage, stageT: liveStage.pinned ? 1e9 : now - liveStage.t0, now, reduced: still, stepMs: 3200 });
+            drawLive(c.canvas, c.project, c.index, cards.length, { stage, stageT: liveStage.pinned ? 1e9 : now - liveStage.t0, now, reduced: still, stepMs: 3200, hasDossier: c.hasDossier });
             c.texture.needsUpdate = true;
             c.live = true; c.drawnAt = now; c.drawnStage = stage;
           }

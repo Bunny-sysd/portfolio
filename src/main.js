@@ -39,7 +39,7 @@ const film = { dive: 0, diveTarget: 0, contact: 0, glitch: 0, last: 0 };
 const caseStudies = initCaseStudies({ scroll: { stop() {}, start() {} }, onDive: (on) => { film.diveTarget = on ? 1 : 0; } });
 // ── address-space layer: avalanche transitions, sigils, probe, sound ─────
 const avalanche = createAvalanche(document.querySelector('.avalanche'), { reduced: reducedMotion });
-const sound = createSound(document.querySelector('.sound'));
+const sound = createSound(document.querySelector('.sound'), { reduced: reducedMotion });
 createProbe(document, { reduced: reducedMotion, gravity: world ? () => world.hole.screen : null });
 const idSigil = createSigil(document.querySelector('.hud-id .sigil'), { reduced: reducedMotion });
 idSigil.set('Aaron Alva').then((hex) => { if (hex) document.querySelector('.hud-id__hash').textContent = `sha256 ${hex.slice(0, 8)}…`; });
@@ -67,9 +67,14 @@ router = createRouter((route, prev) => {
   if (route.view !== 'detail') reveal?.stop();
   const played = route.view === 'detail' ? reveal?.play(route.id) : avalanche.trigger(lastPointer.x, lastPointer.y);
   if (played) { sound.cascade(); film.glitch = 1; }
-  if (route.view === 'contact' && !reducedMotion()) {
-    root.classList.remove('is-crossing'); void root.offsetWidth; root.classList.add('is-crossing');
-    setTimeout(() => root.classList.remove('is-crossing'), 1200);
+  // Sound follows the view; opening a project plays its stinger, closing one
+  // sinkholes, crossing into contact drops through the horizon.
+  sound.setMode(route.view);
+  if (route.view === 'detail') sound.stinger(route.id);
+  else if (prev.view === 'detail') sound.sinkhole();
+  if (route.view === 'contact') {
+    sound.horizon();
+    if (!reducedMotion()) { root.classList.remove('is-crossing'); void root.offsetWidth; root.classList.add('is-crossing'); setTimeout(() => root.classList.remove('is-crossing'), 1200); }
   }
 });
 router.start();

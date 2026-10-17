@@ -57,6 +57,24 @@ const MOTIFS = {
       g.stroke();
     }
   },
+  // Jarvis: a neural core — a ring of nodes with signals crossing the middle.
+  jarvis(g, w, h, accent, r) {
+    const cx = w * 0.7, cy = h * 0.5, R = 120;
+    const pts = Array.from({ length: 10 }, (_, i) => [cx + Math.cos(i / 10 * 6.28) * R, cy + Math.sin(i / 10 * 6.28) * R]);
+    g.strokeStyle = 'rgba(200,230,240,0.14)'; g.lineWidth = 1;
+    for (let i = 0; i < pts.length; i++) for (let j = i + 1; j < pts.length; j++) if (r() < 0.4) { g.beginPath(); g.moveTo(...pts[i]); g.lineTo(...pts[j]); g.stroke(); }
+    g.fillStyle = accent;
+    pts.forEach(([x, y]) => { g.beginPath(); g.arc(x, y, 4, 0, 6.28); g.fill(); });
+    g.beginPath(); g.arc(cx, cy, 16, 0, 6.28); g.fill();
+  },
+  // Homelab: a small network topology — a host, a switch, three boxes.
+  homelab(g, w, h, accent, r) {
+    const cx = w * 0.68, cy = h * 0.5;
+    const nodes = [[cx, cy - 90], [cx, cy], [cx - 110, cy + 90], [cx, cy + 90], [cx + 110, cy + 90]];
+    g.strokeStyle = 'rgba(200,230,240,0.25)'; g.lineWidth = 1.5;
+    [[0, 1], [1, 2], [1, 3], [1, 4]].forEach(([a, b]) => { g.beginPath(); g.moveTo(...nodes[a]); g.lineTo(...nodes[b]); g.stroke(); });
+    nodes.forEach(([x, y], i) => { g.fillStyle = i === 1 ? accent : 'rgba(12,20,30,0.95)'; g.strokeStyle = accent; g.lineWidth = 1.5; g.fillRect(x - 24, y - 15, 48, 30); g.strokeRect(x - 24, y - 15, 48, 30); });
+  },
 };
 
 export function drawScreen(canvas, project, index, total) {
@@ -92,7 +110,7 @@ function wrap(g, text, maxW) {
   if (line) out.push(line);
   return out;
 }
-export function drawLive(canvas, project, index, total, { stage, stageT, now, reduced, stepMs }) {
+export function drawLive(canvas, project, index, total, { stage, stageT, now, reduced, stepMs, hasDossier = true }) {
   const g = canvas.getContext('2d');
   const w = canvas.width, h = canvas.height;
   const accent = `hsl(${Math.round(project.hue * 360)} 80% 62%)`;
@@ -178,7 +196,7 @@ export function drawLive(canvas, project, index, total, { stage, stageT, now, re
   }
   g.font = '600 11px "JetBrains Mono", monospace';
   g.textAlign = 'right'; g.fillStyle = blink ? accent : 'rgba(200,230,240,0.6)';
-  g.fillText('CLICK · FULL DOSSIER ↗', w - 18, h - 25); g.textAlign = 'left';
+  g.fillText(hasDossier ? 'CLICK · FULL DOSSIER ↗' : 'PRIVATE BUILD · NO REPO', w - 18, h - 25); g.textAlign = 'left';
   // Scanlines.
   g.fillStyle = 'rgba(0,0,0,0.12)';
   for (let yy = 0; yy < h; yy += 3) g.fillRect(0, yy, w, 1);

@@ -60,13 +60,20 @@ export function createViews(doc, { router, reduced, pick, openDossier, onCaption
     const stats = $('.detail__stats');
     stats.replaceChildren(...p.stats.map((s) => Object.assign(doc.createElement('li'), { textContent: s })));
     const links = $('.detail__links');
-    const dossier = doc.createElement('button');
-    dossier.type = 'button'; dossier.className = 'detail__dossier'; dossier.textContent = 'Open full dossier';
-    dossier.addEventListener('click', () => openDossier(p.id, dossier));
-    const first = doc.createElement('li');
-    first.append(dossier);
+    // Only projects with a full dossier <dialog> get the "Open full dossier"
+    // button (Jarvis and the homelab are private builds with no dialog).
+    const hasDossier = !!doc.getElementById(`case-${p.id}`);
+    const lead = [];
+    if (hasDossier) {
+      const dossier = doc.createElement('button');
+      dossier.type = 'button'; dossier.className = 'detail__dossier'; dossier.textContent = 'Open full dossier';
+      dossier.addEventListener('click', () => openDossier(p.id, dossier));
+      const first = doc.createElement('li');
+      first.append(dossier);
+      lead.push(first);
+    }
     links.replaceChildren(
-      first,
+      ...lead,
       ...p.links.map((l) => {
         const li = doc.createElement('li');
         const a = Object.assign(doc.createElement('a'), { href: l.href, textContent: `${l.label} ↗`, target: '_blank', rel: 'noopener noreferrer' });

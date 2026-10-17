@@ -62,7 +62,7 @@ for (const reduced of [false, true]) {
     check((await caption(page)).title === 'Proving Grounds' && (await caption(page)).index.endsWith('01'), `${tag}: ctf filter leaves only Proving Grounds`);
     check(await page.getAttribute('[data-filter="ctf"]', 'aria-pressed') === 'true', `${tag}: active filter is aria-pressed`);
     await page.click('[data-filter="ctf"]'); await page.waitForTimeout(500);
-    check((await caption(page)).index.endsWith('05'), `${tag}: clicking it again clears the filter`);
+    check((await caption(page)).index.endsWith('07'), `${tag}: clicking it again clears the filter`);
 
     // Open a project from the caption; scroll to close.
     await page.click('.caption__open'); await page.waitForTimeout(1600);
@@ -106,7 +106,7 @@ for (const reduced of [false, true]) {
 
     // Decode only with motion; screen readers always get the real text.
     await page.goto(BASE + '#/work'); await page.waitForTimeout(1200);
-    const order = ['Mutagen', 'Vigil', 'SignalHub', 'Proving Grounds', 'Researcher'];
+    const order = ['Mutagen', 'Vigil', 'SignalHub', 'Proving Grounds', 'Jarvis', 'Homelab', 'Researcher'];
     const nextTitle = order[(order.indexOf((await caption(page)).title) + 1) % order.length];
     await page.click('[data-step="1"]'); await page.waitForTimeout(80);
     const mid = await page.$eval('.caption__title', (t) => ({ sr: t.querySelector('.sr-only')?.textContent ?? t.textContent, shown: t.querySelector('[aria-hidden]')?.textContent ?? t.textContent }));
