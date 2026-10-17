@@ -35,6 +35,17 @@ export function xy2d(n, x, y) {
   return d;
 }
 
+// A point in [0,1)² → an address in the private 10.0.0.0/8 block on an
+// order-12 Hilbert map (2^24 cells). Private space is never a real internet
+// host, so the cursor readout can't land on someone's live server.
+export function toPrivateIPv4(u, v) {
+  const N = 4096;
+  const x = Math.min(N - 1, Math.max(0, Math.floor(u * N)));
+  const y = Math.min(N - 1, Math.max(0, Math.floor(v * N)));
+  const d = xy2d(N, x, y);
+  return ['10', Math.floor(d / 65536) % 256, Math.floor(d / 256) % 256, d % 256].join('.');
+}
+
 // A point in [0,1)² → its IPv4 address on an order-16 Hilbert map of the
 // whole address space (each of the 2^32 cells is one address).
 export function toIPv4(u, v) {

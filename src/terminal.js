@@ -1,5 +1,6 @@
 import { PROJECTS, projectById } from './projects.js';
 import { sha256Hex } from './widgets/sigil.js';
+import { SKILLS } from './skills.js';
 
 // The "ask me anything" box, as a terminal: a handful of commands answered
 // from the site's own verified data — nothing is sent anywhere. Input is only
@@ -47,6 +48,7 @@ export function createTerminal(form, { go }) {
       line('  traceroute <proj> fly there hop by hop');
       line('  nmap              scan this site');
       line('  hash <project>    sha256 of its title (its sigil)');
+      line('  skills            what I work on, broadly');
       line('  certs             verified credentials');
       line('  contact           get in touch');
       line('  clear             clear the screen');
@@ -54,6 +56,10 @@ export function createTerminal(form, { go }) {
     whoami: () => line('Aaron Alva — Grade 11 cybersecurity researcher & systems developer, Canada.'),
     ls: () => line(ids),
     projects: () => line(ids),
+    skills: () => SKILLS.forEach((s) => {
+      line(`${s.domain} [${s.level}]`, 'is-cmd');
+      line(`  ${s.where}${s.lately.length ? ` · lately: ${s.lately.join(', ')}` : ''}`);
+    }),
     certs: () => CERTS.forEach(([name, detail, href]) => link(`${name} — ${detail}`, href)),
     cat: (arg) => {
       const p = projectById(arg);

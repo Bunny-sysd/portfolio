@@ -1,8 +1,8 @@
-import { toIPv4 } from '../hilbert.js';
+import { toPrivateIPv4 } from '../hilbert.js';
 
-// The cursor as a probe. The screen is read as the IPv4 address space laid
-// out on a Hilbert curve (as census maps do), so the readout shows the real
-// address under the pointer. Over anything you can act on, the reticle locks
+// The cursor as a probe. The screen is read as an address space laid out on
+// a Hilbert curve (as census maps do) — the private 10.0.0.0/8 block, so the
+// readout never shows a real public host. Over anything you can act on, the reticle locks
 // to its bounds and runs a zero-trust handshake — every target is verified,
 // nothing is trusted by position. Fine pointers only; the native cursor stays.
 const TARGETS = 'a, button, input, textarea, [tabindex="0"]';
@@ -67,7 +67,7 @@ export function createProbe(doc, { reduced, gravity }) {
     } else if (root.classList.contains('is-pointing')) {
       setText('▸ open');
     } else {
-      setText(`${toIPv4(pos.tx / innerWidth, pos.ty / innerHeight)}/32`);
+      setText(`${toPrivateIPv4(pos.tx / innerWidth, pos.ty / innerHeight)}/32`);
     }
     if (moving) raf = requestAnimationFrame(tick);
   }

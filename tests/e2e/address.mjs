@@ -44,7 +44,7 @@ for (const reduced of [false, true]) {
     // Probe: an IPv4 readout on open space, a lock + verify over a control.
     await page.mouse.move(200, 200); await page.waitForTimeout(500);
     const read = await page.textContent('.probe__read');
-    check(/^\d+\.\d+\.\d+\.\d+\/32$/.test(read), `${tag}: probe reads the address under the pointer (${read})`);
+    check(/^10\.\d+\.\d+\.\d+\/32$/.test(read), `${tag}: probe reads a private 10.x address under the pointer, never a public one (${read})`);
     const box = await page.locator('.caption__open').boundingBox();
     await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2); await page.waitForTimeout(700);
     const lock = await page.evaluate(() => ({ cls: document.querySelector('.probe').className, text: document.querySelector('.probe__read').textContent }));
@@ -262,4 +262,23 @@ await withPage({ viewport: { width: 1440, height: 900 } }, async (page) => {
   await page.goto(BASE + '#/work/mutagen'); await page.waitForTimeout(1500);
   const vis = await page.evaluate(() => ['.detail', '.flow', '.dtabs'].map((s) => getComputedStyle(document.querySelector(s)).display !== 'none'));
   check(JSON.stringify(vis) === '[true,true,false]', `desktop: detail + diagram both shown, no tabs (${JSON.stringify(vis)})`);
+});
+
+// Skills: broad domains with a plain hands-on / familiar badge, from
+// src/skills.js; no technique lists or addresses anywhere in the copy.
+await withPage({ viewport: { width: 1440, height: 900 } }, async (page, errors) => {
+  await live(page);
+  await page.goto(BASE + '#/work/who'); await page.waitForTimeout(1400);
+  await page.click('.detail__dossier'); await page.waitForTimeout(1200);
+  const cards = await page.$$eval('#case-who .skill-card', (c) => c.map((e) => e.querySelector('.skill-card__level').textContent));
+  check(cards.length === 6 && cards.every((l) => l === 'Hands-on' || l === 'Familiar'), `skills: six domains, each Hands-on or Familiar (${cards.join(', ')})`);
+  check((await page.textContent('#case-who .skills-map')).includes('Web cache attacks'), 'skills: lately-into tags shown');
+  await page.screenshot({ path: `${SHOTS}/skills-map.png` });
+  await page.keyboard.press('Escape'); await page.waitForTimeout(600);
+  const html = await page.content();
+  check(!/162\.254|169\.254|kerberoast|bloodhound/i.test(html), 'skills: no addresses or niche technique lists in the page');
+  await page.goto(BASE + '#/work'); await page.waitForTimeout(800);
+  await page.fill('.term__in', 'skills'); await page.press('.term__in', 'Enter'); await page.waitForTimeout(150);
+  check((await page.textContent('.term__out')).includes('Cloud [familiar]'), 'skills: terminal "skills" lists the domains');
+  check(errors.length === 0, `skills: no console errors ${JSON.stringify(errors)}`);
 });

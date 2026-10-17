@@ -152,7 +152,7 @@
               <span class="dossier-header-status">CLEARANCE: GIAC-GFACT-CERTIFIED // SANS INSTITUTE</span>
             </div>
             <p style="font-size: 1.12rem; line-height: 1.85; color: rgba(255,255,255,0.92); margin: 0 0 1.25rem 0;">
-              I am a <strong style="color: var(--green);">Grade 11 cybersecurity researcher and systems developer</strong> specializing in autonomous vulnerability discovery, agentic AI fuzzing architectures, and low-level Linux systems security. My research focuses on instrumenting native C/C++ binaries with AddressSanitizer (ASan) inside air-gapped sandboxes, engineering high-entropy Abstract Syntax Tree (AST) mutation engines, and correlating live CVE telemetry via automated pipelines.
+              I am a <strong style="color: var(--green);">Grade 11 cybersecurity researcher and systems developer</strong> who builds security tools and practises offensive security every week. I build in Python &mdash; Mutagen, an AI fuzzer, and Vigil, a threat-hunting CLI &mdash; practise web security on PortSwigger&rsquo;s Web Security Academy, and work through labs on TryHackMe and Hack The Box. I&rsquo;m also familiar with setting up environments in Google Cloud and Azure.
             </p>
             <div class="dossier-grid-4" style="grid-template-columns: repeat(3, 1fr);">
               <div class="dossier-stat-box">
@@ -194,63 +194,13 @@
             </div>
           </div>
 
-          <!-- Tactical Core Competencies -->
+          <!-- Skills map (rendered from src/skills.js) -->
           <div class="dossier-panel">
             <div class="dossier-header-bar">
-              <span class="dossier-header-title">TACTICAL CORE COMPETENCIES</span>
-              <span class="dossier-header-status">TAXONOMY: OFFENSIVE &amp; DEFENSIVE SYSTEMS</span>
+              <span class="dossier-header-title">SKILLS MAP</span>
+              <span class="dossier-header-status">HANDS-ON = PRACTISED OR BUILT REGULARLY · FAMILIAR = WORKING KNOWLEDGE</span>
             </div>
-            <div class="skill-tag-cloud" style="margin-bottom: 1.25rem;">
-              <span class="skill-tag-pill">VULNERABILITY DISCOVERY</span>
-              <span class="skill-tag-pill">LINUX PRIVILEGE ESCALATION</span>
-              <span class="skill-tag-pill">DOCKER / ASAN SANDBOXING</span>
-              <span class="skill-tag-pill">AI &amp; LLM SECURITY</span>
-              <span class="skill-tag-pill">THREAT INTELLIGENCE</span>
-            </div>
-            <div style="display: flex; flex-direction: column; gap: 0.75rem;">
-              <div class="dossier-pod">
-                <div class="dossier-pod-title">Binary Exploitation &amp; Memory Safety</div>
-                <p class="dossier-pod-desc">Analyzing stack frame layouts, buffer overflow boundaries, Heap Use-After-Free (UAF), and triaging crash signals with GDB/GEF and AddressSanitizer.</p>
-              </div>
-              <div class="dossier-pod">
-                <div class="dossier-pod-title">Linux Kernel &amp; Privilege Escalation</div>
-                <p class="dossier-pod-desc">Exploiting SUID/SGID binaries, Linux capability misconfigurations, cron job race conditions, and inspecting system activity with <code>auditd</code> and <code>strace</code>.</p>
-              </div>
-              <div class="dossier-pod">
-                <div class="dossier-pod-title">Agentic AI &amp; LLM Security Systems</div>
-                <p class="dossier-pod-desc">Architecting LLM-driven AST input mutators, autonomous vulnerability patch generators, and sandboxing neural pipelines against prompt injection vectors.</p>
-              </div>
-              <div class="dossier-pod">
-                <div class="dossier-pod-title">Network Forensics &amp; Threat Intelligence</div>
-                <p class="dossier-pod-desc">Deep-packet inspection via Wireshark/tcpdump, TCP 3-way handshake analysis, NVD API v2 live correlation, and exporting standardized SARIF v2.1 reports.</p>
-              </div>
-            </div>
-          </div>
-
-          <!-- Formal Vulnerability Research Methodology (4-Phase Lifecycle) -->
-          <div class="dossier-panel">
-            <div class="dossier-header-bar">
-              <span class="dossier-header-title">STRUCTURED VULNERABILITY RESEARCH METHODOLOGY</span>
-              <span class="dossier-header-status">STANDARDIZED VR &amp; EXPLOIT LIFECYCLE</span>
-            </div>
-            <div class="dossier-grid-2">
-              <div class="dossier-pod">
-                <div class="dossier-pod-title">1. Attack Surface Enumeration &amp; CFG Analysis</div>
-                <p class="dossier-pod-desc">Decompiling target binaries via Ghidra and Clang AST to extract Control Flow Graphs (CFG), trace user-controlled input sources, and identify dangerous sink APIs (e.g. <code>strcpy</code>, <code>memcpy</code>, <code>malloc</code>, <code>free</code>).</p>
-              </div>
-              <div class="dossier-pod">
-                <div class="dossier-pod-title">2. Context-Aware Semantic Fuzzing</div>
-                <p class="dossier-pod-desc">Synthesizing high-entropy mutated testcases that target boundary conditions (e.g. <code>INT_MAX</code>, off-by-one fenceposts, format string sequences <code>%n%s</code>, and endianness conversions).</p>
-              </div>
-              <div class="dossier-pod">
-                <div class="dossier-pod-title">3. Air-Gapped Sandboxed Instrumentation</div>
-                <p class="dossier-pod-desc">Executing dynamic harnesses inside non-root Docker containers with <code>--network=none</code>, strict seccomp filters dropping unneeded system calls, and AddressSanitizer (ASan) memory watchdogs.</p>
-              </div>
-              <div class="dossier-pod">
-                <div class="dossier-pod-title">4. Root Cause Analysis (RCA) &amp; Auto-Patching</div>
-                <p class="dossier-pod-desc">Capturing crash signals (<code>SIGSEGV</code>, <code>SIGABRT</code>), deduplicating via instruction pointer (RIP) hashing, isolating minimal reproducible testcases, and drafting verified AST diff patches.</p>
-              </div>
-            </div>
+            <div class="skills-map" data-skills></div>
           </div>
 
           <!-- Research Milestones Timeline -->
@@ -267,7 +217,7 @@
             <div class="dossier-timeline-item">
               <div class="dossier-timeline-date">2024 – PRESENT</div>
               <div class="dossier-timeline-title">TryHackMe Top 1% Worldwide // Offensive Security</div>
-              <div class="dossier-timeline-desc">Achieved top 1% global ranking across 100+ completed rooms covering Active Directory Kerberoasting, buffer overflows, web exploitation (SQLi/SSRF/IDOR), and Linux privilege escalation.</div>
+              <div class="dossier-timeline-desc">Top 1% on TryHackMe with 100+ rooms completed, across web, Linux, Windows and Active Directory labs.</div>
             </div>
             <div class="dossier-timeline-item">
               <div class="dossier-timeline-date">2024 – PRESENT</div>
@@ -648,7 +598,7 @@
               <span class="dossier-header-status">GLOBAL STANDING: TOP 1% WORLDWIDE // 100+ ROOMS</span>
             </div>
             <p style="font-size: 1.1rem; line-height: 1.8; color: rgba(255,255,255,0.9); margin: 0 0 1.25rem 0;">
-              Ranked in the <strong style="color: var(--cyan);">Top 1% Worldwide on TryHackMe</strong> with 100+ rooms completed. Active competitor on Hack The Box, focusing on Linux privilege escalation, Active Directory attack paths (Kerberoasting, AS-REP Roasting), and web exploitation (SQLi, SSRF, IDOR).
+              Ranked in the <strong style="color: var(--cyan);">Top 1% Worldwide on TryHackMe</strong> with 100+ rooms completed. Active on Hack The Box, and practising web security on PortSwigger&rsquo;s Web Security Academy &mdash; lately web LLM attacks and web cache attacks.
             </p>
             <div class="dossier-grid-4">
               <div class="dossier-stat-box">
@@ -660,12 +610,12 @@
                 <div class="dossier-stat-lbl">Rooms Completed</div>
               </div>
               <div class="dossier-stat-box">
-                <div class="dossier-stat-val">100%</div>
-                <div class="dossier-stat-lbl">Offensive Paths</div>
+                <div class="dossier-stat-val">L25</div>
+                <div class="dossier-stat-lbl">Hack The Box &middot; Apprentice</div>
               </div>
               <div class="dossier-stat-box">
-                <div class="dossier-stat-val">AD</div>
-                <div class="dossier-stat-lbl">Kerberoasting</div>
+                <div class="dossier-stat-val">WEB</div>
+                <div class="dossier-stat-lbl">PortSwigger Labs</div>
               </div>
             </div>
           </div>
@@ -677,16 +627,15 @@
               <span class="dossier-header-status">STATUS: APPRENTICE TIER // LEVEL 25</span>
             </div>
             <p style="font-size: 1.05rem; line-height: 1.8; color: rgba(255,255,255,0.92); margin: 0 0 1rem 0;">
-              Active practitioner on Hack The Box labs (<strong style="color: var(--cyan);">maxthemadman</strong>, Level 25, Apprentice Tier). Hands-on experience with real-world active attack chains including Kerberoasting, AS-REP Roasting, BloodHound domain mapping, SUID binary exploitation, and kernel privilege escalation.
+              Active practitioner on Hack The Box labs (<strong style="color: var(--cyan);">maxthemadman</strong>, Level 25, Apprentice Tier), working across Linux, Windows and Active Directory machines.
             </p>
             <div class="skill-tag-cloud" style="margin-bottom: 1.25rem;">
               <span class="skill-tag-pill cyan">HANDLE: maxthemadman</span>
               <span class="skill-tag-pill cyan">TIER: APPRENTICE</span>
               <span class="skill-tag-pill cyan">LEVEL: 25</span>
-              <span class="skill-tag-pill">ACTIVE DIRECTORY</span>
-              <span class="skill-tag-pill">KERBEROASTING</span>
-              <span class="skill-tag-pill">BLOODHOUND</span>
-              <span class="skill-tag-pill">LINUX PRIVESC</span>
+              <span class="skill-tag-pill">LINUX</span>
+              <span class="skill-tag-pill">WINDOWS &amp; ACTIVE DIRECTORY</span>
+              <span class="skill-tag-pill">WEB</span>
             </div>
             <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
               <a href="https://app.hackthebox.com/users/3735054" target="_blank" rel="noopener noreferrer" class="at-action-btn" style="padding: 0.65rem 1.25rem; font-size: 0.8rem; border-color: var(--cyan); color: var(--cyan); background: rgba(0, 229, 255, 0.08);">View Hack The Box Profile (maxthemadman) ↗</a>
@@ -697,25 +646,25 @@
           <!-- Systematic 5-Phase Penetration Testing Methodology -->
           <div class="dossier-panel">
             <div class="dossier-header-bar">
-              <span class="dossier-header-title">OFFENSIVE TECHNIQUE AREAS</span>
-              <span class="dossier-header-status">TACTICAL WORKFLOW</span>
+              <span class="dossier-header-title">WHERE I PRACTISE</span>
+              <span class="dossier-header-status">BROAD AREAS, HANDS-ON LABS</span>
             </div>
             <div class="dossier-grid-2">
               <div class="dossier-pod">
-                <div class="dossier-pod-title">1. Reconnaissance &amp; Surface Mapping</div>
-                <p class="dossier-pod-desc">Fast TCP/UDP port enumeration with Nmap (<code>-sC -sV -p- -T4</code>), directory fuzzing via FFuf, and DNS virtual host brute-forcing.</p>
+                <div class="dossier-pod-title">Web application security</div>
+                <p class="dossier-pod-desc">Labs on PortSwigger&rsquo;s Web Security Academy. Lately: web LLM attacks and web cache attacks.</p>
               </div>
               <div class="dossier-pod">
-                <div class="dossier-pod-title">2. Web Application Exploitation</div>
-                <p class="dossier-pod-desc">Exploiting Union-based SQL Injection, Server-Side Request Forgery (SSRF) against cloud metadata (<code>169.254.169.254</code>), Insecure Direct Object References (IDOR), and Local File Inclusion (LFI).</p>
+                <div class="dossier-pod-title">Linux, Windows &amp; Active Directory</div>
+                <p class="dossier-pod-desc">Machines and rooms on Hack The Box and TryHackMe.</p>
               </div>
               <div class="dossier-pod">
-                <div class="dossier-pod-title">3. Linux Privilege Escalation</div>
-                <p class="dossier-pod-desc">Reverse-engineering SUID binaries, exploiting GTFOBins, abusing <code>sudo -l</code> token rights, writable <code>/etc/passwd</code>, and vulnerable cron jobs.</p>
+                <div class="dossier-pod-title">Cloud</div>
+                <p class="dossier-pod-desc">Setting up environments in Google Cloud and Azure.</p>
               </div>
               <div class="dossier-pod">
-                <div class="dossier-pod-title">4. Active Directory Exploitation</div>
-                <p class="dossier-pod-desc">Executing Kerberoasting (<code>GetUserSPNs.py</code>), AS-REP Roasting, BloodHound graph path analysis, and Pass-the-Hash (PtH) lateral movement.</p>
+                <div class="dossier-pod-title">Recon &amp; enumeration</div>
+                <p class="dossier-pod-desc">Mapping what&rsquo;s exposed before touching anything &mdash; the first step of every lab.</p>
               </div>
             </div>
           </div>

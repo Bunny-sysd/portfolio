@@ -76,9 +76,9 @@ export const PROJECTS = [
     flow: [
       ['TryHackMe', 'Top 1% · 100+ rooms completed.'],
       ['Hack The Box', 'maxthemadman · Apprentice tier · Level 25.'],
-      ['Focus', 'Linux privilege escalation, Active Directory attack paths and web exploitation.'],
+      ['PortSwigger', 'Web security labs — lately web LLM attacks and web cache attacks.'],
     ],
-    console: ['> tryhackme · top 1% · 100+ rooms', '> hackthebox · maxthemadman', '> tier apprentice · level 25', '> focus · linux privesc', '> focus · active directory', '> focus · web exploitation'],
+    console: ['> tryhackme · top 1% · 100+ rooms', '> hackthebox · maxthemadman', '> tier apprentice · level 25', '> portswigger · web security academy', '> lately · web llm attacks', '> lately · web cache attacks'],
     hue: 0.95,
   },
   {
@@ -95,7 +95,7 @@ export const PROJECTS = [
       ['GIAC GFACT', 'Certified · scored 94 · issued 1 September 2026.'],
       ['Build', 'Mutagen and Vigil — open source on GitHub.'],
     ],
-    console: ['> giac gfact · certified', '> score 94 · issued 1 sep 2026', '> cyberstart canada · scholarship', '> building · mutagen · vigil'],
+    console: ['> giac gfact · certified', '> score 94 · issued 1 sep 2026', '> cyberstart canada · scholarship', '> building · mutagen · vigil', '> cloud · google cloud · azure'],
     hue: 0.72,
   },
 ];

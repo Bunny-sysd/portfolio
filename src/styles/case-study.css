@@ -756,3 +756,15 @@ dialog.case.is-closing::backdrop { animation: case-fade-out 0.42s ease both; }
   background: linear-gradient(90deg, var(--accent) calc(var(--pull, 0) * 100%), rgba(248, 250, 252, 0.18) 0);
 }
 @media (hover: none) { .case__pull { display: none; } } /* touch: no wheel to pull with */
+
+/* Skills map (who dossier): broad domains, a plain hands-on / familiar badge. */
+.skills-map { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 0.75rem; }
+.skill-card { padding: 0.9rem 1rem; border: 1px solid rgba(125, 211, 252, 0.18); border-radius: 10px; background: rgba(6, 14, 24, 0.6); }
+.skill-card__head { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; margin-bottom: 0.4rem; }
+.skill-card__domain { font-weight: 600; color: #f8fafc; }
+.skill-card__level { flex: none; padding: 0.15rem 0.55rem; border-radius: 999px; font: 600 0.68rem/1.4 'JetBrains Mono', monospace; letter-spacing: 0.12em; text-transform: uppercase; }
+.skill-card__level.is-hands-on { color: #03060b; background: #5eead4; }
+.skill-card__level.is-familiar { color: #7dd3fc; border: 1px solid rgba(125, 211, 252, 0.5); }
+.skill-card__where { margin: 0; font-size: 0.9rem; line-height: 1.6; color: rgba(255, 255, 255, 0.82); }
+.skill-card__lately { display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem; margin: 0.6rem 0 0; }
+.skill-card__lately-k { font: 500 0.68rem 'JetBrains Mono', monospace; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255, 255, 255, 0.6); }

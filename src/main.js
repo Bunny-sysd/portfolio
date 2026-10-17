@@ -16,6 +16,7 @@ import { createProbe } from './widgets/probe.js';
 import { createSound } from './widgets/sound.js';
 import { createCipher } from './widgets/cipher.js';
 import { createReveal } from './widgets/reveal.js';
+import { renderSkills } from './skills.js';
 
 const reduceQuery = matchMedia('(prefers-reduced-motion: reduce)');
 const reducedMotion = () => reduceQuery.matches;
@@ -88,6 +89,7 @@ addEventListener('keydown', (e) => {
 const blockedEl = document.querySelector('[data-blocked]');
 if (world) setInterval(() => { if (!document.hidden) blockedEl.textContent = world.perimeter.blocked.toLocaleString('en-US'); }, 500);
 
+document.querySelectorAll('[data-skills]').forEach(renderSkills);
 const form = document.getElementById('contact-form');
 createCipher(form.elements.message, form.querySelector('.cipher'));
 form.addEventListener('submit', (e) => {
