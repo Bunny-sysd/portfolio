@@ -53,7 +53,7 @@ export function createViews(doc, { router, reduced, pick, openDossier, onCaption
   function renderDetail(p) {
     stopFlow();
     setTab('card');
-    stopFlow = renderFlow($('.flow'), p.flow, { reduced, id: p.id });
+    stopFlow = renderFlow($('.flow'), p.flow, { reduced, id: p.id, hue: p.hue });
     $('.detail__title').textContent = p.title;
     $('.detail__meta').textContent = `${p.kind} / ${p.meta}`;
     $('.detail__blurb').textContent = p.blurb;

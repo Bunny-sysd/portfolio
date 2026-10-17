@@ -37,7 +37,7 @@ export const SKILLS = [
   },
   {
     domain: 'Foundations',
-    level: 'hands-on',
+    level: 'familiar',
     where: 'GIAC GFACT, scored 94 — architecture, networking, Linux, Python',
     lately: [],
   },

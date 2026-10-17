@@ -87,7 +87,7 @@ export const PROJECTS = [
     kind: 'Local AI pentesting agent',
     meta: 'Qwen3.8-27B · Hermes harness · private build',
     tags: ['tools', 'research'],
-    blurb: 'A pentesting agent that runs entirely on my own GPU: Qwen3.8-27B quantized to IQ3_XXS, 65k context, about 30 tokens/s on an RTX 5060. Built on the Hermes harness with long-term memory in an Obsidian vault. It works from its own Kali environment in a Docker container behind NAT, isolated from my host, where tools it installs persist between sessions. It has its own browser and is wired to Ghidra for reverse engineering, and on HTB labs it helps with recon, writing exploit code and binary exploitation.',
+    blurb: 'A pentesting agent that runs entirely on my own GPU: Qwen3.8-27B quantized to IQ3_XXS, 65k context, about 30 tokens/s on an RTX 5060. Built on the Hermes harness with long-term memory in an Obsidian vault. It works from its own Kali environment in a Docker container behind NAT, isolated from my host, where tools it installs persist between sessions. It has its own browser and is wired to Ghidra for reverse engineering, and on HTB labs it helps with recon, scripting, and reasoning about binaries.',
     stats: ['IQ3_XXS · 65k ctx', '~30 tok/s · RTX 5060', 'Containerized Kali'],
     links: [],
     flow: [
@@ -97,7 +97,7 @@ export const PROJECTS = [
       ['Reverse-engineer', 'Wired to Ghidra to decompile and reason about binaries.'],
       ['Remember', 'Findings go back into the vault, so later sessions build on earlier ones.'],
     ],
-    console: ['> model qwen3.8-27b · iq3_xxs · 65k ctx', '> harness hermes · obsidian memory', '> sandbox kali · docker · nat', '> tool ghidra · browser', '> htb · recon · exploit code'],
+    console: ['> model qwen3.8-27b · iq3_xxs · 65k ctx', '> harness hermes · obsidian memory', '> sandbox kali · docker · nat', '> tool ghidra · browser', '> htb · recon · scripting · re'],
     hue: 0.86,
   },
   {
