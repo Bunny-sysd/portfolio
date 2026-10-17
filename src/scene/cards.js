@@ -1,5 +1,6 @@
 import * as THREE from 'three';
-import { drawScreen, SCREEN_W, SCREEN_H } from './screens.js';
+import { drawScreen, drawLive, SCREEN_W, SCREEN_H } from './screens.js';
+import { liveStage } from '../widgets/live-state.js';
 
 // Glass project cards orbiting the core. Each is a rounded plane whose shader
 // refracts `tBg` — the scene behind the cards, rendered first each frame —
@@ -87,7 +88,7 @@ export function createCards(projects, { reducedMotion }) {
     const mesh = new THREE.Mesh(geometry, material);
     mesh.userData.id = project.id;
     group.add(mesh);
-    return { project, mesh, material, texture, canvas, shown: 1, open: 0, closing: false };
+    return { project, mesh, material, texture, canvas, index: i, shown: 1, open: 0, closing: false, live: false, drawnAt: 0, drawnStage: -1 };
   });
   // Titles use the web font: redraw once it's ready.
   document.fonts?.ready.then(() => cards.forEach((c, i) => { drawScreen(c.canvas, c.project, i, cards.length); c.texture.needsUpdate = true; }));
@@ -110,7 +111,7 @@ export function createCards(projects, { reducedMotion }) {
     // spin: carousel position in slots (fractional while gliding); visible:
     // ids passing the filter; openId: the project in detail view; open: 0–1
     // eased detail transition; camera: to place the open card in front of it.
-    update({ time, spin, visible, openId, open, camera, enter, fillDist = 5.2 }) {
+    update({ time, spin, visible, openId, open, camera, enter, fillDist = 5.2, tilt }) {
       const order = cards.filter((c) => visible.has(c.project.id));
       const n = Math.max(1, order.length);
       const dt = 1 / 60;
@@ -160,11 +161,30 @@ export function createCards(projects, { reducedMotion }) {
           } else {
             m.position.lerp(fill, c.open * c.open * (3 - 2 * c.open));
             m.quaternion.slerp(camera.quaternion, c.open);
+            // A hologram you can lean into: the open card tilts toward the cursor.
+            if (tilt && !reducedMotion()) { m.rotateY(tilt.x * 0.16 * c.open); m.rotateX(-tilt.y * 0.11 * c.open); }
             c.squeezed = false;
           }
         } else c.squeezed = false;
         if (!c.squeezed) m.scale.setScalar(c.shown * (0.85 + 0.15 * front) * enter + 1e-4);
         m.visible = c.shown * enter > 0.01;
+        // The open card's screen goes live (synced to the flow diagram); it
+        // reverts to its still motif once it's back in the ring.
+        const wantLive = c.project.id === openId && c.open > 0.3;
+        if (wantLive) {
+          const now = performance.now();
+          const stage = liveStage.id === c.project.id ? liveStage.index : 0;
+          const still = reducedMotion();
+          if (!c.live || stage !== c.drawnStage || (!still && now - c.drawnAt > 66)) {
+            drawLive(c.canvas, c.project, c.index, cards.length, { stage, stageT: liveStage.pinned ? 1e9 : now - liveStage.t0, now, reduced: still, stepMs: 3200 });
+            c.texture.needsUpdate = true;
+            c.live = true; c.drawnAt = now; c.drawnStage = stage;
+          }
+        } else if (c.live) {
+          drawScreen(c.canvas, c.project, c.index, cards.length);
+          c.texture.needsUpdate = true;
+          c.live = false; c.drawnStage = -1;
+        }
         const u = c.material.uniforms;
         u.uTime.value = reducedMotion() ? 0 : time;
         u.uActive.value = front;

@@ -167,8 +167,11 @@ export function createWorld(stage, { projects, reducedMotion }) {
       camera.updateMatrixWorld();
 
       const half = (deg) => Math.tan((deg * Math.PI) / 360);
-      const fillDist = 5.2 * half(mark.fov) / half(camera.fov);
-      cards.update({ time, spin: eased.spin, visible: state.visible, openId: state.openId, open: eased.open, camera, enter: eased.enter, fillDist });
+      // Far enough that the whole card (3.2 wide, plus margin) fits the
+      // screen's width — on a phone that's well back from the desktop 5.2.
+      const fitDist = Math.max(5.2, 1.6 * 1.12 / (half(mark.fov) * camera.aspect));
+      const fillDist = fitDist * half(mark.fov) / half(camera.fov);
+      cards.update({ time, spin: eased.spin, visible: state.visible, openId: state.openId, open: eased.open, camera, enter: eased.enter, fillDist, tilt: smooth });
       dust.rotation.y = snap ? 0 : time * 0.01;
       env.update({ time, dpr: renderer.getPixelRatio(), enter: eased.enter });
       const tm = snap ? 0 : time;

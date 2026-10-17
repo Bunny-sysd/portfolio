@@ -22,6 +22,9 @@ export const PROJECTS = [
       ['Patch & Exploit', 'On a confirmed crash, drafts a secure C patch and a Python proof-of-concept.'],
       ['Verify', 'Re-runs the campaign against the patched build to prove the bug is gone.'],
     ],
+    // Shown typing on the open card's live screen: the project's real CLI,
+    // from its README and dossier.
+    console: ['$ pip install -e .', '$ mutagen --target targets/01_buffer_overflow.c', '$ mutagen --target path/to/binary.exe --binary', '$ mutagen --target targets/22_asyn_signal_uaf.c --mode agents', '$ python run_all.py --max-payloads 3'],
     hue: 0.48,
   },
   {
@@ -38,6 +41,7 @@ export const PROJECTS = [
       ['Compass', 'vigil compass ranks tactical next steps for the current phase — recon, initial access or privesc. You choose.'],
       ['Report', 'Exports SARIF v2.1, HTML or Markdown; vigil diff and vigil session track the engagement over time.'],
     ],
+    console: ['$ vigil analyze target_scan.txt --format sarif --output results.sarif', '$ vigil compass target_scan.txt --phase initial_access', '$ vigil diff scan_before.txt scan_after.txt'],
     hue: 0.58,
   },
   {
@@ -54,6 +58,7 @@ export const PROJECTS = [
       ['Score', 'Every stock gets an AI score and a Buy, Watch or Avoid signal; the screener filters on them.'],
       ['Decide', 'Watchlist, what-if scenarios for target prices, and an assistant panel for market questions.'],
     ],
+    console: ['> market snapshot · fear & greed', '> ai picks · buy / watch / avoid', '> screener · sector · signal · score', '> watchlist', '> scenario engine · target prices', '> assistant panel'],
     hue: 0.12,
   },
   {
@@ -73,6 +78,7 @@ export const PROJECTS = [
       ['Hack The Box', 'maxthemadman · Apprentice tier · Level 25.'],
       ['Focus', 'Linux privilege escalation, Active Directory attack paths and web exploitation.'],
     ],
+    console: ['> tryhackme · top 1% · 100+ rooms', '> hackthebox · maxthemadman', '> tier apprentice · level 25', '> focus · linux privesc', '> focus · active directory', '> focus · web exploitation'],
     hue: 0.95,
   },
   {
@@ -89,6 +95,7 @@ export const PROJECTS = [
       ['GIAC GFACT', 'Certified · scored 94 · issued 1 September 2026.'],
       ['Build', 'Mutagen and Vigil — open source on GitHub.'],
     ],
+    console: ['> giac gfact · certified', '> score 94 · issued 1 sep 2026', '> cyberstart canada · scholarship', '> building · mutagen · vigil'],
     hue: 0.72,
   },
 ];

@@ -91,6 +91,11 @@
 
     <section id="view-detail" class="view view--detail" aria-labelledby="detail-title" tabindex="-1">
       <p class="detail__hint" aria-hidden="true">Scroll to close</p>
+      <div class="dtabs" role="tablist" aria-label="Project panels">
+        <button type="button" role="tab" data-tab="card" aria-selected="true">Card</button>
+        <button type="button" role="tab" data-tab="flow" aria-selected="false">How it works</button>
+        <button type="button" role="tab" data-tab="info" aria-selected="false">Details</button>
+      </div>
       <div class="detail">
         <h2 id="detail-title" class="detail__title"></h2>
         <p class="detail__meta"></p>
@@ -102,7 +107,8 @@
       <section class="flow" aria-labelledby="flow-title" hidden>
         <h3 id="flow-title" class="flow__title">How it works</h3>
         <ol class="flow__nodes"></ol>
-        <p class="flow__tag" aria-hidden="true"></p>
+        <div class="flow__meta"><p class="flow__tag" aria-hidden="true"></p><code class="flow__sig" aria-hidden="true"></code></div>
+        <div class="flow__timer" aria-hidden="true"></div>
         <p class="flow__desc"></p>
       </section>
     </section>

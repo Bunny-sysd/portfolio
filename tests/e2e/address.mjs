@@ -220,3 +220,46 @@ for (const reduced of [false, true]) {
     check(errors.length === 0, `${tag}: flow - no console errors ${JSON.stringify(errors)}`);
   });
 }
+
+// The open card is a live screen synced to the diagram, and clicking it opens
+// the full dossier.
+await withPage({ viewport: { width: 1440, height: 900 } }, async (page, errors) => {
+  await live(page);
+  await page.goto(BASE + '#/work/vigil'); await page.waitForTimeout(1800);
+  const live1 = await page.evaluate(() => window.__world.cards.cards.find((c) => c.project.id === 'vigil').live);
+  check(live1, 'live card: the open card switches to its live screen');
+  await page.click('.flow__nodes li:nth-child(3) .flow__node'); await page.waitForTimeout(300);
+  const stage = await page.evaluate(() => window.__world.cards.cards.find((c) => c.project.id === 'vigil').drawnStage);
+  check(stage === 2, `live card: follows the diagram's stage (${stage})`);
+  const r = await page.evaluate(() => window.__world.cardRect('vigil'));
+  await page.mouse.click(r.x + r.w / 2, r.y + r.h / 2); await page.waitForTimeout(1200);
+  check(await page.$eval('#case-vigil', (d) => d.open), 'live card: clicking it opens the full dossier');
+  await page.keyboard.press('Escape'); await page.waitForTimeout(700);
+  await page.goto(BASE + '#/work'); await page.waitForTimeout(1800);
+  const back = await page.evaluate(() => window.__world.cards.cards.find((c) => c.project.id === 'vigil').live);
+  check(!back, 'live card: back in the ring it shows its still motif');
+  check(errors.length === 0, `live card: no console errors ${JSON.stringify(errors)}`);
+});
+
+// Phones: the detail view's panels are tabs, the card fits the screen.
+await withPage({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true }, async (page, errors) => {
+  await live(page);
+  await page.goto(BASE + '#/work/mutagen'); await page.waitForTimeout(2600);
+  const shown = () => page.evaluate(() => ['.detail', '.flow'].map((s) => getComputedStyle(document.querySelector(s)).display !== 'none'));
+  check(JSON.stringify(await shown()) === '[false,false]', '390 tabs: opens on the card alone');
+  const r = await page.evaluate(() => window.__world.cardRect('mutagen'));
+  check(r.x >= -2 && r.x + r.w <= 392, `390 tabs: the open card fits the screen (${Math.round(r.x)}..${Math.round(r.x + r.w)})`);
+  await page.tap('.dtabs [data-tab="flow"]'); await page.waitForTimeout(300);
+  check(JSON.stringify(await shown()) === '[false,true]', '390 tabs: "How it works" shows the diagram');
+  await page.tap('.dtabs [data-tab="info"]'); await page.waitForTimeout(300);
+  check(JSON.stringify(await shown()) === '[true,false]', '390 tabs: "Details" shows the copy');
+  check(await page.getAttribute('.dtabs [data-tab="info"]', 'aria-selected') === 'true', '390 tabs: selected tab is aria-selected');
+  check(await page.evaluate(() => document.documentElement.dataset.view) === 'detail', '390 tabs: tapping tabs never closes the project');
+  check(errors.length === 0, `390 tabs: no console errors ${JSON.stringify(errors)}`);
+});
+await withPage({ viewport: { width: 1440, height: 900 } }, async (page) => {
+  await live(page);
+  await page.goto(BASE + '#/work/mutagen'); await page.waitForTimeout(1500);
+  const vis = await page.evaluate(() => ['.detail', '.flow', '.dtabs'].map((s) => getComputedStyle(document.querySelector(s)).display !== 'none'));
+  check(JSON.stringify(vis) === '[true,true,false]', `desktop: detail + diagram both shown, no tabs (${JSON.stringify(vis)})`);
+});

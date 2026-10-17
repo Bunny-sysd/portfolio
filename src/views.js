@@ -40,10 +40,20 @@ export function createViews(doc, { router, reduced, pick, openDossier, onCaption
     onCaption?.(p);
   }
 
+  // Phone layout: the detail view's three panels as tabs (card / how it
+  // works / details). CSS only applies them under 768px; desktop shows all.
+  const setTab = (tab) => {
+    root.dataset.dtab = tab;
+    doc.querySelectorAll('.dtabs [data-tab]').forEach((b) => b.setAttribute('aria-selected', String(b.dataset.tab === tab)));
+  };
+  doc.querySelectorAll('.dtabs [data-tab]').forEach((b) => b.addEventListener('click', () => setTab(b.dataset.tab)));
+  setTab('card');
+
   let stopFlow = () => {};
   function renderDetail(p) {
     stopFlow();
-    stopFlow = renderFlow($('.flow'), p.flow, { reduced });
+    setTab('card');
+    stopFlow = renderFlow($('.flow'), p.flow, { reduced, id: p.id });
     $('.detail__title').textContent = p.title;
     $('.detail__meta').textContent = `${p.kind} / ${p.meta}`;
     $('.detail__blurb').textContent = p.blurb;
@@ -172,7 +182,7 @@ export function createViews(doc, { router, reduced, pick, openDossier, onCaption
   });
 
   const touch = { x: 0, y: 0, on: false };
-  addEventListener('touchstart', (e) => { const t = e.touches[0]; touch.x = t.clientX; touch.y = t.clientY; touch.on = !e.target.closest('input, textarea, .term, .view--contact, dialog'); }, { passive: true });
+  addEventListener('touchstart', (e) => { const t = e.touches[0]; touch.x = t.clientX; touch.y = t.clientY; touch.on = !e.target.closest('input, textarea, .term, .view--contact, dialog, .detail, .flow, .dtabs'); }, { passive: true });
   addEventListener('touchend', (e) => {
     if (!touch.on) return;
     const t = e.changedTouches[0];
@@ -187,13 +197,23 @@ export function createViews(doc, { router, reduced, pick, openDossier, onCaption
 
   // Clicking a card: the front one opens, a side one spins to the front.
   doc.getElementById('scene').parentElement.addEventListener('click', (e) => {
-    if (state.view !== 'work' || e.target.closest('a, button, input, textarea, form, dialog, .caption, .filters')) return;
+    if (e.target.closest('a, button, input, textarea, form, dialog, .caption, .filters, .detail, .flow, .dtabs')) return;
+    // In a project, the live card is the way into its full dossier.
+    if (state.view === 'detail') {
+      if (pick?.(e.clientX, e.clientY) === state.openId) {
+        const at = { getBoundingClientRect: () => ({ left: e.clientX, top: e.clientY, width: 0, height: 0 }) };
+        openDossier(state.openId, at);
+      }
+      return;
+    }
+    if (state.view !== 'work') return;
     const id = pick?.(e.clientX, e.clientY);
     if (!id) return;
     if (id === current().id) router.go({ view: 'detail', id });
     else { const i = order().findIndex((p) => p.id === id); const n = order().length; let d = i - state.index; if (d > n / 2) d -= n; if (d < -n / 2) d += n; step(d); }
   });
   doc.addEventListener('pointermove', (e) => {
+    if (state.view === 'detail') { root.classList.toggle('is-pointing', pick?.(e.clientX, e.clientY) === state.openId); return; }
     if (state.view !== 'work') { root.classList.remove('is-pointing'); return; }
     root.classList.toggle('is-pointing', !!pick?.(e.clientX, e.clientY));
   }, { passive: true });
