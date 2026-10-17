@@ -2,7 +2,7 @@
 // cursor, Ctrl+K, the perimeter tally, and a low-end (software GPU) run.
 // Needs the dev server: node tests/e2e/address.mjs
 import { createHash } from 'node:crypto';
-import { withPage, check, SHOTS, BASE } from './lib.mjs';
+import { withPage, check, contrastOf, SHOTS, BASE } from './lib.mjs';
 
 const live = (page) => page.waitForFunction(() => document.documentElement.classList.contains('scene-live'), null, { timeout: 30000 });
 const sha = (s) => createHash('sha256').update(s).digest('hex');
@@ -189,5 +189,34 @@ for (const reduced of [false, true]) {
     const dist = await page.evaluate(() => window.__stage.camera.position.length());
     check(dist < 3.5, `${tag}: contact puts the camera across the event horizon (${dist.toFixed(2)} from the hole)`);
     check(errors.length === 0, `${tag}: reveals - no console errors ${JSON.stringify(errors)}`);
+  });
+}
+
+// Opening a project shows its "How it works" flow diagram: one node per
+// stage, stepping on its own with motion, pinned by a click either way.
+for (const reduced of [false, true]) {
+  const tag = reduced ? 'reduced' : 'motion';
+  await withPage({ viewport: { width: 1440, height: 900 }, reducedMotion: reduced ? 'reduce' : 'no-preference' }, async (page, errors) => {
+    await live(page);
+    const expect = { mutagen: 5, vigil: 3, signalhub: 3, 'proving-grounds': 3, who: 3 };
+    for (const [id, n] of Object.entries(expect)) {
+      await page.goto(BASE + '#/work/' + id); await page.waitForTimeout(900);
+      const nodes = await page.$$eval('.flow:not([hidden]) .flow__node', (b) => b.length);
+      check(nodes === n, `${tag}: ${id} shows a ${n}-stage flow diagram (${nodes})`);
+    }
+    await page.goto(BASE + '#/work/mutagen'); await page.waitForTimeout(900);
+    const first = await page.textContent('.flow__tag');
+    await page.waitForTimeout(3000);
+    const later = await page.textContent('.flow__tag');
+    if (reduced) check(first === later, `${tag}: flow holds still (${later})`);
+    else check(first !== later, `${tag}: flow steps on its own (${first} -> ${later})`);
+    await page.click('.flow__nodes li:nth-child(4) .flow__node'); await page.waitForTimeout(200);
+    const pinned = await page.evaluate(() => ({ tag: document.querySelector('.flow__tag').textContent, pressed: document.querySelector('.flow__nodes li:nth-child(4) .flow__node').getAttribute('aria-pressed') }));
+    check(pinned.tag.includes('Patch') && pinned.pressed === 'true', `${tag}: clicking a node shows that stage (${pinned.tag})`);
+    await page.waitForTimeout(3000);
+    check((await page.textContent('.flow__tag')).includes('Patch'), `${tag}: a clicked node stays pinned`);
+    const c = await contrastOf(page, '.flow__desc');
+    check(c >= 4.5, `${tag}: flow text readable (${c.toFixed(2)}:1)`);
+    check(errors.length === 0, `${tag}: flow - no console errors ${JSON.stringify(errors)}`);
   });
 }

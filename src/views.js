@@ -1,5 +1,6 @@
 import { PROJECTS, projectById } from './projects.js';
 import { decodeText } from './widgets/decode.js';
+import { renderFlow } from './widgets/flow.js';
 
 const STEP_PX = 110;     // wheel travel per carousel step
 const STEP_GAP_MS = 320; // min time between steps, so one flick moves one card
@@ -39,7 +40,10 @@ export function createViews(doc, { router, reduced, pick, openDossier, onCaption
     onCaption?.(p);
   }
 
+  let stopFlow = () => {};
   function renderDetail(p) {
+    stopFlow();
+    stopFlow = renderFlow($('.flow'), p.flow, { reduced });
     $('.detail__title').textContent = p.title;
     $('.detail__meta').textContent = `${p.kind} / ${p.meta}`;
     $('.detail__blurb').textContent = p.blurb;
