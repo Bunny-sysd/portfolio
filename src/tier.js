@@ -17,7 +17,7 @@ export function detectTier({ gpu = '', memory = 8, cores = 8, width = 1600, touc
 // a flat sub-1 scale that overrode DPR entirely), while capping it keeps the
 // pixel count affordable. Desktop supersamples a little (dpr 1, cap 1.5).
 export const TIER_SETTINGS = {
-  low:  { dprCap: 1.5, postFX: false },
-  mid:  { dprCap: 1.75, postFX: true },
+  low:  { dprCap: 2.5, postFX: false },
+  mid:  { dprCap: 2, postFX: true },
   high: { dprCap: 2, postFX: true },
 };
