@@ -25,7 +25,7 @@ export const PROJECTS = [
     // Shown typing on the open card's live screen: the project's real CLI,
     // from its README and dossier.
     // Real lines from a verified run on Aaron's AWS lab (Ubuntu + Docker/ASan).
-    console: ['$ mutagen --target targets/01_buffer_overflow.c', '> phase 3/5 · execute payloads', '> CRASH!! · SIGSEGV · code 139 · NEW', '> asan: stack-buffer-overflow · WRITE size 65 · strcpy', '> phase 4/5 · exploit → 01_buffer_overflow_exploit.py', '> fix: strcpy → snprintf(buf, sizeof(buf), %s)'],
+    console: ['$ mutagen --target targets/01_buffer_overflow.c', '> CRASH!! · SIGSEGV · code 139 · 100% rate', '> asan: stack-buffer-overflow · WRITE size 65 · strcpy', '> exploit → 01_buffer_overflow_exploit.py', '> patch: strcpy → snprintf(buf, sizeof(buf), %s)', '> ✓ VERIFIED SECURE · exploit no longer crashes'],
     hue: 0.48,
   },
   {
