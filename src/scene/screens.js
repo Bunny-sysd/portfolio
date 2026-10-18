@@ -1,8 +1,11 @@
 // Procedural "screens" for the glass cards: one original Canvas2D motif per
 // project, plus its title in the site's mono face. Drawn once (and again once
 // the web font has loaded), then used as a texture.
+// Logical drawing size; the canvas backing store is SCREEN_SS× larger
+// (supersampled) so the card text stays crisp on a card that fills the screen.
 export const SCREEN_W = 640;
 export const SCREEN_H = 400;
+export const SCREEN_SS = 2;
 
 const rand = (seed) => () => ((seed = (seed * 16807) % 2147483647) - 1) / 2147483646;
 
@@ -79,7 +82,8 @@ const MOTIFS = {
 
 export function drawScreen(canvas, project, index, total) {
   const g = canvas.getContext('2d');
-  const w = canvas.width, h = canvas.height;
+  const w = SCREEN_W, h = SCREEN_H;
+  g.setTransform(canvas.width / w, 0, 0, canvas.height / h, 0, 0);
   const accent = `hsl(${Math.round(project.hue * 360)} 80% 62%)`;
   const r = rand(17 + index * 101);
   g.clearRect(0, 0, w, h);
@@ -112,7 +116,8 @@ function wrap(g, text, maxW) {
 }
 export function drawLive(canvas, project, index, total, { stage, stageT, now, reduced, stepMs, hasDossier = true }) {
   const g = canvas.getContext('2d');
-  const w = canvas.width, h = canvas.height;
+  const w = SCREEN_W, h = SCREEN_H;
+  g.setTransform(canvas.width / w, 0, 0, canvas.height / h, 0, 0);
   const accent = `hsl(${Math.round(project.hue * 360)} 80% 62%)`;
   const text1 = '#e6faff', dim = 'rgba(200,230,240,0.5)';
   g.clearRect(0, 0, w, h);

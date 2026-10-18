@@ -19,7 +19,7 @@ describe('detectTier', () => {
     expect(detectTier({ gpu: 'NVIDIA GeForce RTX 5060 Ti', width: 1920, cores: 16, memory: 16 })).toBe('high');
   });
   it('has settings for every tier', () => {
-    for (const t of ['low', 'mid', 'high']) expect(TIER_SETTINGS[t].renderScale).toBeGreaterThan(0);
+    for (const t of ['low', 'mid', 'high']) expect(TIER_SETTINGS[t].dprCap).toBeGreaterThanOrEqual(1);
     expect(TIER_SETTINGS.low.postFX).toBe(false);
   });
 });

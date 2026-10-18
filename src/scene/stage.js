@@ -45,7 +45,9 @@ export function createStage(canvas) {
   // forces a synchronous wait on the GPU process (~100–250 ms of main-thread
   // block on load, even after compileAsync). Keep it while developing only.
   renderer.debug.checkShaderErrors = import.meta.env.DEV;
-  renderer.setPixelRatio(settings.renderScale);
+  // Cap the device pixel ratio per tier (don't override it with a flat scale —
+  // that rendered sub-native on high-DPR phones and blurred the card text).
+  renderer.setPixelRatio(Math.max(1, Math.min(window.devicePixelRatio || 1, settings.dprCap)));
   renderer.setSize(innerWidth, innerHeight, false);
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   // Additive particles stack past 1 at the core; neutral tone mapping rolls

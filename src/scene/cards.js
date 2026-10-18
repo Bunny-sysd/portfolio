@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { drawScreen, drawLive, SCREEN_W, SCREEN_H } from './screens.js';
+import { drawScreen, drawLive, SCREEN_W, SCREEN_H, SCREEN_SS } from './screens.js';
 import { liveStage } from '../widgets/live-state.js';
 
 // Glass project cards orbiting the core. Each is a rounded plane whose shader
@@ -72,11 +72,11 @@ export function createCards(projects, { reducedMotion }) {
   const res = new THREE.Vector2(1, 1);
   const cards = projects.map((project, i) => {
     const canvas = document.createElement('canvas');
-    canvas.width = SCREEN_W; canvas.height = SCREEN_H;
+    canvas.width = SCREEN_W * SCREEN_SS; canvas.height = SCREEN_H * SCREEN_SS;
     drawScreen(canvas, project, i, projects.length);
     const texture = new THREE.CanvasTexture(canvas);
     texture.colorSpace = THREE.SRGBColorSpace;
-    texture.anisotropy = 4;
+    texture.anisotropy = 8;
     const material = new THREE.ShaderMaterial({
       vertexShader: vert, fragmentShader: frag, transparent: true, depthWrite: false, side: THREE.DoubleSide,
       uniforms: {
