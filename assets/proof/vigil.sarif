@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json.schemastore.org/sarif-2.1.0.json",
+  "version": "2.1.0",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "name": "Vigil Security Engine",
+          "version": "0.4.0",
+          "informationUri": "https://github.com/vigil-security/vigil"
+        }
+      },
+      "results": [
+        {
+          "ruleId": "T1110",
+          "level": "error",
+          "message": {
+            "text": "Brute Force Attack \u2192 Successful Compromise: A brute force attack from source IP 10.10.14.5 against user accounts ('admin') was followed by a successful login to 'admin' at 03:00:25. This indicates a highly probable compromised system."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "target"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "T1548",
+          "level": "error",
+          "message": {
+            "text": "Suspicious Sudo Command Execution (Potential Escape): User 'admin' executed a shell interpreter or environment escape command ('/bin/bash') via sudo as root. This is a common technique to spawn an interactive root shell."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "target"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "T1110",
+          "level": "error",
+          "message": {
+            "text": "Active Brute Force Attack: Multiple authentication failures (5) were detected from source IP 10.10.14.5 targeting accounts ('admin') within a 60-second window."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "target"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

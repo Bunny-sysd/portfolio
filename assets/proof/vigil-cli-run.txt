@@ -1,0 +1,93 @@
+Vigil Security Engine v0.4.0
+Target: tests/fixtures/auth_brute_force.log (1 files)
+╭──────────────────────────────────────────────────────────────────────────────╮
+│ 🔍 Vigil — AI Threat Hunting & Log Forensics Engine                   v0.1.0 │
+╰──────────────────────────────────────────────────────────────────────────────╯
+Scan Summary                                
+ Scan Started:     2026-10-18 20:45:35      
+ Duration:         0.36 seconds             
+ Files Processed:  1 (auth_brute_force.log) 
+ Total Lines:      7                        
+ AI Provider:      None (Rules Only)        
+ Threat Score:     65/100                   
+╭─ Artifact Counter ───────────────────────────────────────────────────────────╮
+│  Findings  Credentials  Services  PrivEsc Paths                              │
+│     3           2          1            0                                    │
+╰──────────────────────────────────────────────────────────────────────────────╯
+🚨 Security Findings
+╭────────── 🔴 CRITICAL — Brute Force Attack → Successful Compromise ──────────╮
+│ ATT&CK: T1110 (Brute Force)                                                  │
+│                                                                              │
+│ A brute force attack from source IP 10.10.14.5 against user accounts         │
+│ ('admin') was followed by a successful login to 'admin' at 03:00:25. This    │
+│ indicates a highly probable compromised system.                              │
+│                                                                              │
+│ Remediation: Immediately disable/quarantine user 'admin', revoke access      │
+│ tokens, block IP 10.10.14.5, and audit all actions performed after the       │
+│ login.                                                                       │
+│                                                                              │
+│ Evidence:                                                                    │
+│   L1: Jul 18 03:00:01 target sshd[1001]: Invalid user admin from 10.10.14.5  │
+│ port 42156 ssh2                                                              │
+│   L2: Jul 18 03:00:05 target sshd[1002]: Failed password for invalid user    │
+│ admin from 10.10.14.5 port 42156 ssh2                                        │
+│   L3: Jul 18 03:00:10 target sshd[1003]: Failed password for invalid user    │
+│ admin from 10.10.14.5 port 42156 ssh2                                        │
+│   ... and 3 more lines                                                       │
+╰──────────────────────────────────────────────────────────────────────────────╯
+╭───── 🔴 CRITICAL — Suspicious Sudo Command Execution (Potential Escape) ─────╮
+│ ATT&CK: T1548 (Abuse Elevation Control Mechanism)                            │
+│                                                                              │
+│ User 'admin' executed a shell interpreter or environment escape command      │
+│ ('/bin/bash') via sudo as root. This is a common technique to spawn an       │
+│ interactive root shell.                                                      │
+│                                                                              │
+│ Remediation: Review whether this user requires root privilege access to      │
+│ interactive commands. Inspect host command history.                          │
+│                                                                              │
+│ Evidence:                                                                    │
+│   L7: Jul 18 03:00:30 target sudo: admin : TTY=pts/0 ; PWD=/home/admin ;     │
+│ USER=root ; COMMAND=/bin/bash                                                │
+╰──────────────────────────────────────────────────────────────────────────────╯
+╭──────────────────── 🟠 HIGH — Active Brute Force Attack ─────────────────────╮
+│ ATT&CK: T1110 (Brute Force)                                                  │
+│                                                                              │
+│ Multiple authentication failures (5) were detected from source IP 10.10.14.5 │
+│ targeting accounts ('admin') within a 60-second window.                      │
+│                                                                              │
+│ Remediation: Apply immediate firewall blocks or fail2ban rules to IP         │
+│ 10.10.14.5. Verify target user accounts have not been locked out.            │
+│                                                                              │
+│ Evidence:                                                                    │
+│   L1: Jul 18 03:00:01 target sshd[1001]: Invalid user admin from 10.10.14.5  │
+│ port 42156 ssh2                                                              │
+│   L2: Jul 18 03:00:05 target sshd[1002]: Failed password for invalid user    │
+│ admin from 10.10.14.5 port 42156 ssh2                                        │
+│   L3: Jul 18 03:00:10 target sshd[1003]: Failed password for invalid user    │
+│ admin from 10.10.14.5 port 42156 ssh2                                        │
+│   ... and 2 more lines                                                       │
+╰──────────────────────────────────────────────────────────────────────────────╯
+🎯 Discovered Service Banners & CVE Matches                                     
+┏━━━━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━━┳━━━━━━━━━┳━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━┓
+┃ Host       ┃ Port/Proto ┃ Service ┃ Version ┃ CVE Matches ┃ Top Exploit Link ┃
+┡━━━━━━━━━━━━╇━━━━━━━━━━━━╇━━━━━━━━━╇━━━━━━━━━╇━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━┩
+│ 10.10.14.5 │ 42156/tcp  │ sshd    │         │ None        │ N/A              │
+└────────────┴────────────┴─────────┴─────────┴─────────────┴──────────────────┘
+🔑 Extracted Credentials                                                        
+┏━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Username ┃ Password / Secret ┃ Context              ┃ Source File            ┃
+┡━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ admin    │ <empty>           │ failed_login_attempt │ auth_brute_force.log:1 │
+│ admin    │ <empty>           │ successful_login     │ auth_brute_force.log:6 │
+└──────────┴───────────────────┴──────────────────────┴────────────────────────┘
+⏱ Reconstructed Timeline
+ Timestamp             Phase            Description                             
+ 2026-07-18 03:00:01   Delivery         Active Brute Force Attack               
+ 2026-07-18 03:00:01   Delivery         Brute Force Attack → Successful         
+                                        Compromise                              
+ 2026-07-18 03:00:01   Exploitation     Credential extracted: 'admin' (type:    
+                                        password, status: failed_login_attempt) 
+ 2026-07-18 03:00:25   Exploitation     Credential extracted: 'admin' (type:    
+                                        password, status: successful_login)     
+ 2026-07-18 03:00:30   Privilege        Suspicious Sudo Command Execution       
+                       Escalation       (Potential Escape)                      

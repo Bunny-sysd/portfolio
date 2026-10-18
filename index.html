@@ -519,17 +519,18 @@
           <div class="dossier-panel">
             <div class="dossier-header-bar">
               <span class="dossier-header-title">CLI USAGE &amp; CORRELATION OUTPUT</span>
-              <span class="dossier-header-status">SAMPLE EXECUTION TRACE</span>
+              <span class="dossier-header-status">REAL RUN · test fixture auth_brute_force.log</span>
             </div>
             <div class="dd-console">
-              <div>> vigil analyze nmap_corporate.txt --format sarif --output report.sarif</div>
-              <div class="dim">> [INGEST] Parsed 48 services across 12 hosts from nmap_corporate.xml</div>
-              <div class="cyan">> [CPE_MAP] OpenSSH 7.4p1 → cpe:2.3:a:openbsd:openssh:7.4:p1:*:*:*:*:*:*</div>
-              <div class="cyan">> [CVE_MATCH] CVE-2018-15473 (OpenSSH User Enumeration) | CVSS: 5.3 (Medium)</div>
-              <div class="warn">> [POC_FOUND] github.com/Rhynorater/CVE-2018-15473 [STARS: 892] [VERIFIED]</div>
-              <div class="err">> [CRITICAL] Apache 2.4.49 → CVE-2021-41773 (Path Traversal + RCE) | CVSS: 9.8 (Critical)</div>
-              <div class="warn">> [POC_FOUND] github.com/inbug-team/CVE-2021-41773_PoC [STARS: 1420] [VERIFIED]</div>
-              <div>> [EXPORT] Generated: report.sarif (SARIF v2.1) + report.html (Interactive Dashboard)</div>
+              <div>$ vigil analyze tests/fixtures/auth_brute_force.log</div>
+              <div class="dim">> [INGEST] 1 file &middot; auth_brute_force.log</div>
+              <div class="cyan">> Threat Score: 65/100</div>
+              <div class="err">> [CRITICAL] Brute Force Attack &rarr; Successful Compromise</div>
+              <div class="warn">&nbsp;&nbsp;ATT&amp;CK T1110 &middot; src 10.10.14.5 &rarr; user 'admin' &middot; login 03:00:25</div>
+              <div class="err">> [CRITICAL] Suspicious Sudo Command Execution (Potential Escape)</div>
+              <div class="warn">> [HIGH] Active Brute Force Attack &middot; 5 auth failures from 10.10.14.5 (T1110)</div>
+              <div>$ vigil analyze &hellip; --format sarif --output report.sarif</div>
+              <div class="dim">> &check; SARIF v2.1.0 report saved to report.sarif</div>
             </div>
           </div>
 

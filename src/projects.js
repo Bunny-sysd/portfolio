@@ -42,7 +42,8 @@ export const PROJECTS = [
       ['Compass', 'vigil compass ranks tactical next steps for the current phase — recon, initial access or privesc. You choose.'],
       ['Report', 'Exports SARIF v2.1, HTML or Markdown; vigil diff and vigil session track the engagement over time.'],
     ],
-    console: ['$ vigil analyze target_scan.txt --format sarif --output results.sarif', '$ vigil compass target_scan.txt --phase initial_access', '$ vigil diff scan_before.txt scan_after.txt'],
+    // Real lines from a run on the project's own test fixture (auth log).
+    console: ['$ vigil analyze auth_brute_force.log', '> threat score · 65/100', '> CRITICAL · brute force → successful compromise', '> att&ck T1110 · 10.10.14.5 → admin · login 03:00:25', '> CRITICAL · suspicious sudo (potential escape)', '> ✓ SARIF v2.1.0 report saved'],
     hue: 0.58,
   },
   {
