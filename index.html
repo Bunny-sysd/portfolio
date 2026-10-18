@@ -248,7 +248,7 @@
               Mutagen is an agentic AI fuzzer built in Python that reads source code (or a compiled binary via Ghidra decompilation), finds vulnerabilities, generates exploits, patches the bugs, and proves the fix works &mdash; fully autonomously. Rather than the random mutation traditional fuzzers rely on, Mutagen uses an LLM (Gemini, Claude, GPT, or a local Ollama model) to reason about the code, target high-entropy edge cases, and learn from each failed attempt before retrying.
             </p>
             <p style="font-size: 1.02rem; line-height: 1.75; color: rgba(255,255,255,0.82); margin: 0 0 1.25rem 0; border-left: 2px solid var(--cyan); padding-left: 1rem;">
-              <strong style="color: var(--cyan);">Tested:</strong> exercised against libpng and classic vulnerable C programs using Gemini, succeeding in most runs. The harness itself is the project &mdash; it is model-agnostic, so results depend on the model behind it.
+              <strong style="color: var(--cyan);">Verified run</strong> (my own AWS lab &mdash; Ubuntu, Docker + AddressSanitizer sandbox) on <code>targets/01_buffer_overflow.c</code>: Mutagen reproduced a real <strong>stack-buffer-overflow</strong> &mdash; ASan caught a <code>WRITE of size 65</code> into a 32-byte buffer via <code>strcpy</code>, a 100% crash rate on the generated payload &mdash; auto-generated a working Python exploit, and proposed the correct fix (<code>strcpy</code> &rarr; <code>snprintf(buf, sizeof(buf), …)</code>). The harness itself is the project and is model-agnostic (Gemini / Claude / GPT / local); automated patch <em>verification</em> is still being hardened.
             </p>
             <div class="dossier-grid-4">
               <div class="dossier-stat-box">

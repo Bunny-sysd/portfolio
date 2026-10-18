@@ -1,0 +1,58 @@
+{
+  "tool": "Mutagen v2.1.0",
+  "target": "01_buffer_overflow",
+  "analysis_mode": "source_code",
+  "profile": "legacy-audit",
+  "static_only": false,
+  "sandboxed": true,
+  "user_confirmed_unsandboxed": false,
+  "docker_available": true,
+  "container_ids": [
+    "773df3a835e4"
+  ],
+  "image": "ubuntu:latest",
+  "image_digest": "ubuntu@sha256:c098726dd9b9733f3e885f8de0ef375206a311b0a317eadc40d347b1115fb944",
+  "reachability_status": "CONFIRMED",
+  "reachability_message": "",
+  "sandbox_details": {
+    "sandboxed": true,
+    "user_confirmed_unsandboxed": false,
+    "docker_available": true,
+    "container_ids": [
+      "773df3a835e4"
+    ],
+    "image": "ubuntu:latest",
+    "image_digest": "ubuntu@sha256:c098726dd9b9733f3e885f8de0ef375206a311b0a317eadc40d347b1115fb944"
+  },
+  "timestamp": "20261018_201503",
+  "total_payloads_tested": 1,
+  "total_crashes_found": 1,
+  "crash_rate": "100.0%",
+  "unique_vuln_types": [
+    "buffer_overflow"
+  ],
+  "unique_cwes": [
+    "CWE-120"
+  ],
+  "crashes": [
+    {
+      "args": [
+        "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+      ],
+      "input_data": null,
+      "payload": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+      "vuln_type": "buffer_overflow",
+      "cwe": "CWE-120",
+      "reason": "The strcpy() function copies the user-controlled input from argv[1] into a fixed-size buffer (buffer[32]) without any bounds checking. Providing an input string longer than 31 characters (plus null terminator) will cause a buffer overflow, overwriting adjacent stack memory, which can lead to denial of service or arbitrary code execution (MITRE ATT&CK T1190, T1068).",
+      "severity": "critical",
+      "crash_type": "SIGSEGV (Segmentation Fault)",
+      "return_code": 139,
+      "stdout": "",
+      "stderr": "=================================================================\n==1==ERROR: AddressSanitizer: stack-buffer-overflow on address 0x76e476400040 at pc 0x565380c6c058 bp 0x7fffeeb38c30 sp 0x7fffeeb383d8\nWRITE of size 65 at 0x76e476400040 thread T0\n    #0 0x565380c6c057 in strcpy.part.0 (/tmp/01_buffer_overflow.out+0x86057) (BuildId: 124a623cece1ca62d10aff5783325b599b395006)\n    #1 0x565380d3ba1e in vulnerable_function (/tmp/01_buffer_overflow.out+0x155a1e) (BuildId: 124a623cece1ca62d10aff5783325b599b395006)\n    #2 0x565380d3bbb0 in main (/tmp/01_buffer_overflow.out+0x155bb0) (BuildId: 124a623cece1ca62d10aff5783325b599b395006)\n    #3 0x7ae47859b600  (/usr/lib/x86_64-linux-gnu/libc.so.6+0x2a600) (BuildId: 066527e430a32768d82741e00b81eebb1a872294)\n    #4 0x7ae47859b717 in __libc_start_main (/usr/lib/x86_64-linux-gnu/libc.so.6+0x2a717) (BuildId: 066527e430a32768d82741e00b81eebb1a872294)\n    #5 0x565380bef6c4 in _start (/tmp/01_buffer_overflow.out+0x96c4) (BuildId: 124a623cece1ca62d10aff5783325b599b395006)\n\nAddress 0x76e476400040 is located in stack of thread T0 at offset 64 in frame\n    #0 0x565380d3b968 in vulnerable_function (/tmp/01_buffer_overflow.out+0x155968) (BuildId: 124a623cece1ca62d10aff5783325b599b395006)\n\n  This frame has 1 object(s):\n    [32, 64) 'buffer' (line 29) <== Memory access at offset 64 overflows this variable\nHINT: this may be a false positive if your program uses some custom stack unwind mechanism, swapcontext or vfork\n      (longjmp and C++ exceptions *are* supported)\nSUMMARY: AddressSanitizer: stack-buffer-overflow (/tmp/01_buffer_overflow.out+0x86057) (BuildId: 124a623cece1ca62d10aff5783325b599b395006) in strcpy.part.0\nShadow bytes around the buggy address:\n  0x76e4763ffd80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n  0x76e4763ffe00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n  0x76e4763ffe80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n  0x76e4763fff00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n  0x76e4763fff80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n=>0x76e476400000: f1 f1 f1 f1 00 00 00 00[f3]f3 f3 f3 00 00 00 00\n  0x76e476400080: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n  0x76e476400100: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n  0x76e476400180: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n  0x76e476400200: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\n  0x76e476400280: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\nShadow byte legend (one shadow byte represents 8 application bytes):\n  Addressable:           00\n  Partially addressable: 01 02 03 04 05 06 07 \n  Heap left redzone:       fa\n  Freed heap region:       fd\n  Stack left redzone:      f1\n  Stack mid redzone:       f2\n  Stack right redzone:     f3\n  Stack after return:      f5\n  Stack use after scope:   f8\n  Global redzone:          f9\n  Global init order:       f6\n  Poisoned by user:        f7\n  Container overflow:      fc\n  Array cookie:            ac\n  Intra object redzone:    bb\n  ASan internal:           fe\n  Left alloca redzone:     ca\n  Right alloca redzone:    cb\n==1==ABORTING\n",
+      "retries": 0,
+      "container_id": "773df3a835e4",
+      "container_image": "ubuntu:latest",
+      "container_image_digest": "ubuntu@sha256:c098726dd9b9733f3e885f8de0ef375206a311b0a317eadc40d347b1115fb944"
+    }
+  ]
+}

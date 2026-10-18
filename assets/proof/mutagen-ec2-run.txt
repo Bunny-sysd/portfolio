@@ -1,0 +1,233 @@
+╭────────────────────────────────────╮
+│ MUTAGEN v2.0                       │
+│ Agentic AI-Powered Fuzzer          │
+│ Execution mode: Docker (sandboxed) │
+╰────────────────────────────────────╯
+Using GCC C/C++ compiler: gcc
+ Fuzzing Target: targets/01_buffer_overflow.c
+╭──────────────────────────────────────────────────────────────────────────────╮
+│ 🐳 DOCKER SANDBOX SPECIFICATIONS                                             │
+│   Image:          ubuntu:latest                                              │
+│   Memory Limit:   512m                                                       │
+│   CPU Limit:      1.0 Core(s)                                                │
+│   Network Policy: Isolated (`--network=none`)                                │
+│   Mount Mode:     Read-Only Host Directory (`/target:ro`)                    │
+╰──────────────────────────────────────────────────────────────────────────────╯
+
+  ✓ Docker image 'ubuntu:latest' verified & ready (2 layers) ━━━━━━━━━━━ 0:00:02
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃   __  __ _   _ _____  _    ____ _____ _   _                                  ┃
+┃  |  \/  | | | |_   _|/ \  / ___| ____| \ | |                                 ┃
+┃  | |\/| | | | | | | / _ \| |  _|  _| |  \| |                                 ┃
+┃  | |  | | |_| | | |/ ___ \ |_| | |___| |\  |                                 ┃
+┃  |_|  |_|\___/  |_/_/   \_\____|_____|_| \_|                                 ┃
+┃                                                                              ┃
+┃  AI-Powered Zero-Day Fuzzer v2.0                                             ┃
+┃  by Bunny-sysd                                                               ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+> TARGET: /home/ubuntu/mutagen/targets/01_buffer_overflow.c
+  Read 1358 bytes of source code
+
+╭──────────────────────────────────────────────────────────────────────────────╮
+│ PHASE 1/5 [20%]: AI CODE ANALYSIS (ARGS mode - legacy-audit profile)         │
+│ Sending source code to AI engine for vulnerability analysis...               │
+╰──────────────────────────────────────────────────────────────────────────────╯
+
+Direct use of automatic function calling (AFC) in Models.generate_content is not
+recommended. Instead, we recommend to use AFC in Chat.send_message. Similarly,
+direct use of AFC in Models.generate_content_stream is not recommended. Instead,
+we recommend to use AFC in Chat.send_message_stream.
+>> AI generated 1 targeted payloads
+
+                           AI Vulnerability Analysis
+╭──────┬───────────────┬────────────┬──────────┬───────────────┬───────────────╮
+│      │               │            │          │ Payload       │               │
+│ #    │ Type          │ CWE        │ Severity │ Preview       │ Reason        │
+├──────┼───────────────┼────────────┼──────────┼───────────────┼───────────────┤
+│ 1    │ buffer_overf… │ CWE-120    │ critical │ AAAAAAAAAAAA… │ The strcpy()  │
+│      │               │            │          │               │ function      │
+│      │               │            │          │               │ copies        │
+╰──────┴───────────────┴────────────┴──────────┴───────────────┴───────────────╯
+
+╭──────────────────────────────────────────────────────────────────────────────╮
+│ PHASE 2/5 [40%]: COMPILE TARGET                                              │
+│ Building the target with security protections disabled...                    │
+╰──────────────────────────────────────────────────────────────────────────────╯
+  ASan/UBSan support detected! Injecting compiler instrumentation flags...
+>> Compiled to: /home/ubuntu/mutagen/targets/01_buffer_overflow.out
+
+╭──────────────────────────────────────────────────────────────────────────────╮
+│ PHASE 3/5 [60%]: EXECUTE PAYLOADS (ARGS mode)                                │
+│ Firing 1 targeted payloads at binary (Timeout: 5s | Sandbox: docker)...      │
+╰──────────────────────────────────────────────────────────────────────────────╯
+[Docker Sandbox] Cleaned up container 'mutagen_sandbox_e9770304' (ID:
+773df3a835e4) via `docker rm -f`.
+                                Fuzzing Results
+╭──────┬──────────────┬───────────────┬──────────────┬──────────────┬──────────╮
+│      │              │ Payload       │              │              │          │
+│ #    │ Status       │ Preview       │ Crash Type   │ Return Code  │ Unique?  │
+├──────┼──────────────┼───────────────┼──────────────┼──────────────┼──────────┤
+│ 1    │ CRASH!!      │ AAAAAAAAAAAA… │ SIGSEGV      │ 139          │ ✓ NEW    │
+│      │              │               │ (Segmentati… │              │          │
+│      │              │               │ Fault)       │              │          │
+╰──────┴──────────────┴───────────────┴──────────────┴──────────────┴──────────╯
+
+╭──────────────────────────────────────────────────────────────────────────────╮
+│ PHASE 4/5 [80%]: AUTO-PATCH & EXPLOIT GENERATION                             │
+│ Asking AI to generate a secure fix and Python exploit...                     │
+╰──────────────────────────────────────────────────────────────────────────────╯
+
+>> Python exploit saved to: exploits/01_buffer_overflow_exploit.py
+
+╭──────────────────────────────────────────────────────────────────────────────╮
+│ PHASE 5/5 [100%]: AUTO-PATCH VERIFICATION & SELF-HEALING                     │
+│ Mathematically proving the patch works (Max self-healing retries: 3)...      │
+╰──────────────────────────────────────────────────────────────────────────────╯
+  ↳ AI writing secure C patch...
+
+    ✓ AST Pre-Check passed (64 nodes, 1 functions)
+  ASan/UBSan support detected! Injecting compiler instrumentation flags...
+    X Compilation Failed:
+patches/01_buffer_overflow_FIXED.c: In function ‘vulnerable_function’:
+patches/01_buffer_overflow_FIXED.c:7:5: error: implicit declaration of function
+‘snprintf’ [-Wimplicit-function-declaration]
+    7 |     snprintf(buffer, sizeof(buffer), "%s", input);
+      |     ^~~~~~~~
+patches/01_buffer_overflow_FIXED.c:1:1: note: include ‘<stdio.h>’ or provide a
+declaration of ‘snprintf’
+  +++ |+#include <stdio.h>
+    1 | void vulnerable_function(char *input) {
+patches/01_buffer_overflow_FIXED.c:7:5: warning: incompatible implicit
+declaration of built-in function ‘snprintf’ [-Wbuiltin-declaration-mismatch]
+    7 |     snprintf(buffer, sizeof(buffer), "%s", input);
+      |     ^~~~~~~~
+patches/01_buffer_overflow_FIXED.c:7:5: note: include ‘<stdio.h>’ or provide a
+declaration of ‘snprintf’
+patches/01_buffer_overflow_FIXED.c:9:5: error: implicit declaration of function
+‘printf’ [-Wimplicit-function-declaration]
+    9 |     printf("Processed: %s\n", buffer);
+      |     ^~~~~~
+patches/01_buffer_overflow_FIXED.c:9:5: note: include ‘<stdio.h>’ or provide a
+declaration of ‘printf’
+patches/01_buffer_overflow_FIXED.c:9:5: warning: incompatible implicit
+declaration of built-in function ‘printf’ [-Wbuiltin-declaration-mismatch]
+patches/01_buffer_overflow_FIXED.c:9:5: note: include ‘<stdio.h>’ or provide a
+declaration of ‘printf’
+
+  ↳ Self-Healing Attempt 1/3 initializing...
+
+1/2)...
+
+    ✓ AST Pre-Check passed (64 nodes, 1 functions)
+  ASan/UBSan support detected! Injecting compiler instrumentation flags...
+    X Compilation Failed:
+patches/01_buffer_overflow_FIXED.c: In function ‘vulnerable_function’:
+patches/01_buffer_overflow_FIXED.c:7:5: error: implicit declaration of function
+‘snprintf’ [-Wimplicit-function-declaration]
+    7 |     snprintf(buffer, sizeof(buffer), "%s", input);
+      |     ^~~~~~~~
+patches/01_buffer_overflow_FIXED.c:1:1: note: include ‘<stdio.h>’ or provide a
+declaration of ‘snprintf’
+  +++ |+#include <stdio.h>
+    1 | void vulnerable_function(char *input) {
+patches/01_buffer_overflow_FIXED.c:7:5: warning: incompatible implicit
+declaration of built-in function ‘snprintf’ [-Wbuiltin-declaration-mismatch]
+    7 |     snprintf(buffer, sizeof(buffer), "%s", input);
+      |     ^~~~~~~~
+patches/01_buffer_overflow_FIXED.c:7:5: note: include ‘<stdio.h>’ or provide a
+declaration of ‘snprintf’
+patches/01_buffer_overflow_FIXED.c:9:5: error: implicit declaration of function
+‘printf’ [-Wimplicit-function-declaration]
+    9 |     printf("Processed: %s\n", buffer);
+      |     ^~~~~~
+patches/01_buffer_overflow_FIXED.c:9:5: note: include ‘<stdio.h>’ or provide a
+declaration of ‘printf’
+patches/01_buffer_overflow_FIXED.c:9:5: warning: incompatible implicit
+declaration of built-in function ‘printf’ [-Wbuiltin-declaration-mismatch]
+patches/01_buffer_overflow_FIXED.c:9:5: note: include ‘<stdio.h>’ or provide a
+declaration of ‘printf’
+
+  ↳ Self-Healing Attempt 2/3 initializing...
+
+1/2)...
+
+    ✓ AST Pre-Check passed (64 nodes, 1 functions)
+  ASan/UBSan support detected! Injecting compiler instrumentation flags...
+    X Compilation Failed:
+patches/01_buffer_overflow_FIXED.c: In function ‘vulnerable_function’:
+patches/01_buffer_overflow_FIXED.c:7:5: error: implicit declaration of function
+‘snprintf’ [-Wimplicit-function-declaration]
+    7 |     snprintf(buffer, sizeof(buffer), "%s", input);
+      |     ^~~~~~~~
+patches/01_buffer_overflow_FIXED.c:1:1: note: include ‘<stdio.h>’ or provide a
+declaration of ‘snprintf’
+  +++ |+#include <stdio.h>
+    1 | void vulnerable_function(char *input) {
+patches/01_buffer_overflow_FIXED.c:7:5: warning: incompatible implicit
+declaration of built-in function ‘snprintf’ [-Wbuiltin-declaration-mismatch]
+    7 |     snprintf(buffer, sizeof(buffer), "%s", input);
+      |     ^~~~~~~~
+patches/01_buffer_overflow_FIXED.c:7:5: note: include ‘<stdio.h>’ or provide a
+declaration of ‘snprintf’
+patches/01_buffer_overflow_FIXED.c:9:5: error: implicit declaration of function
+‘printf’ [-Wimplicit-function-declaration]
+    9 |     printf("Processed: %s\n", buffer);
+      |     ^~~~~~
+patches/01_buffer_overflow_FIXED.c:9:5: note: include ‘<stdio.h>’ or provide a
+declaration of ‘printf’
+patches/01_buffer_overflow_FIXED.c:9:5: warning: incompatible implicit
+declaration of built-in function ‘printf’ [-Wbuiltin-declaration-mismatch]
+patches/01_buffer_overflow_FIXED.c:9:5: note: include ‘<stdio.h>’ or provide a
+declaration of ‘printf’
+
+  ↳ Self-Healing Attempt 3/3 initializing...
+
+1/2)...
+
+    ✓ AST Pre-Check passed (67 nodes, 1 functions)
+  ASan/UBSan support detected! Injecting compiler instrumentation flags...
+    X Compilation Failed:
+patches/01_buffer_overflow_FIXED.c: In function ‘vulnerable_function’:
+patches/01_buffer_overflow_FIXED.c:10:5: error: implicit declaration of function
+‘snprintf’ [-Wimplicit-function-declaration]
+   10 |     snprintf(buffer, sizeof(buffer), "%s", input);
+      |     ^~~~~~~~
+patches/01_buffer_overflow_FIXED.c:1:1: note: include ‘<stdio.h>’ or provide a
+declaration of ‘snprintf’
+  +++ |+#include <stdio.h>
+    1 | void vulnerable_function(char *input) {
+patches/01_buffer_overflow_FIXED.c:10:5: warning: incompatible implicit
+declaration of built-in function ‘snprintf’ [-Wbuiltin-declaration-mismatch]
+   10 |     snprintf(buffer, sizeof(buffer), "%s", input);
+      |     ^~~~~~~~
+patches/01_buffer_overflow_FIXED.c:10:5: note: include ‘<stdio.h>’ or provide a
+declaration of ‘snprintf’
+patches/01_buffer_overflow_FIXED.c:12:5: error: implicit declaration of function
+‘printf’ [-Wimplicit-function-declaration]
+   12 |     printf("Processed: %s\n", buffer);
+      |     ^~~~~~
+patches/01_buffer_overflow_FIXED.c:12:5: note: include ‘<stdio.h>’ or provide a
+declaration of ‘printf’
+patches/01_buffer_overflow_FIXED.c:12:5: warning: incompatible implicit
+declaration of built-in function ‘printf’ [-Wbuiltin-declaration-mismatch]
+patches/01_buffer_overflow_FIXED.c:12:5: note: include ‘<stdio.h>’ or provide a
+declaration of ‘printf’
+
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ ** RESULTS ** ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ FUZZING COMPLETE                                                             ┃
+┃                                                                              ┃
+┃   Payloads tested:  1                                                        ┃
+┃   Unique crashes:   1                                                        ┃
+┃   Crash rate:       100%                                                     ┃
+┃   Vuln types:       buffer_overflow                                          ┃
+┃   JSON report:                                                               ┃
+┃ crashes/crash_report_01_buffer_overflow_20261018_201503.json                 ┃
+┃   HTML report:      crashes/report_01_buffer_overflow_20261018_201503.html   ┃
+┃   Patch generated:  patches/01_buffer_overflow_FIXED.c                       ┃
+┃   Exploit generated:exploits/01_buffer_overflow_exploit.py                   ┃
+┃   Verification:     FAILED                                                   ┃
+┃   Self-healing:     Failed (used 3 retries)                                  ┃
+┃   Open the HTML report in your browser for a visual breakdown!               ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+

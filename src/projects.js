@@ -24,7 +24,8 @@ export const PROJECTS = [
     ],
     // Shown typing on the open card's live screen: the project's real CLI,
     // from its README and dossier.
-    console: ['$ pip install -e .', '$ mutagen --target targets/01_buffer_overflow.c', '$ mutagen --target path/to/binary.exe --binary', '$ mutagen --target targets/22_asyn_signal_uaf.c --mode agents', '$ python run_all.py --max-payloads 3'],
+    // Real lines from a verified run on Aaron's AWS lab (Ubuntu + Docker/ASan).
+    console: ['$ mutagen --target targets/01_buffer_overflow.c', '> phase 3/5 · execute payloads', '> CRASH!! · SIGSEGV · code 139 · NEW', '> asan: stack-buffer-overflow · WRITE size 65 · strcpy', '> phase 4/5 · exploit → 01_buffer_overflow_exploit.py', '> fix: strcpy → snprintf(buf, sizeof(buf), %s)'],
     hue: 0.48,
   },
   {
