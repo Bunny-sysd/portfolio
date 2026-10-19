@@ -18,7 +18,7 @@ const D = 73.42; // D2
 const PHRYGIAN = [0, 1, 3, 5, 7, 8, 10];
 const note = (deg, oct = 0) => D * 2 ** ((PHRYGIAN[((deg % 7) + 7) % 7] + 12 * (oct + Math.floor(deg / 7))) / 12);
 
-export function createSound(button, { reduced = () => false } = {}) {
+export function createSound(button, { reduced = () => false, lite = false } = {}) {
   let ctx = null, master = null, wet = null, bus = null, on = false;
   const S = {};
   const read = () => { try { return localStorage.getItem(KEY) === 'on'; } catch { return false; } };
@@ -102,12 +102,16 @@ export function createSound(button, { reduced = () => false } = {}) {
     o.start(at); o2.start(at); o.stop(at + dur + 0.05); o2.stop(at + dur + 0.05);
   }
   // A short dry tick (filtered noise burst) — never sustained, never to reverb.
-  function tick(at, { freq = 2200, vol = 0.03, dur = 0.025, q = 10 } = {}) {
-    const src = ctx.createBufferSource(); src.buffer = S.noise;
-    const f = ctx.createBiquadFilter(); f.type = 'bandpass'; f.frequency.value = freq; f.Q.value = q;
-    const g = ctx.createGain(); g.gain.setValueAtTime(vol, at); g.gain.exponentialRampToValueAtTime(0.0001, at + dur);
-    src.connect(f).connect(g).connect(bus);
-    src.start(at, Math.random() * 0.3); src.stop(at + dur + 0.02);
+  // A clean tonal blip — one oscillator, soft attack/decay. Replaces the old
+  // filtered-noise "tick": repeated high-frequency noise bursts read as
+  // firecrackers/sparks on phones and crackle under load.
+  function tick(at, { freq = 2200, vol = 0.03, dur = 0.05, type = 'triangle' } = {}) {
+    const o = ctx.createOscillator(), g = ctx.createGain();
+    o.type = type; o.frequency.value = freq;
+    g.gain.setValueAtTime(0.0001, at);
+    g.gain.exponentialRampToValueAtTime(vol, at + 0.006);
+    g.gain.exponentialRampToValueAtTime(0.0001, at + dur);
+    o.connect(g).connect(bus); o.start(at); o.stop(at + dur + 0.02);
   }
   function thump(at, { from = 110, to = 34, vol = 0.3, dur = 0.7 } = {}) {
     const o = ctx.createOscillator(), g = ctx.createGain();
@@ -145,14 +149,15 @@ export function createSound(button, { reduced = () => false } = {}) {
       }
       if (b === 0) bell(note(0, 1) * (inside ? 0.5 : 1), t, { dur: 4.5, vol: 0.022 });
       if (driving) {
-        if (b % 4 === 0) thump(t, { from: 150, to: 42, vol: 0.3, dur: 0.26 });          // kick, on the quarter
-        if (b % 4 === 2) tick(t, { freq: 7200, vol: 0.016, dur: 0.028, q: 1.5 });        // hat, offbeat
-        if (b % 2 === 0) bass(note(BASS_SEQ[(S.beat / 2 | 0) % BASS_SEQ.length], 1), t); // bass, eighths
+        if (b % 4 === 0) thump(t, { from: 150, to: 42, vol: 0.3, dur: 0.26 });           // kick, on the quarter
+        if (!lite && b % 4 === 2) tick(t, { freq: 1480, vol: 0.012, dur: 0.05 });         // soft tonal hat, offbeat
+        // Bass on eighths (quarters on phones, to halve the voice count).
+        if ((lite ? b % 4 === 0 : b % 2 === 0)) bass(note(BASS_SEQ[(S.beat / 2 | 0) % BASS_SEQ.length], 1), t);
       } else if (inside) {
-        if (b % 8 === 0) thump(t, { from: 92, to: 24, vol: 0.5, dur: 0.95 });            // heavy slow kick
-        if (b % 4 === 0) bass(note(0, 0), t, 0.5, 0.07);                                 // sub drone pulse
+        if (b % 8 === 0) thump(t, { from: 92, to: 24, vol: 0.5, dur: 0.95 });             // heavy slow kick
+        if (b % 4 === 0) bass(note(0, 0), t, 0.5, 0.07);                                  // sub drone pulse
       } else if (b % 8 === 0) {
-        tick(t, { freq: 2600, vol: 0.013, dur: 0.02, q: 16 });                           // calm home pulse
+        tick(t, { freq: note(0, 2), vol: 0.012, dur: 0.5, type: 'sine' });                // soft tonal home pulse
       }
       S.beat++; S.beatTime += SIX;
     }

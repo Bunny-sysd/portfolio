@@ -39,7 +39,9 @@ const film = { dive: 0, diveTarget: 0, contact: 0, glitch: 0, last: 0 };
 const caseStudies = initCaseStudies({ scroll: { stop() {}, start() {} }, onDive: (on) => { film.diveTarget = on ? 1 : 0; } });
 // ── address-space layer: avalanche transitions, sigils, probe, sound ─────
 const avalanche = createAvalanche(document.querySelector('.avalanche'), { reduced: reducedMotion });
-const sound = createSound(document.querySelector('.sound'), { reduced: reducedMotion });
+// On phones/weak devices thin the beat (fewer simultaneous voices) so the
+// audio thread doesn't crackle while the GPU is busy.
+const sound = createSound(document.querySelector('.sound'), { reduced: reducedMotion, lite: !stage || stage.tier === 'low' });
 createProbe(document, { reduced: reducedMotion, gravity: world ? () => world.hole.screen : null });
 const idSigil = createSigil(document.querySelector('.hud-id .sigil'), { reduced: reducedMotion });
 idSigil.set('Aaron Alva').then((hex) => { if (hex) document.querySelector('.hud-id__hash').textContent = `sha256 ${hex.slice(0, 8)}…`; });

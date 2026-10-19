@@ -403,8 +403,31 @@ html:has(dialog[open]) .probe { display: none; }
 /* Ctrl/⌘+K brings the terminal up over home too. */
 html.term-summoned[data-view="home"] .term { display: block; }
 
-/* Phone tabs for the detail view (shown under 768px only). */
+/* Phone/tablet tabs for the detail view. */
 .dtabs { display: none; }
+
+/* Detail view becomes tabbed (Card / How it works / Details) whenever the
+   viewport is too small to show the flying card, the flow diagram and the copy
+   at once — tablets and short windows, not only phones. Without this the three
+   panels overlapped and the diagram labels clogged together. */
+@media (max-width: 1100px), (max-height: 780px) {
+  .dtabs {
+    display: flex; position: absolute; left: 50%; transform: translateX(-50%); bottom: 16px; z-index: 5;
+    width: min(520px, calc(100vw - 32px)); gap: 4px; padding: 4px;
+    border-radius: 999px; background: rgba(3, 6, 11, 0.72); backdrop-filter: blur(12px); border: 1px solid var(--line);
+  }
+  .dtabs button {
+    flex: 1; padding: 10px 6px; border: 0; border-radius: 999px; background: none; cursor: pointer;
+    font: 500 10px var(--font-mono); letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-dim);
+  }
+  .dtabs button[aria-selected="true"] { color: var(--ink); background: var(--accent); }
+  html[data-dtab="card"] .view--detail .detail, html[data-dtab="card"] .view--detail .flow { display: none; }
+  html[data-dtab="flow"] .view--detail .detail { display: none; }
+  html[data-dtab="info"] .view--detail .flow { display: none; }
+  .detail { left: 50%; right: auto; transform: translateX(-50%); bottom: 74px; width: min(620px, calc(100vw - 32px)); max-height: 56vh; overflow: auto; }
+  .flow { left: 50%; right: auto; transform: translateX(-50%); top: auto; bottom: 74px; width: min(700px, calc(100vw - 32px)); padding: 14px 16px 12px; }
+  .detail__hint { top: 70px; }
+}
 
 /* ── small screens ──────────────────────────────────────────────────── */
 @media (max-width: 767px) {
@@ -426,28 +449,18 @@ html.term-summoned[data-view="home"] .term { display: block; }
   .caption { bottom: 96px; min-width: 0; width: calc(100vw - 40px); }
   .term { bottom: 18px; }
   .term__prompt { display: none; }
-  .detail { bottom: 74px; max-height: 58vh; overflow: auto; }
-  .dtabs {
-    display: flex; position: absolute; left: 12px; right: 12px; bottom: 14px; gap: 4px; padding: 4px;
-    border-radius: 999px; background: rgba(3, 6, 11, 0.72); backdrop-filter: blur(12px); border: 1px solid var(--line);
-  }
-  .dtabs button {
-    flex: 1; padding: 10px 6px; border: 0; border-radius: 999px; background: none; cursor: pointer;
-    font: 500 10px var(--font-mono); letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-dim);
-  }
-  .dtabs button[aria-selected="true"] { color: var(--ink); background: var(--accent); }
-  html[data-dtab="card"] .view--detail .detail, html[data-dtab="card"] .view--detail .flow { display: none; }
-  html[data-dtab="flow"] .view--detail .detail { display: none; }
-  html[data-dtab="info"] .view--detail .flow { display: none; }
-  html[data-dtab="flow"] .flow { top: auto; bottom: 74px; }
-  .flow { left: 12px; right: 12px; top: 100px; bottom: auto; width: auto; padding: 12px 12px 10px; }
+  /* Phone: the tabbed panels go full-width (override the centred tablet
+     layout) and the flow diagram shrinks to fit. */
+  .dtabs { left: 12px; right: 12px; transform: none; width: auto; }
+  .detail, .flow { left: 12px; right: 12px; transform: none; width: auto; }
+  .detail { bottom: 74px; max-height: 56vh; }
+  .flow { top: auto; bottom: 74px; padding: 12px 12px 10px; }
   .flow__node { width: 54px; }
   .flow__reactor { width: 44px; height: 44px; }
   .flow__label { font-size: 7px; }
   .flow__wire { margin-top: 2px; }
   .flow__sig { display: none; }
   .flow__desc { font-size: 12px; min-height: 0; }
-  .detail__hint { top: 70px; }
   .contact__grid { grid-template-columns: 1fr; gap: 20px; }
   .view--contact { align-content: start; overflow: auto; }
 }
