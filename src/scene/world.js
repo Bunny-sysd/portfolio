@@ -68,9 +68,16 @@ export function createWorld(stage, { projects, reducedMotion }) {
   const hole = createBlackHole({ tier: stage.tier, reducedMotion });
   // The glass cards refract the backdrop *with* the hole traced into it.
   cards.cards.forEach((c) => { c.material.uniforms.tBg.value = hole.target.texture; });
-  const infall = createInfall({ tier: stage.tier });
-  const stars = createStars({ tier: stage.tier });
-  scene.add(stars.object, census.object, env.group, net.object, perimeter.group, infall.object, hole.group, cards.group, dust);
+  // The faint star field and infalling streaks are decorative and barely
+  // visible on a small screen — skip them on the low tier so phones keep GPU
+  // headroom to render at full resolution (otherwise the fps watchdog drops
+  // the pixel ratio and the scene goes blurry).
+  const lite = stage.tier === 'low';
+  const infall = lite ? null : createInfall({ tier: stage.tier });
+  const stars = lite ? null : createStars({ tier: stage.tier });
+  scene.add(census.object, env.group, net.object, perimeter.group, hole.group, cards.group, dust);
+  if (stars) scene.add(stars.object);
+  if (infall) scene.add(infall.object);
   // Only the top tier ray-traces the hole into a backdrop and mirrors the
   // water — both re-render the whole scene and are far too heavy for a phone.
   const fullHole = stage.tier === 'high';
@@ -188,8 +195,8 @@ export function createWorld(stage, { projects, reducedMotion }) {
       census.update({ time: tm, enter: eased.enter, tint });
       // The probes stand down while a project is open, so the card reads clean.
       perimeter.update({ time: tm, dpr: renderer.getPixelRatio(), fade: 1 - 0.8 * eased.open });
-      infall.update({ time: tm, fade: 1 - 0.6 * eased.open });
-      stars.update({ dpr: renderer.getPixelRatio() });
+      infall?.update({ time: tm, fade: 1 - 0.6 * eased.open });
+      stars?.update({ dpr: renderer.getPixelRatio() });
       renderer.getDrawingBufferSize(drawRes);
       hole.update({ time, camera, res: drawRes, pulse: eased.pulse, focus: eased.focus });
       return { open: eased.open, enter: eased.enter };
@@ -217,7 +224,7 @@ export function createWorld(stage, { projects, reducedMotion }) {
     },
     dispose() {
       removeEventListener('pointermove', onMove);
-      hole.dispose(); cards.dispose(); env.dispose(); net.dispose(); perimeter.dispose(); census.dispose(); infall.dispose(); stars.dispose();
+      hole.dispose(); cards.dispose(); env.dispose(); net.dispose(); perimeter.dispose(); census.dispose(); infall?.dispose(); stars?.dispose();
       dust.geometry.dispose(); dust.material.map.dispose(); dust.material.dispose();
     },
   };

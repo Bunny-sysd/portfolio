@@ -194,7 +194,7 @@ function buildShafts() {
 
 export function createEnvironment({ tier, reducedMotion }) {
   const group = new THREE.Group();
-  const towers = new THREE.Points(buildTowers(tier === 'low' ? 0.45 : 1), new THREE.ShaderMaterial({
+  const towers = new THREE.Points(buildTowers(tier === 'low' ? 0.32 : 1), new THREE.ShaderMaterial({
     vertexShader: towerVert, fragmentShader: towerFrag, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
     uniforms: { uTime: { value: 0 }, uDPR: { value: 1 }, uVault: { value: 0 }, uForest: { value: 1 } },
   }));
